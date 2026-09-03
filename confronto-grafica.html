@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--
+  Pagina di confronto delle varianti grafiche.
+
+  Serve solo a guardarle affiancate e scegliere: non fa parte dell'app e non finira mai
+  su main. Le quattro versioni sono caricate in iframe alla larghezza di un telefono
+  (375px), cosi il confronto e alla misura in cui l'app viene davvero usata.
+
+  Ogni iframe e un'app vera e funzionante: si puo toccare, cambiare vista, aprire una
+  scheda. Non sono immagini.
+-->
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confronto grafiche — app formazione</title>
+<style>
+  :root{
+    --bg:#0E1116; --surface:#181D25; --surface2:#212832;
+    --text:#EEF1F5; --muted:#7F8899; --line:rgba(255,255,255,.09);
+    --accent:#F0BC46;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans);
+    padding:22px 18px 60px; }
+  h1{ font-size:21px; margin:0 0 4px; }
+  .sub{ color:var(--muted); font-size:13.5px; margin:0 0 22px; line-height:1.6; max-width:760px; }
+  .sub code{ background:var(--surface2); padding:1px 5px; border-radius:4px; font-size:12.5px; }
+
+  .fila{ display:flex; gap:18px; overflow-x:auto; padding-bottom:14px; align-items:flex-start; }
+  .col{ flex:0 0 auto; width:375px; }
+  .col h2{ font-size:14.5px; margin:0 0 2px; display:flex; align-items:center; gap:8px; }
+  .tag{ font-size:10px; text-transform:uppercase; letter-spacing:.6px; padding:2px 7px;
+    border-radius:99px; background:var(--surface2); color:var(--muted); border:1px solid var(--line); }
+  .tag.ora{ background:rgba(240,188,70,.14); color:var(--accent); border-color:rgba(240,188,70,.3); }
+  .col p{ font-size:12px; color:var(--muted); line-height:1.55; margin:4px 0 10px; min-height:56px; }
+  iframe{ width:375px; height:760px; border:1px solid var(--line); border-radius:14px;
+    background:#000; display:block; box-shadow:0 8px 30px rgba(0,0,0,.5); }
+
+  .nota{ margin-top:30px; padding:14px 16px; background:var(--surface); border:1px solid var(--line);
+    border-radius:12px; font-size:13px; color:var(--muted); line-height:1.65; max-width:900px; }
+  .nota b{ color:var(--text); }
+</style>
+</head>
+<body>
+
+<h1>Varianti grafiche a confronto</h1>
+<p class="sub">
+  Quattro app vere affiancate, alla larghezza di un telefono. Sono interattive: puoi cambiare
+  vista, aprire una scheda giocatore, toccare i moduli. Nessuna di queste tocca
+  <code>index.html</code> su <code>main</code>, che resta quello verificato ieri sera.
+</p>
+
+<div class="fila">
+
+  <div class="col">
+    <h2>Attuale <span class="tag ora">in uso</span></h2>
+    <p>Quella su cui abbiamo lavorato: scura, fondali neri freddi, accento ambra. Il campo è
+       un blocco verde spento e le caselle ci si confondono un po' sopra.</p>
+    <iframe src="./index.html" title="Versione attuale"></iframe>
+  </div>
+
+  <div class="col">
+    <h2>A — Campo vero</h2>
+    <p>Il campo diventa un campo: righe di taglio dell'erba, bordo, cerchio di centrocampo.
+       Le caselle diventano tessere chiare che si staccano nettamente, come segnaposti su una
+       lavagna tattica.</p>
+    <iframe src="./variante-a-campo.html" title="Variante A"></iframe>
+  </div>
+
+  <div class="col">
+    <h2>B — Chiara</h2>
+    <p>Tema chiaro ad alto contrasto. Non è solo gusto: la formazione si fa spesso di sabato
+       mattina, e uno schermo scuro sotto il sole diventa uno specchio. Il campo resta verde.</p>
+    <iframe src="./variante-b-chiara.html" title="Variante B"></iframe>
+  </div>
+
+  <div class="col">
+    <h2>C — Densa</h2>
+    <p>Resta scura ma si stringe: righe più compatte, KPI in una riga sola invece di tre
+       scatole, gerarchia tipografica più netta. Circa due giocatori in più per schermata.</p>
+    <iframe src="./variante-c-densa.html" title="Variante C"></iframe>
+  </div>
+
+</div>
+
+<div class="nota">
+  <b>I colori di ruolo non cambiano in nessuna variante</b> — ambra, verde, blu, rosso restano
+  quelli. Sono il codice con cui leggi l'asta a colpo d'occhio e cambiarli ti costringerebbe a
+  reimparare due app lo stesso giorno. Nella variante B sono solo scuriti quel tanto che serve a
+  restare leggibili su fondo chiaro.
+  <br><br>
+  <b>Come si adotta una variante:</b> si copia il file scelto su <code>index.html</code> e si
+  fonde il branch. Le varianti si possono anche mescolare — per esempio il campo della A con la
+  densità della C — perché toccano regole diverse.
+  <br><br>
+  <b>Se non ti convince nessuna</b>, si buttano: sono su un branch separato, <code>main</code>
+  non è mai stato toccato.
+</div>
+
+</body>
+</html>
