@@ -1,0 +1,46 @@
+# Configurazione del sito.
+# Sito statico: nessuna build, si pubblica la cartella cosi com'e.
+
+[build]
+  publish = "."
+
+# ---------------------------------------------------------------------------
+# Cache: la parte che conta davvero.
+#
+# Il problema classico delle PWA e il service worker che resta in cache. Se un
+# CDN serve un sw.js vecchio, il browser continua a usare la versione vecchia
+# dell'app anche dopo un deploy nuovo, e l'utente non ha modo di accorgersene
+# ne di forzare l'aggiornamento: vede un'app che semplicemente non cambia mai.
+# Per questo sw.js non va mai messo in cache.
+#
+# Stesso ragionamento per i dati di giornata: la GitHub Action li riscrive fino
+# a cinque volte a settimana, e una copia vecchia servita dal CDN significa
+# schierare la formazione su probabili superate. Meglio una richiesta in piu
+# che un dato sbagliato.
+#
+# Il resto (l'app stessa, che e un unico index.html) usa no-cache: il browser
+# puo tenerne una copia ma deve sempre chiedere se e cambiata. A rendere l'app
+# utilizzabile senza rete ci pensa il service worker, non la cache HTTP.
+# ---------------------------------------------------------------------------
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    # Permette al service worker di controllare tutta la cartella.
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/dati/*"
+  [headers.values]
+    Cache-Control = "no-cache"
