@@ -92,10 +92,13 @@
       repeating-linear-gradient(180deg, rgba(255,255,255,.022) 0 34px, transparent 34px 68px),
       linear-gradient(180deg, #1A3A24, #142C1C);
     padding:14px 8px 12px; box-shadow:var(--lift-2); }
-  .pitch-line{ display:flex; justify-content:center; gap:7px; margin-bottom:9px; flex-wrap:wrap; }
+  .pitch-line{ display:flex; justify-content:center; gap:7px; margin-bottom:9px; }
   .pitch-line:last-child{ margin-bottom:0; }
 
-  .slot{ width:78px; background:var(--surface); border:1px solid var(--line-2);
+  /* Larghezza elastica invece che fissa: con la difesa a 5 i riquadri da 78px non ci
+     stavano in 355px e la linea andava a capo 4+1, che su una difesa non si puo vedere.
+     Cosi le caselle si dividono lo spazio e la riga resta una riga sempre. */
+  .slot{ flex:1 1 0; min-width:0; max-width:84px; background:var(--surface); border:1px solid var(--line-2);
     border-radius:var(--radius-sm); padding:6px 4px 5px; text-align:center;
     box-shadow:var(--lift); position:relative; overflow:hidden; }
   .slot:active{ background:var(--surface2); }
@@ -241,6 +244,21 @@
     padding:11px 17px; border-radius:99px; font-size:13px; z-index:60; opacity:0;
     transition:all .24s var(--ease); pointer-events:none; box-shadow:var(--lift-2); }
   #toast.on{ transform:translateX(-50%); opacity:1; }
+
+  /* Su schermi larghi i riquadri da 78px lasciavano il campo quasi vuoto: la riga dei
+     difensori ne riempiva il 45%. Crescono con lo spazio, cosi il campo somiglia a un campo
+     e i bersagli da toccare restano comodi. */
+  @media (min-width:560px){
+    .slot{ max-width:112px; padding:8px 6px 7px; }
+    .slot .nm{ font-size:13px; } .slot .sq{ font-size:10.5px; } .slot .fm{ font-size:14.5px; }
+    .pitch-line{ gap:10px; margin-bottom:12px; }
+    .pitch{ padding:18px 10px 16px; }
+  }
+  @media (min-width:820px){
+    .slot{ max-width:138px; padding:10px 8px 8px; }
+    .slot .nm{ font-size:14px; } .slot .fm{ font-size:16px; }
+    .pitch-line{ gap:14px; margin-bottom:14px; }
+  }
 
   /* Su tablet la lista a tutta larghezza sparpaglia i numeri agli antipodi dello schermo. */
   @media (min-width:820px){
@@ -648,10 +666,20 @@ async function caricaProbabili(forza){
   }
 }
 
-function etaDati(){
+/* Oltre questa soglia i dati non sono piu una fotografia della giornata in corso: le
+   probabili si rifanno ogni settimana, e una lista vecchia di quattro giorni puo dare
+   titolare uno che nel frattempo e squalificato. Va detto forte, non lasciato dedurre
+   dalla scritta piccola in alto. */
+const ORE_DATI_VECCHI = 96;
+
+function oreDati(){
   if(!PROB || !PROB.generato) return null;
-  const ms = Date.now() - new Date(PROB.generato).getTime();
-  const h = ms/3600000;
+  return (Date.now() - new Date(PROB.generato).getTime())/3600000;
+}
+
+function etaDati(){
+  const h = oreDati();
+  if(h==null) return null;
   if(h < 1) return 'aggiornati poco fa';
   if(h < 24) return 'aggiornati ' + Math.round(h) + ' ore fa';
   const g = Math.round(h/24);
@@ -859,6 +887,9 @@ function render(){
   if(!PROB){
     w.style.display = 'block'; w.className = 'warnbar';
     w.textContent = 'Dati di giornata non disponibili: le percentuali vengono dalla titolarita fotografata all asta.';
+  }else if(oreDati() > ORE_DATI_VECCHI){
+    w.style.display = 'block'; w.className = 'warnbar';
+    w.textContent = 'Dati fermi a ' + etaDati().replace('aggiornati ','') + ' (giornata ' + PROB.giornata + '): potrebbero non essere piu quelli buoni.';
   }else if(!S.rosa.length){
     w.style.display = 'none';
   }else{
