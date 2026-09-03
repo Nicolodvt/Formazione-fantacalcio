@@ -1,0 +1,9601 @@
+{
+ "schema": 1,
+ "generato": "2026-09-03T22:13:01.022Z",
+ "fonte": "fantacalcio.it/voti-fantacalcio-serie-a — voti ufficiali Redazione Fantacalcio",
+ "stagione": "2026-27",
+ "giornata": 2,
+ "squadre": [
+  "Atalanta",
+  "Bologna",
+  "Cagliari",
+  "Como",
+  "Fiorentina",
+  "Frosinone",
+  "Genoa",
+  "Inter",
+  "Juventus",
+  "Lazio",
+  "Lecce",
+  "Milan",
+  "Monza",
+  "Napoli",
+  "Parma",
+  "Roma",
+  "Sassuolo",
+  "Torino",
+  "Udinese",
+  "Venezia"
+ ],
+ "giocatori": {
+  "22": {
+   "id": 22,
+   "nome": "De Roon",
+   "squadra": "Roma",
+   "ruolo": "C",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "133": {
+   "id": 133,
+   "nome": "Skorupski",
+   "squadra": "Bologna",
+   "ruolo": "P",
+   "voto": 5,
+   "fantavoto": 4,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4.5,
+     "fantavoto": 3.5
+    },
+    "italia": {
+     "voto": 4.5,
+     "fantavoto": 3.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 1,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "152": {
+   "id": 152,
+   "nome": "Zielinski",
+   "squadra": "Inter",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "184": {
+   "id": 184,
+   "nome": "Bernardeschi",
+   "squadra": "Bologna",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "254": {
+   "id": 254,
+   "nome": "Dimarco",
+   "squadra": "Inter",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "309": {
+   "id": 309,
+   "nome": "Dybala",
+   "squadra": "Roma",
+   "ruolo": "A",
+   "voto": 7,
+   "fantavoto": 7,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 7
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 7
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "531": {
+   "id": 531,
+   "nome": "Berardi",
+   "squadra": "Sassuolo",
+   "ruolo": "A",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 10
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 1
+   }
+  },
+  "536": {
+   "id": 536,
+   "nome": "Politano",
+   "squadra": "Napoli",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "554": {
+   "id": 554,
+   "nome": "Zappacosta",
+   "squadra": "Atalanta",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "572": {
+   "id": 572,
+   "nome": "Meret",
+   "squadra": "Napoli",
+   "ruolo": "P",
+   "voto": 6,
+   "fantavoto": 4,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 4
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 4
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 2,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "608": {
+   "id": 608,
+   "nome": "Zapata D.",
+   "squadra": "Torino",
+   "ruolo": "A",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "632": {
+   "id": 632,
+   "nome": "Zaccagni",
+   "squadra": "Lazio",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "779": {
+   "id": 779,
+   "nome": "Cristante",
+   "squadra": "Roma",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "827": {
+   "id": 827,
+   "nome": "Locatelli",
+   "squadra": "Juventus",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 7.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 7.5
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 7.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "1852": {
+   "id": 1852,
+   "nome": "Spinazzola",
+   "squadra": "Napoli",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "1870": {
+   "id": 1870,
+   "nome": "Barella",
+   "squadra": "Inter",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 8,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 8
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 8
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "1871": {
+   "id": 1871,
+   "nome": "Deiola",
+   "squadra": "Cagliari",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "1933": {
+   "id": 1933,
+   "nome": "Mandragora",
+   "squadra": "Fiorentina",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2038": {
+   "id": 2038,
+   "nome": "Pinamonti",
+   "squadra": "Lazio",
+   "ruolo": "A",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2061": {
+   "id": 2061,
+   "nome": "Simeone",
+   "squadra": "Torino",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2077": {
+   "id": 2077,
+   "nome": "Pasalic",
+   "squadra": "Atalanta",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2115": {
+   "id": 2115,
+   "nome": "Delli Carri",
+   "squadra": "Monza",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2120": {
+   "id": 2120,
+   "nome": "Bastoni",
+   "squadra": "Inter",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2134": {
+   "id": 2134,
+   "nome": "Falcone",
+   "squadra": "Lecce",
+   "ruolo": "P",
+   "voto": 5.5,
+   "fantavoto": 1.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 1
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 1.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 4,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2137": {
+   "id": 2137,
+   "nome": "Scamacca",
+   "squadra": "Atalanta",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2155": {
+   "id": 2155,
+   "nome": "Cutrone",
+   "squadra": "Monza",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2167": {
+   "id": 2167,
+   "nome": "Orsolini",
+   "squadra": "Bologna",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2194": {
+   "id": 2194,
+   "nome": "Calhanoglu",
+   "squadra": "Inter",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 10
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 1
+   }
+  },
+  "2263": {
+   "id": 2263,
+   "nome": "Lazzari",
+   "squadra": "Lazio",
+   "ruolo": "D",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2296": {
+   "id": 2296,
+   "nome": "Mancini",
+   "squadra": "Roma",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 7.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "2379": {
+   "id": 2379,
+   "nome": "Rabiot",
+   "squadra": "Milan",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2514": {
+   "id": 2514,
+   "nome": "Stones",
+   "squadra": "Inter",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2517": {
+   "id": 2517,
+   "nome": "De Bruyne",
+   "squadra": "Napoli",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2521": {
+   "id": 2521,
+   "nome": "De Gea",
+   "squadra": "Fiorentina",
+   "ruolo": "P",
+   "voto": 5,
+   "fantavoto": 2,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4.5,
+     "fantavoto": 1.5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 2
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 3,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2528": {
+   "id": 2528,
+   "nome": "Matic",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2606": {
+   "id": 2606,
+   "nome": "Modric",
+   "squadra": "Milan",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2640": {
+   "id": 2640,
+   "nome": "Kolasinac",
+   "squadra": "Atalanta",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2764": {
+   "id": 2764,
+   "nome": "Martinez L.",
+   "squadra": "Inter",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2765": {
+   "id": 2765,
+   "nome": "Odgaard",
+   "squadra": "Bologna",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2788": {
+   "id": 2788,
+   "nome": "Bremer",
+   "squadra": "Juventus",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2816": {
+   "id": 2816,
+   "nome": "Di Lorenzo",
+   "squadra": "Napoli",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 4.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2832": {
+   "id": 2832,
+   "nome": "Boga",
+   "squadra": "Juventus",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "2848": {
+   "id": 2848,
+   "nome": "Frattesi",
+   "squadra": "Lazio",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 10
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4159": {
+   "id": 4159,
+   "nome": "Akanji",
+   "squadra": "Inter",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4177": {
+   "id": 4177,
+   "nome": "Pavard",
+   "squadra": "Inter",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4179": {
+   "id": 4179,
+   "nome": "Gonzalez N.",
+   "squadra": "Juventus",
+   "ruolo": "C",
+   "voto": 7.5,
+   "fantavoto": 10.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7.5,
+     "fantavoto": 10.5
+    },
+    "italia": {
+     "voto": 7.5,
+     "fantavoto": 10.5
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 1
+   }
+  },
+  "4199": {
+   "id": 4199,
+   "nome": "Loftus-Cheek",
+   "squadra": "Milan",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4220": {
+   "id": 4220,
+   "nome": "Zambo Anguissa",
+   "squadra": "Napoli",
+   "ruolo": "C",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4236": {
+   "id": 4236,
+   "nome": "Muric",
+   "squadra": "Sassuolo",
+   "ruolo": "P",
+   "voto": 6.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 1,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4260": {
+   "id": 4260,
+   "nome": "Winks",
+   "squadra": "Cagliari",
+   "ruolo": "C",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4287": {
+   "id": 4287,
+   "nome": "Lobotka",
+   "squadra": "Napoli",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4312": {
+   "id": 4312,
+   "nome": "Maignan",
+   "squadra": "Milan",
+   "ruolo": "P",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4359": {
+   "id": 4359,
+   "nome": "Piccoli",
+   "squadra": "Bologna",
+   "ruolo": "A",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4360": {
+   "id": 4360,
+   "nome": "Caprile",
+   "squadra": "Cagliari",
+   "ruolo": "P",
+   "voto": 7,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 1,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4364": {
+   "id": 4364,
+   "nome": "Gaetano",
+   "squadra": "Atalanta",
+   "ruolo": "C",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4371": {
+   "id": 4371,
+   "nome": "Raspadori",
+   "squadra": "Atalanta",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4375": {
+   "id": 4375,
+   "nome": "Terzic",
+   "squadra": "Frosinone",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4401": {
+   "id": 4401,
+   "nome": "Gabbia",
+   "squadra": "Milan",
+   "ruolo": "D",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4409": {
+   "id": 4409,
+   "nome": "Rrahmani",
+   "squadra": "Napoli",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 7,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 7
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "4431": {
+   "id": 4431,
+   "nome": "Carnesecchi",
+   "squadra": "Atalanta",
+   "ruolo": "P",
+   "voto": 7,
+   "fantavoto": 7,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 7
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4433": {
+   "id": 4433,
+   "nome": "Zortea",
+   "squadra": "Bologna",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4436": {
+   "id": 4436,
+   "nome": "Cambiaghi",
+   "squadra": "Bologna",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4459": {
+   "id": 4459,
+   "nome": "Rovella",
+   "squadra": "Lazio",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4465": {
+   "id": 4465,
+   "nome": "Fagioli",
+   "squadra": "Fiorentina",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4479": {
+   "id": 4479,
+   "nome": "Elmas",
+   "squadra": "Atalanta",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4485": {
+   "id": 4485,
+   "nome": "Thiam",
+   "squadra": "Monza",
+   "ruolo": "P",
+   "voto": 4.5,
+   "fantavoto": 1.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4.5,
+     "fantavoto": 1.5
+    },
+    "italia": {
+     "voto": 4.5,
+     "fantavoto": 1.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 3,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4657": {
+   "id": 4657,
+   "nome": "Celik",
+   "squadra": "Juventus",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4777": {
+   "id": 4777,
+   "nome": "McTominay",
+   "squadra": "Napoli",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4807": {
+   "id": 4807,
+   "nome": "Hermoso",
+   "squadra": "Roma",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 7
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4817": {
+   "id": 4817,
+   "nome": "Pedraza",
+   "squadra": "Lazio",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4845": {
+   "id": 4845,
+   "nome": "Correia T.",
+   "squadra": "Venezia",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4856": {
+   "id": 4856,
+   "nome": "Chukwueze",
+   "squadra": "Milan",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4870": {
+   "id": 4870,
+   "nome": "Adopo",
+   "squadra": "Cagliari",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4871": {
+   "id": 4871,
+   "nome": "Thuram",
+   "squadra": "Inter",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4887": {
+   "id": 4887,
+   "nome": "Bellanova",
+   "squadra": "Atalanta",
+   "ruolo": "D",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4892": {
+   "id": 4892,
+   "nome": "Saelemaekers",
+   "squadra": "Milan",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 8,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 8
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 8
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "4896": {
+   "id": 4896,
+   "nome": "Maldini",
+   "squadra": "Cagliari",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4911": {
+   "id": 4911,
+   "nome": "Douglas Luiz",
+   "squadra": "Juventus",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4923": {
+   "id": 4923,
+   "nome": "Colombo",
+   "squadra": "Genoa",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4925": {
+   "id": 4925,
+   "nome": "Carboni A.",
+   "squadra": "Monza",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4947": {
+   "id": 4947,
+   "nome": "Brescianini",
+   "squadra": "Fiorentina",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4952": {
+   "id": 4952,
+   "nome": "Monterisi",
+   "squadra": "Frosinone",
+   "ruolo": "D",
+   "voto": 7,
+   "fantavoto": 7,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 7
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 7
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4964": {
+   "id": 4964,
+   "nome": "Vicario",
+   "squadra": "Juventus",
+   "ruolo": "P",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 7
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 7
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4970": {
+   "id": 4970,
+   "nome": "Messias",
+   "squadra": "Genoa",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4976": {
+   "id": 4976,
+   "nome": "Kalulu",
+   "squadra": "Juventus",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4994": {
+   "id": 4994,
+   "nome": "Vojvoda",
+   "squadra": "Udinese",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "4998": {
+   "id": 4998,
+   "nome": "Molina N.",
+   "squadra": "Roma",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5007": {
+   "id": 5007,
+   "nome": "Ilic",
+   "squadra": "Lecce",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5010": {
+   "id": 5010,
+   "nome": "Ismajli",
+   "squadra": "Torino",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5022": {
+   "id": 5022,
+   "nome": "Pavlovic",
+   "squadra": "Milan",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5029": {
+   "id": 5029,
+   "nome": "Geubbels",
+   "squadra": "Lecce",
+   "ruolo": "A",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5036": {
+   "id": 5036,
+   "nome": "Caqueret",
+   "squadra": "Como",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5116": {
+   "id": 5116,
+   "nome": "Martinez Jo.",
+   "squadra": "Inter",
+   "ruolo": "P",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5119": {
+   "id": 5119,
+   "nome": "Samardzic",
+   "squadra": "Atalanta",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 10
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 1
+   }
+  },
+  "5172": {
+   "id": 5172,
+   "nome": "Jones C.",
+   "squadra": "Inter",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5273": {
+   "id": 5273,
+   "nome": "Estupinan",
+   "squadra": "Milan",
+   "ruolo": "D",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5295": {
+   "id": 5295,
+   "nome": "Musah",
+   "squadra": "Milan",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5298": {
+   "id": 5298,
+   "nome": "Pobega",
+   "squadra": "Bologna",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5301": {
+   "id": 5301,
+   "nome": "Luis Henrique",
+   "squadra": "Inter",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5319": {
+   "id": 5319,
+   "nome": "Sohm",
+   "squadra": "Venezia",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5365": {
+   "id": 5365,
+   "nome": "Dragusin",
+   "squadra": "Fiorentina",
+   "ruolo": "D",
+   "voto": 4,
+   "fantavoto": 3.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4.5,
+     "fantavoto": 4
+    },
+    "italia": {
+     "voto": 4,
+     "fantavoto": 3.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5422": {
+   "id": 5422,
+   "nome": "Zalewski",
+   "squadra": "Atalanta",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 7.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "5436": {
+   "id": 5436,
+   "nome": "Raimondo",
+   "squadra": "Frosinone",
+   "ruolo": "A",
+   "voto": 8,
+   "fantavoto": 13.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 8,
+     "fantavoto": 13.5
+    },
+    "italia": {
+     "voto": 8,
+     "fantavoto": 13.5
+    }
+   },
+   "bonus": {
+    "gol": 2,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 1
+   }
+  },
+  "5457": {
+   "id": 5457,
+   "nome": "Maleh",
+   "squadra": "Lecce",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5462": {
+   "id": 5462,
+   "nome": "Ciervo",
+   "squadra": "Cagliari",
+   "ruolo": "C",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5500": {
+   "id": 5500,
+   "nome": "Cancellieri",
+   "squadra": "Lazio",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5504": {
+   "id": 5504,
+   "nome": "Coulibaly L.",
+   "squadra": "Lecce",
+   "ruolo": "C",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5507": {
+   "id": 5507,
+   "nome": "Busio",
+   "squadra": "Venezia",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5514": {
+   "id": 5514,
+   "nome": "Vasquez",
+   "squadra": "Genoa",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5520": {
+   "id": 5520,
+   "nome": "Cambiaso",
+   "squadra": "Juventus",
+   "ruolo": "D",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5526": {
+   "id": 5526,
+   "nome": "Scalvini",
+   "squadra": "Atalanta",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5544": {
+   "id": 5544,
+   "nome": "David",
+   "squadra": "Juventus",
+   "ruolo": "A",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5555": {
+   "id": 5555,
+   "nome": "Kamara H.",
+   "squadra": "Udinese",
+   "ruolo": "D",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7.5,
+     "fantavoto": 10.5
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 1
+   }
+  },
+  "5559": {
+   "id": 5559,
+   "nome": "Da Cunha",
+   "squadra": "Como",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5578": {
+   "id": 5578,
+   "nome": "Kossounou",
+   "squadra": "Atalanta",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5585": {
+   "id": 5585,
+   "nome": "Malen",
+   "squadra": "Roma",
+   "ruolo": "A",
+   "voto": 8,
+   "fantavoto": 13.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 8,
+     "fantavoto": 13.5
+    },
+    "italia": {
+     "voto": 8,
+     "fantavoto": 13.5
+    }
+   },
+   "bonus": {
+    "gol": 2,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 1
+   }
+  },
+  "5589": {
+   "id": 5589,
+   "nome": "Konè M.",
+   "squadra": "Roma",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 7,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5603": {
+   "id": 5603,
+   "nome": "Pongracic",
+   "squadra": "Fiorentina",
+   "ruolo": "D",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5620": {
+   "id": 5620,
+   "nome": "Tavares N.",
+   "squadra": "Lazio",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 7.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 8
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 8
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 1
+   }
+  },
+  "5637": {
+   "id": 5637,
+   "nome": "Davis K.",
+   "squadra": "Udinese",
+   "ruolo": "A",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5641": {
+   "id": 5641,
+   "nome": "Chalobah T.",
+   "squadra": "Como",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5672": {
+   "id": 5672,
+   "nome": "Dia",
+   "squadra": "Lazio",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5674": {
+   "id": 5674,
+   "nome": "Basic",
+   "squadra": "Venezia",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5678": {
+   "id": 5678,
+   "nome": "Holm",
+   "squadra": "Bologna",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5685": {
+   "id": 5685,
+   "nome": "Koopmeiners",
+   "squadra": "Juventus",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 10
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5687": {
+   "id": 5687,
+   "nome": "Vlasic",
+   "squadra": "Torino",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5695": {
+   "id": 5695,
+   "nome": "Haps",
+   "squadra": "Venezia",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5701": {
+   "id": 5701,
+   "nome": "Obert",
+   "squadra": "Cagliari",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5734": {
+   "id": 5734,
+   "nome": "Soulè",
+   "squadra": "Roma",
+   "ruolo": "A",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5735": {
+   "id": 5735,
+   "nome": "Volpato",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 9.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7.5,
+     "fantavoto": 10
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 9.5
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5739": {
+   "id": 5739,
+   "nome": "De Winter",
+   "squadra": "Milan",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5750": {
+   "id": 5750,
+   "nome": "Ostigard",
+   "squadra": "Genoa",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5757": {
+   "id": 5757,
+   "nome": "Cittadini",
+   "squadra": "Frosinone",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5791": {
+   "id": 5791,
+   "nome": "Frendrup",
+   "squadra": "Genoa",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5792": {
+   "id": 5792,
+   "nome": "Ederson D.S.",
+   "squadra": "Atalanta",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5800": {
+   "id": 5800,
+   "nome": "Gudmundsson A.",
+   "squadra": "Fiorentina",
+   "ruolo": "C",
+   "voto": 4.5,
+   "fantavoto": 4,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4.5,
+     "fantavoto": 4
+    },
+    "italia": {
+     "voto": 4.5,
+     "fantavoto": 4
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5820": {
+   "id": 5820,
+   "nome": "Bertola",
+   "squadra": "Udinese",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5823": {
+   "id": 5823,
+   "nome": "Baldanzi",
+   "squadra": "Genoa",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5833": {
+   "id": 5833,
+   "nome": "Gila",
+   "squadra": "Milan",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5838": {
+   "id": 5838,
+   "nome": "Birindelli",
+   "squadra": "Monza",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5840": {
+   "id": 5840,
+   "nome": "Olivera",
+   "squadra": "Napoli",
+   "ruolo": "D",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4.5,
+     "fantavoto": 4.5
+    },
+    "italia": {
+     "voto": 4.5,
+     "fantavoto": 4.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5841": {
+   "id": 5841,
+   "nome": "Svilar",
+   "squadra": "Roma",
+   "ruolo": "P",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5844": {
+   "id": 5844,
+   "nome": "Thorstvedt",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5851": {
+   "id": 5851,
+   "nome": "Doig",
+   "squadra": "Sassuolo",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5858": {
+   "id": 5858,
+   "nome": "Ferguson",
+   "squadra": "Bologna",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5862": {
+   "id": 5862,
+   "nome": "Valeri",
+   "squadra": "Parma",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5878": {
+   "id": 5878,
+   "nome": "Colpani",
+   "squadra": "Monza",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 9.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5882": {
+   "id": 5882,
+   "nome": "Mota",
+   "squadra": "Monza",
+   "ruolo": "A",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5946": {
+   "id": 5946,
+   "nome": "Sow",
+   "squadra": "Genoa",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5951": {
+   "id": 5951,
+   "nome": "Kolo Muani",
+   "squadra": "Juventus",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5994": {
+   "id": 5994,
+   "nome": "Ebosse",
+   "squadra": "Udinese",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5995": {
+   "id": 5995,
+   "nome": "De Ketelaere",
+   "squadra": "Atalanta",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "5998": {
+   "id": 5998,
+   "nome": "Zerbin",
+   "squadra": "Frosinone",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6005": {
+   "id": 6005,
+   "nome": "Ilkhan",
+   "squadra": "Torino",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6010": {
+   "id": 6010,
+   "nome": "Fazzini",
+   "squadra": "Cagliari",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6020": {
+   "id": 6020,
+   "nome": "Ellertsson",
+   "squadra": "Genoa",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6021": {
+   "id": 6021,
+   "nome": "Abankwah",
+   "squadra": "Udinese",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6042": {
+   "id": 6042,
+   "nome": "Lucumì",
+   "squadra": "Juventus",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6052": {
+   "id": 6052,
+   "nome": "Hojlund",
+   "squadra": "Napoli",
+   "ruolo": "A",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6054": {
+   "id": 6054,
+   "nome": "Moro N.",
+   "squadra": "Bologna",
+   "ruolo": "C",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6060": {
+   "id": 6060,
+   "nome": "Laurientè",
+   "squadra": "Sassuolo",
+   "ruolo": "A",
+   "voto": 6.5,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6151": {
+   "id": 6151,
+   "nome": "Perrone",
+   "squadra": "Como",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6164": {
+   "id": 6164,
+   "nome": "Vitinha O.",
+   "squadra": "Genoa",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6170": {
+   "id": 6170,
+   "nome": "Gineitis",
+   "squadra": "Torino",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 4.5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 4.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6190": {
+   "id": 6190,
+   "nome": "Pisilli",
+   "squadra": "Roma",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6191": {
+   "id": 6191,
+   "nome": "Belahyane",
+   "squadra": "Lazio",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6204": {
+   "id": 6204,
+   "nome": "Kvernadze",
+   "squadra": "Frosinone",
+   "ruolo": "A",
+   "voto": 7.5,
+   "fantavoto": 8.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7.5,
+     "fantavoto": 8.5
+    },
+    "italia": {
+     "voto": 7.5,
+     "fantavoto": 8.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "6207": {
+   "id": 6207,
+   "nome": "Almqvist",
+   "squadra": "Parma",
+   "ruolo": "C",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6212": {
+   "id": 6212,
+   "nome": "Zarraga",
+   "squadra": "Udinese",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6215": {
+   "id": 6215,
+   "nome": "Lucca",
+   "squadra": "Napoli",
+   "ruolo": "A",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6217": {
+   "id": 6217,
+   "nome": "Bisseck",
+   "squadra": "Inter",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6229": {
+   "id": 6229,
+   "nome": "Tourè E.",
+   "squadra": "Parma",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6238": {
+   "id": 6238,
+   "nome": "Oyono A.",
+   "squadra": "Frosinone",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6243": {
+   "id": 6243,
+   "nome": "Borrelli",
+   "squadra": "Cagliari",
+   "ruolo": "A",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6246": {
+   "id": 6246,
+   "nome": "Lipani",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6248": {
+   "id": 6248,
+   "nome": "Stankovic F.",
+   "squadra": "Venezia",
+   "ruolo": "P",
+   "voto": 6.5,
+   "fantavoto": 4.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 4.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 4.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 2,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6252": {
+   "id": 6252,
+   "nome": "Folorunsho",
+   "squadra": "Monza",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6294": {
+   "id": 6294,
+   "nome": "Ndour",
+   "squadra": "Fiorentina",
+   "ruolo": "C",
+   "voto": 4.5,
+   "fantavoto": 4.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6320": {
+   "id": 6320,
+   "nome": "Doekhi",
+   "squadra": "Lazio",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6397": {
+   "id": 6397,
+   "nome": "Ramos G.",
+   "squadra": "Milan",
+   "ruolo": "A",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 1
+   }
+  },
+  "6398": {
+   "id": 6398,
+   "nome": "Isaksen",
+   "squadra": "Lazio",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6415": {
+   "id": 6415,
+   "nome": "Palmisani",
+   "squadra": "Frosinone",
+   "ruolo": "P",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6435": {
+   "id": 6435,
+   "nome": "Krstovic",
+   "squadra": "Atalanta",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6462": {
+   "id": 6462,
+   "nome": "Okoye",
+   "squadra": "Udinese",
+   "ruolo": "P",
+   "voto": 6,
+   "fantavoto": 4,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 4
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 4
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 2,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6482": {
+   "id": 6482,
+   "nome": "Mandas",
+   "squadra": "Lazio",
+   "ruolo": "P",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6495": {
+   "id": 6495,
+   "nome": "Comuzzo",
+   "squadra": "Torino",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 9.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6496": {
+   "id": 6496,
+   "nome": "Bartesaghi",
+   "squadra": "Milan",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6506": {
+   "id": 6506,
+   "nome": "Fini",
+   "squadra": "Frosinone",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6531": {
+   "id": 6531,
+   "nome": "Jimenez A.",
+   "squadra": "Fiorentina",
+   "ruolo": "D",
+   "voto": 4.5,
+   "fantavoto": 4,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4.5,
+     "fantavoto": 4
+    },
+    "italia": {
+     "voto": 4.5,
+     "fantavoto": 4
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6549": {
+   "id": 6549,
+   "nome": "Pierotti",
+   "squadra": "Lecce",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6572": {
+   "id": 6572,
+   "nome": "Castro S.",
+   "squadra": "Roma",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6592": {
+   "id": 6592,
+   "nome": "Forson O.",
+   "squadra": "Monza",
+   "ruolo": "C",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6593": {
+   "id": 6593,
+   "nome": "Akinsanmiro",
+   "squadra": "Monza",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 7.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "6618": {
+   "id": 6618,
+   "nome": "Cissè A.",
+   "squadra": "Milan",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6631": {
+   "id": 6631,
+   "nome": "Ghilardi",
+   "squadra": "Roma",
+   "ruolo": "D",
+   "voto": 7,
+   "fantavoto": 7,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6632": {
+   "id": 6632,
+   "nome": "Gaspar K.",
+   "squadra": "Lecce",
+   "ruolo": "D",
+   "voto": 4,
+   "fantavoto": 4,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4.5,
+     "fantavoto": 4.5
+    },
+    "italia": {
+     "voto": 4,
+     "fantavoto": 4
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6638": {
+   "id": 6638,
+   "nome": "Marin R.",
+   "squadra": "Napoli",
+   "ruolo": "D",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6642": {
+   "id": 6642,
+   "nome": "Coco",
+   "squadra": "Torino",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6646": {
+   "id": 6646,
+   "nome": "Adams C.",
+   "squadra": "Torino",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6659": {
+   "id": 6659,
+   "nome": "Lucchesi",
+   "squadra": "Monza",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6660": {
+   "id": 6660,
+   "nome": "Marcandalli",
+   "squadra": "Genoa",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6662": {
+   "id": 6662,
+   "nome": "Corvi",
+   "squadra": "Parma",
+   "ruolo": "P",
+   "voto": 6,
+   "fantavoto": 4,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 4.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 4.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 2,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6664": {
+   "id": 6664,
+   "nome": "Delprato",
+   "squadra": "Parma",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6666": {
+   "id": 6666,
+   "nome": "Bernabè",
+   "squadra": "Parma",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6672": {
+   "id": 6672,
+   "nome": "Idzes",
+   "squadra": "Sassuolo",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6675": {
+   "id": 6675,
+   "nome": "Dovbyk",
+   "squadra": "Bologna",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6677": {
+   "id": 6677,
+   "nome": "Adzic",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 7.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "6680": {
+   "id": 6680,
+   "nome": "Karlstrom",
+   "squadra": "Udinese",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6684": {
+   "id": 6684,
+   "nome": "Ekkelenkamp",
+   "squadra": "Udinese",
+   "ruolo": "C",
+   "voto": 7.5,
+   "fantavoto": 10.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 10
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6727": {
+   "id": 6727,
+   "nome": "Couto",
+   "squadra": "Como",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6766": {
+   "id": 6766,
+   "nome": "Kelly L.",
+   "squadra": "Juventus",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6783": {
+   "id": 6783,
+   "nome": "Unai Gomez",
+   "squadra": "Udinese",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6814": {
+   "id": 6814,
+   "nome": "Norton-Cuffy",
+   "squadra": "Genoa",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6815": {
+   "id": 6815,
+   "nome": "Fadera",
+   "squadra": "Cagliari",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6821": {
+   "id": 6821,
+   "nome": "Hainaut",
+   "squadra": "Venezia",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6831": {
+   "id": 6831,
+   "nome": "Neres",
+   "squadra": "Napoli",
+   "ruolo": "A",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6867": {
+   "id": 6867,
+   "nome": "Valle",
+   "squadra": "Como",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 7
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6869": {
+   "id": 6869,
+   "nome": "Ramon",
+   "squadra": "Como",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6875": {
+   "id": 6875,
+   "nome": "Paz N.",
+   "squadra": "Como",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6884": {
+   "id": 6884,
+   "nome": "Conceicao",
+   "squadra": "Juventus",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6892": {
+   "id": 6892,
+   "nome": "Schingtienne",
+   "squadra": "Venezia",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6893": {
+   "id": 6893,
+   "nome": "Kempf",
+   "squadra": "Como",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6895": {
+   "id": 6895,
+   "nome": "Dominguez B.",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6898": {
+   "id": 6898,
+   "nome": "Keita M.",
+   "squadra": "Parma",
+   "ruolo": "C",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6904": {
+   "id": 6904,
+   "nome": "Yeboah J.",
+   "squadra": "Venezia",
+   "ruolo": "A",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6908": {
+   "id": 6908,
+   "nome": "Atta",
+   "squadra": "Fiorentina",
+   "ruolo": "C",
+   "voto": 4,
+   "fantavoto": 4,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4.5,
+     "fantavoto": 4.5
+    },
+    "italia": {
+     "voto": 4.5,
+     "fantavoto": 4.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6917": {
+   "id": 6917,
+   "nome": "Masini",
+   "squadra": "Frosinone",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6956": {
+   "id": 6956,
+   "nome": "Solet",
+   "squadra": "Udinese",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6966": {
+   "id": 6966,
+   "nome": "Butez",
+   "squadra": "Como",
+   "ruolo": "P",
+   "voto": 5.5,
+   "fantavoto": 4.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 1,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6967": {
+   "id": 6967,
+   "nome": "Diao",
+   "squadra": "Como",
+   "ruolo": "A",
+   "voto": 6.5,
+   "fantavoto": 7.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "6989": {
+   "id": 6989,
+   "nome": "Tiago Gabriel",
+   "squadra": "Lecce",
+   "ruolo": "D",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6990": {
+   "id": 6990,
+   "nome": "Veiga D.",
+   "squadra": "Lecce",
+   "ruolo": "D",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "6994": {
+   "id": 6994,
+   "nome": "Perez K.",
+   "squadra": "Venezia",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7001": {
+   "id": 7001,
+   "nome": "N'Dri",
+   "squadra": "Lecce",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7012": {
+   "id": 7012,
+   "nome": "Provstgaard",
+   "squadra": "Lazio",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7014": {
+   "id": 7014,
+   "nome": "Smolcic I.",
+   "squadra": "Como",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7017": {
+   "id": 7017,
+   "nome": "Douvikas",
+   "squadra": "Como",
+   "ruolo": "A",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7.5,
+     "fantavoto": 10.5
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7023": {
+   "id": 7023,
+   "nome": "Pellegrino M.",
+   "squadra": "Fiorentina",
+   "ruolo": "A",
+   "voto": 4.5,
+   "fantavoto": 4.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 4.5,
+     "fantavoto": 4.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7036": {
+   "id": 7036,
+   "nome": "Bakola",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7060": {
+   "id": 7060,
+   "nome": "Cacciamani",
+   "squadra": "Torino",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 7.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "7069": {
+   "id": 7069,
+   "nome": "Fortini",
+   "squadra": "Torino",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7070": {
+   "id": 7070,
+   "nome": "Sucic P.",
+   "squadra": "Inter",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7071": {
+   "id": 7071,
+   "nome": "Esposito F.P.",
+   "squadra": "Inter",
+   "ruolo": "A",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7078": {
+   "id": 7078,
+   "nome": "Mastantuono",
+   "squadra": "Fiorentina",
+   "ruolo": "C",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7120": {
+   "id": 7120,
+   "nome": "Lang",
+   "squadra": "Napoli",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7126": {
+   "id": 7126,
+   "nome": "Baturina",
+   "squadra": "Como",
+   "ruolo": "C",
+   "voto": 7.5,
+   "fantavoto": 10.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7.5,
+     "fantavoto": 10.5
+    },
+    "italia": {
+     "voto": 7.5,
+     "fantavoto": 10.5
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 1
+   }
+  },
+  "7131": {
+   "id": 7131,
+   "nome": "Floriani Mussolini",
+   "squadra": "Lazio",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7138": {
+   "id": 7138,
+   "nome": "Ordonez C.",
+   "squadra": "Parma",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7175": {
+   "id": 7175,
+   "nome": "Joao Mario",
+   "squadra": "Fiorentina",
+   "ruolo": "D",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7181": {
+   "id": 7181,
+   "nome": "Wesley",
+   "squadra": "Roma",
+   "ruolo": "D",
+   "voto": 7,
+   "fantavoto": 8,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 8
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 8
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "7182": {
+   "id": 7182,
+   "nome": "Ndaba",
+   "squadra": "Lecce",
+   "ruolo": "D",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7183": {
+   "id": 7183,
+   "nome": "Aboukhlal",
+   "squadra": "Torino",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7198": {
+   "id": 7198,
+   "nome": "Piotrowski",
+   "squadra": "Udinese",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 9.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 10
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7203": {
+   "id": 7203,
+   "nome": "Jashari",
+   "squadra": "Milan",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7208": {
+   "id": 7208,
+   "nome": "Miller L.",
+   "squadra": "Udinese",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7212": {
+   "id": 7212,
+   "nome": "Heggem",
+   "squadra": "Bologna",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7235": {
+   "id": 7235,
+   "nome": "Troilo",
+   "squadra": "Parma",
+   "ruolo": "D",
+   "voto": 5,
+   "fantavoto": 4.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 4.5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 4.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7238": {
+   "id": 7238,
+   "nome": "Kouadio",
+   "squadra": "Monza",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7240": {
+   "id": 7240,
+   "nome": "Siebert",
+   "squadra": "Lecce",
+   "ruolo": "D",
+   "voto": 4.5,
+   "fantavoto": 4.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 4.5,
+     "fantavoto": 4.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7248": {
+   "id": 7248,
+   "nome": "Gorter",
+   "squadra": "Lecce",
+   "ruolo": "C",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4.5,
+     "fantavoto": 4.5
+    },
+    "italia": {
+     "voto": 4.5,
+     "fantavoto": 4.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7252": {
+   "id": 7252,
+   "nome": "Stulic",
+   "squadra": "Lecce",
+   "ruolo": "A",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7253": {
+   "id": 7253,
+   "nome": "Bella-Kotchap",
+   "squadra": "Venezia",
+   "ruolo": "D",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7255": {
+   "id": 7255,
+   "nome": "Britschgi",
+   "squadra": "Parma",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7268": {
+   "id": 7268,
+   "nome": "Rodriguez Ju.",
+   "squadra": "Cagliari",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7272": {
+   "id": 7272,
+   "nome": "Gueye",
+   "squadra": "Udinese",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7274": {
+   "id": 7274,
+   "nome": "Zè Pedro",
+   "squadra": "Cagliari",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7276": {
+   "id": 7276,
+   "nome": "Cremaschi",
+   "squadra": "Parma",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7294": {
+   "id": 7294,
+   "nome": "Valdepenas",
+   "squadra": "Fiorentina",
+   "ruolo": "D",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7311": {
+   "id": 7311,
+   "nome": "Romano",
+   "squadra": "Cagliari",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7312": {
+   "id": 7312,
+   "nome": "Arizala",
+   "squadra": "Udinese",
+   "ruolo": "D",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7314": {
+   "id": 7314,
+   "nome": "Taylor K.",
+   "squadra": "Lazio",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7322": {
+   "id": 7322,
+   "nome": "Ngom",
+   "squadra": "Lecce",
+   "ruolo": "C",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7326": {
+   "id": 7326,
+   "nome": "Helland",
+   "squadra": "Bologna",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7329": {
+   "id": 7329,
+   "nome": "Obrador",
+   "squadra": "Sassuolo",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7332": {
+   "id": 7332,
+   "nome": "Bijlow",
+   "squadra": "Genoa",
+   "ruolo": "P",
+   "voto": 5,
+   "fantavoto": 4,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 4
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 4
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 1,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7341": {
+   "id": 7341,
+   "nome": "Amorim",
+   "squadra": "Genoa",
+   "ruolo": "C",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7342": {
+   "id": 7342,
+   "nome": "Elphege",
+   "squadra": "Parma",
+   "ruolo": "A",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7347": {
+   "id": 7347,
+   "nome": "Bowie",
+   "squadra": "Sassuolo",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7349": {
+   "id": 7349,
+   "nome": "Kulenovic",
+   "squadra": "Torino",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7351": {
+   "id": 7351,
+   "nome": "Santos A.",
+   "squadra": "Napoli",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7374": {
+   "id": 7374,
+   "nome": "Mendy P.",
+   "squadra": "Cagliari",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7409": {
+   "id": 7409,
+   "nome": "Meichtry",
+   "squadra": "Genoa",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7410": {
+   "id": 7410,
+   "nome": "Viery",
+   "squadra": "Fiorentina",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7412": {
+   "id": 7412,
+   "nome": "Milla",
+   "squadra": "Como",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 7,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 7
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 7
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7414": {
+   "id": 7414,
+   "nome": "Kaiki",
+   "squadra": "Como",
+   "ruolo": "D",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7436": {
+   "id": 7436,
+   "nome": "Alajbegovic",
+   "squadra": "Juventus",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7449": {
+   "id": 7449,
+   "nome": "Rrahmani Al.",
+   "squadra": "Venezia",
+   "ruolo": "A",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7457": {
+   "id": 7457,
+   "nome": "Mascardi",
+   "squadra": "Torino",
+   "ruolo": "P",
+   "voto": 5.5,
+   "fantavoto": 3.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 4
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 4
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 2,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7464": {
+   "id": 7464,
+   "nome": "Oulai",
+   "squadra": "Fiorentina",
+   "ruolo": "C",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7467": {
+   "id": 7467,
+   "nome": "Calvani",
+   "squadra": "Frosinone",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7469": {
+   "id": 7469,
+   "nome": "Bracaglia",
+   "squadra": "Frosinone",
+   "ruolo": "D",
+   "voto": 7.5,
+   "fantavoto": 11,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 8,
+     "fantavoto": 11.5
+    },
+    "italia": {
+     "voto": 7.5,
+     "fantavoto": 11
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "7472": {
+   "id": 7472,
+   "nome": "Calò",
+   "squadra": "Frosinone",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 8,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 8
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 8
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "7478": {
+   "id": 7478,
+   "nome": "Franjic",
+   "squadra": "Venezia",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7482": {
+   "id": 7482,
+   "nome": "Lauberbach",
+   "squadra": "Venezia",
+   "ruolo": "A",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7483": {
+   "id": 7483,
+   "nome": "Alhassane",
+   "squadra": "Bologna",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7484": {
+   "id": 7484,
+   "nome": "Adams A.",
+   "squadra": "Venezia",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7485": {
+   "id": 7485,
+   "nome": "Mangas",
+   "squadra": "Monza",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 7.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "7523": {
+   "id": 7523,
+   "nome": "Varela G.",
+   "squadra": "Monza",
+   "ruolo": "A",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 7,
+     "fantavoto": 10
+    },
+    "italia": {
+     "voto": 7,
+     "fantavoto": 10
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7526": {
+   "id": 7526,
+   "nome": "Comert",
+   "squadra": "Torino",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7528": {
+   "id": 7528,
+   "nome": "Amondarain",
+   "squadra": "Bologna",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7532": {
+   "id": 7532,
+   "nome": "Kofler",
+   "squadra": "Cagliari",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7535": {
+   "id": 7535,
+   "nome": "Fitz-Jim",
+   "squadra": "Torino",
+   "ruolo": "C",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7538": {
+   "id": 7538,
+   "nome": "Halhal",
+   "squadra": "Venezia",
+   "ruolo": "D",
+   "voto": 5,
+   "fantavoto": 3,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 3
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 3
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 1,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7547": {
+   "id": 7547,
+   "nome": "Kevin Carlos",
+   "squadra": "Cagliari",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7550": {
+   "id": 7550,
+   "nome": "Grillitsch",
+   "squadra": "Frosinone",
+   "ruolo": "C",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7551": {
+   "id": 7551,
+   "nome": "Schmid",
+   "squadra": "Frosinone",
+   "ruolo": "C",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7554": {
+   "id": 7554,
+   "nome": "Romero D.",
+   "squadra": "Parma",
+   "ruolo": "A",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7556": {
+   "id": 7556,
+   "nome": "Mora",
+   "squadra": "Roma",
+   "ruolo": "C",
+   "voto": 7,
+   "fantavoto": 10,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 9.5
+    }
+   },
+   "bonus": {
+    "gol": 1,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7561": {
+   "id": 7561,
+   "nome": "Lontani",
+   "squadra": "Parma",
+   "ruolo": "A",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7564": {
+   "id": 7564,
+   "nome": "Leysen F.",
+   "squadra": "Sassuolo",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 7.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 7.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 1,
+    "migliorInCampo": 0
+   }
+  },
+  "7573": {
+   "id": 7573,
+   "nome": "Cinquegrano",
+   "squadra": "Sassuolo",
+   "ruolo": "D",
+   "voto": 6,
+   "fantavoto": 6,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7574": {
+   "id": 7574,
+   "nome": "Foe Ondoa",
+   "squadra": "Monza",
+   "ruolo": "C",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7575": {
+   "id": 7575,
+   "nome": "Mout",
+   "squadra": "Monza",
+   "ruolo": "C",
+   "voto": 5,
+   "fantavoto": 5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5,
+     "fantavoto": 5
+    },
+    "italia": {
+     "voto": 5,
+     "fantavoto": 5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7581": {
+   "id": 7581,
+   "nome": "Konate A.",
+   "squadra": "Parma",
+   "ruolo": "C",
+   "voto": 4.5,
+   "fantavoto": 4,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 4,
+     "fantavoto": 3.5
+    },
+    "italia": {
+     "voto": 4.5,
+     "fantavoto": 4
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7599": {
+   "id": 7599,
+   "nome": "Lulli",
+   "squadra": "Roma",
+   "ruolo": "D",
+   "voto": 6.5,
+   "fantavoto": 6.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    },
+    "italia": {
+     "voto": 6.5,
+     "fantavoto": 6.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7600": {
+   "id": 7600,
+   "nome": "Osmajic",
+   "squadra": "Genoa",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7602": {
+   "id": 7602,
+   "nome": "Fatah",
+   "squadra": "Lecce",
+   "ruolo": "A",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": 6,
+     "fantavoto": 6
+    },
+    "italia": {
+     "voto": 6,
+     "fantavoto": 6
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7610": {
+   "id": 7610,
+   "nome": "Birligea",
+   "squadra": "Frosinone",
+   "ruolo": "A",
+   "voto": null,
+   "fantavoto": null,
+   "senzaVoto": true,
+   "subentrato": true,
+   "altreFonti": {
+    "statistico": {
+     "voto": null,
+     "fantavoto": null
+    },
+    "italia": {
+     "voto": null,
+     "fantavoto": null
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  },
+  "7615": {
+   "id": 7615,
+   "nome": "Drobnic",
+   "squadra": "Parma",
+   "ruolo": "D",
+   "voto": 5.5,
+   "fantavoto": 5.5,
+   "senzaVoto": false,
+   "subentrato": false,
+   "altreFonti": {
+    "statistico": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    },
+    "italia": {
+     "voto": 5.5,
+     "fantavoto": 5.5
+    }
+   },
+   "bonus": {
+    "gol": 0,
+    "golSubiti": 0,
+    "autogol": 0,
+    "rigoriSegnati": 0,
+    "rigoriSbagliati": 0,
+    "rigoriParati": 0,
+    "assist": 0,
+    "migliorInCampo": 0
+   }
+  }
+ }
+}

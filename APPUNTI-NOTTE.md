@@ -8,9 +8,9 @@ A fine notte va riassunto in CLAUDE.md e cancellato.
 - [x] 1. QA via click UI reali — FATTO, 1 bug trovato (bersagli da dito) e corretto
 - [x] 2. Casi limite — FATTO, tutti gestiti senza errori
 - [x] 3. netlify.toml — FATTO
-- [ ] 4. Ricerca fonti dati + fattibilità API + costi
+- [x] 4. Ricerca fonti dati — FATTO (vedi sotto)
 - [ ] 5. Esplorazione grafica su branch separato
-- [ ] 6. Scaffolding scraper voti
+- [x] 6. Scaffolding scraper voti — FATTO e validato su G1+G2
 - [ ] 7. Sanity check fantamedia
 - [ ] 8. Feature e fix (continuo)
 - [ ] 9. Verifica con subagent
@@ -46,3 +46,31 @@ formazione da copiare).
 **netlify.toml**: no-cache su sw.js (con Service-Worker-Allowed), index.html, manifest e dati/*.
 Il rischio evitato e il piu insidioso delle PWA: un CDN che serve un service worker vecchio e
 un'app che non si aggiorna mai piu, senza che l'utente possa accorgersene.
+
+### 01:00 — punti 4 e 6: fonti dati e scraper voti
+
+**Cosa e raggiungibile senza login** (sondato lato server):
+
+| fonte | esito |
+|---|---|
+| voti di giornata | pubblica, servita dal server, 319 giocatori — USABILE |
+| statistiche stagionali | pubblica, 592 giocatori — la fonte per le medie voto reali |
+| infortunati | pubblica, ma NON usa i link con id: struttura da capire |
+| squalificati | pubblica, 45 KB, nessuna tabella: forse vuota o caricata via JS |
+| calendario | pubblica, ma mostra solo la giornata corrente |
+| API /api/v1/Excel/votes | 401, serve account. NON usata: non serve |
+
+**Scraper voti fatto** (`tools/fetch-voti.mjs`), validato su G1 e G2: 293 voti per giornata,
+media 5.98 e 5.96 — esattamente il valore atteso per il calcio. Incrocio col listone: 95-98%
+agganciati, ZERO discordanze di ruolo.
+
+Due trappole trovate e disinnescate, nessuna delle quali dava errore:
+
+1. **Tre colonne di voto, non una.** Il sito pubblica Redazione Fantacalcio, Voto Statistico e
+   Voto Italia affiancate. La nostra lega usa la PRIMA. Prendere la colonna sbagliata non
+   avrebbe dato alcun errore, solo uno storico interamente falso. Lo script ora verifica
+   l'ordine leggendo le icone di intestazione e si ferma se cambia.
+2. **"Senza voto" e codificato come 55.** Non come casella vuota. Preso per buono dava una media
+   di giornata di 9.98, impossibile. Verificato che tutte e 28 le righe con 55 portano l'icona
+   "Subentrato": sono entrati troppo tardi per essere giudicati. E stata la validazione sulla
+   media a intercettarlo — senza, sarebbe passato in silenzio.
