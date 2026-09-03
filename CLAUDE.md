@@ -1,8 +1,8 @@
 # App Formazione — Diario di bordo
 
-**Stato: v0.1 (03/09/2026).** Fasi 0 e 1 chiuse. L'app schiera, sceglie il modulo e funziona
-offline. Il fetcher gira a mano ma **non è ancora schedulato in cloud**: manca il repo su GitHub.
-Traguardo: **4ª giornata**.
+**Stato: v0.2 (04/09/2026).** Fasi 0, 1 e 2 chiuse, Fase 3 avviata. L'app schiera, sceglie il
+modulo, funziona offline ed è online su Netlify; la GitHub Action scarica probabili e voti da
+sola. Traguardo: **4ª giornata**.
 
 Progetto separato dall'app asta, che vive nella cartella superiore. Quella serve a *comprare* ed è
 finita lunedì; questa serve a *schierare* e deve reggere 38 giornate.
@@ -15,7 +15,10 @@ finita lunedì; questa serve a *schierare* e deve reggere 38 giornate.
   la cartella è servita via http/https.
 - `tools/fetch-probabili.mjs` — lo scraper. **Gira solo in CI, mai nel browser.**
 - `dati/probabili.json` — output dello scraper, letto dall'app con fetch same-origin.
-- `.github/workflows/dati.yml` — il cron. Scritto, **mai eseguito**: serve il repo remoto.
+- `.github/workflows/dati.yml` — il cron: probabili 5 volte a settimana, voti il martedì sera.
+- `tools/fetch-voti.mjs` — scraper dei voti a giornata conclusa.
+- `tools/taratura.mjs` — confronta le stime del modello con i fantavoti reali.
+- `tools/controlla.mjs` — controllo di integrità, **da lanciare dopo ogni modifica**.
 
 ## La decisione che regge tutto: fetcher fuori dall'app
 
@@ -185,16 +188,55 @@ Valgono identiche qui, e sono state imparate sbagliando:
 - Attenzione a `node -e` dentro bash: i backtick nei template literal vengono interpretati dalla
   shell. Per le patch, scrivere lo script su file ed eseguirlo.
 
+## Cosa è arrivato con la notte del 03→04/09
+
+**Online.** Repo su GitHub (`Nicolodvt/Formazione-fantacalcio`) e sito Netlify collegato, con
+deploy automatico a ogni push. Service worker verificato `activated` sull'origine vera.
+
+**Bersagli da dito.** Misurando l'area toccabile reale con `elementFromPoint` — non la dimensione
+visiva — il pulsante impostazioni risultava 30×28 px contro i 44×44 della linea guida. Corretto
+estendendo l'area oltre il bordo visibile con uno pseudo-elemento: tutto fra 44 e 46 px, testata
+cresciuta di 6 px. Nessun controllo di sintassi l'avrebbe mai trovato.
+
+**Scraper dei voti** (`tools/fetch-voti.mjs`), validato su G1 e G2. Due trappole disinnescate,
+nessuna delle quali dava errore:
+- Il sito pubblica **tre voti affiancati** (Redazione Fantacalcio, Statistico, Italia). La nostra
+  lega usa il primo. Sbagliare colonna non avrebbe dato errore, solo uno storico falso: ora
+  l'ordine viene verificato dalle icone di intestazione e lo script si ferma se cambia.
+- **"Senza voto" è codificato con la sentinella 55**, non con una casella vuota. Preso per buono
+  dava una media di giornata di 9.98. L'ha intercettato il controllo sulla media attesa.
+
+**Il modello è tarato bene.** `tools/taratura.mjs` estrae le formule da `index.html` (non le
+ricopia, così non possono divergere) e le confronta con i fantavoti reali di G1+G2 su 331
+giocatori: media stimata **6.13** contro **6.14** reale, scarto massimo per reparto 0.17 sui
+portieri. Le costanti `BONUS_MAX`, scelte a intuito, reggono al confronto col campo.
+Sull'**ordinamento** due giornate non dicono nulla (Spearman 0.32) e le costanti **non** sono
+state ritoccate: con n=2 si inseguirebbe il rumore. Da rifare dopo G5 e G10.
+
+**`netlify.toml`** con no-cache su `sw.js`, `index.html`, manifest e `dati/*`. Evita il guaio più
+insidioso delle PWA: un CDN che serve un service worker vecchio e un'app che non si aggiorna mai
+più, senza che l'utente possa accorgersene.
+
+**Casi limite**, tutti retti senza errori JavaScript: rosa vuota, un solo giocatore, zero
+portieri, undici esatti senza panchina, nessun attaccante. Due comportamenti emersi da soli dalla
+simulazione: senza panchina l'app avvisa che il modificatore "salta il 25% delle volte", e senza
+attaccanti l'ottimizzatore mette in cima 5-4-1 e 4-5-1, cioè i moduli che sprecano meno caselle.
+
+**Tre varianti grafiche** sul branch `grafica-varianti` (mai fuso in `main`), con
+`confronto-grafica.html` che le mostra affiancate a 375px come app vere e interattive: A "Campo
+vero", B "Chiara", C "Densa". I colori di ruolo non cambiano in nessuna. Da decidere.
+
 ## Da fare
 
-1. **Mettere il repo su GitHub e collegare Netlify** (sito separato da quello dell'asta). Finché
-   non è fatto, `dati.yml` non gira: c'è ma non è mai stato eseguito, e i dati vanno aggiornati a
-   mano con `node tools/fetch-probabili.mjs`.
-2. Fase 3 — voti a giornata conclusa, storico, medie voto misurate al posto delle stimate.
-   L'endpoint vuole un account fantacalcio.it: la password va messa come GitHub Secret
-   dall'utente, non passa da qui.
-3. Fase 4 — mercato di riparazione e svincoli.
-4. Provare installazione e offline **sul telefono vero**.
+
+1. **Decidere sulla grafica**: aprire `confronto-grafica.html` sul branch `grafica-varianti` e
+   scegliere (o scartare tutto: `main` è intatto). Le varianti sono mescolabili.
+2. **Verificare che la Action giri davvero.** Il primo giro automatico delle probabili è il
+   venerdì alle 18:00; i voti il martedì alle 21:00. Si può forzare da Actions → Run workflow.
+3. Fase 3 — usare i voti scaricati dentro l'app: storico delle giornate, punteggio calcolato,
+   e medie voto misurate che sostituiscono progressivamente quelle stimate.
+4. Fase 4 — mercato di riparazione e svincoli.
+5. Provare installazione e offline **sul telefono vero**.
 
 **Aperto, non bloccante:** il regolamento della lega (moduli ammessi, numero di cambi, soglie del
 modificatore). Si è partiti con i default: sono costanti in testa al file, sotto *COSTANTI DI
