@@ -72,14 +72,23 @@
   .status-strip .eta{ color:var(--muted); }
   .status-strip .sp{ flex:1; }
   .icon-btn{ background:var(--surface2); border:1px solid var(--line); color:var(--text-dim);
-    border-radius:var(--radius-xs); padding:5px 9px; font-size:12px; }
+    border-radius:var(--radius-xs); padding:5px 9px; font-size:12px;
+    position:relative; min-width:40px; min-height:36px; }
   .icon-btn:active{ background:var(--surface3); }
+  /* Bersagli da dito. I comandi in testata restano visivamente piccoli per non rubare spazio
+     verticale, ma l area toccabile viene estesa oltre il bordo visibile con uno pseudo-elemento:
+     il dito trova i suoi ~44px, la testata non cresce di un pixel. L estensione orizzontale e
+     tenuta sotto al gap fra i pulsanti (10px) cosi le aree non si sovrappongono. */
+  .icon-btn::after{ content:""; position:absolute; inset:-8px -2px; }
 
   .tabs{ display:flex; gap:6px; padding:2px 10px 9px; }
   .tab{ flex:1; background:var(--surface); border:1px solid var(--line); color:var(--text-dim);
     border-radius:var(--radius-sm); padding:9px 4px; font-size:13px; font-weight:600;
     background-image:var(--glass); transition:all .13s var(--ease); }
   .tab.on{ background:var(--accent-soft); border-color:var(--accent-dark); color:var(--accent); }
+  .tab{ position:relative; }
+  /* Solo in verticale: in orizzontale i tab sono gia larghi e si sfiorerebbero fra loro. */
+  .tab::after{ content:""; position:absolute; inset:-5px 0; }
 
   .warnbar{ background:rgba(240,99,95,.14); border-top:1px solid rgba(240,99,95,.3);
     border-bottom:1px solid rgba(240,99,95,.3); color:#FFC9C7; font-size:12px;
