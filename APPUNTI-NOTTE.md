@@ -23,7 +23,7 @@ Reti di sicurezza armate: cron one-shot 04:03 (reset limiti utente) + watchdog o
 Stato git di partenza: ff4b028 "Campo elastico, avviso dati vecchi, diario aggiornato".
 Remote su origin/main, Netlify pubblica e verificata.
 
-### 00:35 — punti 1, 2, 3 chiusi
+### 23:59 — punti 1, 2, 3 chiusi
 
 **QA interfaccia.** Il pannello browser resta nascosto tutta la notte, quindi i click veri del
 mouse vanno in timeout. Aggirato cosi: il wiring verificato con click DOM sui listener, e la parte
@@ -47,7 +47,7 @@ formazione da copiare).
 Il rischio evitato e il piu insidioso delle PWA: un CDN che serve un service worker vecchio e
 un'app che non si aggiorna mai piu, senza che l'utente possa accorgersene.
 
-### 01:00 — punti 4 e 6: fonti dati e scraper voti
+### 00:05 — punti 4 e 6: fonti dati e scraper voti
 
 **Cosa e raggiungibile senza login** (sondato lato server):
 
@@ -75,7 +75,7 @@ Due trappole trovate e disinnescate, nessuna delle quali dava errore:
    "Subentrato": sono entrati troppo tardi per essere giudicati. E stata la validazione sulla
    media a intercettarlo — senza, sarebbe passato in silenzio.
 
-### 01:15 — punto 7: taratura sui dati veri
+### 00:15 — punto 7: taratura sui dati veri
 
 `tools/taratura.mjs` estrae le formule DA index.html (non le ricopia, cosi le due versioni non
 possono divergere) e le confronta con i fantavoti realmente ottenuti in G1+G2. 331 giocatori.
