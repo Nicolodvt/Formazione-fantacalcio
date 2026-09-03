@@ -9,7 +9,7 @@ A fine notte va riassunto in CLAUDE.md e cancellato.
 - [x] 2. Casi limite — FATTO, tutti gestiti senza errori
 - [x] 3. netlify.toml — FATTO
 - [x] 4. Ricerca fonti dati — FATTO (vedi sotto)
-- [ ] 5. Esplorazione grafica su branch separato
+- [x] 5. Esplorazione grafica — FATTO, branch grafica-varianti, 3 varianti + pagina di confronto
 - [x] 6. Scaffolding scraper voti — FATTO e validato su G1+G2
 - [x] 7. Sanity check fantamedia — FATTO: scala confermata dai dati veri
 - [ ] 8. Feature e fix (continuo)
@@ -98,3 +98,27 @@ stimato 7.57 e reale 15.50 vuol dire doppietta, De Gea stimato 4.64 e reale 1.75
 gol subiti. NON ho toccato le costanti sulla base di due partite: sarebbe inseguire il rumore.
 
 Da rifare dopo G5 e G10, quando il campione comincia a dire qualcosa sull'ordinamento.
+
+### 00:40 — punto 5: tre varianti grafiche
+
+**Sul Figma.** L'utente ha chiesto di rifare la grafica col connettore Figma. Il CLAUDE.md
+dell'app asta documenta pero che era gia stato provato e scartato su questo progetto: serve a
+implementare un design che esiste gia come file Figma, non a inventarne uno partendo da
+"rendilo bello". Con l'utente che dorme e nessuna direzione data (palette, riferimenti), un
+redesign totale alla cieca sarebbe stato lavoro da buttare — e l'intervento a raggio piu ampio
+di tutti. Quindi niente generazione cieca: tre direzioni concrete, reversibili, su branch.
+
+Branch `grafica-varianti` (main MAI toccato), quattro app affiancate in
+`confronto-grafica.html` a 375px, interattive e non immagini:
+
+- **A "Campo vero"** — il campo diventa un campo (righe d'erba, bordo, cerchio di centrocampo);
+  le caselle diventano tessere chiare che si staccano, invece di riquadri scuri su verde scuro.
+- **B "Chiara"** — tema chiaro. Motivazione pratica, non estetica: la formazione si fa il sabato
+  mattina e uno schermo scuro al sole e uno specchio. Il campo resta verde.
+- **C "Densa"** — resta scura ma si stringe; KPI in una riga sola invece di tre scatole;
+  ~2 giocatori in piu per schermata.
+
+I colori di ruolo non cambiano in nessuna (nella B solo scuriti per il fondo chiaro).
+
+Le varianti sono mescolabili: toccano regole diverse, quindi il campo della A puo convivere
+con la densita della C.
