@@ -1,0 +1,55 @@
+name: Aggiorna probabili formazioni
+
+# Le probabili si assestano tra giovedi e il giorno della partita, quindi si passa piu volte
+# invece di fidarsi di una lettura sola. Gli orari sono in UTC: d'estate l'Italia e UTC+2.
+#   giovedi e venerdi 18:00 CEST  -> quando escono le prime probabili serie
+#   sabato 09:00 e 12:00 CEST     -> aggiornamenti prima delle partite del pomeriggio
+#   domenica 09:00 CEST           -> ultimo giro prima del grosso della giornata
+# Sono cinque letture a settimana: abbastanza per non arrivare con dati vecchi, poche
+# abbastanza da non pesare su fantacalcio.it.
+
+on:
+  schedule:
+    - cron: '0 16 * * 4,5'
+    - cron: '0 7,10 * * 6'
+    - cron: '0 7 * * 0'
+  workflow_dispatch:        # per lanciarlo a mano quando serve
+
+# Serve a scrivere il JSON aggiornato dentro il repo.
+permissions:
+  contents: write
+
+# Se parte una seconda esecuzione mentre la prima e' in corso, la vecchia si annulla:
+# due commit sullo stesso file nello stesso minuto si pestano i piedi.
+concurrency:
+  group: dati-probabili
+  cancel-in-progress: true
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Lo scraper non ha dipendenze: niente npm install, niente lockfile che invecchia.
+      # Se la validazione fallisce esce con codice 1 e il workflow diventa rosso SENZA aver
+      # scritto niente: si tiene il file vecchio, che e' sempre meglio di uno rotto.
+      - name: Scarica le probabili
+        run: node "tools/fetch-probabili.mjs"
+
+      - name: Committa se e cambiato qualcosa
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- dati/probabili.json; then
+            echo "Nessuna variazione: niente commit."
+            exit 0
+          fi
+          GIORNATA=$(node -e "console.log(require('./dati/probabili.json').giornata)")
+          git add dati/probabili.json
+          git commit -m "Probabili giornata ${GIORNATA} — $(date -u '+%d/%m %H:%M UTC')"
+          git push

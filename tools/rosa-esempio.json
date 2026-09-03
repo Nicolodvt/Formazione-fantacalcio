@@ -1,0 +1,309 @@
+{
+ "schema": 1,
+ "generato": "2026-09-03T19:49:58.383Z",
+ "fonteDati": "prova",
+ "lega": {
+  "squadre": 8,
+  "creditiIniziali": 500,
+  "rosaPrevista": {
+   "P": 3,
+   "D": 8,
+   "C": 8,
+   "A": 6
+  },
+  "modificatoreDifesa": true
+ },
+ "mia": {
+  "squadra": "Paradiso della Brugola",
+  "rosaCompleta": true,
+  "spesoTotale": 500,
+  "creditiResidui": 0,
+  "modificatoreDifesaStimato": null,
+  "rosa": {
+   "P": [
+    {
+     "id": 5841,
+     "nome": "Svilar",
+     "squadra": "Roma",
+     "ruolo": "P",
+     "prezzoPagato": 21,
+     "quotazione": 19,
+     "fvm": 85,
+     "titolaritaPct": 100,
+     "zona": null
+    },
+    {
+     "id": 572,
+     "nome": "Meret",
+     "squadra": "Napoli",
+     "ruolo": "P",
+     "prezzoPagato": 12,
+     "quotazione": 11,
+     "fvm": 48,
+     "titolaritaPct": 100,
+     "zona": null
+    },
+    {
+     "id": 4236,
+     "nome": "Muric",
+     "squadra": "Sassuolo",
+     "ruolo": "P",
+     "prezzoPagato": 8,
+     "quotazione": 7,
+     "fvm": 15,
+     "titolaritaPct": 97,
+     "zona": null
+    }
+   ],
+   "D": [
+    {
+     "id": 7181,
+     "nome": "Wesley",
+     "squadra": "Roma",
+     "ruolo": "D",
+     "prezzoPagato": 20,
+     "quotazione": 18,
+     "fvm": 87,
+     "titolaritaPct": 100,
+     "zona": "Esterno"
+    },
+    {
+     "id": 4998,
+     "nome": "Molina N.",
+     "squadra": "Roma",
+     "ruolo": "D",
+     "prezzoPagato": 20,
+     "quotazione": 18,
+     "fvm": 78,
+     "titolaritaPct": 100,
+     "zona": "Esterno"
+    },
+    {
+     "id": 2788,
+     "nome": "Bremer",
+     "squadra": "Juventus",
+     "ruolo": "D",
+     "prezzoPagato": 18,
+     "quotazione": 16,
+     "fvm": 60,
+     "titolaritaPct": 100,
+     "zona": "Centrale"
+    },
+    {
+     "id": 2296,
+     "nome": "Mancini",
+     "squadra": "Roma",
+     "ruolo": "D",
+     "prezzoPagato": 18,
+     "quotazione": 16,
+     "fvm": 50,
+     "titolaritaPct": 100,
+     "zona": "Centrale"
+    },
+    {
+     "id": 6956,
+     "nome": "Solet",
+     "squadra": "Udinese",
+     "ruolo": "D",
+     "prezzoPagato": 15,
+     "quotazione": 13,
+     "fvm": 46,
+     "titolaritaPct": 100,
+     "zona": "Centrale"
+    },
+    {
+     "id": 4317,
+     "nome": "N'Dicka",
+     "squadra": "Roma",
+     "ruolo": "D",
+     "prezzoPagato": 15,
+     "quotazione": 13,
+     "fvm": 42,
+     "titolaritaPct": 100,
+     "zona": "Centrale"
+    },
+    {
+     "id": 5514,
+     "nome": "Vasquez",
+     "squadra": "Genoa",
+     "ruolo": "D",
+     "prezzoPagato": 10,
+     "quotazione": 9,
+     "fvm": 30,
+     "titolaritaPct": 100,
+     "zona": "Terzino sx"
+    },
+    {
+     "id": 5620,
+     "nome": "Tavares N.",
+     "squadra": "Lazio",
+     "ruolo": "D",
+     "prezzoPagato": 8,
+     "quotazione": 7,
+     "fvm": 25,
+     "titolaritaPct": null,
+     "zona": "Esterno"
+    }
+   ],
+   "C": [
+    {
+     "id": 2194,
+     "nome": "Calhanoglu",
+     "squadra": "Inter",
+     "ruolo": "C",
+     "prezzoPagato": 26,
+     "quotazione": 28,
+     "fvm": 243,
+     "titolaritaPct": 100,
+     "zona": "Centrale"
+    },
+    {
+     "id": 6908,
+     "nome": "Atta",
+     "squadra": "Fiorentina",
+     "ruolo": "C",
+     "prezzoPagato": 14,
+     "quotazione": 15,
+     "fvm": 78,
+     "titolaritaPct": 100,
+     "zona": "Trequartista"
+    },
+    {
+     "id": 5687,
+     "nome": "Vlasic",
+     "squadra": "Torino",
+     "ruolo": "C",
+     "prezzoPagato": 12,
+     "quotazione": 13,
+     "fvm": 73,
+     "titolaritaPct": 100,
+     "zona": "Trequartista"
+    },
+    {
+     "id": 4973,
+     "nome": "McKennie",
+     "squadra": "Juventus",
+     "ruolo": "C",
+     "prezzoPagato": 16,
+     "quotazione": 17,
+     "fvm": 70,
+     "titolaritaPct": 94,
+     "zona": "Trequartista"
+    },
+    {
+     "id": 2606,
+     "nome": "Modric",
+     "squadra": "Milan",
+     "ruolo": "C",
+     "prezzoPagato": 11,
+     "quotazione": 12,
+     "fvm": 45,
+     "titolaritaPct": 100,
+     "zona": "Centrale"
+    },
+    {
+     "id": 7412,
+     "nome": "Milla",
+     "squadra": "Como",
+     "ruolo": "C",
+     "prezzoPagato": 6,
+     "quotazione": 6,
+     "fvm": 30,
+     "titolaritaPct": 75,
+     "zona": "Centrale"
+    },
+    {
+     "id": 7551,
+     "nome": "Schmid",
+     "squadra": "Frosinone",
+     "ruolo": "C",
+     "prezzoPagato": 7,
+     "quotazione": 8,
+     "fvm": 25,
+     "titolaritaPct": 97,
+     "zona": "Ala"
+    },
+    {
+     "id": 6833,
+     "nome": "Mbangula",
+     "squadra": "Bologna",
+     "ruolo": "C",
+     "prezzoPagato": 7,
+     "quotazione": 8,
+     "fvm": 28,
+     "titolaritaPct": null,
+     "zona": "Ala"
+    }
+   ],
+   "A": [
+    {
+     "id": 5585,
+     "nome": "Malen",
+     "squadra": "Roma",
+     "ruolo": "A",
+     "prezzoPagato": 70,
+     "quotazione": 38,
+     "fvm": 450,
+     "titolaritaPct": 100,
+     "zona": null
+    },
+    {
+     "id": 6397,
+     "nome": "Ramos G.",
+     "squadra": "Milan",
+     "ruolo": "A",
+     "prezzoPagato": 50,
+     "quotazione": 27,
+     "fvm": 237,
+     "titolaritaPct": 100,
+     "zona": null
+    },
+    {
+     "id": 2137,
+     "nome": "Scamacca",
+     "squadra": "Atalanta",
+     "ruolo": "A",
+     "prezzoPagato": 35,
+     "quotazione": 19,
+     "fvm": 110,
+     "titolaritaPct": 88,
+     "zona": null
+    },
+    {
+     "id": 6752,
+     "nome": "Woltemade",
+     "squadra": "Juventus",
+     "ruolo": "A",
+     "prezzoPagato": 42,
+     "quotazione": 23,
+     "fvm": 160,
+     "titolaritaPct": null,
+     "zona": null
+    },
+    {
+     "id": 5694,
+     "nome": "Beto",
+     "squadra": "Fiorentina",
+     "ruolo": "A",
+     "prezzoPagato": 26,
+     "quotazione": 14,
+     "fvm": 50,
+     "titolaritaPct": null,
+     "zona": null
+    },
+    {
+     "id": 7523,
+     "nome": "Varela G.",
+     "squadra": "Monza",
+     "ruolo": "A",
+     "prezzoPagato": 13,
+     "quotazione": 7,
+     "fvm": 40,
+     "titolaritaPct": 69,
+     "zona": null
+    }
+   ]
+  }
+ },
+ "altreRose": []
+}

@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<!--
+  App Formazione — v0.1 (03/09/2026)
+
+  Serve a decidere CHI SCHIERARE ogni giornata. E' la seconda meta' dell'app asta:
+  quella compra, questa manda in campo.
+
+  Il commento sta DOPO il DOCTYPE, non prima: un commento prima manda il browser in
+  quirks mode.
+
+  CHANGELOG
+  v0.1  Prima versione. Import rosa dall'app asta (schema 1) o composizione a mano.
+        Motore certezza/resa, campo, ottimizzatore di modulo con simulazione, panchina
+        ordinata. Dati di giornata da dati/probabili.json, con inserimento manuale come
+        rete di sicurezza.
+-->
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E1116">
+<meta name="description" content="Assistente di formazione: probabili, moduli, modificatore di difesa.">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Formazione — Paradiso della Brugola</title>
+<style>
+  :root{
+    /* Stessi token dell'app asta: due app della stessa stagione devono sembrare la stessa cosa. */
+    --bg:#0E1116; --bg-2:#12161C;
+    --surface:#181D25; --surface2:#212832; --surface3:#2A313D;
+    --text:#EEF1F5; --text-dim:#C3CAD6; --muted:#7F8899;
+    --line:rgba(255,255,255,.075); --line-2:rgba(255,255,255,.14);
+    --accent:#F0BC46; --accent-dark:#B98A22; --accent-soft:rgba(240,188,70,.13);
+    --pos:#43C98A; --neg:#F0635F; --other:#D4B584;
+    /* Colori di ruolo: NON si toccano. Sono gia' il codice con cui si legge l'altra app. */
+    --role-p:#E8B339; --role-d:#4CAF7D; --role-c:#5B8DEF; --role-a:#E15B5B;
+    --role-p-soft:rgba(232,179,57,.14); --role-d-soft:rgba(76,175,125,.14);
+    --role-c-soft:rgba(91,141,239,.14); --role-a-soft:rgba(225,91,91,.14);
+    --radius:14px; --radius-sm:10px; --radius-xs:7px;
+    --lift: inset 0 1px 0 rgba(255,255,255,.055), 0 1px 2px rgba(0,0,0,.4);
+    --lift-2: inset 0 1px 0 rgba(255,255,255,.07), 0 4px 16px rgba(0,0,0,.5);
+    --glass: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --pitch:#16321F;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%; margin:0; background:var(--bg); color:var(--text); font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;}
+  html{ height:100dvh; }
+  body{ min-height:100dvh; background:
+      radial-gradient(1100px 420px at 50% -14%, rgba(76,175,125,.10), transparent 70%),
+      radial-gradient(760px 320px at 90% 0%, rgba(240,188,70,.05), transparent 70%),
+      var(--bg); background-attachment:fixed;
+      display:flex; flex-direction:column; overscroll-behavior:none; }
+  button, .tap{ font-family:inherit; user-select:none; -webkit-user-select:none; cursor:pointer; }
+
+  /* Cifre tabulari ovunque compaia un numero: i valori si ricalcolano di continuo e senza
+     questo le colonne ballano a ogni ridisegno. */
+  .status-strip, .prow .nums, .slot .fm, .slot .cz, .mod-row .n, .bench-row .nums,
+  .info-cell .v, .mv-box, .kpi .v, .modulo-row .pts, .pct-badge{ font-variant-numeric:tabular-nums; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+
+  /* ---------- Shell ---------- */
+  #app{ display:flex; flex-direction:column; height:100%; height:100dvh; }
+  header{ position:sticky; top:0; z-index:20; background:var(--bg-2); border-bottom:1px solid var(--line); }
+  main{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:10px 0 40px; }
+
+  .status-strip{ display:flex; align-items:center; gap:10px; padding:8px 12px 6px;
+    font-size:12px; color:var(--text-dim); }
+  .status-strip .gg{ font-weight:700; color:var(--text); font-size:13px; }
+  .status-strip .eta{ color:var(--muted); }
+  .status-strip .sp{ flex:1; }
+  .icon-btn{ background:var(--surface2); border:1px solid var(--line); color:var(--text-dim);
+    border-radius:var(--radius-xs); padding:5px 9px; font-size:12px; }
+  .icon-btn:active{ background:var(--surface3); }
+
+  .tabs{ display:flex; gap:6px; padding:2px 10px 9px; }
+  .tab{ flex:1; background:var(--surface); border:1px solid var(--line); color:var(--text-dim);
+    border-radius:var(--radius-sm); padding:9px 4px; font-size:13px; font-weight:600;
+    background-image:var(--glass); transition:all .13s var(--ease); }
+  .tab.on{ background:var(--accent-soft); border-color:var(--accent-dark); color:var(--accent); }
+
+  .warnbar{ background:rgba(240,99,95,.14); border-top:1px solid rgba(240,99,95,.3);
+    border-bottom:1px solid rgba(240,99,95,.3); color:#FFC9C7; font-size:12px;
+    padding:7px 12px; text-align:center; }
+  .warnbar.info{ background:rgba(240,188,70,.12); border-color:rgba(240,188,70,.3); color:#F2D89A; }
+
+  /* ---------- Campo ---------- */
+  .pitch{ margin:0 10px 14px; border-radius:var(--radius); border:1px solid var(--line);
+    background:
+      repeating-linear-gradient(180deg, rgba(255,255,255,.022) 0 34px, transparent 34px 68px),
+      linear-gradient(180deg, #1A3A24, #142C1C);
+    padding:14px 8px 12px; box-shadow:var(--lift-2); }
+  .pitch-line{ display:flex; justify-content:center; gap:7px; margin-bottom:9px; flex-wrap:wrap; }
+  .pitch-line:last-child{ margin-bottom:0; }
+
+  .slot{ width:78px; background:var(--surface); border:1px solid var(--line-2);
+    border-radius:var(--radius-sm); padding:6px 4px 5px; text-align:center;
+    box-shadow:var(--lift); position:relative; overflow:hidden; }
+  .slot:active{ background:var(--surface2); }
+  .slot::before{ content:''; position:absolute; inset:0 0 auto 0; height:3px; }
+  .slot.P::before{ background:var(--role-p); } .slot.D::before{ background:var(--role-d); }
+  .slot.C::before{ background:var(--role-c); } .slot.A::before{ background:var(--role-a); }
+  .slot .nm{ font-size:11.5px; font-weight:600; white-space:nowrap; overflow:hidden;
+    text-overflow:ellipsis; margin-top:2px; }
+  .slot .sq{ font-size:9.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .slot .fm{ font-size:12.5px; font-weight:700; margin-top:2px; }
+  .slot .cz{ font-size:9.5px; color:var(--muted); }
+  .slot.vuoto{ background:rgba(0,0,0,.25); border-style:dashed; color:var(--muted); }
+  .slot.vuoto .nm{ color:var(--muted); font-weight:500; }
+  .slot.rischio{ border-color:rgba(240,99,95,.5); }
+  .slot.bloccato::after{ content:'📌'; position:absolute; top:3px; right:3px; font-size:8px; }
+
+  .cz-bar{ height:3px; border-radius:99px; background:rgba(255,255,255,.12); margin:3px 2px 0;
+    overflow:hidden; }
+  .cz-bar i{ display:block; height:100%; background:var(--pos); }
+  .cz-bar.mid i{ background:var(--accent); } .cz-bar.low i{ background:var(--neg); }
+
+  /* ---------- KPI ---------- */
+  .kpis{ display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin:0 10px 12px; }
+  .kpi{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-sm);
+    padding:8px 9px; background-image:var(--glass); }
+  .kpi .k{ font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
+  .kpi .v{ font-size:17px; font-weight:700; margin-top:1px; }
+  .kpi .s{ font-size:10.5px; color:var(--text-dim); }
+  .v.forte{ color:var(--pos); } .v.ok{ color:var(--accent); } .v.debole{ color:var(--neg); }
+
+  .sec-title{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px;
+    margin:16px 10px 7px; display:flex; align-items:center; gap:8px; }
+  .sec-title::after{ content:''; flex:1; height:1px; background:var(--line); }
+
+  /* ---------- Righe giocatore ---------- */
+  .prow{ display:grid; grid-template-columns:4px minmax(0,1fr) auto auto; align-items:center;
+    column-gap:10px; padding:11px 13px; margin:0 10px 6px; border-radius:var(--radius);
+    background:var(--surface); border:1px solid var(--line);
+    transition:background .13s var(--ease), border-color .13s var(--ease); }
+  .prow:active{ background:var(--surface2); border-color:var(--line-2); }
+  .rolebar{ width:4px; height:26px; border-radius:99px; }
+  .rolebar.P{ background:var(--role-p); } .rolebar.D{ background:var(--role-d); }
+  .rolebar.C{ background:var(--role-c); } .rolebar.A{ background:var(--role-a); }
+  .prow .main{ min-width:0; }
+  .prow .nm{ font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .prow .sub{ font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden;
+    text-overflow:ellipsis; margin-top:1px; }
+  .prow .nums{ text-align:right; }
+  .prow .nums .fm{ font-size:15px; font-weight:700; }
+  .prow .nums .cz{ font-size:10.5px; color:var(--muted); }
+  .prow.fuori{ opacity:.5; }
+
+  .pct-badge{ font-size:11px; font-weight:700; padding:3px 7px; border-radius:99px;
+    border:1px solid transparent; white-space:nowrap; }
+  .pct-badge.alta{ background:rgba(67,201,138,.14); color:var(--pos); border-color:rgba(67,201,138,.3); }
+  .pct-badge.media{ background:var(--accent-soft); color:var(--accent); border-color:rgba(240,188,70,.3); }
+  .pct-badge.bassa{ background:rgba(240,99,95,.13); color:var(--neg); border-color:rgba(240,99,95,.3); }
+  .pct-badge.out{ background:rgba(127,136,153,.14); color:var(--muted); border-color:var(--line-2); }
+
+  .flag{ font-size:10px; padding:2px 6px; border-radius:var(--radius-xs); margin-left:5px;
+    white-space:nowrap; }
+  .flag.inf{ background:rgba(240,99,95,.15); color:#F5928F; }
+  .flag.sq{ background:rgba(225,91,91,.22); color:#FFB3B1; }
+  .flag.dub{ background:var(--accent-soft); color:var(--accent); }
+  .flag.man{ background:rgba(91,141,239,.16); color:#9BBBF5; }
+
+  /* ---------- Moduli ---------- */
+  .modulo-row{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center;
+    column-gap:11px; padding:12px 13px; margin:0 10px 6px; border-radius:var(--radius);
+    background:var(--surface); border:1px solid var(--line); }
+  .modulo-row.on{ border-color:var(--accent-dark); background:var(--accent-soft); }
+  .modulo-row .mn{ font-size:15px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .modulo-row .diff{ font-size:11px; color:var(--muted); margin-top:2px; line-height:1.4; }
+  .modulo-row .pts{ font-size:16px; font-weight:700; text-align:right; }
+  .modulo-row .pts small{ display:block; font-size:10px; color:var(--muted); font-weight:500; }
+  .rank{ width:22px; height:22px; border-radius:99px; background:var(--surface3); color:var(--text-dim);
+    font-size:11px; font-weight:700; display:grid; place-items:center; }
+  .modulo-row.on .rank{ background:var(--accent); color:#1a1200; }
+
+  /* ---------- Sheet ---------- */
+  #overlay{ position:fixed; inset:0; background:rgba(4,6,9,.74); display:none; z-index:40;
+    animation:fadeIn .18s var(--ease); }
+  @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+  @keyframes sheetUp{ from{transform:translateY(14px); opacity:.6} to{transform:none; opacity:1} }
+  .sheet{ position:fixed; left:0; right:0; bottom:0;
+    background:linear-gradient(180deg, var(--surface2) 0, var(--surface) 90px);
+    border-top:1px solid var(--line-2); border-radius:22px 22px 0 0; z-index:41; display:none;
+    max-height:88vh; max-height:88dvh; overflow-y:auto;
+    padding:6px 16px calc(24px + env(safe-area-inset-bottom));
+    overscroll-behavior:contain; box-shadow:0 -18px 50px rgba(0,0,0,.6);
+    animation:sheetUp .24s var(--ease); }
+  .handle{ width:40px; height:4px; background:var(--surface3); border-radius:99px; margin:9px auto 14px; }
+  .sheet h3{ margin:0 0 3px; font-size:18px; }
+  .sheet .sub{ color:var(--muted); font-size:12.5px; margin-bottom:14px; }
+  .sheet h4{ margin:18px 0 8px; font-size:11px; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.6px; }
+
+  .info-grid{ display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:6px; }
+  .info-cell{ background:var(--surface2); border:1px solid var(--line); border-radius:var(--radius-sm);
+    padding:8px 10px; }
+  .info-cell.wide{ grid-column:1/-1; }
+  .info-cell .k{ font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
+  .info-cell .v{ font-size:14px; font-weight:600; margin-top:2px; }
+  .info-cell .n{ font-size:11.5px; color:var(--text-dim); margin-top:3px; line-height:1.45; font-weight:400; }
+
+  .opt{ display:grid; grid-template-columns:4px minmax(0,1fr) auto auto; align-items:center;
+    column-gap:10px; padding:10px 11px; margin-bottom:6px; border-radius:var(--radius-sm);
+    background:var(--surface2); border:1px solid var(--line); }
+  .opt:active{ background:var(--surface3); }
+  .opt.attuale{ border-color:var(--accent-dark); background:var(--accent-soft); }
+  .opt .nm{ font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .opt .sub{ font-size:10.5px; color:var(--muted); margin:0; white-space:nowrap; overflow:hidden;
+    text-overflow:ellipsis; }
+  .opt .fm{ font-size:14px; font-weight:700; }
+
+  .btn{ width:100%; border:none; border-radius:var(--radius-sm); padding:13px; font-size:14.5px;
+    font-weight:700; margin-top:9px; }
+  .btn-primary{ background:var(--accent); color:#1a1200; }
+  .btn-sec{ background:var(--surface3); color:var(--text); border:1px solid var(--line-2); }
+  .btn-danger{ background:rgba(240,99,95,.16); color:#F5928F; border:1px solid rgba(240,99,95,.35); }
+  .btn-row{ display:flex; gap:9px; }
+  .btn-row .btn{ flex:1; }
+
+  .seg{ display:flex; gap:6px; margin:6px 0 4px; }
+  .seg button{ flex:1; background:var(--surface2); border:1px solid var(--line); color:var(--text-dim);
+    border-radius:var(--radius-xs); padding:9px 3px; font-size:12px; font-weight:600; }
+  .seg button.on{ background:var(--accent-soft); border-color:var(--accent-dark); color:var(--accent); }
+
+  textarea{ width:100%; min-height:110px; background:var(--bg); color:var(--text);
+    border:1px solid var(--line-2); border-radius:var(--radius-sm); padding:10px;
+    font-family:var(--mono); font-size:11.5px; resize:vertical; }
+  input[type=text]{ width:100%; background:var(--bg); color:var(--text); border:1px solid var(--line-2);
+    border-radius:var(--radius-sm); padding:11px; font-size:14px; font-family:inherit; }
+
+  .empty{ text-align:center; color:var(--muted); padding:48px 26px; font-size:13.5px; line-height:1.6; }
+  .empty b{ color:var(--text-dim); display:block; margin-bottom:7px; font-size:15px; }
+
+  .note{ font-size:11.5px; color:var(--muted); line-height:1.55; margin:8px 0 0; }
+
+  #toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(70px);
+    background:var(--surface3); color:var(--text); border:1px solid var(--line-2);
+    padding:11px 17px; border-radius:99px; font-size:13px; z-index:60; opacity:0;
+    transition:all .24s var(--ease); pointer-events:none; box-shadow:var(--lift-2); }
+  #toast.on{ transform:translateX(-50%); opacity:1; }
+
+  /* Su tablet la lista a tutta larghezza sparpaglia i numeri agli antipodi dello schermo. */
+  @media (min-width:820px){
+    .tabs, .status-strip, .pitch, .kpis, .prow, .modulo-row, .sec-title, .warnbar{
+      max-width:880px; margin-left:auto; margin-right:auto; }
+    .sheet{ max-width:880px; left:50%; transform:translateX(-50%); border-radius:22px 22px 0 0; }
+  }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header>
+    <div class="status-strip">
+      <span class="gg" id="stGiornata">—</span>
+      <span class="eta" id="stEta"></span>
+      <span class="sp"></span>
+      <button class="icon-btn" id="btnRicarica">Aggiorna</button>
+      <button class="icon-btn" id="btnSettings">⚙</button>
+    </div>
+    <div class="tabs">
+      <button class="tab on" data-vista="campo">Campo</button>
+      <button class="tab" data-vista="rosa">Rosa</button>
+      <button class="tab" data-vista="moduli">Moduli</button>
+    </div>
+    <div class="warnbar" id="warnbar" style="display:none"></div>
+  </header>
+  <main id="main"></main>
+</div>
+
+<div id="toast"></div>
+<div id="overlay"></div>
+<div class="sheet" id="sheet"></div>
+<div class="sheet" id="settingsSheet"></div>
+
+<script id="listone-data" type="application/json">[{"id":5585,"n":"Malen","s":"Roma","r":"A","q":38,"f":450,"fp":99,"t":100,"sc":99,"z":null,"zt":null,"pz":"R1","pr":null},{"id":2764,"n":"Martinez L.","s":"Inter","r":"A","q":33,"f":361,"fp":98,"t":100,"sc":98,"z":null,"zt":null,"pz":"R2","pr":null},{"id":6052,"n":"Hojlund","s":"Napoli","r":"A","q":28,"f":260,"fp":97,"t":100,"sc":97,"z":null,"zt":null,"pz":"R2","pr":null},{"id":4871,"n":"Thuram","s":"Inter","r":"A","q":28,"f":249,"fp":95,"t":35,"sc":55,"z":null,"zt":null,"pz":"","pr":null},{"id":6397,"n":"Ramos G.","s":"Milan","r":"A","q":27,"f":237,"fp":94,"t":100,"sc":94,"z":null,"zt":null,"pz":"R1","pr":null},{"id":7017,"n":"Douvikas","s":"Como","r":"A","q":22,"f":185,"fp":93,"t":85,"sc":86,"z":null,"zt":null,"pz":"R3","pr":null},{"id":2097,"n":"Kean","s":"Como","r":"A","q":24,"f":183,"fp":92,"t":23,"sc":57,"z":null,"zt":null,"pz":"","pr":null},{"id":5951,"n":"Kolo Muani","s":"Juventus","r":"A","q":25,"f":165,"fp":91,"t":100,"sc":91,"z":null,"zt":null,"pz":"R3","pr":null},{"id":6752,"n":"Woltemade","s":"Juventus","r":"A","q":23,"f":160,"fp":90,"t":null,"sc":76,"z":null,"zt":null,"pz":"","pr":null},{"id":2137,"n":"Scamacca","s":"Atalanta","r":"A","q":19,"f":110,"fp":89,"t":88,"sc":84,"z":null,"zt":null,"pz":"R1","pr":null},{"id":5637,"n":"Davis K.","s":"Udinese","r":"A","q":19,"f":108,"fp":87,"t":100,"sc":87,"z":null,"zt":null,"pz":"R1","pr":null},{"id":531,"n":"Berardi","s":"Sassuolo","r":"A","q":19,"f":106,"fp":86,"t":20,"sc":35,"z":null,"zt":null,"pz":"R1/P1","pr":null},{"id":7071,"n":"Esposito F.P.","s":"Inter","r":"A","q":17,"f":105,"fp":85,"t":9,"sc":46,"z":null,"zt":null,"pz":"","pr":null},{"id":309,"n":"Dybala","s":"Roma","r":"A","q":16,"f":100,"fp":83,"t":94,"sc":81,"z":null,"zt":null,"pz":"R2/P1","pr":null},{"id":6435,"n":"Krstovic","s":"Atalanta","r":"A","q":18,"f":98,"fp":82,"t":12,"sc":46,"z":null,"zt":null,"pz":"","pr":null},{"id":5995,"n":"De Ketelaere","s":"Atalanta","r":"A","q":17,"f":95,"fp":80,"t":100,"sc":80,"z":null,"zt":null,"pz":"R2/P1","pr":null},{"id":6060,"n":"Laurientè","s":"Sassuolo","r":"A","q":15,"f":83,"fp":79,"t":100,"sc":79,"z":null,"zt":null,"pz":"P2","pr":null},{"id":2061,"n":"Simeone","s":"Torino","r":"A","q":14,"f":80,"fp":78,"t":100,"sc":78,"z":null,"zt":null,"pz":"R3","pr":null},{"id":4371,"n":"Raspadori","s":"Atalanta","r":"A","q":14,"f":73,"fp":77,"t":86,"sc":72,"z":null,"zt":null,"pz":"","pr":null},{"id":6572,"n":"Castro S.","s":"Roma","r":"A","q":14,"f":70,"fp":76,"t":15,"sc":44,"z":null,"zt":null,"pz":"","pr":null},{"id":7351,"n":"Santos A.","s":"Napoli","r":"A","q":14,"f":61,"fp":75,"t":92,"sc":72,"z":null,"zt":null,"pz":"","pr":null},{"id":2038,"n":"Pinamonti","s":"Lazio","r":"A","q":12,"f":53,"fp":74,"t":54,"sc":57,"z":null,"zt":null,"pz":"R3","pr":null},{"id":4923,"n":"Colombo","s":"Genoa","r":"A","q":11,"f":52,"fp":72,"t":94,"sc":70,"z":null,"zt":null,"pz":"R1","pr":null},{"id":6675,"n":"Dovbyk","s":"Bologna","r":"A","q":15,"f":51,"fp":71,"t":46,"sc":52,"z":null,"zt":null,"pz":"R2","pr":null},{"id":5694,"n":"Beto","s":"Fiorentina","r":"A","q":14,"f":50,"fp":69,"t":null,"sc":59,"z":null,"zt":null,"pz":"","pr":null},{"id":6967,"n":"Diao","s":"Como","r":"A","q":12,"f":50,"fp":69,"t":88,"sc":65,"z":null,"zt":null,"pz":"","pr":null},{"id":5734,"n":"Soulè","s":"Roma","r":"A","q":13,"f":48,"fp":68,"t":8,"sc":37,"z":null,"zt":null,"pz":"R3/P3","pr":null},{"id":7023,"n":"Pellegrino M.","s":"Fiorentina","r":"A","q":14,"f":40,"fp":64,"t":77,"sc":57,"z":null,"zt":null,"pz":"R2","pr":null},{"id":4463,"n":"Esposito Se.","s":"Sassuolo","r":"A","q":12,"f":40,"fp":64,"t":20,"sc":38,"z":null,"zt":null,"pz":"R2","pr":null},{"id":7523,"n":"Varela G.","s":"Monza","r":"A","q":7,"f":40,"fp":64,"t":69,"sc":54,"z":null,"zt":null,"pz":"","pr":null},{"id":6229,"n":"Tourè E.","s":"Parma","r":"A","q":10,"f":37,"fp":62,"t":100,"sc":62,"z":null,"zt":null,"pz":"R1","pr":null},{"id":7554,"n":"Romero D.","s":"Parma","r":"A","q":10,"f":37,"fp":62,"t":73,"sc":54,"z":null,"zt":null,"pz":"","pr":null},{"id":7547,"n":"Kevin Carlos","s":"Cagliari","r":"A","q":12,"f":36,"fp":61,"t":20,"sc":25,"z":null,"zt":null,"pz":"","pr":null},{"id":7484,"n":"Adams A.","s":"Venezia","r":"A","q":11,"f":35,"fp":60,"t":91,"sc":57,"z":null,"zt":null,"pz":"R2","pr":null},{"id":6646,"n":"Adams C.","s":"Torino","r":"A","q":10,"f":33,"fp":59,"t":null,"sc":50,"z":null,"zt":null,"pz":"","pr":null},{"id":7347,"n":"Bowie","s":"Sassuolo","r":"A","q":9,"f":32,"fp":57,"t":57,"sc":45,"z":null,"zt":null,"pz":"","pr":null},{"id":7612,"n":"Bobcek","s":"Frosinone","r":"A","q":9,"f":31,"fp":56,"t":57,"sc":44,"z":null,"zt":null,"pz":"","pr":null},{"id":4359,"n":"Piccoli","s":"Bologna","r":"A","q":8,"f":29,"fp":55,"t":62,"sc":45,"z":null,"zt":null,"pz":"","pr":null},{"id":7600,"n":"Osmajic","s":"Genoa","r":"A","q":8,"f":28,"fp":54,"t":null,"sc":46,"z":null,"zt":null,"pz":"","pr":null},{"id":5436,"n":"Raimondo","s":"Frosinone","r":"A","q":9,"f":27,"fp":51,"t":51,"sc":39,"z":null,"zt":null,"pz":"R2","pr":null},{"id":6904,"n":"Yeboah J.","s":"Venezia","r":"A","q":9,"f":27,"fp":51,"t":97,"sc":50,"z":null,"zt":null,"pz":"P2","pr":null},{"id":2832,"n":"Boga","s":"Juventus","r":"A","q":7,"f":27,"fp":51,"t":null,"sc":43,"z":null,"zt":null,"pz":"","pr":null},{"id":7623,"n":"Gnonto","s":"Fiorentina","r":"A","q":7,"f":25,"fp":49,"t":null,"sc":42,"z":null,"zt":null,"pz":"","pr":null},{"id":6204,"n":"Kvernadze","s":"Frosinone","r":"A","q":6,"f":24,"fp":48,"t":45,"sc":35,"z":null,"zt":null,"pz":"","pr":null},{"id":2155,"n":"Cutrone","s":"Monza","r":"A","q":9,"f":23,"fp":45,"t":75,"sc":39,"z":null,"zt":null,"pz":"R2","pr":null},{"id":6530,"n":"Ghedjemis","s":"Frosinone","r":"A","q":8,"f":23,"fp":45,"t":48,"sc":33,"z":null,"zt":null,"pz":"P3","pr":null},{"id":5029,"n":"Geubbels","s":"Lecce","r":"A","q":8,"f":23,"fp":45,"t":86,"sc":42,"z":null,"zt":null,"pz":"R1","pr":null},{"id":4896,"n":"Maldini","s":"Cagliari","r":"A","q":5,"f":21,"fp":44,"t":94,"sc":43,"z":null,"zt":null,"pz":"P2","pr":null},{"id":6831,"n":"Neres","s":"Napoli","r":"A","q":6,"f":20,"fp":41,"t":12,"sc":23,"z":null,"zt":null,"pz":"P3","pr":null},{"id":6519,"n":"Camarda","s":"Milan","r":"A","q":4,"f":20,"fp":41,"t":null,"sc":35,"z":null,"zt":null,"pz":"","pr":null},{"id":7620,"n":"Zeballos","s":"Monza","r":"A","q":6,"f":18,"fp":40,"t":null,"sc":34,"z":null,"zt":null,"pz":"","pr":null},{"id":6669,"n":"Bonny","s":"Inter","r":"A","q":7,"f":15,"fp":39,"t":null,"sc":33,"z":null,"zt":null,"pz":"","pr":null},{"id":7120,"n":"Lang","s":"Napoli","r":"A","q":4,"f":14,"fp":37,"t":null,"sc":31,"z":null,"zt":null,"pz":"","pr":null},{"id":7602,"n":"Fatah","s":"Lecce","r":"A","q":4,"f":14,"fp":37,"t":45,"sc":27,"z":null,"zt":null,"pz":"","pr":null},{"id":6164,"n":"Vitinha O.","s":"Genoa","r":"A","q":8,"f":13,"fp":33,"t":91,"sc":32,"z":null,"zt":null,"pz":"R3/P2","pr":null},{"id":7449,"n":"Rrahmani Al.","s":"Venezia","r":"A","q":7,"f":13,"fp":33,"t":20,"sc":20,"z":null,"zt":null,"pz":"","pr":null},{"id":6145,"n":"Ngonge","s":"Monza","r":"A","q":5,"f":13,"fp":33,"t":46,"sc":24,"z":null,"zt":null,"pz":"","pr":null},{"id":608,"n":"Zapata D.","s":"Torino","r":"A","q":6,"f":12,"fp":29,"t":null,"sc":25,"z":null,"zt":null,"pz":"R2","pr":null},{"id":7374,"n":"Mendy P.","s":"Cagliari","r":"A","q":4,"f":12,"fp":29,"t":21,"sc":18,"z":null,"zt":null,"pz":"","pr":null},{"id":7001,"n":"N'Dri","s":"Lecce","r":"A","q":4,"f":12,"fp":29,"t":45,"sc":21,"z":null,"zt":null,"pz":"","pr":null},{"id":6215,"n":"Lucca","s":"Napoli","r":"A","q":4,"f":12,"fp":29,"t":null,"sc":25,"z":null,"zt":null,"pz":"","pr":null},{"id":7252,"n":"Stulic","s":"Lecce","r":"A","q":6,"f":11,"fp":24,"t":22,"sc":15,"z":null,"zt":null,"pz":"R2","pr":null},{"id":7610,"n":"Birligea","s":"Frosinone","r":"A","q":5,"f":11,"fp":24,"t":null,"sc":20,"z":null,"zt":null,"pz":"","pr":null},{"id":7342,"n":"Elphege","s":"Parma","r":"A","q":3,"f":11,"fp":24,"t":10,"sc":13,"z":null,"zt":null,"pz":"","pr":null},{"id":7561,"n":"Lontani","s":"Parma","r":"A","q":3,"f":11,"fp":24,"t":48,"sc":18,"z":null,"zt":null,"pz":"","pr":null},{"id":2012,"n":"Milik","s":"Juventus","r":"A","q":4,"f":10,"fp":21,"t":null,"sc":18,"z":null,"zt":null,"pz":"","pr":null},{"id":5336,"n":"Nzola","s":"Cagliari","r":"A","q":4,"f":10,"fp":21,"t":null,"sc":18,"z":null,"zt":null,"pz":"","pr":null},{"id":6822,"n":"Ekhator","s":"Juventus","r":"A","q":3,"f":10,"fp":21,"t":null,"sc":18,"z":null,"zt":null,"pz":"","pr":null},{"id":6243,"n":"Borrelli","s":"Cagliari","r":"A","q":4,"f":9,"fp":18,"t":null,"sc":15,"z":null,"zt":null,"pz":"","pr":null},{"id":7349,"n":"Kulenovic","s":"Torino","r":"A","q":4,"f":9,"fp":18,"t":null,"sc":15,"z":null,"zt":null,"pz":"","pr":null},{"id":5918,"n":"Sulemana K.","s":"Atalanta","r":"A","q":6,"f":8,"fp":14,"t":null,"sc":12,"z":null,"zt":null,"pz":"","pr":null},{"id":6556,"n":"Noslin","s":"Lazio","r":"A","q":6,"f":8,"fp":14,"t":null,"sc":12,"z":null,"zt":null,"pz":"","pr":null},{"id":5882,"n":"Mota","s":"Monza","r":"A","q":4,"f":8,"fp":14,"t":32,"sc":9,"z":null,"zt":null,"pz":"P3","pr":null},{"id":4387,"n":"Adorante","s":"Venezia","r":"A","q":4,"f":8,"fp":14,"t":null,"sc":12,"z":null,"zt":null,"pz":"","pr":null},{"id":6598,"n":"Mutandwa","s":"Cagliari","r":"A","q":6,"f":7,"fp":10,"t":null,"sc":8,"z":null,"zt":null,"pz":"","pr":null},{"id":7162,"n":"Giovane","s":"Napoli","r":"A","q":4,"f":7,"fp":10,"t":null,"sc":8,"z":null,"zt":null,"pz":"","pr":null},{"id":7272,"n":"Gueye","s":"Udinese","r":"A","q":4,"f":7,"fp":10,"t":null,"sc":8,"z":null,"zt":null,"pz":"","pr":null},{"id":7213,"n":"Frigan","s":"Parma","r":"A","q":4,"f":6,"fp":9,"t":29,"sc":6,"z":null,"zt":null,"pz":"","pr":null},{"id":7453,"n":"Havel","s":"Genoa","r":"A","q":4,"f":5,"fp":7,"t":null,"sc":6,"z":null,"zt":null,"pz":"","pr":null},{"id":7546,"n":"Robinson J.","s":"Monza","r":"A","q":4,"f":5,"fp":7,"t":null,"sc":6,"z":null,"zt":null,"pz":"","pr":null},{"id":7161,"n":"Bayo V.","s":"Udinese","r":"A","q":1,"f":3,"fp":5,"t":null,"sc":4,"z":null,"zt":null,"pz":"","pr":null},{"id":7622,"n":"Robinho Junior","s":"Genoa","r":"A","q":1,"f":3,"fp":5,"t":null,"sc":4,"z":null,"zt":null,"pz":"","pr":null},{"id":7317,"n":"Trepy","s":"Cagliari","r":"A","q":1,"f":2,"fp":3,"t":null,"sc":3,"z":null,"zt":null,"pz":"","pr":null},{"id":7408,"n":"Lisman","s":"Venezia","r":"A","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":null},{"id":7482,"n":"Lauberbach","s":"Venezia","r":"A","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":null},{"id":7568,"n":"De Martis","s":"Parma","r":"A","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":null},{"id":6875,"n":"Paz N.","s":"Como","r":"C","q":29,"f":245,"fp":99,"t":100,"sc":100,"z":"Punta agg.","zt":4,"pz":"R2/P1","pr":null},{"id":2194,"n":"Calhanoglu","s":"Inter","r":"C","q":28,"f":243,"fp":99,"t":100,"sc":99,"z":"Centrale","zt":2,"pz":"R1/P1","pr":null},{"id":4777,"n":"McTominay","s":"Napoli","r":"C","q":27,"f":220,"fp":98,"t":100,"sc":100,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":2167,"n":"Orsolini","s":"Bologna","r":"C","q":25,"f":177,"fp":98,"t":94,"sc":100,"z":"Ala","zt":4,"pz":"R1/P1","pr":null},{"id":2423,"n":"Pulisic","s":"Milan","r":"C","q":24,"f":150,"fp":97,"t":22,"sc":48,"z":"Punta agg.","zt":4,"pz":"R2/P2","pr":null},{"id":2379,"n":"Rabiot","s":"Milan","r":"C","q":23,"f":145,"fp":97,"t":28,"sc":45,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":2517,"n":"De Bruyne","s":"Napoli","r":"C","q":17,"f":108,"fp":96,"t":58,"sc":80,"z":"Trequartista","zt":3,"pz":"R1/P1","pr":null},{"id":7126,"n":"Baturina","s":"Como","r":"C","q":20,"f":105,"fp":96,"t":94,"sc":97,"z":"Trequartista","zt":3,"pz":"P2","pr":null},{"id":7556,"n":"Mora","s":"Roma","r":"C","q":20,"f":100,"fp":95,"t":76,"sc":88,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":5559,"n":"Da Cunha","s":"Como","r":"C","q":18,"f":87,"fp":94,"t":95,"sc":96,"z":"Trequartista","zt":3,"pz":"R1/P3","pr":null},{"id":632,"n":"Zaccagni","s":"Lazio","r":"C","q":16,"f":87,"fp":94,"t":100,"sc":100,"z":"Ala","zt":4,"pz":"R1/P2","pr":null},{"id":1870,"n":"Barella","s":"Inter","r":"C","q":18,"f":81,"fp":94,"t":100,"sc":94,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":2766,"n":"Zaniolo","s":"Udinese","r":"C","q":18,"f":80,"fp":93,"t":100,"sc":100,"z":"Punta agg.","zt":4,"pz":"R3/P1","pr":null},{"id":6908,"n":"Atta","s":"Fiorentina","r":"C","q":15,"f":78,"fp":93,"t":100,"sc":97,"z":"Trequartista","zt":3,"pz":"P2","pr":null},{"id":2848,"n":"Frattesi","s":"Lazio","r":"C","q":10,"f":75,"fp":92,"t":92,"sc":92,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":5687,"n":"Vlasic","s":"Torino","r":"C","q":13,"f":73,"fp":92,"t":100,"sc":96,"z":"Trequartista","zt":3,"pz":"R1/P1","pr":null},{"id":4973,"n":"McKennie","s":"Juventus","r":"C","q":17,"f":70,"fp":91,"t":94,"sc":92,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":6884,"n":"Conceicao","s":"Juventus","r":"C","q":13,"f":68,"fp":91,"t":97,"sc":98,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6684,"n":"Ekkelenkamp","s":"Udinese","r":"C","q":12,"f":57,"fp":90,"t":85,"sc":87,"z":"Trequartista","zt":3,"pz":"P2","pr":null},{"id":7314,"n":"Taylor K.","s":"Lazio","r":"C","q":13,"f":53,"fp":90,"t":100,"sc":94,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":7625,"n":"Goncalves P.","s":"Fiorentina","r":"C","q":12,"f":50,"fp":89,"t":null,"sc":84,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7078,"n":"Mastantuono","s":"Fiorentina","r":"C","q":11,"f":50,"fp":89,"t":100,"sc":97,"z":"Ala","zt":4,"pz":"R1/P1","pr":null},{"id":5172,"n":"Jones C.","s":"Inter","r":"C","q":12,"f":47,"fp":88,"t":48,"sc":65,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":1850,"n":"Kessiè","s":"Atalanta","r":"C","q":12,"f":47,"fp":88,"t":62,"sc":71,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5792,"n":"Ederson D.S.","s":"Atalanta","r":"C","q":12,"f":46,"fp":87,"t":100,"sc":87,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":152,"n":"Zielinski","s":"Inter","r":"C","q":12,"f":45,"fp":85,"t":42,"sc":60,"z":"Centrale","zt":2,"pz":"R3/P3","pr":null},{"id":2606,"n":"Modric","s":"Milan","r":"C","q":12,"f":45,"fp":85,"t":100,"sc":85,"z":"Centrale","zt":2,"pz":"P1","pr":null},{"id":4179,"n":"Gonzalez N.","s":"Juventus","r":"C","q":12,"f":45,"fp":85,"t":null,"sc":80,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6372,"n":"Moreira","s":"Milan","r":"C","q":11,"f":45,"fp":85,"t":15,"sc":30,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5119,"n":"Samardzic","s":"Atalanta","r":"C","q":13,"f":44,"fp":84,"t":33,"sc":60,"z":"Trequartista","zt":3,"pz":"R3/P2","pr":null},{"id":6274,"n":"Diouf","s":"Inter","r":"C","q":9,"f":43,"fp":84,"t":18,"sc":58,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7436,"n":"Alajbegovic","s":"Juventus","r":"C","q":11,"f":42,"fp":83,"t":66,"sc":77,"z":"Ala","zt":4,"pz":"","pr":null},{"id":5589,"n":"Konè M.","s":"Roma","r":"C","q":10,"f":42,"fp":83,"t":100,"sc":83,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":4220,"n":"Zambo Anguissa","s":"Napoli","r":"C","q":10,"f":41,"fp":82,"t":62,"sc":66,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5800,"n":"Gudmundsson A.","s":"Lazio","r":"C","q":12,"f":40,"fp":81,"t":54,"sc":70,"z":"Punta agg.","zt":4,"pz":"R2","pr":null},{"id":6844,"n":"Rowe","s":"Atalanta","r":"C","q":10,"f":40,"fp":81,"t":null,"sc":77,"z":"Ala","zt":4,"pz":"","pr":null},{"id":5844,"n":"Thorstvedt","s":"Sassuolo","r":"C","q":10,"f":39,"fp":81,"t":54,"sc":66,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":536,"n":"Politano","s":"Napoli","r":"C","q":9,"f":37,"fp":80,"t":71,"sc":76,"z":"Ala","zt":4,"pz":"P2","pr":null},{"id":4892,"n":"Saelemaekers","s":"Milan","r":"C","q":11,"f":35,"fp":79,"t":38,"sc":63,"z":"Esterno","zt":4,"pz":"P3","pr":null},{"id":7223,"n":"Vergara","s":"Napoli","r":"C","q":10,"f":35,"fp":79,"t":null,"sc":75,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6151,"n":"Perrone","s":"Como","r":"C","q":10,"f":34,"fp":78,"t":82,"sc":71,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6666,"n":"Bernabè","s":"Parma","r":"C","q":7,"f":34,"fp":78,"t":100,"sc":78,"z":"Centrale","zt":2,"pz":"R2/P1","pr":null},{"id":827,"n":"Locatelli","s":"Juventus","r":"C","q":9,"f":33,"fp":78,"t":97,"sc":77,"z":"Centrale","zt":2,"pz":"R2/P2","pr":null},{"id":7129,"n":"Rodriguez Je.","s":"Como","r":"C","q":11,"f":31,"fp":77,"t":20,"sc":54,"z":"Ala","zt":4,"pz":"","pr":null},{"id":4364,"n":"Gaetano","s":"Atalanta","r":"C","q":7,"f":30,"fp":76,"t":12,"sc":43,"z":"Centrale","zt":2,"pz":"P3","pr":null},{"id":7412,"n":"Milla","s":"Como","r":"C","q":6,"f":30,"fp":76,"t":75,"sc":80,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":779,"n":"Cristante","s":"Roma","r":"C","q":9,"f":29,"fp":76,"t":97,"sc":75,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5823,"n":"Baldanzi","s":"Genoa","r":"C","q":11,"f":28,"fp":74,"t":91,"sc":75,"z":"Trequartista","zt":3,"pz":"P1","pr":null},{"id":6833,"n":"Mbangula","s":"Bologna","r":"C","q":8,"f":28,"fp":74,"t":null,"sc":71,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6827,"n":"Njie","s":"Fiorentina","r":"C","q":4,"f":28,"fp":74,"t":8,"sc":48,"z":"Ala","zt":4,"pz":"","pr":null},{"id":184,"n":"Bernardeschi","s":"Bologna","r":"C","q":10,"f":27,"fp":72,"t":67,"sc":68,"z":"Ala","zt":4,"pz":"R3/P2","pr":null},{"id":5888,"n":"Casadei","s":"Torino","r":"C","q":9,"f":27,"fp":72,"t":89,"sc":72,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":7472,"n":"Calò","s":"Frosinone","r":"C","q":8,"f":27,"fp":72,"t":82,"sc":66,"z":"Centrale","zt":2,"pz":"R1/P1","pr":null},{"id":5562,"n":"Thuram K.","s":"Juventus","r":"C","q":9,"f":25,"fp":69,"t":46,"sc":50,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5500,"n":"Cancellieri","s":"Lazio","r":"C","q":9,"f":25,"fp":69,"t":25,"sc":51,"z":"Ala","zt":4,"pz":"","pr":null},{"id":5735,"n":"Volpato","s":"Sassuolo","r":"C","q":9,"f":25,"fp":69,"t":8,"sc":45,"z":"Ala","zt":4,"pz":"","pr":null},{"id":4436,"n":"Cambiaghi","s":"Bologna","r":"C","q":8,"f":25,"fp":69,"t":55,"sc":61,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7551,"n":"Schmid","s":"Frosinone","r":"C","q":8,"f":25,"fp":69,"t":97,"sc":76,"z":"Ala","zt":4,"pz":"P2","pr":null},{"id":7618,"n":"Hutchinson","s":"Milan","r":"C","q":8,"f":25,"fp":69,"t":null,"sc":67,"z":"Ala","zt":4,"pz":"","pr":null},{"id":5680,"n":"Sarr P.","s":"Juventus","r":"C","q":7,"f":25,"fp":69,"t":null,"sc":59,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7060,"n":"Cacciamani","s":"Torino","r":"C","q":6,"f":24,"fp":68,"t":100,"sc":76,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6618,"n":"Cissè A.","s":"Milan","r":"C","q":5,"f":24,"fp":68,"t":35,"sc":54,"z":"Ala","zt":4,"pz":"","pr":null},{"id":1933,"n":"Mandragora","s":"Torino","r":"C","q":8,"f":23,"fp":65,"t":null,"sc":55,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":4287,"n":"Lobotka","s":"Napoli","r":"C","q":8,"f":23,"fp":65,"t":100,"sc":65,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5858,"n":"Ferguson","s":"Bologna","r":"C","q":7,"f":23,"fp":65,"t":95,"sc":63,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7619,"n":"Monteiro J.","s":"Lecce","r":"C","q":7,"f":23,"fp":65,"t":null,"sc":63,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6010,"n":"Fazzini","s":"Cagliari","r":"C","q":6,"f":23,"fp":65,"t":100,"sc":69,"z":"Trequartista","zt":3,"pz":"R1/P1","pr":null},{"id":6398,"n":"Isaksen","s":"Lazio","r":"C","q":9,"f":22,"fp":62,"t":25,"sc":30,"z":"Ala","zt":4,"pz":"","pr":null},{"id":2077,"n":"Pasalic","s":"Atalanta","r":"C","q":8,"f":22,"fp":62,"t":21,"sc":42,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":4856,"n":"Chukwueze","s":"Milan","r":"C","q":8,"f":22,"fp":62,"t":63,"sc":59,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6294,"n":"Ndour","s":"Fiorentina","r":"C","q":7,"f":22,"fp":62,"t":47,"sc":46,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":4479,"n":"Elmas","s":"Atalanta","r":"C","q":7,"f":22,"fp":62,"t":null,"sc":61,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7070,"n":"Sucic P.","s":"Inter","r":"C","q":9,"f":21,"fp":61,"t":9,"sc":33,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7311,"n":"Romano","s":"Cagliari","r":"C","q":7,"f":21,"fp":61,"t":95,"sc":59,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6678,"n":"Liberali","s":"Como","r":"C","q":6,"f":21,"fp":61,"t":null,"sc":56,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":530,"n":"Pellegrini Lo.","s":"Roma","r":"C","q":9,"f":20,"fp":58,"t":null,"sc":53,"z":"Trequartista","zt":3,"pz":"P2","pr":null},{"id":6717,"n":"Konè I.","s":"Sassuolo","r":"C","q":8,"f":20,"fp":58,"t":8,"sc":31,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":4465,"n":"Fagioli","s":"Fiorentina","r":"C","q":7,"f":20,"fp":58,"t":71,"sc":50,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6680,"n":"Karlstrom","s":"Udinese","r":"C","q":7,"f":20,"fp":58,"t":100,"sc":58,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7624,"n":"Braganca","s":"Torino","r":"C","q":6,"f":20,"fp":58,"t":null,"sc":49,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5791,"n":"Frendrup","s":"Genoa","r":"C","q":7,"f":19,"fp":56,"t":100,"sc":56,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6190,"n":"Pisilli","s":"Roma","r":"C","q":7,"f":19,"fp":56,"t":null,"sc":48,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6549,"n":"Pierotti","s":"Lecce","r":"C","q":6,"f":19,"fp":56,"t":100,"sc":64,"z":"Ala","zt":4,"pz":"P1","pr":null},{"id":5674,"n":"Basic","s":"Venezia","r":"C","q":6,"f":19,"fp":56,"t":96,"sc":55,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5422,"n":"Zalewski","s":"Atalanta","r":"C","q":7,"f":18,"fp":55,"t":13,"sc":39,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7464,"n":"Oulai","s":"Fiorentina","r":"C","q":6,"f":18,"fp":55,"t":87,"sc":51,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7535,"n":"Fitz-Jim","s":"Torino","r":"C","q":5,"f":18,"fp":55,"t":89,"sc":52,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":2765,"n":"Odgaard","s":"Bologna","r":"C","q":8,"f":17,"fp":52,"t":20,"sc":35,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":5504,"n":"Coulibaly L.","s":"Lecce","r":"C","q":7,"f":17,"fp":52,"t":97,"sc":51,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5036,"n":"Caqueret","s":"Como","r":"C","q":6,"f":17,"fp":52,"t":null,"sc":48,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":5761,"n":"Zhegrova","s":"Juventus","r":"C","q":6,"f":17,"fp":52,"t":null,"sc":52,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6252,"n":"Folorunsho","s":"Monza","r":"C","q":4,"f":17,"fp":52,"t":58,"sc":45,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":4459,"n":"Rovella","s":"Lazio","r":"C","q":7,"f":16,"fp":49,"t":97,"sc":48,"z":"Centrale","zt":2,"pz":"P1","pr":null},{"id":6783,"n":"Unai Gomez","s":"Udinese","r":"C","q":7,"f":16,"fp":49,"t":26,"sc":35,"z":"Trequartista","zt":3,"pz":"P3","pr":null},{"id":6020,"n":"Ellertsson","s":"Genoa","r":"C","q":6,"f":16,"fp":49,"t":72,"sc":50,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":4349,"n":"Nicolussi Caviglia","s":"Parma","r":"C","q":6,"f":16,"fp":49,"t":31,"sc":32,"z":"Centrale","zt":2,"pz":"P2","pr":null},{"id":6677,"n":"Adzic","s":"Sassuolo","r":"C","q":6,"f":16,"fp":49,"t":66,"sc":45,"z":"Trequartista","zt":3,"pz":"P3","pr":null},{"id":4199,"n":"Loftus-Cheek","s":"Milan","r":"C","q":4,"f":16,"fp":49,"t":22,"sc":34,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":5878,"n":"Colpani","s":"Monza","r":"C","q":9,"f":15,"fp":43,"t":60,"sc":38,"z":"Trequartista","zt":3,"pz":"P2","pr":null},{"id":5685,"n":"Koopmeiners","s":"Juventus","r":"C","q":7,"f":15,"fp":43,"t":null,"sc":41,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":5946,"n":"Sow","s":"Genoa","r":"C","q":7,"f":15,"fp":43,"t":75,"sc":38,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":4260,"n":"Winks","s":"Cagliari","r":"C","q":6,"f":15,"fp":43,"t":95,"sc":42,"z":"Centrale","zt":2,"pz":"P3","pr":null},{"id":2741,"n":"Pessina","s":"Monza","r":"C","q":6,"f":15,"fp":43,"t":54,"sc":33,"z":"Centrale","zt":2,"pz":"R1/P1","pr":null},{"id":2528,"n":"Matic","s":"Sassuolo","r":"C","q":6,"f":15,"fp":43,"t":100,"sc":43,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7198,"n":"Piotrowski","s":"Udinese","r":"C","q":6,"f":15,"fp":43,"t":57,"sc":34,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6898,"n":"Keita M.","s":"Parma","r":"C","q":5,"f":15,"fp":43,"t":100,"sc":43,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6994,"n":"Perez K.","s":"Venezia","r":"C","q":5,"f":15,"fp":43,"t":54,"sc":37,"z":"Trequartista","zt":3,"pz":"P3","pr":null},{"id":4911,"n":"Douglas Luiz","s":"Juventus","r":"C","q":4,"f":15,"fp":43,"t":23,"sc":26,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5295,"n":"Musah","s":"Milan","r":"C","q":3,"f":15,"fp":43,"t":null,"sc":45,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7036,"n":"Bakola","s":"Sassuolo","r":"C","q":6,"f":14,"fp":41,"t":48,"sc":34,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":7146,"n":"Tourè I.","s":"Monza","r":"C","q":6,"f":14,"fp":41,"t":35,"sc":36,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5507,"n":"Busio","s":"Venezia","r":"C","q":5,"f":14,"fp":41,"t":92,"sc":39,"z":"Centrale","zt":2,"pz":"R1/P1","pr":null},{"id":6054,"n":"Moro N.","s":"Bologna","r":"C","q":4,"f":14,"fp":41,"t":52,"sc":31,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":4870,"n":"Adopo","s":"Cagliari","r":"C","q":7,"f":13,"fp":39,"t":100,"sc":39,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6629,"n":"Dele-Bashiru","s":"Lazio","r":"C","q":5,"f":13,"fp":39,"t":null,"sc":37,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":7203,"n":"Jashari","s":"Milan","r":"C","q":5,"f":13,"fp":39,"t":23,"sc":24,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6506,"n":"Fini ","s":"Frosinone","r":"C","q":4,"f":13,"fp":39,"t":null,"sc":41,"z":"Ala","zt":4,"pz":"","pr":null},{"id":5298,"n":"Pobega","s":"Bologna","r":"C","q":6,"f":12,"fp":30,"t":16,"sc":17,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5998,"n":"Zerbin","s":"Frosinone","r":"C","q":6,"f":12,"fp":30,"t":59,"sc":32,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6218,"n":"Oristanio","s":"Torino","r":"C","q":6,"f":12,"fp":30,"t":22,"sc":26,"z":"Ala","zt":4,"pz":"P2","pr":null},{"id":5301,"n":"Luis Henrique","s":"Inter","r":"C","q":5,"f":12,"fp":30,"t":null,"sc":34,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6170,"n":"Gineitis","s":"Torino","r":"C","q":5,"f":12,"fp":30,"t":66,"sc":25,"z":"Centrale","zt":2,"pz":"P3","pr":null},{"id":6895,"n":"Dominguez B.","s":"Sassuolo","r":"C","q":4,"f":12,"fp":30,"t":null,"sc":34,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7473,"n":"Cichella","s":"Frosinone","r":"C","q":4,"f":12,"fp":30,"t":16,"sc":17,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":333,"n":"Cataldi","s":"Lazio","r":"C","q":4,"f":12,"fp":30,"t":null,"sc":26,"z":"Centrale","zt":2,"pz":"P3","pr":null},{"id":7322,"n":"Ngom","s":"Lecce","r":"C","q":4,"f":12,"fp":30,"t":68,"sc":25,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6015,"n":"Berisha M.","s":"Lecce","r":"C","q":4,"f":12,"fp":30,"t":28,"sc":23,"z":"Trequartista","zt":3,"pz":"P2","pr":null},{"id":5453,"n":"Ricci S.","s":"Como","r":"C","q":4,"f":12,"fp":30,"t":null,"sc":26,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7208,"n":"Miller L.","s":"Udinese","r":"C","q":4,"f":12,"fp":30,"t":32,"sc":20,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7579,"n":"Massolin","s":"Cagliari","r":"C","q":4,"f":12,"fp":30,"t":null,"sc":30,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":7248,"n":"Gorter","s":"Lecce","r":"C","q":3,"f":12,"fp":30,"t":18,"sc":18,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7536,"n":"Diallo O.","s":"Parma","r":"C","q":3,"f":12,"fp":30,"t":null,"sc":34,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6815,"n":"Fadera","s":"Cagliari","r":"C","q":2,"f":12,"fp":30,"t":null,"sc":34,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7575,"n":"Mout","s":"Monza","r":"C","q":1,"f":12,"fp":30,"t":null,"sc":26,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6593,"n":"Akinsanmiro","s":"Monza","r":"C","q":7,"f":11,"fp":26,"t":80,"sc":23,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7409,"n":"Meichtry","s":"Genoa","r":"C","q":5,"f":11,"fp":26,"t":9,"sc":22,"z":"Ala","zt":4,"pz":"","pr":null},{"id":5319,"n":"Sohm","s":"Venezia","r":"C","q":5,"f":11,"fp":26,"t":49,"sc":19,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7474,"n":"Koutsoupias","s":"Frosinone","r":"C","q":4,"f":11,"fp":26,"t":null,"sc":22,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7341,"n":"Amorim","s":"Genoa","r":"C","q":4,"f":11,"fp":26,"t":17,"sc":15,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":2857,"n":"Traorè Hj.","s":"Genoa","r":"C","q":4,"f":11,"fp":26,"t":9,"sc":22,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6207,"n":"Almqvist","s":"Parma","r":"C","q":4,"f":11,"fp":26,"t":null,"sc":30,"z":"Ala","zt":4,"pz":"","pr":null},{"id":4947,"n":"Brescianini","s":"Fiorentina","r":"C","q":3,"f":11,"fp":26,"t":null,"sc":26,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":7528,"n":"Amondarain","s":"Bologna","r":"C","q":5,"f":10,"fp":21,"t":24,"sc":13,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":22,"n":"De Roon","s":"Roma","r":"C","q":4,"f":10,"fp":21,"t":null,"sc":18,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7127,"n":"Addai","s":"Como","r":"C","q":4,"f":10,"fp":21,"t":null,"sc":26,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7318,"n":"Gandelman","s":"Lecce","r":"C","q":4,"f":10,"fp":21,"t":24,"sc":17,"z":"Trequartista","zt":3,"pz":"P3","pr":null},{"id":7550,"n":"Grillitsch","s":"Frosinone","r":"C","q":4,"f":10,"fp":21,"t":15,"sc":15,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5131,"n":"Gilmour","s":"Napoli","r":"C","q":3,"f":10,"fp":21,"t":null,"sc":18,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7138,"n":"Ordonez C.","s":"Parma","r":"C","q":3,"f":10,"fp":21,"t":25,"sc":13,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6225,"n":"El Azzouzi O.","s":"Bologna","r":"C","q":2,"f":10,"fp":21,"t":null,"sc":18,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5007,"n":"Ilic","s":"Lecce","r":"C","q":1,"f":10,"fp":21,"t":55,"sc":16,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":2529,"n":"Mkhitaryan","s":"Inter","r":"C","q":4,"f":9,"fp":21,"t":null,"sc":18,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6206,"n":"Fabbian","s":"Parma","r":"C","q":4,"f":8,"fp":17,"t":43,"sc":16,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":4970,"n":"Messias","s":"Genoa","r":"C","q":4,"f":8,"fp":17,"t":null,"sc":22,"z":"Ala","zt":4,"pz":"R2","pr":null},{"id":6005,"n":"Ilkhan","s":"Torino","r":"C","q":4,"f":8,"fp":17,"t":null,"sc":14,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":1871,"n":"Deiola","s":"Cagliari","r":"C","q":3,"f":8,"fp":17,"t":null,"sc":14,"z":"Centrale","zt":2,"pz":"R3","pr":null},{"id":6917,"n":"Masini","s":"Frosinone","r":"C","q":3,"f":8,"fp":17,"t":20,"sc":10,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":801,"n":"Gagliardini","s":"Cagliari","r":"C","q":3,"f":8,"fp":17,"t":null,"sc":14,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7232,"n":"Fernandez T.","s":"Venezia","r":"C","q":3,"f":8,"fp":17,"t":null,"sc":22,"z":"Punta agg.","zt":4,"pz":"","pr":null},{"id":6640,"n":"Felici","s":"Cagliari","r":"C","q":5,"f":7,"fp":15,"t":null,"sc":21,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6024,"n":"Sulemana I.","s":"Sassuolo","r":"C","q":3,"f":7,"fp":15,"t":null,"sc":13,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6503,"n":"Stankovic A.","s":"Inter","r":"C","q":3,"f":7,"fp":15,"t":null,"sc":13,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5457,"n":"Maleh","s":"Lecce","r":"C","q":3,"f":7,"fp":15,"t":null,"sc":13,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6241,"n":"Gelli F.","s":"Frosinone","r":"C","q":3,"f":6,"fp":14,"t":null,"sc":16,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":5880,"n":"Ciurria","s":"Monza","r":"C","q":2,"f":6,"fp":14,"t":null,"sc":20,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7418,"n":"Chakvetadze","s":"Udinese","r":"C","q":2,"f":6,"fp":14,"t":null,"sc":20,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7183,"n":"Aboukhlal","s":"Torino","r":"C","q":3,"f":5,"fp":10,"t":null,"sc":16,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6903,"n":"Hasa","s":"Frosinone","r":"C","q":2,"f":5,"fp":10,"t":32,"sc":11,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":6219,"n":"Boloca","s":"Sassuolo","r":"C","q":2,"f":5,"fp":10,"t":null,"sc":8,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6246,"n":"Lipani","s":"Sassuolo","r":"C","q":2,"f":5,"fp":10,"t":17,"sc":6,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7092,"n":"Jovanovic","s":"Udinese","r":"C","q":2,"f":5,"fp":10,"t":null,"sc":16,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7345,"n":"Przyborek","s":"Lazio","r":"C","q":1,"f":5,"fp":10,"t":null,"sc":16,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7477,"n":"Colombo L.","s":"Monza","r":"C","q":3,"f":4,"fp":8,"t":null,"sc":7,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6980,"n":"Venturino","s":"Genoa","r":"C","q":2,"f":4,"fp":8,"t":null,"sc":15,"z":"Ala","zt":4,"pz":"","pr":null},{"id":6212,"n":"Zarraga","s":"Udinese","r":"C","q":2,"f":4,"fp":8,"t":null,"sc":7,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":526,"n":"Duncan","s":"Venezia","r":"C","q":2,"f":4,"fp":8,"t":null,"sc":7,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6889,"n":"Anjorin","s":"Torino","r":"C","q":1,"f":4,"fp":8,"t":null,"sc":11,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":5872,"n":"Helgason","s":"Venezia","r":"C","q":3,"f":3,"fp":6,"t":null,"sc":9,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":6191,"n":"Belahyane","s":"Lazio","r":"C","q":2,"f":3,"fp":6,"t":null,"sc":5,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7276,"n":"Cremaschi","s":"Parma","r":"C","q":2,"f":3,"fp":6,"t":null,"sc":13,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5725,"n":"Kone B.","s":"Frosinone","r":"C","q":1,"f":3,"fp":6,"t":null,"sc":5,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7574,"n":"Foe Ondoa","s":"Monza","r":"C","q":2,"f":2,"fp":5,"t":null,"sc":4,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6410,"n":"Kaba","s":"Lecce","r":"C","q":1,"f":2,"fp":5,"t":null,"sc":4,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":6592,"n":"Forson O.","s":"Monza","r":"C","q":2,"f":1,"fp":0,"t":null,"sc":8,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7165,"n":"Liteta","s":"Cagliari","r":"C","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7357,"n":"Lahdo","s":"Como","r":"C","q":1,"f":1,"fp":0,"t":null,"sc":4,"z":"Trequartista","zt":3,"pz":"","pr":null},{"id":7456,"n":"El Azzouzi A.","s":"Frosinone","r":"C","q":1,"f":1,"fp":0,"t":8,"sc":0,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7319,"n":"Fofana Sa.","s":"Lecce","r":"C","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7481,"n":"Dagasso","s":"Venezia","r":"C","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":7571,"n":"Laerke","s":"Lecce","r":"C","q":1,"f":1,"fp":0,"t":null,"sc":8,"z":"Ala","zt":4,"pz":"","pr":null},{"id":7572,"n":"Comotto","s":"Milan","r":"C","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":"Centrale","zt":2,"pz":"","pr":null},{"id":5462,"n":"Ciervo","s":"Cagliari","r":"C","q":1,"f":1,"fp":0,"t":null,"sc":8,"z":"Ala","zt":4,"pz":"","pr":null},{"id":254,"n":"Dimarco","s":"Inter","r":"D","q":31,"f":240,"fp":99,"t":100,"sc":100,"z":"Esterno","zt":4,"pz":"P2","pr":null},{"id":7181,"n":"Wesley","s":"Roma","r":"D","q":18,"f":87,"fp":99,"t":100,"sc":100,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":4998,"n":"Molina N.","s":"Roma","r":"D","q":18,"f":78,"fp":98,"t":100,"sc":100,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":2788,"n":"Bremer","s":"Juventus","r":"D","q":16,"f":60,"fp":98,"t":100,"sc":94,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4409,"n":"Rrahmani","s":"Napoli","r":"D","q":15,"f":51,"fp":97,"t":92,"sc":89,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":2296,"n":"Mancini","s":"Roma","r":"D","q":16,"f":50,"fp":97,"t":100,"sc":93,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5022,"n":"Pavlovic","s":"Milan","r":"D","q":14,"f":49,"fp":96,"t":100,"sc":92,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4159,"n":"Akanji","s":"Inter","r":"D","q":15,"f":47,"fp":95,"t":96,"sc":89,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4976,"n":"Kalulu","s":"Juventus","r":"D","q":14,"f":47,"fp":95,"t":97,"sc":94,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":6956,"n":"Solet","s":"Udinese","r":"D","q":13,"f":46,"fp":95,"t":100,"sc":91,"z":"Centrale","zt":1,"pz":"R2","pr":null},{"id":2120,"n":"Bastoni","s":"Inter","r":"D","q":14,"f":43,"fp":94,"t":100,"sc":90,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4317,"n":"N'Dicka","s":"Roma","r":"D","q":13,"f":42,"fp":94,"t":100,"sc":90,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5750,"n":"Ostigard","s":"Genoa","r":"D","q":11,"f":41,"fp":93,"t":100,"sc":89,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":2816,"n":"Di Lorenzo","s":"Napoli","r":"D","q":12,"f":39,"fp":93,"t":100,"sc":100,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5982,"n":"Spence","s":"Inter","r":"D","q":11,"f":37,"fp":92,"t":82,"sc":92,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6217,"n":"Bisseck","s":"Inter","r":"D","q":12,"f":36,"fp":91,"t":41,"sc":60,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5641,"n":"Chalobah T.","s":"Como","r":"D","q":10,"f":32,"fp":91,"t":94,"sc":88,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":5833,"n":"Gila","s":"Milan","r":"D","q":13,"f":31,"fp":90,"t":100,"sc":86,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6869,"n":"Ramon","s":"Como","r":"D","q":10,"f":31,"fp":90,"t":100,"sc":86,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5514,"n":"Vasquez","s":"Genoa","r":"D","q":9,"f":30,"fp":89,"t":100,"sc":89,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":5526,"n":"Scalvini","s":"Atalanta","r":"D","q":10,"f":28,"fp":89,"t":100,"sc":85,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4807,"n":"Hermoso","s":"Roma","r":"D","q":11,"f":26,"fp":88,"t":78,"sc":74,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4137,"n":"Diego Carlos","s":"Parma","r":"D","q":8,"f":26,"fp":88,"t":null,"sc":71,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":2514,"n":"Stones","s":"Inter","r":"D","q":12,"f":25,"fp":86,"t":62,"sc":66,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":1852,"n":"Spinazzola","s":"Napoli","r":"D","q":8,"f":25,"fp":86,"t":91,"sc":90,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6727,"n":"Couto","s":"Como","r":"D","q":8,"f":25,"fp":86,"t":91,"sc":90,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5620,"n":"Tavares N.","s":"Lazio","r":"D","q":7,"f":25,"fp":86,"t":null,"sc":81,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":4734,"n":"Miranda J.","s":"Bologna","r":"D","q":8,"f":23,"fp":85,"t":55,"sc":65,"z":"Esterno","zt":4,"pz":"P3","pr":null},{"id":6496,"n":"Bartesaghi","s":"Milan","r":"D","q":8,"f":22,"fp":84,"t":35,"sc":65,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5862,"n":"Valeri","s":"Parma","r":"D","q":8,"f":22,"fp":84,"t":92,"sc":89,"z":"Esterno","zt":4,"pz":"P3","pr":null},{"id":6664,"n":"Delprato","s":"Parma","r":"D","q":8,"f":21,"fp":83,"t":100,"sc":91,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6867,"n":"Valle","s":"Como","r":"D","q":6,"f":21,"fp":83,"t":39,"sc":66,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5885,"n":"Dodò","s":"Fiorentina","r":"D","q":9,"f":20,"fp":77,"t":32,"sc":59,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6989,"n":"Tiago Gabriel","s":"Lecce","r":"D","q":8,"f":20,"fp":77,"t":78,"sc":65,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5675,"n":"Theate","s":"Bologna","r":"D","q":8,"f":20,"fp":77,"t":62,"sc":62,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":4210,"n":"Mina","s":"Cagliari","r":"D","q":7,"f":20,"fp":77,"t":25,"sc":35,"z":"Centrale","zt":1,"pz":"R2","pr":null},{"id":5365,"n":"Dragusin","s":"Fiorentina","r":"D","q":7,"f":20,"fp":77,"t":100,"sc":73,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7220,"n":"Belghali","s":"Torino","r":"D","q":7,"f":20,"fp":77,"t":null,"sc":73,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5877,"n":"Carlos Augusto","s":"Inter","r":"D","q":6,"f":20,"fp":77,"t":null,"sc":73,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":460,"n":"Romagnoli","s":"Lazio","r":"D","q":6,"f":20,"fp":77,"t":9,"sc":38,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":2188,"n":"Marusic","s":"Lazio","r":"D","q":6,"f":20,"fp":77,"t":95,"sc":83,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6485,"n":"Kristensen T.","s":"Atalanta","r":"D","q":6,"f":20,"fp":77,"t":73,"sc":67,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":5739,"n":"De Winter","s":"Milan","r":"D","q":5,"f":20,"fp":77,"t":null,"sc":65,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":4994,"n":"Vojvoda","s":"Udinese","r":"D","q":9,"f":19,"fp":74,"t":85,"sc":76,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":554,"n":"Zappacosta","s":"Atalanta","r":"D","q":8,"f":19,"fp":74,"t":64,"sc":69,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":4433,"n":"Zortea","s":"Bologna","r":"D","q":7,"f":19,"fp":74,"t":62,"sc":68,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6672,"n":"Idzes","s":"Sassuolo","r":"D","q":7,"f":19,"fp":74,"t":100,"sc":70,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7580,"n":"Sutalo J.","s":"Lazio","r":"D","q":7,"f":19,"fp":74,"t":78,"sc":62,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5520,"n":"Cambiaso","s":"Juventus","r":"D","q":8,"f":18,"fp":72,"t":35,"sc":45,"z":"Esterno","zt":4,"pz":"P3","pr":null},{"id":6531,"n":"Jimenez A.","s":"Fiorentina","r":"D","q":7,"f":18,"fp":72,"t":59,"sc":65,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":4664,"n":"Badiashile","s":"Napoli","r":"D","q":7,"f":18,"fp":72,"t":69,"sc":57,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7219,"n":"Bernasconi","s":"Atalanta","r":"D","q":6,"f":18,"fp":72,"t":70,"sc":69,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6042,"n":"Lucumì","s":"Juventus","r":"D","q":7,"f":17,"fp":71,"t":63,"sc":54,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4887,"n":"Bellanova","s":"Atalanta","r":"D","q":6,"f":17,"fp":71,"t":36,"sc":56,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":4657,"n":"Celik","s":"Juventus","r":"D","q":8,"f":16,"fp":70,"t":22,"sc":51,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6320,"n":"Doekhi","s":"Lazio","r":"D","q":8,"f":16,"fp":70,"t":68,"sc":55,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7294,"n":"Valdepenas","s":"Fiorentina","r":"D","q":5,"f":16,"fp":70,"t":71,"sc":60,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":7529,"n":"Koulierakis","s":"Roma","r":"D","q":8,"f":15,"fp":65,"t":22,"sc":36,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5701,"n":"Obert","s":"Cagliari","r":"D","q":7,"f":15,"fp":65,"t":100,"sc":73,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7469,"n":"Bracaglia","s":"Frosinone","r":"D","q":7,"f":15,"fp":65,"t":53,"sc":50,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":4401,"n":"Gabbia","s":"Milan","r":"D","q":7,"f":15,"fp":65,"t":20,"sc":30,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7485,"n":"Mangas","s":"Monza","r":"D","q":7,"f":15,"fp":65,"t":100,"sc":73,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7212,"n":"Heggem","s":"Bologna","r":"D","q":6,"f":15,"fp":65,"t":89,"sc":61,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":2724,"n":"Buongiorno","s":"Napoli","r":"D","q":6,"f":15,"fp":65,"t":17,"sc":34,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4147,"n":"Caleta-Car","s":"Sassuolo","r":"D","q":6,"f":15,"fp":65,"t":null,"sc":51,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7621,"n":"Sugawara","s":"Cagliari","r":"D","q":6,"f":15,"fp":65,"t":null,"sc":63,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6642,"n":"Coco","s":"Torino","r":"D","q":7,"f":14,"fp":61,"t":83,"sc":52,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6660,"n":"Marcandalli","s":"Genoa","r":"D","q":6,"f":14,"fp":61,"t":100,"sc":57,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4177,"n":"Pavard","s":"Inter","r":"D","q":6,"f":14,"fp":61,"t":null,"sc":52,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":4817,"n":"Pedraza","s":"Lazio","r":"D","q":6,"f":14,"fp":61,"t":94,"sc":67,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7268,"n":"Rodriguez Ju.","s":"Cagliari","r":"D","q":4,"f":14,"fp":61,"t":94,"sc":59,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":6986,"n":"Rensch","s":"Roma","r":"D","q":4,"f":14,"fp":61,"t":null,"sc":60,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7238,"n":"Kouadio","s":"Monza","r":"D","q":3,"f":14,"fp":61,"t":69,"sc":52,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":7235,"n":"Troilo","s":"Parma","r":"D","q":3,"f":14,"fp":61,"t":92,"sc":55,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6495,"n":"Comuzzo","s":"Torino","r":"D","q":8,"f":13,"fp":54,"t":100,"sc":50,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5010,"n":"Ismajli","s":"Torino","r":"D","q":7,"f":13,"fp":54,"t":32,"sc":32,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5678,"n":"Holm","s":"Bologna","r":"D","q":6,"f":13,"fp":54,"t":38,"sc":45,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7414,"n":"Kaiki","s":"Como","r":"D","q":6,"f":13,"fp":54,"t":53,"sc":49,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":4952,"n":"Monterisi","s":"Frosinone","r":"D","q":6,"f":13,"fp":54,"t":94,"sc":48,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7329,"n":"Obrador","s":"Sassuolo","r":"D","q":6,"f":13,"fp":54,"t":49,"sc":48,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7274,"n":"Zè Pedro","s":"Cagliari","r":"D","q":5,"f":13,"fp":54,"t":92,"sc":52,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":6893,"n":"Kempf","s":"Como","r":"D","q":5,"f":13,"fp":54,"t":null,"sc":42,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7467,"n":"Calvani","s":"Frosinone","r":"D","q":5,"f":13,"fp":54,"t":39,"sc":34,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5840,"n":"Olivera","s":"Napoli","r":"D","q":5,"f":13,"fp":54,"t":9,"sc":37,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7253,"n":"Bella-Kotchap","s":"Venezia","r":"D","q":5,"f":13,"fp":54,"t":100,"sc":50,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7012,"n":"Provstgaard","s":"Lazio","r":"D","q":4,"f":13,"fp":54,"t":45,"sc":35,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5273,"n":"Estupinan","s":"Milan","r":"D","q":3,"f":13,"fp":54,"t":11,"sc":38,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5555,"n":"Kamara H.","s":"Udinese","r":"D","q":9,"f":12,"fp":44,"t":92,"sc":50,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7410,"n":"Viery","s":"Fiorentina","r":"D","q":6,"f":12,"fp":44,"t":63,"sc":36,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":6990,"n":"Veiga D.","s":"Lecce","r":"D","q":6,"f":12,"fp":44,"t":100,"sc":52,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":4502,"n":"Gallo","s":"Lecce","r":"D","q":6,"f":12,"fp":44,"t":100,"sc":52,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6202,"n":"Beukema","s":"Napoli","r":"D","q":6,"f":12,"fp":44,"t":null,"sc":33,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7069,"n":"Fortini","s":"Torino","r":"D","q":6,"f":12,"fp":44,"t":46,"sc":40,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7564,"n":"Leysen F.","s":"Sassuolo","r":"D","q":6,"f":12,"fp":44,"t":45,"sc":32,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":6766,"n":"Kelly L.","s":"Juventus","r":"D","q":5,"f":12,"fp":44,"t":29,"sc":28,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":6632,"n":"Gaspar K.","s":"Lecce","r":"D","q":5,"f":12,"fp":44,"t":100,"sc":40,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4845,"n":"Correia T.","s":"Venezia","r":"D","q":5,"f":12,"fp":44,"t":87,"sc":49,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5751,"n":"Patterson","s":"Torino","r":"D","q":5,"f":12,"fp":44,"t":null,"sc":45,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5578,"n":"Kossounou","s":"Atalanta","r":"D","q":4,"f":12,"fp":44,"t":11,"sc":24,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":7240,"n":"Siebert","s":"Lecce","r":"D","q":4,"f":12,"fp":44,"t":29,"sc":24,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5838,"n":"Birindelli","s":"Monza","r":"D","q":4,"f":12,"fp":44,"t":88,"sc":49,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7526,"n":"Comert","s":"Torino","r":"D","q":4,"f":12,"fp":44,"t":85,"sc":37,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4263,"n":"Kabasele","s":"Udinese","r":"D","q":4,"f":12,"fp":44,"t":20,"sc":18,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6821,"n":"Hainaut","s":"Venezia","r":"D","q":4,"f":12,"fp":44,"t":65,"sc":44,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7326,"n":"Helland","s":"Bologna","r":"D","q":3,"f":12,"fp":44,"t":22,"sc":27,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":7175,"n":"Joao Mario","s":"Fiorentina","r":"D","q":3,"f":12,"fp":44,"t":19,"sc":34,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6046,"n":"Hien","s":"Atalanta","r":"D","q":7,"f":11,"fp":40,"t":null,"sc":30,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4705,"n":"Balerdi","s":"Roma","r":"D","q":6,"f":11,"fp":40,"t":null,"sc":30,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7563,"n":"Favasuli","s":"Napoli","r":"D","q":4,"f":11,"fp":40,"t":null,"sc":42,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6659,"n":"Lucchesi","s":"Monza","r":"D","q":3,"f":11,"fp":40,"t":43,"sc":25,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6925,"n":"Palma","s":"Udinese","r":"D","q":3,"f":11,"fp":40,"t":25,"sc":21,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6896,"n":"Van Der Brempt","s":"Sassuolo","r":"D","q":2,"f":11,"fp":40,"t":31,"sc":34,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6238,"n":"Oyono A.","s":"Frosinone","r":"D","q":6,"f":10,"fp":28,"t":68,"sc":32,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6631,"n":"Ghilardi","s":"Roma","r":"D","q":5,"f":10,"fp":28,"t":null,"sc":20,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5851,"n":"Doig","s":"Sassuolo","r":"D","q":5,"f":10,"fp":28,"t":58,"sc":30,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5695,"n":"Haps","s":"Venezia","r":"D","q":5,"f":10,"fp":28,"t":null,"sc":32,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7068,"n":"Vitik","s":"Bologna","r":"D","q":4,"f":10,"fp":28,"t":20,"sc":13,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7014,"n":"Smolcic I.","s":"Como","r":"D","q":4,"f":10,"fp":28,"t":9,"sc":23,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5449,"n":"Parisi","s":"Fiorentina","r":"D","q":4,"f":10,"fp":28,"t":8,"sc":23,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7537,"n":"Mitaj","s":"Genoa","r":"D","q":4,"f":10,"fp":28,"t":38,"sc":27,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5831,"n":"Gatti","s":"Juventus","r":"D","q":4,"f":10,"fp":28,"t":null,"sc":20,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7131,"n":"Floriani Mussolini","s":"Lazio","r":"D","q":4,"f":10,"fp":28,"t":null,"sc":32,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5307,"n":"Valenti","s":"Parma","r":"D","q":4,"f":10,"fp":28,"t":null,"sc":20,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":4374,"n":"Walukiewicz","s":"Sassuolo","r":"D","q":4,"f":10,"fp":28,"t":60,"sc":22,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":5820,"n":"Bertola","s":"Udinese","r":"D","q":4,"f":10,"fp":28,"t":60,"sc":22,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":5527,"n":"Zanoli","s":"Udinese","r":"D","q":4,"f":10,"fp":28,"t":15,"sc":24,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":256,"n":"Juan Jesus","s":"Venezia","r":"D","q":4,"f":10,"fp":28,"t":null,"sc":24,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":4378,"n":"Ranieri L.","s":"Fiorentina","r":"D","q":3,"f":10,"fp":28,"t":24,"sc":17,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":7255,"n":"Britschgi","s":"Parma","r":"D","q":3,"f":10,"fp":28,"t":null,"sc":32,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7538,"n":"Halhal","s":"Venezia","r":"D","q":3,"f":10,"fp":28,"t":43,"sc":16,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6892,"n":"Schingtienne","s":"Venezia","r":"D","q":3,"f":10,"fp":28,"t":100,"sc":24,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5742,"n":"Drameh","s":"Genoa","r":"D","q":3,"f":10,"fp":28,"t":null,"sc":32,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6021,"n":"Abankwah","s":"Udinese","r":"D","q":2,"f":10,"fp":28,"t":18,"sc":17,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":7599,"n":"Lulli","s":"Roma","r":"D","q":2,"f":10,"fp":28,"t":null,"sc":32,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5481,"n":"Mazzocchi","s":"Venezia","r":"D","q":1,"f":10,"fp":28,"t":null,"sc":32,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":4925,"n":"Carboni A.","s":"Monza","r":"D","q":3,"f":9,"fp":28,"t":100,"sc":28,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":2640,"n":"Kolasinac","s":"Atalanta","r":"D","q":6,"f":8,"fp":21,"t":null,"sc":18,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":4751,"n":"Tomori","s":"Milan","r":"D","q":6,"f":8,"fp":21,"t":null,"sc":14,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7532,"n":"Kofler","s":"Cagliari","r":"D","q":5,"f":8,"fp":21,"t":null,"sc":14,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5603,"n":"Pongracic","s":"Fiorentina","r":"D","q":4,"f":8,"fp":21,"t":13,"sc":8,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5757,"n":"Cittadini","s":"Frosinone","r":"D","q":4,"f":8,"fp":21,"t":33,"sc":10,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7312,"n":"Arizala","s":"Udinese","r":"D","q":4,"f":8,"fp":21,"t":null,"sc":26,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":4375,"n":"Terzic","s":"Frosinone","r":"D","q":4,"f":8,"fp":21,"t":47,"sc":23,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7154,"n":"Odenthal","s":"Sassuolo","r":"D","q":3,"f":8,"fp":21,"t":8,"sc":7,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7605,"n":"Tchato","s":"Frosinone","r":"D","q":3,"f":8,"fp":21,"t":26,"sc":21,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6601,"n":"Kambwala","s":"Como","r":"D","q":3,"f":8,"fp":21,"t":null,"sc":18,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":6638,"n":"Marin R.","s":"Napoli","r":"D","q":2,"f":8,"fp":21,"t":null,"sc":14,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7202,"n":"Ndiaye","s":"Parma","r":"D","q":2,"f":8,"fp":21,"t":52,"sc":12,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7260,"n":"Ziolkowski","s":"Monza","r":"D","q":1,"f":8,"fp":21,"t":null,"sc":14,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6985,"n":"Candè","s":"Sassuolo","r":"D","q":3,"f":7,"fp":19,"t":26,"sc":12,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":6673,"n":"Sverko","s":"Venezia","r":"D","q":3,"f":7,"fp":19,"t":null,"sc":16,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":7478,"n":"Franjic","s":"Venezia","r":"D","q":3,"f":7,"fp":19,"t":15,"sc":19,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":2728,"n":"Pellegrini Lu.","s":"Lazio","r":"D","q":2,"f":7,"fp":19,"t":null,"sc":24,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6890,"n":"Moreno M.","s":"Venezia","r":"D","q":4,"f":6,"fp":17,"t":42,"sc":8,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7540,"n":"Akpoguma","s":"Frosinone","r":"D","q":3,"f":6,"fp":17,"t":40,"sc":8,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7483,"n":"Alhassane","s":"Bologna","r":"D","q":2,"f":6,"fp":17,"t":null,"sc":22,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5498,"n":"Casale","s":"Bologna","r":"D","q":3,"f":5,"fp":12,"t":null,"sc":6,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5994,"n":"Ebosse","s":"Udinese","r":"D","q":3,"f":5,"fp":12,"t":15,"sc":7,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":6977,"n":"Otoa","s":"Genoa","r":"D","q":2,"f":5,"fp":12,"t":null,"sc":6,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":791,"n":"Sabelli","s":"Genoa","r":"D","q":2,"f":5,"fp":12,"t":null,"sc":18,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":2263,"n":"Lazzari","s":"Lazio","r":"D","q":2,"f":5,"fp":12,"t":null,"sc":18,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7182,"n":"Ndaba","s":"Lecce","r":"D","q":2,"f":5,"fp":12,"t":null,"sc":18,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":252,"n":"Biraghi","s":"Torino","r":"D","q":2,"f":5,"fp":12,"t":null,"sc":18,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7548,"n":"Aurelio","s":"Cagliari","r":"D","q":2,"f":5,"fp":12,"t":null,"sc":18,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6537,"n":"Goglichidze","s":"Monza","r":"D","q":2,"f":5,"fp":12,"t":null,"sc":10,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":6883,"n":"Jean","s":"Lecce","r":"D","q":2,"f":4,"fp":8,"t":null,"sc":3,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7525,"n":"Diawara S.","s":"Milan","r":"D","q":2,"f":4,"fp":8,"t":null,"sc":7,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":7476,"n":"Bakoune","s":"Monza","r":"D","q":2,"f":4,"fp":8,"t":null,"sc":15,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6681,"n":"Sagrado","s":"Venezia","r":"D","q":2,"f":4,"fp":8,"t":null,"sc":15,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7573,"n":"Cinquegrano","s":"Sassuolo","r":"D","q":2,"f":4,"fp":8,"t":null,"sc":15,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5812,"n":"Terracciano F.","s":"Milan","r":"D","q":2,"f":4,"fp":8,"t":null,"sc":11,"z":"Braccetto","zt":3,"pz":"","pr":null},{"id":487,"n":"De Silvestri","s":"Bologna","r":"D","q":1,"f":4,"fp":8,"t":null,"sc":15,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":6039,"n":"Cabal","s":"Juventus","r":"D","q":1,"f":4,"fp":8,"t":null,"sc":15,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7125,"n":"Idrissi R.","s":"Cagliari","r":"D","q":3,"f":3,"fp":5,"t":null,"sc":12,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7413,"n":"Puczka","s":"Genoa","r":"D","q":2,"f":3,"fp":5,"t":null,"sc":12,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":294,"n":"Rugani","s":"Juventus","r":"D","q":1,"f":3,"fp":5,"t":null,"sc":0,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6809,"n":"Marianucci","s":"Napoli","r":"D","q":1,"f":3,"fp":5,"t":null,"sc":0,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6149,"n":"Carboni F.","s":"Parma","r":"D","q":1,"f":3,"fp":5,"t":null,"sc":12,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":5399,"n":"Antov","s":"Monza","r":"D","q":1,"f":2,"fp":4,"t":null,"sc":0,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":6826,"n":"Dembelè A.","s":"Lecce","r":"D","q":1,"f":2,"fp":4,"t":null,"sc":11,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7615,"n":"Drobnic","s":"Parma","r":"D","q":2,"f":1,"fp":0,"t":null,"sc":0,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":418,"n":"Goldaniga","s":"Como","r":"D","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":5424,"n":"Amey","s":"Frosinone","r":"D","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":327,"n":"Patric","s":"Lazio","r":"D","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":"Terzino dx","zt":2,"pz":"","pr":null},{"id":7156,"n":"Pieragnolo","s":"Sassuolo","r":"D","q":1,"f":1,"fp":0,"t":null,"sc":8,"z":"Esterno","zt":4,"pz":"","pr":null},{"id":7454,"n":"Gomes","s":"Venezia","r":"D","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":7553,"n":"Omar Fayed","s":"Frosinone","r":"D","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":"Centrale","zt":1,"pz":"","pr":null},{"id":7604,"n":"Maye","s":"Monza","r":"D","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":"Terzino sx","zt":2,"pz":"","pr":null},{"id":5841,"n":"Svilar","s":"Roma","r":"P","q":19,"f":85,"fp":98,"t":100,"sc":98,"z":null,"zt":null,"pz":"","pr":1},{"id":4964,"n":"Vicario","s":"Juventus","r":"P","q":17,"f":70,"fp":97,"t":100,"sc":97,"z":null,"zt":null,"pz":"","pr":1},{"id":5116,"n":"Martinez Jo.","s":"Inter","r":"P","q":17,"f":68,"fp":95,"t":95,"sc":93,"z":null,"zt":null,"pz":"","pr":1},{"id":4431,"n":"Carnesecchi","s":"Atalanta","r":"P","q":17,"f":55,"fp":94,"t":100,"sc":94,"z":null,"zt":null,"pz":"","pr":1},{"id":4312,"n":"Maignan","s":"Milan","r":"P","q":15,"f":52,"fp":92,"t":100,"sc":92,"z":null,"zt":null,"pz":"","pr":1},{"id":6966,"n":"Butez","s":"Como","r":"P","q":15,"f":50,"fp":91,"t":100,"sc":91,"z":null,"zt":null,"pz":"","pr":1},{"id":572,"n":"Meret","s":"Napoli","r":"P","q":11,"f":48,"fp":89,"t":100,"sc":89,"z":null,"zt":null,"pz":"","pr":1},{"id":6482,"n":"Mandas","s":"Lazio","r":"P","q":10,"f":36,"fp":88,"t":85,"sc":81,"z":null,"zt":null,"pz":"","pr":1},{"id":133,"n":"Skorupski","s":"Bologna","r":"P","q":10,"f":32,"fp":86,"t":100,"sc":86,"z":null,"zt":null,"pz":"","pr":1},{"id":2521,"n":"De Gea","s":"Fiorentina","r":"P","q":11,"f":30,"fp":84,"t":100,"sc":84,"z":null,"zt":null,"pz":"","pr":1},{"id":6462,"n":"Okoye","s":"Udinese","r":"P","q":9,"f":28,"fp":83,"t":100,"sc":83,"z":null,"zt":null,"pz":"","pr":1},{"id":6534,"n":"Perri","s":"Torino","r":"P","q":9,"f":26,"fp":80,"t":54,"sc":62,"z":null,"zt":null,"pz":"","pr":1},{"id":2134,"n":"Falcone","s":"Lecce","r":"P","q":8,"f":26,"fp":80,"t":100,"sc":80,"z":null,"zt":null,"pz":"","pr":1},{"id":4360,"n":"Caprile","s":"Cagliari","r":"P","q":10,"f":25,"fp":77,"t":100,"sc":77,"z":null,"zt":null,"pz":"","pr":1},{"id":6344,"n":"Sanchez Ro.","s":"Como","r":"P","q":8,"f":25,"fp":77,"t":null,"sc":65,"z":null,"zt":null,"pz":"","pr":2},{"id":7332,"n":"Bijlow","s":"Genoa","r":"P","q":8,"f":15,"fp":73,"t":100,"sc":73,"z":null,"zt":null,"pz":"","pr":1},{"id":4236,"n":"Muric","s":"Sassuolo","r":"P","q":7,"f":15,"fp":73,"t":97,"sc":72,"z":null,"zt":null,"pz":"","pr":1},{"id":6415,"n":"Palmisani","s":"Frosinone","r":"P","q":5,"f":12,"fp":72,"t":96,"sc":71,"z":null,"zt":null,"pz":"","pr":1},{"id":6248,"n":"Stankovic F.","s":"Venezia","r":"P","q":6,"f":11,"fp":70,"t":100,"sc":70,"z":null,"zt":null,"pz":"","pr":1},{"id":6662,"n":"Corvi","s":"Parma","r":"P","q":2,"f":10,"fp":67,"t":49,"sc":50,"z":null,"zt":null,"pz":"","pr":2},{"id":7301,"n":"Tornqvist","s":"Monza","r":"P","q":1,"f":10,"fp":67,"t":null,"sc":57,"z":null,"zt":null,"pz":"","pr":2},{"id":7411,"n":"Daffara","s":"Parma","r":"P","q":6,"f":7,"fp":66,"t":51,"sc":50,"z":null,"zt":null,"pz":"","pr":1},{"id":2170,"n":"Milinkovic-Savic V.","s":"Napoli","r":"P","q":5,"f":5,"fp":59,"t":null,"sc":50,"z":null,"zt":null,"pz":"","pr":2},{"id":4485,"n":"Thiam","s":"Monza","r":"P","q":4,"f":5,"fp":59,"t":85,"sc":55,"z":null,"zt":null,"pz":"","pr":1},{"id":2814,"n":"Provedel","s":"Inter","r":"P","q":2,"f":5,"fp":59,"t":null,"sc":50,"z":null,"zt":null,"pz":"","pr":2},{"id":7457,"n":"Mascardi","s":"Torino","r":"P","q":1,"f":5,"fp":59,"t":23,"sc":36,"z":null,"zt":null,"pz":"","pr":2},{"id":7463,"n":"Desplanches","s":"Frosinone","r":"P","q":2,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":4,"n":"Sportiello","s":"Atalanta","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":7533,"n":"Happonen","s":"Bologna","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":7172,"n":"Pessina Mas.","s":"Bologna","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":6650,"n":"Sherri","s":"Cagliari","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":2809,"n":"Vigorito","s":"Como","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":6403,"n":"Christensen O.","s":"Fiorentina","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":158,"n":"Lezzerini","s":"Fiorentina","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":7466,"n":"Lolic","s":"Frosinone","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":219,"n":"Sommariva","s":"Genoa","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":6569,"n":"Stolz","s":"Genoa","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":1926,"n":"Di Gennaro","s":"Inter","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":1930,"n":"Pinsoglio","s":"Juventus","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":7337,"n":"Motta","s":"Lazio","r":"P","q":1,"f":1,"fp":0,"t":15,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":7534,"n":"Renzetti","s":"Lazio","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":2815,"n":"Terracciano","s":"Milan","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":6813,"n":"Torriani","s":"Milan","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":7475,"n":"Strajnar","s":"Monza","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":2845,"n":"Contini","s":"Napoli","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":7048,"n":"De Marzi","s":"Roma","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":610,"n":"Gollini","s":"Roma","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":4518,"n":"Russo A.","s":"Sassuolo","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":4867,"n":"Turati","s":"Sassuolo","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":5320,"n":"Paleari","s":"Torino","r":"P","q":1,"f":1,"fp":0,"t":23,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":7363,"n":"Siviero","s":"Torino","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":4},{"id":543,"n":"Padelli","s":"Udinese","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":5707,"n":"Piana","s":"Udinese","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":6671,"n":"Grandi","s":"Venezia","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":7531,"n":"Pozzi","s":"Venezia","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":2127,"n":"Satalino","s":"Sassuolo","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":4},{"id":7557,"n":"Penev","s":"Lecce","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":2},{"id":7560,"n":"Pisseri","s":"Frosinone","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":4},{"id":3,"n":"Radunovic","s":"Cagliari","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":4957,"n":"Montipò","s":"Venezia","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":4},{"id":4468,"n":"Bleve","s":"Lecce","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":7603,"n":"Grabara","s":"Juventus","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3},{"id":7611,"n":"Mrozek","s":"Udinese","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":4},{"id":2874,"n":"Ghidotti","s":"Parma","r":"P","q":1,"f":1,"fp":0,"t":null,"sc":0,"z":null,"zt":null,"pz":"","pr":3}]</script>
+
+<script>
+(function(){
+'use strict';
+
+/* =======================================================================================
+   COSTANTI DI LEGA
+   Tutte qui in testa perche' il regolamento non e' ancora stato verificato: quando
+   arrivera', si cambiano questi numeri e non si tocca altro.
+   ======================================================================================= */
+
+const MODULI = {
+  '3-4-3':{D:3,C:4,A:3}, '3-5-2':{D:3,C:5,A:2},
+  '4-3-3':{D:4,C:3,A:3}, '4-4-2':{D:4,C:4,A:2}, '4-5-1':{D:4,C:5,A:1},
+  '5-3-2':{D:5,C:3,A:2}, '5-4-1':{D:5,C:4,A:1}
+};
+const SLOT_MAX = {P:3, D:8, C:8, A:6};
+const ROLE_ORDER = ['P','D','C','A'];
+const ROLE_NOME = {P:'Portiere', D:'Difensore', C:'Centrocampista', A:'Attaccante'};
+const MAX_CAMBI = 3;              // cambi che entrano dalla panchina, da regolamento
+
+/* Il modificatore di difesa e' una MEDIA su portiere + 3 migliori difensori. Le soglie di
+   conversione in punti cambiano da lega a lega e per la nostra NON sono state verificate.
+   Qui si usa una conversione lineare prudente solo per poter CONFRONTARE i moduli tra loro;
+   il valore assoluto non viene mai mostrato come se fosse un punteggio certo. */
+const MOD_RIF = 6.00;             // media attorno a cui il modificatore non da' ne toglie
+const MOD_PESO = 4.0;             // fantapunti per ogni punto pieno di media sopra il riferimento
+
+/* =======================================================================================
+   MODELLO 1 — MEDIA VOTO DI SQUADRA
+   Ripreso dall'app asta senza modifiche concettuali: meta' rango e meta' valore
+   normalizzato. Il solo rango spaziava le squadre in modo uniforme, il solo valore
+   schiacciava la meta' classifica.
+   ======================================================================================= */
+
+const MV_MIN = 5.75, MV_MAX = 6.15, MV_AGG_MAX = 0.12;
+let MV_SQUADRA = {};
+
+/* Correzione posizionale: il modificatore conta il VOTO, non i bonus, quindi la quotazione
+   di un esterno e' gonfiata da gol e assist che al modificatore non servono. */
+const MV_ZONA = {
+  'Centrale':{off:+0.04, smorza:1.0}, 'Braccetto':{off:+0.03, smorza:1.0},
+  'Esterno':{off:-0.05, smorza:0.6},
+  'Terzino sx':{off:-0.04, smorza:0.7}, 'Terzino dx':{off:-0.04, smorza:0.7}
+};
+
+function calcolaMvSquadre(){
+  const idx = {}, squadre = [];
+  LISTONE.forEach(p=>{ if(squadre.indexOf(p.s)===-1) squadre.push(p.s); });
+  squadre.forEach(sq=>{
+    const D = LISTONE.filter(p=>p.s===sq && p.r==='D').sort((a,b)=>b.q-a.q).slice(0,4);
+    const G = LISTONE.filter(p=>p.s===sq && p.r==='P').sort((a,b)=>b.q-a.q).slice(0,1);
+    const mD = D.length ? D.reduce((s,x)=>s+x.q,0)/D.length : 0;
+    const mP = G.length ? G[0].q : 0;
+    idx[sq] = 0.25*mP + 0.75*mD;      // stessi pesi del modificatore
+  });
+  const ord = squadre.slice().sort((a,b)=> idx[a]-idx[b]);
+  const vals = squadre.map(sq=>idx[sq]);
+  const vmin = Math.min.apply(null,vals), vmax = Math.max.apply(null,vals);
+  MV_SQUADRA = {};
+  ord.forEach((sq,i)=>{
+    const pctRango = ord.length>1 ? i/(ord.length-1) : 0.5;
+    const pctValore = (vmax>vmin) ? (idx[sq]-vmin)/(vmax-vmin) : 0.5;
+    MV_SQUADRA[sq] = MV_MIN + (MV_MAX-MV_MIN)*(0.5*pctRango + 0.5*pctValore);
+  });
+}
+
+/* Media voto nelle giornate in cui gioca. Solo P e D: il modificatore riguarda loro. */
+function mvStimata(p){
+  if(!p || (p.r!=='P' && p.r!=='D')) return null;
+  const base = MV_SQUADRA[p.s];
+  if(base==null) return null;
+  const z = (p.r==='D' && p.z) ? (MV_ZONA[p.z]||null) : null;
+  const pari = LISTONE.filter(x=> x.s===p.s && x.r===p.r);
+  let agg = 0;
+  if(pari.length){
+    const media = pari.reduce((s,x)=>s+x.q,0)/pari.length;
+    const max = Math.max.apply(null, pari.map(x=>x.q));
+    if(max>media) agg = MV_AGG_MAX * Math.max(-1, Math.min(1, (p.q-media)/(max-media)));
+  }
+  if(z) agg = agg*z.smorza + z.off;
+  return Math.max(5.5, Math.min(6.5, base+agg));
+}
+
+/* =======================================================================================
+   MODELLO 2 — FANTAMEDIA ATTESA
+   Quanto rende quando gioca, in fantapunti.
+
+   ATTENZIONE, LIMITE DICHIARATO: i bonus sono STIMATI dal percentile di valore dentro il
+   ruolo, non misurati su gol e assist reali. Servono a ordinare due attaccanti tra loro,
+   non a prevedere il fantavoto di domenica. Dalla Fase 3, con i voti veri, questa stima
+   verra' sostituita progressivamente dai dati.
+   ======================================================================================= */
+
+/* Bonus massimo per ruolo, in fantapunti a partita, per chi sta al vertice del suo ruolo.
+   Tarati su fantamedie stagionali reali: un attaccante da 7.4 di fantamedia e' un top
+   assoluto, uno da 6.4 e' un buon titolare. */
+const BONUS_MAX = {P:0.10, D:0.35, C:0.85, A:1.20};
+const BONUS_CURVA = 1.7;          // convessa: solo i primi fanno davvero bonus
+
+/* Rigori e piazzati. Un rigorista designato calcia ~0.2 rigori a partita: su 38 giornate
+   e' il singolo dato piu' sottovalutato del listone. */
+const BONUS_PIAZZATI = {R1:0.40, R2:0.12, R3:0.04, P1:0.10, P2:0.05, P3:0.02};
+const MALUS_FISSO = 0.10;         // ammonizioni e simili, forfettario
+
+/* Gol subiti attesi dal portiere, dedotti dalla forza difensiva della squadra. Nel
+   fantacalcio classico ogni gol subito vale -1, ed e' il motivo per cui la fantamedia di
+   un portiere sta sotto quella di ogni altro ruolo. */
+function golSubitiAttesi(sq){
+  const b = MV_SQUADRA[sq];
+  if(b==null) return 1.35;
+  const t = (b - MV_MIN)/(MV_MAX - MV_MIN);      // 0 = difesa peggiore, 1 = migliore
+  return 1.75 - 0.85*t;
+}
+
+function fantamediaAttesa(p){
+  if(!p) return null;
+  let voto;
+  if(p.r==='P' || p.r==='D'){
+    voto = mvStimata(p);
+  }else{
+    /* Per C e A il voto base conta poco: quello che sposta e' il bonus. Si parte da 6 con
+       un piccolo aggiustamento per la forza della squadra. */
+    const b = MV_SQUADRA[p.s];
+    voto = 6.0 + (b==null ? 0 : (b - 5.95)*0.5);
+  }
+  if(voto==null) voto = 6.0;
+
+  const pct = (p.fp==null ? 50 : p.fp)/100;
+  let bonus = BONUS_MAX[p.r] * Math.pow(Math.max(0,Math.min(1,pct)), BONUS_CURVA);
+
+  const pz = p.pz || '';
+  for(const k in BONUS_PIAZZATI){ if(pz.indexOf(k)!==-1) bonus += BONUS_PIAZZATI[k]; }
+
+  let fm = voto + bonus - MALUS_FISSO;
+  if(p.r==='P') fm -= golSubitiAttesi(p.s);
+  return fm;
+}
+
+/* =======================================================================================
+   MODELLO 3 — CERTEZZA DI PRENDERE VOTO
+   Separata dalla resa di proposito: sono due domande diverse, e mescolarle in un numero
+   solo nasconde il caso peggiore (il fortissimo che pero' non gioca).
+   ======================================================================================= */
+
+/* Chi non parte titolare puo comunque entrare e prendere voto. Si applica SOLO a chi non e
+   dato titolare: per un titolare al 90% sommare la coda del subentro non cambia la sostanza
+   e appiattisce la lettura (diventavano tutti 91%, indistinguibili). Per una riserva, invece,
+   la coda pesa: entrare a mezzora dalla fine e prendere voto capita spesso. */
+const SUBENTRO = 0.18;
+
+function datiGiornata(id){
+  if(!PROB) return {prob:null, ind:null, squadraInCampo:false};
+  const l = LIS[id];
+  return {
+    prob: PROB.giocatori[id] || null,
+    ind: PROB.indisponibili[id] || null,
+    squadraInCampo: !!(l && PROB.squadre[l.s])
+  };
+}
+
+function certezza(id){
+  const ov = S.override[id];
+  if(ov!=null) return ov;                       // il giudizio dell'utente vince sempre
+  const l = LIS[id];
+  if(!l) return 0;
+  const d = datiGiornata(id);
+
+  if(d.ind && d.ind.tipo==='squalificato') return 0;
+
+  let p;
+  if(!PROB || !d.squadraInCampo){
+    /* Nessun dato di giornata: si ripiega sulla titolarita' fotografata all'asta. E' il
+       dato peggiore che abbiamo, ma e' meglio di un numero inventato. */
+    p = (l.t==null ? 70 : l.t)/100;
+  }else if(d.prob){
+    p = (d.prob.pct==null ? (d.prob.titolare?0.85:0.20) : d.prob.pct/100);
+    /* data-status="warn" e' un dubbio dichiarato dalla fonte, ma le riserve ce l'hanno
+       tutte per definizione: vale come segnale solo sui titolari. */
+    if(d.prob.incerto && d.prob.titolare) p *= 0.85;
+  }else{
+    /* La sua squadra gioca ma lui non e' tra i 24 convocabili elencati. Non e' un buco nei
+       dati: e' l'informazione che non giochera'. */
+    p = 0.02;
+  }
+
+  if(d.ind && d.ind.tipo==='infortunato') p = Math.min(p, 0.12);
+  if(d.ind && d.ind.tipo==='dubbio') p *= 0.65;
+
+  const parteTitolare = !!(d.prob && d.prob.titolare);
+  if(!parteTitolare) p = p + SUBENTRO*(1-p);
+  return Math.max(0, Math.min(1, p));
+}
+
+/* =======================================================================================
+   OTTIMIZZATORE
+   Sceglie l'undici in modo deterministico (piu' leggibile e stabile a ogni ridisegno), poi
+   ne misura il valore con una simulazione. La simulazione serve perche' il modificatore di
+   difesa non e' additivo: dipende da CHI dei difensori scende davvero in campo, ed e' l'unico
+   modo onesto di dare un prezzo al quarto e quinto difensore, che non alzano la media ma
+   fanno da assicurazione.
+   ======================================================================================= */
+
+const N_SIM = 1500;
+
+function contributoAtteso(id){
+  const l = LIS[id];
+  return certezza(id) * (fantamediaAttesa(l) - 6.0);   // rispetto al voto di riferimento
+}
+
+function scegliUndici(modulo){
+  const need = Object.assign({P:1}, MODULI[modulo]);
+  const titolari = [], panchina = [];
+  const bloccatiSet = {};
+  ROLE_ORDER.forEach(r=> bloccatiSet[r] = []);
+
+  /* Le caselle fissate a mano vengono servite per prime: se l'utente ha deciso, l'app non
+     ridiscute. */
+  S.rosa.forEach(id=>{ if(S.bloccati[id]){ const l=LIS[id]; if(l) bloccatiSet[l.r].push(id); } });
+
+  ROLE_ORDER.forEach(r=>{
+    const tutti = S.rosa.filter(id=> LIS[id] && LIS[id].r===r);
+    const fissi = bloccatiSet[r].slice(0, need[r]);
+    const resto = tutti.filter(id=> fissi.indexOf(id)===-1)
+                       .sort((a,b)=> contributoAtteso(b)-contributoAtteso(a));
+    const scelti = fissi.concat(resto.slice(0, Math.max(0, need[r]-fissi.length)));
+    titolari.push.apply(titolari, scelti);
+    /* La panchina si ordina per resa PER certezza: un riserva bravo che a sua volta non
+       gioca non ti salva, ed e' l'errore classico dell'ordinamento per sola qualita'. */
+    panchina.push.apply(panchina, resto.slice(Math.max(0, need[r]-fissi.length)));
+  });
+
+  panchina.sort((a,b)=> contributoAtteso(b)-contributoAtteso(a));
+  return {titolari, panchina};
+}
+
+/* Una singola giornata simulata: chi gioca, chi entra al posto di chi, che modificatore esce. */
+function simula(titolari, panchina){
+  const gioca = {};
+  const tuttiId = titolari.concat(panchina);
+  tuttiId.forEach(id=>{ gioca[id] = Math.random() < certezza(id); });
+
+  const inCampo = [];
+  const daSostituire = [];
+  titolari.forEach(id=>{ (gioca[id] ? inCampo : daSostituire).push(id); });
+
+  /* I cambi entrano in ordine di panchina, uno per ruolo, fino al massimo consentito. */
+  let cambi = 0;
+  const usati = {};
+  for(const id of daSostituire){
+    if(cambi >= MAX_CAMBI) break;
+    const r = LIS[id].r;
+    const sost = panchina.find(x=> !usati[x] && gioca[x] && LIS[x].r===r);
+    if(sost){ usati[sost]=true; inCampo.push(sost); cambi++; }
+  }
+
+  let punti = 0;
+  const mvP = [], mvD = [];
+  for(const id of inCampo){
+    const l = LIS[id];
+    punti += fantamediaAttesa(l);
+    if(l.r==='P'){ const v=mvStimata(l); if(v!=null) mvP.push(v); }
+    if(l.r==='D'){ const v=mvStimata(l); if(v!=null) mvD.push(v); }
+  }
+  /* Chi resta senza voto e senza sostituto vale 0: e' il buco che il quarto difensore evita. */
+
+  mvD.sort((a,b)=> b-a);
+  let mod = null;
+  if(mvP.length && mvD.length >= 3){
+    mod = (mvP[0] + mvD[0] + mvD[1] + mvD[2]) / 4;
+    punti += (mod - MOD_RIF) * MOD_PESO;
+  }
+  return {punti, mod, buchi: 11 - inCampo.length};
+}
+
+function valuta(titolari, panchina){
+  let sp = 0, sm = 0, nm = 0, sb = 0;
+  for(let i=0;i<N_SIM;i++){
+    const r = simula(titolari, panchina);
+    sp += r.punti; sb += r.buchi;
+    if(r.mod!=null){ sm += r.mod; nm++; }
+  }
+  return {
+    punti: sp/N_SIM,
+    modificatore: nm ? sm/nm : null,
+    probModificatore: nm/N_SIM,
+    buchiAttesi: sb/N_SIM
+  };
+}
+
+function classificaModuli(){
+  return Object.keys(MODULI).map(m=>{
+    const u = scegliUndici(m);
+    const v = valuta(u.titolari, u.panchina);
+    return Object.assign({modulo:m}, u, v);
+  }).sort((a,b)=> b.punti - a.punti);
+}
+
+/* =======================================================================================
+   STATO
+   ======================================================================================= */
+
+const LISTONE = JSON.parse(document.getElementById('listone-data').textContent);
+const LIS = {};
+LISTONE.forEach(p=> LIS[p.id] = p);
+
+const CHIAVE = 'fantaFormazione_v1';
+let PROB = null;
+
+let S = {
+  rosa: [],              // id dei miei giocatori
+  prezzi: {},            // id -> crediti pagati all'asta (solo informativo)
+  squadraNome: 'La mia squadra',
+  modulo: '4-3-3',
+  bloccati: {},          // id -> true: casella fissata a mano
+  override: {},          // id -> certezza forzata a mano (0..1)
+  vista: 'campo'
+};
+
+function salva(){
+  try{
+    localStorage.setItem(CHIAVE, JSON.stringify({
+      rosa:S.rosa, prezzi:S.prezzi, squadraNome:S.squadraNome,
+      modulo:S.modulo, bloccati:S.bloccati, override:S.override
+    }));
+  }catch(e){ /* private browsing o quota piena: si continua in memoria */ }
+}
+function carica(){
+  try{
+    const raw = localStorage.getItem(CHIAVE);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    S.rosa = d.rosa||[]; S.prezzi = d.prezzi||{};
+    S.squadraNome = d.squadraNome||'La mia squadra';
+    S.modulo = MODULI[d.modulo] ? d.modulo : '4-3-3';
+    S.bloccati = d.bloccati||{}; S.override = d.override||{};
+  }catch(e){}
+}
+
+/* =======================================================================================
+   DATI DI GIORNATA
+   ======================================================================================= */
+
+const CACHE_PROB = 'fantaFormazione_probabili';
+
+async function caricaProbabili(forza){
+  /* Prima la copia in memoria locale: l'app deve aprirsi anche in aereo. Poi si prova la
+     rete, e se va meglio si aggiorna. */
+  if(!forza){
+    try{
+      const raw = localStorage.getItem(CACHE_PROB);
+      if(raw) PROB = JSON.parse(raw);
+    }catch(e){}
+  }
+  try{
+    const r = await fetch('./dati/probabili.json', {cache:'no-cache'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d = await r.json();
+    if(d && d.schema===1 && d.giocatori){
+      PROB = d;
+      try{ localStorage.setItem(CACHE_PROB, JSON.stringify(d)); }catch(e){}
+      return true;
+    }
+    throw new Error('schema non riconosciuto');
+  }catch(e){
+    /* Aperta da file:// il fetch fallisce sempre: non e' un errore da mostrare come tale. */
+    return false;
+  }
+}
+
+function etaDati(){
+  if(!PROB || !PROB.generato) return null;
+  const ms = Date.now() - new Date(PROB.generato).getTime();
+  const h = ms/3600000;
+  if(h < 1) return 'aggiornati poco fa';
+  if(h < 24) return 'aggiornati ' + Math.round(h) + ' ore fa';
+  const g = Math.round(h/24);
+  return 'aggiornati ' + g + (g===1?' giorno fa':' giorni fa');
+}
+
+/* =======================================================================================
+   VISTA
+   ======================================================================================= */
+
+const el = (s)=> document.querySelector(s);
+const esc = (s)=> String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(msg){
+  const t = el('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove('on'), 2100);
+}
+
+function classeCz(c){ return c>=0.7 ? '' : (c>=0.4 ? 'mid' : 'low'); }
+function classePct(c){ return c>=0.7 ? 'alta' : (c>=0.4 ? 'media' : (c>0.05 ? 'bassa' : 'out')); }
+
+function flagHtml(id){
+  const d = datiGiornata(id);
+  let h = '';
+  if(S.override[id]!=null) h += '<span class="flag man">a mano</span>';
+  if(d.ind){
+    const t = d.ind.tipo;
+    h += '<span class="flag '+(t==='squalificato'?'sq':(t==='infortunato'?'inf':'dub'))+'">'+
+         (t==='squalificato'?'SQUAL.':(t==='infortunato'?'INF.':'DUBBIO'))+'</span>';
+  }
+  return h;
+}
+
+function slotHtml(id, ruolo){
+  if(id==null){
+    return '<div class="slot vuoto '+ruolo+'"><div class="nm">—</div><div class="sq">manca</div></div>';
+  }
+  const l = LIS[id], c = certezza(id), fm = fantamediaAttesa(l);
+  const cls = 'slot ' + l.r + (c<0.4?' rischio':'') + (S.bloccati[id]?' bloccato':'');
+  return '<div class="'+cls+'" data-slot="'+id+'">' +
+    '<div class="nm">'+esc(l.n)+'</div>' +
+    '<div class="sq">'+esc(l.s)+'</div>' +
+    '<div class="fm">'+fm.toFixed(2)+'</div>' +
+    '<div class="cz-bar '+classeCz(c)+'"><i style="width:'+Math.round(c*100)+'%"></i></div>' +
+    '<div class="cz">'+Math.round(c*100)+'%</div>' +
+  '</div>';
+}
+
+function vistaCampo(){
+  if(!S.rosa.length) return vistaVuota();
+
+  const u = scegliUndici(S.modulo);
+  const v = valuta(u.titolari, u.panchina);
+  const need = Object.assign({P:1}, MODULI[S.modulo]);
+
+  const perRuolo = {};
+  ROLE_ORDER.forEach(r=> perRuolo[r] = u.titolari.filter(id=> LIS[id].r===r));
+
+  let h = '';
+
+  /* Il campo si legge dall'attacco in giu': e' l'ordine con cui si guarda una formazione. */
+  h += '<div class="pitch">';
+  ['A','C','D','P'].forEach(r=>{
+    const lista = perRuolo[r];
+    h += '<div class="pitch-line">';
+    for(let i=0;i<need[r];i++) h += slotHtml(lista[i]!=null ? lista[i] : null, r);
+    h += '</div>';
+  });
+  h += '</div>';
+
+  const mod = v.modificatore;
+  /* Un modificatore alto che pero salta spesso non e un modificatore alto: se i difensori
+     schierati rischiano di restare senza voto, il blocco non si forma nemmeno. Dire 'forte'
+     in quel caso sarebbe rassicurare sul numero sbagliato. */
+  const fragile = v.probModificatore < 0.80;
+  let giudizio, modCls;
+  if(mod==null){ giudizio = '—'; modCls = ''; }
+  else if(fragile){
+    giudizio = 'salta ' + Math.round((1-v.probModificatore)*100) + '% delle volte';
+    modCls = 'debole';
+  }else{
+    giudizio = (mod>=6.10?'forte':(mod>=5.98?'discreto':(mod>=5.88?'nella media':'debole')))
+      + (v.probModificatore<0.97 ? ' · si applica '+Math.round(v.probModificatore*100)+'%' : '');
+    modCls = mod>=6.10?'forte':(mod>=5.98?'ok':'debole');
+  }
+  const dubbi = u.titolari.filter(id=> certezza(id) < 0.6).length;
+
+  h += '<div class="kpis">' +
+    '<div class="kpi"><div class="k">Modulo</div><div class="v">'+S.modulo+'</div>' +
+      '<div class="s">'+u.titolari.length+' su 11</div></div>' +
+    '<div class="kpi"><div class="k">Modificatore</div><div class="v '+modCls+'">'+(mod==null?'—':mod.toFixed(2))+'</div>' +
+      '<div class="s">'+giudizio+'</div></div>' +
+    '<div class="kpi"><div class="k">Da verificare</div><div class="v '+(dubbi?'ok':'forte')+'">'+dubbi+'</div>' +
+      '<div class="s">'+(dubbi===1?'giocatore':'giocatori')+'</div></div>' +
+  '</div>';
+
+  h += '<div class="sec-title">Panchina · ordine dei cambi</div>';
+  if(!u.panchina.length){
+    h += '<div class="empty">Nessuno in panchina.</div>';
+  }else{
+    u.panchina.forEach((id,i)=>{
+      const l = LIS[id], c = certezza(id), fm = fantamediaAttesa(l);
+      h += '<div class="prow" data-giocatore="'+id+'">' +
+        '<div class="rolebar '+l.r+'"></div>' +
+        '<div class="main"><div class="nm">'+(i+1)+'. '+esc(l.n)+flagHtml(id)+'</div>' +
+        '<div class="sub">'+esc(l.s)+' · '+ROLE_NOME[l.r]+'</div></div>' +
+        '<span class="pct-badge '+classePct(c)+'">'+Math.round(c*100)+'%</span>' +
+        '<div class="nums"><div class="fm">'+fm.toFixed(2)+'</div></div>' +
+      '</div>';
+    });
+  }
+
+  h += '<p class="note" style="margin:14px 12px 0">' +
+    'Il numero grande e la fantamedia attesa quando gioca; la percentuale e la probabilita che prenda voto. ' +
+    'Sono tenute separate apposta: un fuoriclasse al 20% non e un fuoriclasse, quella domenica.</p>';
+
+  return h;
+}
+
+function vistaRosa(){
+  if(!S.rosa.length) return vistaVuota();
+  let h = '';
+  ROLE_ORDER.forEach(r=>{
+    const lista = S.rosa.filter(id=> LIS[id] && LIS[id].r===r)
+                        .sort((a,b)=> contributoAtteso(b)-contributoAtteso(a));
+    if(!lista.length) return;
+    h += '<div class="sec-title">'+ROLE_NOME[r]+' · '+lista.length+'/'+SLOT_MAX[r]+'</div>';
+    /* La fantamedia di un portiere e bassa perche include i gol subiti (-1 ciascuno): senza
+       dirlo sembra un errore di calcolo, e invece e come funziona il punteggio. */
+    if(r==='P') h += '<p class="note" style="margin:-2px 12px 8px">Nei portieri la fantamedia e piu bassa perche conta i gol subiti.</p>';
+    lista.forEach(id=>{
+      const l = LIS[id], c = certezza(id), fm = fantamediaAttesa(l);
+      const d = datiGiornata(id);
+      let dove = '';
+      if(PROB && d.squadraInCampo){
+        const sq = PROB.squadre[l.s];
+        dove = (sq.inCasa?'vs ':'a ') + sq.avversario;
+      }else if(PROB){ dove = 'non in questa giornata'; }
+      h += '<div class="prow '+(c<0.15?'fuori':'')+'" data-giocatore="'+id+'">' +
+        '<div class="rolebar '+l.r+'"></div>' +
+        '<div class="main"><div class="nm">'+esc(l.n)+flagHtml(id)+'</div>' +
+        '<div class="sub">'+esc(l.s)+(dove?' · '+esc(dove):'')+'</div></div>' +
+        '<span class="pct-badge '+classePct(c)+'">'+Math.round(c*100)+'%</span>' +
+        '<div class="nums"><div class="fm">'+fm.toFixed(2)+'</div><div class="cz">fantamedia</div></div>' +
+      '</div>';
+    });
+  });
+  return h;
+}
+
+function vistaModuli(){
+  if(!S.rosa.length) return vistaVuota();
+  const cl = classificaModuli();
+  const attuale = cl.find(x=> x.modulo===S.modulo);
+  let h = '<div class="sec-title">Quanto rende ogni modulo</div>';
+
+  cl.forEach((x,i)=>{
+    const delta = x.punti - attuale.punti;
+    const inA = x.titolari.filter(id=> attuale.titolari.indexOf(id)===-1);
+    const outA = attuale.titolari.filter(id=> x.titolari.indexOf(id)===-1);
+    let diff;
+    if(x.modulo===S.modulo){ diff = 'modulo attuale'; }
+    else if(!inA.length){ diff = 'stessi undici'; }
+    else{
+      diff = 'entra ' + inA.map(id=>LIS[id].n).join(', ') +
+             (outA.length ? ' · esce ' + outA.map(id=>LIS[id].n).join(', ') : '');
+    }
+    h += '<div class="modulo-row '+(x.modulo===S.modulo?'on':'')+'" data-modulo="'+x.modulo+'">' +
+      '<div class="rank">'+(i+1)+'</div>' +
+      '<div><div class="mn">'+x.modulo+'</div><div class="diff">'+esc(diff)+'</div></div>' +
+      '<div class="pts">'+(delta>=0?'+':'')+delta.toFixed(2)+
+        '<small>'+(x.modificatore==null?'no mod.':'mod. '+x.modificatore.toFixed(2)+
+        (x.probModificatore<0.97 ? ' ('+Math.round(x.probModificatore*100)+'%)' : ''))+'</small></div>' +
+    '</div>';
+  });
+
+  h += '<p class="note" style="margin:14px 12px 0">' +
+    'Il numero e la differenza in fantapunti attesi rispetto al modulo che stai usando, su ' + N_SIM +
+    ' giornate simulate. La simulazione serve al modificatore di difesa: si calcola sui 3 migliori ' +
+    'difensori, quindi il quarto e il quinto non alzano la media ma coprono il buco quando un ' +
+    'titolare resta fuori. Un conto fatto a tavolino non lo vedrebbe.</p>' +
+    '<p class="note" style="margin:8px 12px 0">Le soglie del modificatore della nostra lega non sono ' +
+    'ancora verificate: la conversione in punti e prudente e serve a confrontare i moduli tra loro, ' +
+    'non a promettere un punteggio.</p>';
+  return h;
+}
+
+function vistaVuota(){
+  return '<div class="empty"><b>Non c\'e ancora una rosa</b>' +
+    'Importa il file esportato dall\'app asta, oppure componi la rosa a mano.' +
+    '<div style="max-width:300px;margin:22px auto 0">' +
+    '<button class="btn btn-primary" id="btnVuotaImporta">Importa la rosa</button>' +
+    '</div></div>';
+}
+
+function render(){
+  const m = el('#main');
+  m.innerHTML = S.vista==='campo' ? vistaCampo() : (S.vista==='rosa' ? vistaRosa() : vistaModuli());
+  m.scrollTop = 0;
+
+  el('#stGiornata').textContent = PROB && PROB.giornata ? ('Giornata '+PROB.giornata) : 'Nessun dato';
+  el('#stEta').textContent = etaDati() || '';
+
+  const w = el('#warnbar');
+  if(!PROB){
+    w.style.display = 'block'; w.className = 'warnbar';
+    w.textContent = 'Dati di giornata non disponibili: le percentuali vengono dalla titolarita fotografata all asta.';
+  }else if(!S.rosa.length){
+    w.style.display = 'none';
+  }else{
+    const scoperti = S.rosa.filter(id=>{ const d=datiGiornata(id); return !d.prob && !d.ind && d.squadraInCampo; }).length;
+    if(scoperti){
+      w.style.display='block'; w.className='warnbar info';
+      w.textContent = scoperti + (scoperti===1?' giocatore non e':' giocatori non sono') + ' tra i convocati di questa giornata.';
+    }else{ w.style.display='none'; }
+  }
+
+  document.querySelectorAll('.tab').forEach(t=> t.classList.toggle('on', t.dataset.vista===S.vista));
+}
+
+/* =======================================================================================
+   SCHEDA GIOCATORE E ALTERNATIVE
+   ======================================================================================= */
+
+function apriSheet(html){
+  el('#sheet').innerHTML = '<div class="handle"></div>' + html;
+  el('#sheet').style.display = 'block';
+  el('#overlay').style.display = 'block';
+}
+function chiudiSheet(){
+  el('#sheet').style.display='none'; el('#settingsSheet').style.display='none';
+  el('#overlay').style.display='none';
+}
+
+function schedaGiocatore(id){
+  const l = LIS[id], d = datiGiornata(id);
+  const c = certezza(id), fm = fantamediaAttesa(l);
+  const mv = mvStimata(l);
+
+  let stato = 'Nessun dato di giornata';
+  if(d.ind) stato = d.ind.tipo.charAt(0).toUpperCase()+d.ind.tipo.slice(1);
+  else if(d.prob) stato = d.prob.titolare ? 'Dato titolare' : 'In panchina';
+  else if(d.squadraInCampo) stato = 'Fuori dai convocati';
+
+  let h = '<h3>'+esc(l.n)+'</h3><div class="sub">'+esc(l.s)+' · '+ROLE_NOME[l.r]+
+          (S.prezzi[id]?' · pagato '+S.prezzi[id]:'')+'</div>';
+
+  h += '<div class="info-grid">' +
+    '<div class="info-cell"><div class="k">Fantamedia attesa</div><div class="v">'+fm.toFixed(2)+'</div>' +
+      '<div class="n">quando gioca</div></div>' +
+    '<div class="info-cell"><div class="k">Prende voto</div><div class="v">'+Math.round(c*100)+'%</div>' +
+      '<div class="n">'+esc(stato)+'</div></div>';
+
+  if(mv!=null){
+    h += '<div class="info-cell"><div class="k">Media voto</div><div class="v">'+mv.toFixed(2)+'</div>' +
+         '<div class="n">conta per il modificatore</div></div>';
+  }
+  h += '<div class="info-cell"><div class="k">Quotazione</div><div class="v">'+l.q+'</div>' +
+       '<div class="n">'+(l.pz?esc(l.pz):'nessun piazzato')+'</div></div>';
+
+  if(d.ind && d.ind.nota){
+    h += '<div class="info-cell wide"><div class="k">Dalla fonte</div><div class="n">'+esc(d.ind.nota)+'</div></div>';
+  }
+  if(PROB && d.squadraInCampo){
+    const sq = PROB.squadre[l.s];
+    h += '<div class="info-cell wide"><div class="k">Partita</div>' +
+         '<div class="v">'+(sq.inCasa?'in casa con ':'in trasferta a ')+esc(sq.avversario)+'</div>' +
+         '<div class="n">'+esc(sq.data||'')+' · modulo '+esc(sq.modulo||'—')+'</div></div>';
+  }
+  h += '</div>';
+
+  /* Ballottaggi: chi gli contende il posto, con le percentuali della fonte. */
+  if(PROB){
+    const b = (PROB.ballottaggi||[]).find(g=> g.some(x=> x.id===id));
+    if(b){
+      h += '<h4>Ballottaggio</h4>';
+      b.forEach(x=>{
+        h += '<div class="opt '+(x.id===id?'attuale':'')+'">' +
+          '<div class="rolebar '+l.r+'"></div>' +
+          '<div><div class="nm">'+esc(x.nome)+'</div></div>' +
+          '<span class="pct-badge '+classePct((x.pct||0)/100)+'">'+(x.pct==null?'—':x.pct+'%')+'</span>' +
+          '<div></div></div>';
+      });
+    }
+  }
+
+  h += '<h4>Correggi a mano</h4>' +
+    '<p class="note" style="margin:0 0 8px">Se sai qualcosa che i dati non sanno, decidi tu. ' +
+    'La correzione resta anche quando i dati si aggiornano.</p>' +
+    '<div class="seg" id="segStato">' +
+    '<button data-c="1">Gioca</button><button data-c="0.5">Dubbio</button>' +
+    '<button data-c="0">Fuori</button><button data-c="auto">Auto</button></div>';
+
+  const inXI = scegliUndici(S.modulo).titolari.indexOf(id)!==-1;
+  h += '<div class="btn-row">' +
+    '<button class="btn btn-sec" id="btnBlocca">'+(S.bloccati[id]?'Non fissare':'Fissa in formazione')+'</button>' +
+    '</div>';
+  if(inXI){
+    h += '<button class="btn btn-sec" id="btnCambia">Cambia questo slot</button>';
+  }
+  h += '<button class="btn btn-sec" id="btnChiudi">Chiudi</button>';
+
+  apriSheet(h);
+
+  const cur = S.override[id];
+  document.querySelectorAll('#segStato button').forEach(b=>{
+    const val = b.dataset.c;
+    const on = (val==='auto') ? cur==null : (cur!=null && Math.abs(cur-parseFloat(val))<0.01);
+    b.classList.toggle('on', on);
+    b.addEventListener('click', ()=>{
+      if(val==='auto') delete S.override[id]; else S.override[id] = parseFloat(val);
+      salva(); chiudiSheet(); render();
+      toast(val==='auto' ? 'Torna al dato automatico' : 'Corretto a mano');
+    });
+  });
+  el('#btnBlocca').addEventListener('click', ()=>{
+    if(S.bloccati[id]) delete S.bloccati[id]; else S.bloccati[id]=true;
+    salva(); chiudiSheet(); render();
+    toast(S.bloccati[id]?'Fissato in formazione':'Non piu fissato');
+  });
+  const bc = el('#btnCambia');
+  if(bc) bc.addEventListener('click', ()=> alternativePerRuolo(LIS[id].r, id));
+  el('#btnChiudi').addEventListener('click', chiudiSheet);
+}
+
+function alternativePerRuolo(ruolo, idAttuale){
+  const u = scegliUndici(S.modulo);
+  const cand = S.rosa.filter(id=> LIS[id] && LIS[id].r===ruolo)
+                     .sort((a,b)=> contributoAtteso(b)-contributoAtteso(a));
+  let h = '<h3>'+ROLE_NOME[ruolo]+'</h3>' +
+    '<div class="sub">Chi scegli viene fissato in formazione, cosi l app non te lo ricambia.</div>';
+  cand.forEach(id=>{
+    const l = LIS[id], c = certezza(id), fm = fantamediaAttesa(l);
+    const inXI = u.titolari.indexOf(id)!==-1;
+    h += '<div class="opt '+(inXI?'attuale':'')+'" data-scegli="'+id+'">' +
+      '<div class="rolebar '+ruolo+'"></div>' +
+      '<div><div class="nm">'+esc(l.n)+'</div><div class="sub">'+esc(l.s)+
+        (inXI?' · in campo':'')+'</div></div>' +
+      '<span class="pct-badge '+classePct(c)+'">'+Math.round(c*100)+'%</span>' +
+      '<div class="fm">'+fm.toFixed(2)+'</div></div>';
+  });
+  h += '<button class="btn btn-sec" id="btnChiudi2">Chiudi</button>';
+  apriSheet(h);
+
+  document.querySelectorAll('[data-scegli]').forEach(n=>{
+    n.addEventListener('click', ()=>{
+      const nuovo = +n.dataset.scegli;
+      /* Fissare il nuovo e liberare il vecchio: altrimenti restano fissati entrambi e uno
+         dei due sparisce senza spiegazione. */
+      if(idAttuale!=null) delete S.bloccati[idAttuale];
+      S.bloccati[nuovo] = true;
+      salva(); chiudiSheet(); render(); toast(LIS[nuovo].n + ' in formazione');
+    });
+  });
+  el('#btnChiudi2').addEventListener('click', chiudiSheet);
+}
+
+/* =======================================================================================
+   IMPOSTAZIONI: import rosa, composizione a mano, formazione da copiare
+   ======================================================================================= */
+
+function apriSettings(){
+  const n = S.rosa.length;
+  let h = '<div class="handle"></div><h3>Impostazioni</h3>' +
+    '<div class="sub">'+esc(S.squadraNome)+' · '+n+' giocatori in rosa</div>';
+
+  h += '<h4>Rosa</h4>' +
+    '<p class="note" style="margin:0 0 8px">Incolla qui il file esportato dall app asta ' +
+    '(Impostazioni → Esporta rosa). Riconosce lo schema 1.</p>' +
+    '<textarea id="boxRosa" placeholder="Incolla il JSON della rosa..."></textarea>' +
+    '<div class="btn-row"><button class="btn btn-primary" id="btnImporta">Importa</button>' +
+    '<button class="btn btn-sec" id="btnComponi">Componi a mano</button></div>';
+
+  h += '<h4>Dati di giornata</h4>' +
+    '<p class="note" style="margin:0 0 8px">' +
+    (PROB ? ('Giornata '+PROB.giornata+', '+esc(etaDati()||'')+'. Fonte: probabili formazioni di fantacalcio.it.')
+          : 'Nessun dato caricato. Se apri l app da file locale il caricamento automatico non funziona: incolla qui il contenuto di dati/probabili.json.') +
+    '</p>' +
+    '<textarea id="boxProb" placeholder="Incolla qui probabili.json se serve..."></textarea>' +
+    '<div class="btn-row"><button class="btn btn-sec" id="btnProbIncolla">Carica incollato</button>' +
+    '<button class="btn btn-sec" id="btnProbRete">Riprova dalla rete</button></div>';
+
+  if(n){
+    h += '<h4>Formazione da copiare</h4>' +
+      '<p class="note" style="margin:0 0 8px">Testo pronto da riportare su Leghe Fantacalcio.</p>' +
+      '<textarea id="boxOut" readonly>'+esc(testoFormazione())+'</textarea>' +
+      '<button class="btn btn-sec" id="btnCopia">Copia negli appunti</button>';
+  }
+
+  h += '<h4>Azzeramenti</h4>' +
+    '<button class="btn btn-sec" id="btnResetMano">Togli tutte le correzioni a mano</button>' +
+    '<button class="btn btn-danger" id="btnResetTutto">Cancella rosa e ricomincia</button>' +
+    '<button class="btn btn-sec" id="btnChiudiSet">Chiudi</button>';
+
+  el('#settingsSheet').innerHTML = h;
+  el('#settingsSheet').style.display='block';
+  el('#overlay').style.display='block';
+
+  el('#btnImporta').addEventListener('click', ()=> importaRosa(el('#boxRosa').value));
+  el('#btnComponi').addEventListener('click', componiRosa);
+  el('#btnProbIncolla').addEventListener('click', ()=>{
+    try{
+      const d = JSON.parse(el('#boxProb').value);
+      if(!d || d.schema!==1 || !d.giocatori) throw new Error();
+      PROB = d;
+      try{ localStorage.setItem(CACHE_PROB, JSON.stringify(d)); }catch(e){}
+      chiudiSheet(); render(); toast('Dati di giornata caricati');
+    }catch(e){ toast('JSON non valido'); }
+  });
+  el('#btnProbRete').addEventListener('click', async ()=>{
+    const ok = await caricaProbabili(true);
+    chiudiSheet(); render();
+    toast(ok ? 'Dati aggiornati' : 'Non raggiungibile');
+  });
+  const bc = el('#btnCopia');
+  if(bc) bc.addEventListener('click', ()=>{
+    const t = el('#boxOut'); t.select();
+    navigator.clipboard.writeText(t.value).then(()=>toast('Copiata')).catch(()=>toast('Copia manualmente'));
+  });
+  el('#btnResetMano').addEventListener('click', ()=>{
+    S.override = {}; S.bloccati = {}; salva(); chiudiSheet(); render(); toast('Correzioni rimosse');
+  });
+  el('#btnResetTutto').addEventListener('click', ()=>{
+    if(!confirm('Cancellare la rosa e tutte le impostazioni?')) return;
+    S.rosa=[]; S.prezzi={}; S.bloccati={}; S.override={};
+    salva(); chiudiSheet(); render(); toast('Azzerato');
+  });
+  el('#btnChiudiSet').addEventListener('click', chiudiSheet);
+}
+
+function importaRosa(testo){
+  let d;
+  try{ d = JSON.parse(testo); }catch(e){ toast('Non e un JSON valido'); return; }
+
+  /* Il campo `schema` esiste apposta: se un giorno il formato cambia, ci si accorge invece
+     di leggere numeri sbagliati in silenzio. */
+  if(!d || d.schema!==1 || !d.mia || !d.mia.rosa){
+    toast('Formato non riconosciuto (serve lo schema 1)'); return;
+  }
+
+  const rosa = [], prezzi = {}, ignorati = [];
+  ROLE_ORDER.forEach(r=>{
+    (d.mia.rosa[r]||[]).forEach(g=>{
+      if(LIS[g.id]){ rosa.push(g.id); prezzi[g.id] = g.prezzoPagato||0; }
+      else ignorati.push(g.nome||g.id);
+    });
+  });
+  if(!rosa.length){ toast('Nessun giocatore riconosciuto'); return; }
+
+  S.rosa = rosa; S.prezzi = prezzi;
+  S.squadraNome = d.mia.squadra || S.squadraNome;
+  S.bloccati = {}; S.override = {};
+  salva(); chiudiSheet(); render();
+  toast(rosa.length + ' giocatori importati' + (ignorati.length ? ', '+ignorati.length+' non nel listone' : ''));
+}
+
+/* Composizione a mano: serve prima dell'asta per provare l'app, e dopo per il mercato. */
+function componiRosa(){
+  let filtro = '';
+  function disegna(){
+    const q = filtro.toLowerCase();
+    let h = '<div class="handle"></div><h3>Componi la rosa</h3>' +
+      '<div class="sub">'+S.rosa.length+' scelti · P '+cnt('P')+'/3 · D '+cnt('D')+'/8 · C '+cnt('C')+'/8 · A '+cnt('A')+'/6</div>' +
+      '<input type="text" id="cerca" placeholder="Cerca un giocatore..." value="'+esc(filtro)+'">';
+
+    const scelti = S.rosa.map(id=>LIS[id]).filter(Boolean);
+    if(scelti.length){
+      h += '<h4>In rosa</h4>';
+      scelti.sort((a,b)=> ROLE_ORDER.indexOf(a.r)-ROLE_ORDER.indexOf(b.r) || b.q-a.q).forEach(l=>{
+        h += '<div class="opt" data-togli="'+l.id+'"><div class="rolebar '+l.r+'"></div>' +
+          '<div><div class="nm">'+esc(l.n)+'</div><div class="sub">'+esc(l.s)+'</div></div>' +
+          '<span class="pct-badge out">togli</span><div></div></div>';
+      });
+    }
+
+    if(q.length>=2){
+      const res = LISTONE.filter(p=> p.n.toLowerCase().indexOf(q)!==-1 && S.rosa.indexOf(p.id)===-1)
+                         .sort((a,b)=> b.sc-a.sc).slice(0,25);
+      h += '<h4>Risultati</h4>';
+      if(!res.length) h += '<p class="note">Nessuno.</p>';
+      res.forEach(l=>{
+        const pieno = cnt(l.r) >= SLOT_MAX[l.r];
+        h += '<div class="opt" data-aggiungi="'+l.id+'" style="'+(pieno?'opacity:.45':'')+'">' +
+          '<div class="rolebar '+l.r+'"></div>' +
+          '<div><div class="nm">'+esc(l.n)+'</div><div class="sub">'+esc(l.s)+' · qt '+l.q+'</div></div>' +
+          '<span class="pct-badge '+(pieno?'out':'alta')+'">'+(pieno?'pieno':'+')+'</span><div></div></div>';
+      });
+    }else{
+      h += '<p class="note" style="margin-top:14px">Scrivi almeno due lettere per cercare.</p>';
+    }
+    h += '<button class="btn btn-primary" id="btnFineComponi">Fatto</button>';
+
+    el('#settingsSheet').innerHTML = h;
+    const c = el('#cerca');
+    c.addEventListener('input', ()=>{ filtro = c.value; const p=c.selectionStart; disegna();
+      const c2=el('#cerca'); c2.focus(); c2.setSelectionRange(p,p); });
+    document.querySelectorAll('[data-aggiungi]').forEach(n=> n.addEventListener('click', ()=>{
+      const id = +n.dataset.aggiungi, l = LIS[id];
+      if(cnt(l.r) >= SLOT_MAX[l.r]){ toast('Reparto pieno'); return; }
+      S.rosa.push(id); salva(); disegna();
+    }));
+    document.querySelectorAll('[data-togli]').forEach(n=> n.addEventListener('click', ()=>{
+      const id = +n.dataset.togli;
+      S.rosa = S.rosa.filter(x=> x!==id); delete S.bloccati[id]; delete S.override[id];
+      salva(); disegna();
+    }));
+    el('#btnFineComponi').addEventListener('click', ()=>{ chiudiSheet(); render(); });
+  }
+  function cnt(r){ return S.rosa.filter(id=> LIS[id] && LIS[id].r===r).length; }
+  disegna();
+  el('#settingsSheet').style.display='block';
+  el('#overlay').style.display='block';
+}
+
+function testoFormazione(){
+  const u = scegliUndici(S.modulo);
+  const nomi = (ids)=> ids.map(id=> LIS[id].n).join(', ');
+  let t = S.squadraNome + ' — modulo ' + S.modulo;
+  if(PROB && PROB.giornata) t += ' — giornata ' + PROB.giornata;
+  t += '\n\nTITOLARI\n';
+  ROLE_ORDER.forEach(r=>{
+    const l = u.titolari.filter(id=> LIS[id].r===r);
+    if(l.length) t += r + ': ' + nomi(l) + '\n';
+  });
+  t += '\nPANCHINA (in ordine)\n';
+  u.panchina.forEach((id,i)=>{ t += (i+1) + '. ' + LIS[id].n + ' (' + LIS[id].r + ')\n'; });
+  return t;
+}
+
+/* =======================================================================================
+   AVVIO
+   ======================================================================================= */
+
+document.addEventListener('click', (e)=>{
+  const slot = e.target.closest('[data-slot]');
+  if(slot){ schedaGiocatore(+slot.dataset.slot); return; }
+  const g = e.target.closest('[data-giocatore]');
+  if(g){ schedaGiocatore(+g.dataset.giocatore); return; }
+  const m = e.target.closest('[data-modulo]');
+  if(m){ S.modulo = m.dataset.modulo; salva(); render(); toast('Modulo '+S.modulo); return; }
+  if(e.target.id==='btnVuotaImporta'){ apriSettings(); return; }
+});
+
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{ S.vista = t.dataset.vista; render(); });
+});
+el('#btnSettings').addEventListener('click', apriSettings);
+el('#btnRicarica').addEventListener('click', async ()=>{
+  const ok = await caricaProbabili(true);
+  render(); toast(ok ? 'Dati aggiornati' : 'Dati non raggiungibili');
+});
+el('#overlay').addEventListener('click', chiudiSheet);
+
+carica();
+calcolaMvSquadre();
+caricaProbabili(false).then(()=> render());
+render();
+
+if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+})();
+</script>
+</body>
+</html>

@@ -1,76 +1,76 @@
 {
  "schema": 1,
- "generato": "2026-09-03T19:38:39.351Z",
+ "generato": "2026-09-03T19:56:01.264Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 3,
  "partite": [
   {
    "casa": "Genoa",
    "trasferta": "Como",
-   "data": "01/01 01:00",
+   "data": "venerdì 04 settembre, 20:45",
    "stadio": "Luigi Ferraris",
    "hash": "GEN-COM"
   },
   {
    "casa": "Fiorentina",
    "trasferta": "Torino",
-   "data": "01/01 01:00",
+   "data": "sabato 05 settembre, 15:00",
    "stadio": "Artemio Franchi",
    "hash": "FIO-TOR"
   },
   {
    "casa": "Inter",
    "trasferta": "Napoli",
-   "data": "01/01 01:00",
+   "data": "sabato 05 settembre, 18:00",
    "stadio": "Giuseppe Meazza",
    "hash": "INT-NAP"
   },
   {
    "casa": "Roma",
    "trasferta": "Atalanta",
-   "data": "01/01 01:00",
+   "data": "sabato 05 settembre, 20:45",
    "stadio": "Olimpico",
    "hash": "ROM-ATA"
   },
   {
    "casa": "Frosinone",
    "trasferta": "Venezia",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 15:00",
    "stadio": "Benito Stirpe",
    "hash": "FRO-VEN"
   },
   {
    "casa": "Parma",
    "trasferta": "Monza",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 15:00",
    "stadio": "Tardini",
    "hash": "PAR-MON"
   },
   {
    "casa": "Bologna",
    "trasferta": "Sassuolo",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 18:00",
    "stadio": "Renato Dall'Ara",
    "hash": "BOL-SAS"
   },
   {
    "casa": "Juventus",
    "trasferta": "Milan",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 20:45",
    "stadio": "Allianz Stadium",
    "hash": "JUV-MIL"
   },
   {
    "casa": "Cagliari",
    "trasferta": "Lecce",
-   "data": "01/01 01:00",
+   "data": "lunedì 07 settembre, 18:30",
    "stadio": "Sardegna Arena",
    "hash": "CAG-LEC"
   },
   {
    "casa": "Udinese",
    "trasferta": "Lazio",
-   "data": "01/01 01:00",
+   "data": "lunedì 07 settembre, 20:45",
    "stadio": "Bluenergy Stadium",
    "hash": "UDI-LAZ"
   }
@@ -80,140 +80,140 @@
    "modulo": "3-4-2-1",
    "inCasa": true,
    "avversario": "Como",
-   "data": "01/01 01:00",
+   "data": "venerdì 04 settembre, 20:45",
    "stadio": "Luigi Ferraris"
   },
   "Como": {
    "modulo": "4-2-3-1",
    "inCasa": false,
    "avversario": "Genoa",
-   "data": "01/01 01:00",
+   "data": "venerdì 04 settembre, 20:45",
    "stadio": "Luigi Ferraris"
   },
   "Fiorentina": {
    "modulo": "4-3-2-1",
    "inCasa": true,
    "avversario": "Torino",
-   "data": "01/01 01:00",
+   "data": "sabato 05 settembre, 15:00",
    "stadio": "Artemio Franchi"
   },
   "Torino": {
    "modulo": "3-4-2-1",
    "inCasa": false,
    "avversario": "Fiorentina",
-   "data": "01/01 01:00",
+   "data": "sabato 05 settembre, 15:00",
    "stadio": "Artemio Franchi"
   },
   "Inter": {
    "modulo": "3-5-2",
    "inCasa": true,
    "avversario": "Napoli",
-   "data": "01/01 01:00",
+   "data": "sabato 05 settembre, 18:00",
    "stadio": "Giuseppe Meazza"
   },
   "Napoli": {
    "modulo": "4-3-3",
    "inCasa": false,
    "avversario": "Inter",
-   "data": "01/01 01:00",
+   "data": "sabato 05 settembre, 18:00",
    "stadio": "Giuseppe Meazza"
   },
   "Roma": {
    "modulo": "3-4-2-1",
    "inCasa": true,
    "avversario": "Atalanta",
-   "data": "01/01 01:00",
+   "data": "sabato 05 settembre, 20:45",
    "stadio": "Olimpico"
   },
   "Atalanta": {
    "modulo": "4-3-3",
    "inCasa": false,
    "avversario": "Roma",
-   "data": "01/01 01:00",
+   "data": "sabato 05 settembre, 20:45",
    "stadio": "Olimpico"
   },
   "Frosinone": {
    "modulo": "4-2-3-1",
    "inCasa": true,
    "avversario": "Venezia",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 15:00",
    "stadio": "Benito Stirpe"
   },
   "Venezia": {
    "modulo": "3-5-2",
    "inCasa": false,
    "avversario": "Frosinone",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 15:00",
    "stadio": "Benito Stirpe"
   },
   "Parma": {
    "modulo": "3-5-2",
    "inCasa": true,
    "avversario": "Monza",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 15:00",
    "stadio": "Tardini"
   },
   "Monza": {
    "modulo": "3-4-2-1",
    "inCasa": false,
    "avversario": "Parma",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 15:00",
    "stadio": "Tardini"
   },
   "Bologna": {
    "modulo": "4-3-3",
    "inCasa": true,
    "avversario": "Sassuolo",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 18:00",
    "stadio": "Renato Dall'Ara"
   },
   "Sassuolo": {
    "modulo": "4-3-3",
    "inCasa": false,
    "avversario": "Bologna",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 18:00",
    "stadio": "Renato Dall'Ara"
   },
   "Juventus": {
    "modulo": "4-2-3-1",
    "inCasa": true,
    "avversario": "Milan",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 20:45",
    "stadio": "Allianz Stadium"
   },
   "Milan": {
    "modulo": "3-4-2-1",
    "inCasa": false,
    "avversario": "Juventus",
-   "data": "01/01 01:00",
+   "data": "domenica 06 settembre, 20:45",
    "stadio": "Allianz Stadium"
   },
   "Cagliari": {
    "modulo": "4-4-2",
    "inCasa": true,
    "avversario": "Lecce",
-   "data": "01/01 01:00",
+   "data": "lunedì 07 settembre, 18:30",
    "stadio": "Sardegna Arena"
   },
   "Lecce": {
    "modulo": "4-3-3",
    "inCasa": false,
    "avversario": "Cagliari",
-   "data": "01/01 01:00",
+   "data": "lunedì 07 settembre, 18:30",
    "stadio": "Sardegna Arena"
   },
   "Udinese": {
    "modulo": "3-4-2-1",
    "inCasa": true,
    "avversario": "Lazio",
-   "data": "01/01 01:00",
+   "data": "lunedì 07 settembre, 20:45",
    "stadio": "Bluenergy Stadium"
   },
   "Lazio": {
    "modulo": "4-3-3",
    "inCasa": false,
    "avversario": "Udinese",
-   "data": "01/01 01:00",
+   "data": "lunedì 07 settembre, 20:45",
    "stadio": "Bluenergy Stadium"
   }
  },

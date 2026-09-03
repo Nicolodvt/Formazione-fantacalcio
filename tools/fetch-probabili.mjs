@@ -106,7 +106,11 @@ function estrai(html) {
 
   for (const m of blocchi(html, '<li class="match match-item')) {
     const hash = /data-match-hash="([^"]*)"/.exec(m);
-    const data = /class="match-date">([\s\S]*?)<\/div>/.exec(m);
+    /* Attenzione: di "match-date" ce ne sono DUE per partita. Il primo, nell intestazione,
+       e un segnaposto mai compilato (porta startDate="1970-01-01" e mostra 01/01 01:00) e
+       una volta e finito davvero nell app. Quello buono sta dentro match-info: va cercato
+       li dentro, o si legge un orario inventato. */
+    const data = /class="match-info">[\s\S]*?class="match-date">([\s\S]*?)<\/div>/.exec(m);
     const stadio = /class="match-stadium">([\s\S]*?)<\/div>/.exec(m);
     const quando = data ? pulisci(data[1]) : null;
     const dove = stadio ? pulisci(stadio[1]) : null;
@@ -195,6 +199,13 @@ function validare(d) {
   if (nSquadre !== 20) problemi.push(`squadre trovate: ${nSquadre}, attese 20`);
   if (d.partite.length !== 10) problemi.push(`partite trovate: ${d.partite.length}, attese 10`);
   if (gioc.length < 400) problemi.push(`giocatori trovati: ${gioc.length}, attesi almeno 400`);
+
+  /* Il segnaposto e gia passato una volta: se ricapita deve fermare tutto qui, non
+     arrivare fino allo schermo travestito da orario vero. */
+  const dateFinte = d.partite.filter(p => !p.data || /^01\/01/.test(p.data)).length;
+  if (dateFinte) problemi.push(`${dateFinte} partite con data segnaposto o mancante`);
+  const senzaStadio = d.partite.filter(p => !p.stadio || p.stadio === '-').length;
+  if (senzaStadio) problemi.push(`${senzaStadio} partite senza stadio`);
 
   const senzaRuolo = gioc.filter(g => !g.ruolo).length;
   if (senzaRuolo) problemi.push(`${senzaRuolo} giocatori senza ruolo`);
