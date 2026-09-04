@@ -314,6 +314,30 @@ attaccante che ha segnato una doppietta esce con +8 di scarto — Malen oggi fa 
 contro una stima di 7.57 — e sembrerebbe che il modello sia rotto quando invece è varianza.
 Meglio mostrare i numeri e dire che non bastano, che far dedurre una conclusione falsa.
 
+## Esplorazione grafica in Figma (04/09)
+
+Su richiesta esplicita dell'utente ho ricostruito in Figma campo, testata, tab, KPI e righe della
+rosa — fedeli ai valori CSS veri (colori, radii, spaziature copiati 1:1), poi ci ho lavorato con
+gli strumenti di precisione di Figma invece che a tentativi con screenshot.
+
+**Esito onesto, non ottimistico:** su tutta la superficie esplorata è emerso **un solo
+miglioramento reale**, l'ombra più marcata sulle tessere del campo (già in `main`: il campo ha
+uno sfondo verde a righe, molto più vivo del resto dell'app, e il filo di luce sottile di
+`--lift` non bastava a staccarcene la tessera). Testata, tab, KPI e righe della rosa sono uscite
+**visivamente identiche** all'app già esistente — confronto diretto fatto, non per assunzione.
+
+**Lezione per la prossima volta che si chiede una passata Figma:** il sistema di token di questa
+app è già disciplinato. Senza un brief di redesign vero (nuova palette, riferimenti, un cambio di
+direzione deciso a monte), un altro giro di "prova a migliorare quello che c'è" molto
+probabilmente non troverà granché — l'ha già dimostrato una volta. Non è un motivo per rifiutare
+la richiesta se arriva, ma va detto in anticipo per calibrare le aspettative.
+
+**File Figma temporaneo, da cancellare a mano**: `fwGN5XlGMed48p5I0znDU6`
+(figma.com/design/fwGN5XlGMed48p5I0znDU6). Non ho un tool di cancellazione file Figma in questo
+ambiente; l'utente doveva farlo lui (tasto destro sul file → Move to trash). **Stato non
+confermato** — se una sessione futura trova questo file ancora lì, o è stato dimenticato o la
+cancellazione non è mai avvenuta.
+
 ## Da fare
 
 
