@@ -749,6 +749,22 @@ function carica(){
 const CACHE_PROB = 'fantaFormazione_probabili';
 const CACHE_STORICO = 'fantaFormazione_storico';
 
+/* La Action scrive su GitHub fino a 7 volte a settimana. Se i dati arrivassero solo dalla
+   copia che Netlify pubblica, ogni scrittura dovrebbe passare da un deploy per raggiungere
+   il telefono - ed e proprio quello che vogliamo evitare (vedi CLAUDE.md, "Aggiornamenti e
+   crediti Netlify"). GitHub offre gia gratis gli stessi file cosi come sono nel repository:
+   si prova prima li, e solo se non risponde si ripiega sulla copia locale pubblicata con
+   l'app (che intanto resta come rete di sicurezza, sempre presente anche se piu vecchia). */
+const REPO_DATI = 'https://raw.githubusercontent.com/Nicolodvt/Formazione-fantacalcio/main/';
+
+async function fetchDati(percorso){
+  try{
+    const r = await fetch(REPO_DATI + percorso, {cache:'no-cache'});
+    if(r.ok) return r;
+  }catch(e){ /* GitHub irraggiungibile: si prova la copia locale sotto */ }
+  return fetch('./' + percorso, {cache:'no-cache'});
+}
+
 /* Un file di giornata mutilato non deve poter entrare in circolo. Il resto del codice
    dereferenzia sempre `squadre`, `giocatori` e `indisponibili`: se ne manca uno l'app va in
    pagina bianca al primo calcolo, senza un messaggio. Meglio rifiutarlo e comportarsi come
@@ -776,7 +792,7 @@ async function caricaProbabili(forza){
     }catch(e){ try{ localStorage.removeItem(CACHE_PROB); }catch(e2){} }
   }
   try{
-    const r = await fetch('./dati/probabili.json', {cache:'no-cache'});
+    const r = await fetchDati('dati/probabili.json');
     if(!r.ok) throw new Error('HTTP '+r.status);
     const d = await r.json();
     if(probabiliValide(d)){
@@ -819,7 +835,7 @@ async function caricaStorico(){
   let trovate = 0;
   for(let g = 1; g <= ultima; g++){
     try{
-      const r = await fetch('./dati/voti-' + g + '.json', {cache:'no-cache'});
+      const r = await fetchDati('dati/voti-' + g + '.json');
       if(!r.ok) continue;
       const d = await r.json();
       if(!d || d.schema!==1 || !d.giocatori) continue;
