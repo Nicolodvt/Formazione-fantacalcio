@@ -340,17 +340,28 @@ cancellazione non è mai avvenuta.
 
 ## Da fare
 
+**Decise e chiuse dal 04/09:**
+- Grafica del campo: scelta la variante "campo vero" (erba a righe alternate, tessere scure,
+  spaziatura normale). Già in `main`.
+- Riga squadra/avversario sul campo: scelto il badge CASA/TRASFERTA + nome avversario per esteso,
+  squadra propria tolta. È su `dev`, non ancora pubblicato (vedi regola in testa al file).
 
-1. **Decidere sulla grafica**: aprire `confronto-grafica.html` sul branch `grafica-varianti` e
-   scegliere (o scartare tutto: `main` è intatto). Le varianti sono mescolabili.
-2. **Verificare che la Action giri davvero.** Il primo giro automatico delle probabili è il
-   venerdì alle 18:00; i voti il martedì alle 21:00. Si può forzare da Actions → Run workflow.
-3. Fase 3 — usare i voti scaricati dentro l'app: storico delle giornate, punteggio calcolato,
+**Da fare:**
+1. **Verificare che la Action giri davvero.** Il primo giro automatico delle probabili è il
+   venerdì alle 18:00; i voti il martedì alle 21:00. Si può forzare da Actions → Run workflow —
+   ma è un'azione su GitHub, non tocca `main` né consuma build Netlify, quindi è permessa anche
+   sotto la regola dev-only.
+2. Fase 3 — usare i voti scaricati dentro l'app: storico delle giornate, punteggio calcolato,
    e medie voto misurate che sostituiscono progressivamente quelle stimate.
-4. Fase 4 — mercato di riparazione e svincoli.
-5. Provare installazione e offline **sul telefono vero**.
+3. Fase 4 — mercato di riparazione e svincoli.
+4. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
+   `main` almeno una volta, quindi va coordinato con l'utente.
+5. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
+   riattivare i build automatici Netlify o fare un deploy manuale singolo (vedi regola in testa
+   al file — non decidere in autonomia).
 
 **Aperto, non bloccante:** il regolamento della lega (moduli ammessi, numero di cambi, soglie del
 modificatore, e **se il cambio del portiere consuma uno dei tre cambi di movimento** — in molte
-leghe no, e questo cambia dove va messo il secondo portiere in panchina: non l'ho indovinato). Si è partiti con i default: sono costanti in testa al file, sotto *COSTANTI DI
-LEGA*, e cambiarle non tocca altro.
+leghe no, e questo cambia dove va messo il secondo portiere in panchina: non l'ho indovinato). Si
+è partiti con i default: sono costanti in testa al file, sotto *COSTANTI DI LEGA*, e cambiarle non
+tocca altro.
