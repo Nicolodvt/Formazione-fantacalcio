@@ -2,7 +2,10 @@
 
 **Stato: v0.3 (04/09/2026).** Fasi 0, 1, 2 e 3 chiuse, notifiche push implementate. L'app schiera,
 sceglie il modulo, funziona offline, e la stima si mescola da sola con i voti veri man mano che
-arrivano; la GitHub Action scarica probabili e voti da sola. **Non è ancora online
+arrivano — sia a livello di singolo giocatore (Fase 3) sia a livello di ruolo, con una
+correzione automatica e smorzata (`RETTIFICA_RUOLO`) che tiene conto anche della prossima
+partita (avversario, casa/trasferta) e della condizione fisica recente. La GitHub Action scarica
+probabili e voti da sola. **Non è ancora online
 su Netlify** — una nota precedente lo dava per fatto, era sbagliata: l'utente non se lo ricordava e
 non c'è nessuna traccia di un deploy reale. Resta da fare, apposta, a lavoro finito (vedi
 *Aggiornamenti e crediti Netlify* sotto). Traguardo: **4ª giornata**.
@@ -121,7 +124,16 @@ dell'asta: mai verificato su un telefono vero.
   sabato, 1 la domenica — spostato sul venerdì il 04/09 su richiesta, prima erano 5 con un giro
   anche il giovedì), voti il martedì sera.
 - `tools/fetch-voti.mjs` — scraper dei voti a giornata conclusa.
-- `tools/taratura.mjs` — confronta le stime del modello con i fantavoti reali.
+- `tools/estrai-motore.mjs` — ricostruisce il motore PURO (`fantamediaStimata`, `mvPura`,
+  `MV_SQUADRA`) fuori dal browser, estraendolo da `index.html`. Condiviso da `taratura.mjs` e
+  `ricalibra.mjs`, così le due estrazioni non possono divergere fra loro.
+- `tools/taratura.mjs` — confronta le stime pure del modello con i fantavoti reali (diagnostica,
+  non scrive nulla).
+- `tools/ricalibra.mjs` — la parte che **corregge**: stessa diagnostica di `taratura.mjs`, ma
+  scrive `dati/costanti.json` con una correzione di ruolo smorzata e limitata. Gira in CI dopo
+  lo scraper dei voti. Vedi *L'app impara dalla stagione*.
+- `dati/costanti.json` — output di `ricalibra.mjs`, letto dall'app allo stesso modo dei dati di
+  giornata (`fetchDati()`). Assente o irraggiungibile ⇒ correzione zero, comportamento di sempre.
 - `tools/controlla.mjs` — controllo di integrità, **da lanciare dopo ogni modifica**.
 
 ## La decisione che regge tutto: fetcher fuori dall'app
@@ -531,6 +543,70 @@ riga G1 mostra correttamente "(sub)", confermando che il campo nuovo arriva fino
 Tutti i conti tornano a mano. `node --check`, `controlla.mjs`, `prova-motore.mjs` e
 `taratura.mjs` puliti prima e dopo ogni pezzo.
 
+## L'app impara dalla stagione — RETTIFICA_RUOLO (04/09)
+
+Chiesto dall'utente: può l'app imparare da quello che ha consigliato in precedenza e
+dall'esito, per diventare più precisa durante la stagione? Sì, con un meccanismo scelto per
+essere **trasparente e prudente**, non un "impara da sola" opaco — coerente con tutto il resto
+del modello (mai un numero che nasconde da dove viene, costanti dichiarate quando sono stime).
+
+**Cosa fa**: `tools/ricalibra.mjs` (nuovo) confronta la stima PURA (`fantamediaStimata`, mai
+quella già mescolata con i dati del singolo giocatore — sarebbe circolare, vedi la stessa nota
+già fatta per `taratura.mjs`) con **tutti** i fantavoti reali scaricati finora, per ruolo. Se lo
+scarto sistematico è abbastanza grande e il campione abbastanza ampio da fidarsene, aggiorna una
+correzione — un solo numero per ruolo, `RETTIFICA_RUOLO`, non un riadattamento di ogni costante
+del modello (perché no, sotto). Scrive `dati/costanti.json`, letto dall'app con `fetchDati()` —
+stesso meccanismo dei dati di giornata: la correzione arriva **senza deploy**, come tutto il
+resto in questa architettura.
+
+**Tre reti di sicurezza contro il rumore dei primi turni** (le due giornate di oggi bastano a
+spiegare perché servono):
+- **Soglia minima di campione**: `MIN_CAMPIONE = 30` osservazioni (giocatore-giornata, non
+  giocatori unici) per ruolo. Sotto, non si tocca nulla — si tiene la correzione precedente.
+- **Correzione limitata**: mai oltre `LIMITE = 0.4` fantavoto, qualunque cosa dicano i dati.
+- **Aggiornamento smorzato**: `TASSO_APPRENDIMENTO = 0.3` — ogni giro si sposta solo il 30%
+  della distanza fra la correzione attuale e quella appena misurata, non un salto diretto.
+  Provato dal vivo lanciando lo script tre volte di fila sugli stessi dati: il portiere
+  converge 0 → 0.071 → 0.120 → 0.155 verso l'obiettivo di 0.235, mai un balzo.
+
+**Dove si applica, e perché lì e non altrove**: dentro `fantamediaAttesa()`, sommata alla stima
+pura **prima** della mescola con il rendimento del singolo giocatore (Fase 3), non dopo. È
+voluto: un giocatore con pochi dati personali deve sentirla piena, uno con molte presenze reali
+proprie deve vederla sfumare da sola — esattamente il comportamento che `mescola()` già dà
+gratis in base a `r.presenze`, senza bisogno di scriverlo una seconda volta. Verificato dal vivo:
+Malen (correzione ruolo A = +0.025, ma solo 2 presenze proprie) passa da 8.91 a 8.93, non a 8.94
+— la mescola smorza anche la correzione di ruolo, coerentemente.
+
+**Cosa NON corregge, deliberatamente**:
+- **`CASA_BONUS` e `PESO_AVVERSARIO`** (Modello 4) restano a intuito. Per tararli sui risultati
+  veri servirebbe sapere, per ogni giornata passata, chi ha giocato in casa/trasferta contro chi
+  — un calendario storico che oggi non esiste (`dati/probabili.json` ha solo il turno
+  *corrente*, sovrascritto ogni settimana; `voti-N.json` non porta avversario né casa/trasferta).
+  Costruirlo è fattibile (uno scraper del calendario stagionale, o un piccolo passo che archivia
+  il turno prima che venga sovrascritto) ma è un pezzo di infrastruttura nuovo, non una riga in
+  più a uno script esistente — da valutare con l'utente se vale la pena, non deciso qui.
+- **`PESO_PRIOR_STAGIONE` e `DECADIMENTO_FORMA`** (quanto velocemente fidarsi dei dati di un
+  singolo giocatore, quanto pesano le giornate recenti) non si auto-tarano: valutare se
+  *aiutano* la previsione richiederebbe un vero backtest (stima al tempo T confrontata con
+  l'esito al tempo T+1, ripetuto nel tempo), più complesso e più a rischio di rincorrere il
+  rumore del semplice confronto scala-contro-scala che regge `RETTIFICA_RUOLO`. Restano
+  costanti manuali, ritarabili a mano con `taratura.mjs` quando ci saranno più giornate.
+- **Un resoconto "cosa avevo consigliato vs cosa è successo"** (mostrato all'utente, non solo
+  usato per correggere il modello) è un'idea buona lasciata per dopo: richiederebbe salvare uno
+  snapshot della formazione consigliata prima di ogni giornata e confrontarlo a posteriori con
+  l'undici ottimale con i voti veri — una feature di fiducia/trasparenza in più, distinta da
+  questa (che corregge il modello, non racconta come è andata). Era già nel piano originale
+  ("confronto tra la formazione schierata e quella che a posteriori era ottimale", Fase 3) e non
+  ancora costruita — buon prossimo passo se l'utente lo chiede.
+
+**Verificato**: `node --check`, `controlla.mjs`, `prova-motore.mjs` (aggiunto
+`RETTIFICA_RUOLO={P:0,D:0,C:0,A:0}` all'ambiente ricostruito, tutte le invarianti passano
+invariate), `taratura.mjs` (rifattorizzato insieme a `ricalibra.mjs` su un modulo condiviso,
+`tools/estrai-motore.mjs`, così le due estrazioni non possono più divergere fra loro; numeri di
+`taratura.mjs` invariati, nessuna circolarità). `ricalibra.mjs` provato più volte per controllare
+lo smorzamento, poi ripristinato a un singolo giro pulito prima del commit. Dal vivo nel browser,
+Malen verificato a mano come sopra.
+
 ## Esplorazione grafica in Figma (04/09)
 
 Su richiesta esplicita dell'utente ho ricostruito in Figma campo, testata, tab, KPI e righe della
@@ -577,6 +653,12 @@ cancellazione non è mai avvenuta.
 - **Modello 4 — la prossima partita, l'andamento pesato, la condizione fisica**: i tre pezzi
   chiesti esplicitamente dall'utente come priorità sopra ogni altra cosa in corso, tutti e tre
   implementati e verificati dal vivo — vedi la sezione dedicata sopra.
+- **L'app impara dalla stagione**: `RETTIFICA_RUOLO`, una correzione automatica per ruolo,
+  smorzata e limitata, che l'app legge da `dati/costanti.json` senza bisogno di deploy — vedi
+  la sezione dedicata sopra. Lasciate fuori deliberatamente: la taratura automatica di
+  `CASA_BONUS`/`PESO_AVVERSARIO` (serve un calendario storico che non esiste ancora) e un
+  resoconto "cosa avevo consigliato vs cosa è successo" (feature di fiducia separata, non di
+  correzione del modello) — entrambe buone idee per dopo, non decise qui.
 
 **Da fare:**
 1. **Impostare due secret su GitHub** (repository → Settings → Secrets and variables → Actions)
@@ -596,10 +678,19 @@ cancellazione non è mai avvenuta.
    tali nel codice, nessuna nascosta: `PESO_PRIOR_STAGIONE` (10), `CASA_BONUS` (0.08),
    `PESO_AVVERSARIO` (1.4), `DECADIMENTO_FORMA` (0.85). Con `taratura.mjs`, quando ci saranno
    abbastanza giornate da distinguere un segnale vero dal rumore — su 2-3 non ancora.
-5. Fase 4 — mercato di riparazione e svincoli.
-6. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
+5. **Verificare che `ricalibra.mjs` giri davvero in CI e che `dati/costanti.json` si aggiorni**
+   nel tempo con dati sensati (stesso discorso del punto 3, aspetta un martedì vero con voti
+   nuovi). Occasione buona anche per guardare come si muove `RETTIFICA_RUOLO` giornata dopo
+   giornata: se oscilla parecchio lo smorzamento va indurito, se non si muove mai forse è troppo
+   prudente — solo i dati veri lo diranno.
+6. **Decidere se costruire il calendario storico** (chi ha giocato contro chi, dove) per poter
+   tarare anche `CASA_BONUS`/`PESO_AVVERSARIO` sui risultati veri — non deciso, vedi *L'app
+   impara dalla stagione*. E se vale la pena del resoconto "formazione consigliata vs esito",
+   già previsto nel piano originale e non ancora costruito.
+7. Fase 4 — mercato di riparazione e svincoli.
+8. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
    `main` almeno una volta, quindi va coordinato con l'utente.
-7. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
+9. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
    riattivare i build automatici Netlify o fare un deploy manuale singolo (vedi regola in testa
    al file — non decidere in autonomia).
 
