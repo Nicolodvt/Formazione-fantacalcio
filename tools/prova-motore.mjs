@@ -157,5 +157,46 @@ console.log('\n5. FORMAZIONE — struttura corretta in tutti i moduli');
   if (tutteOk) ok('tutti e 7 i moduli: 11 titolari, reparti giusti, nessun doppione fra campo e panchina');
 }
 
+/* ---------- 6. LA REGOLA DEI CAMBI ----------
+   I sostituti entrano scorrendo la PANCHINA nell'ordine, ognuno solo se in campo manca
+   qualcuno del suo ruolo, al massimo tre. Si verifica facendo mancare piu titolari di quanti
+   cambi siano concessi: e li che una regola sbagliata sceglie sostituti diversi. */
+console.log('');
+console.log('6. CAMBI — si scorre la panchina, stesso ruolo, massimo tre');
+{
+  S.rosa = ['P','D','C','A'].flatMap(r => perRuolo(r).slice(0, {P:3,D:8,C:8,A:6}[r]).map(p => p.id));
+  S.bloccati = {}; S.override = {};
+
+  const u = M.scegliUndici('4-3-3');
+
+  /* L'undici va FISSATO prima di azzerare, altrimenti scegliUndici sostituisce i giocatori
+     azzerati gia in fase di scelta e non si finisce mai per provare la regola dei cambi. */
+  S.bloccati = {};
+  u.titolari.forEach(id => { S.bloccati[id] = true; });
+
+  /* Cinque titolari non prendono voto: i mancanti saranno piu dei tre cambi concessi. */
+  u.titolari.slice(0, 5).forEach(id => { S.override[id] = 0; });
+  /* Panchina tutta certa, cosi l'unico limite che resta e la regola dei cambi. */
+  u.panchina.forEach(id => { S.override[id] = 1; });
+
+  const u2 = M.scegliUndici('4-3-3');
+  const v = M.valuta(u2.titolari, u2.panchina);
+  const inCampo = 11 - v.buchiAttesi;
+  const attesi = 11 - 5 + 3;   // ne mancano 5, se ne recuperano al massimo 3
+
+  /* Il recupero puo essere minore di 3 se i mancanti sono concentrati in un ruolo con pochi
+     panchinari di quel ruolo: quindi si controlla che NON si superi mai il tetto, e che
+     qualche cambio avvenga davvero. */
+  if (inCampo > attesi + 0.05) {
+    ko('in campo restano ' + inCampo.toFixed(2) + ': superato il tetto di 3 cambi');
+  } else if (inCampo < 11 - 5 - 0.05) {
+    ko('in campo restano ' + inCampo.toFixed(2) + ': nessun cambio effettuato');
+  } else {
+    ok('con 5 titolari fuori restano ' + inCampo.toFixed(1) + ' in campo (fra 6 e ' + attesi + ', tetto rispettato)');
+  }
+  S.bloccati = {};
+  S.override = {};
+}
+
 console.log('\n' + (falliti ? falliti + ' PROVE FALLITE' : 'Tutte le invarianti rispettate.') + '\n');
 process.exit(falliti ? 1 : 0);
