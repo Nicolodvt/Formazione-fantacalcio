@@ -42,12 +42,19 @@ const sorgente = [
   "const ROLE_ORDER = ['P','D','C','A'];",
   'const MV_MIN = 5.75, MV_MAX = 6.15, MV_AGG_MAX = 0.12;',
   'let MV_SQUADRA = {};',
+  /* STORICO vuoto: zero giornate reali, come l'app all'avvio prima che caricaStorico() giri.
+     mvStimata()/fantamediaAttesa() (Fase 3) devono ricadere sulla pura stima con dati vuoti —
+     e proprio quello che queste prove verificano restando valide senza modificarle. */
+  'let STORICO = {};',
   'const LIS = {}; LISTONE.forEach(p=> LIS[p.id]=p);',
   pezzo('MV_ZONA', 'const'), pezzo('BONUS_MAX', 'const'), pezzo('BONUS_CURVA', 'const'),
   pezzo('BONUS_PIAZZATI', 'const'), pezzo('MALUS_FISSO', 'const'), pezzo('SUBENTRO', 'const'),
   pezzo('MODULI', 'const'), pezzo('SLOT_MAX', 'const'), pezzo('MAX_CAMBI', 'const'),
   pezzo('MOD_RIF', 'const'), pezzo('MOD_PESO', 'const'), pezzo('N_SIM', 'const'),
-  pezzo('calcolaMvSquadre'), pezzo('mvStimata'), pezzo('golSubitiAttesi'), pezzo('fantamediaAttesa'),
+  pezzo('PESO_PRIOR_STAGIONE', 'const'),
+  pezzo('calcolaMvSquadre'), pezzo('mvPura'), pezzo('mescola'), pezzo('votoMisurato'),
+  pezzo('mvStimata'), pezzo('golSubitiAttesi'), pezzo('fantamediaStimata'), pezzo('rendimento'),
+  pezzo('fantamediaAttesa'),
   pezzo('datiGiornata'), pezzo('certezza'), pezzo('contributoAtteso'),
   pezzo('scegliUndici'), pezzo('simula'), pezzo('valuta'), pezzo('classificaModuli'),
   'calcolaMvSquadre();',
