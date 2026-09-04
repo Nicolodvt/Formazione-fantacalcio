@@ -13,7 +13,7 @@ A fine notte va riassunto in CLAUDE.md e cancellato.
 - [x] 6. Scaffolding scraper voti — FATTO e validato su G1+G2
 - [x] 7. Sanity check fantamedia — FATTO: scala confermata dai dati veri
 - [ ] 8. Feature e fix (continuo)
-- [ ] 9. Verifica con subagent
+- [x] 9. Verifica con subagent — FATTO, 2 revisori, 11 bug trovati e corretti
 - [ ] 10. Memoria aggiornata
 
 ## Diario
@@ -122,3 +122,45 @@ I colori di ruolo non cambiano in nessuna (nella B solo scuriti per il fondo chi
 
 Le varianti sono mescolabili: toccano regole diverse, quindi il campo della A puo convivere
 con la densita della C.
+
+### 03:17 — punto 9: due revisori indipendenti, undici bug corretti
+
+Il giro con i subagent e stato il piu redditizio della notte. Sintesi.
+
+**Nel motore (index.html):**
+1. **contributoAtteso invertiva la certezza.** Sottraeva 6.0 come riferimento, quindi per chi ha
+   fantamedia sotto 6 (TUTTI i portieri, meta dei difensori) una certezza piu alta rendeva il
+   punteggio piu negativo: l'app preferiva chi NON gioca. Riprodotto: con Svilar al 90% e due
+   riserve al 5%, mandava in porta una riserva. Il criterio giusto discende da simula(), dove
+   chi resta senza voto vale ZERO e non 6: quindi certezza x fantamedia.
+   I miei test non l'avevano visto perche i tre portieri di prova erano tutti al 90%: a certezza
+   costante l'ordinamento tornava giusto per caso.
+2. **Il subentro annullava i tetti** su infortunati e non convocati, sommandosi dopo: tutti e 42
+   gli infortunati uscivano identici al 19,6%.
+3. **I cambi si scorrevano dai titolari mancanti** invece che dalla panchina, che e la regola
+   vera — e l'ordine di panchina e proprio quello che l'app fa ricopiare sul sito della lega.
+4. **La panchina non pesava se un cambio serve** in quel ruolo.
+5. **I fissati eccedenti** venivano troncati in ordine di inserimento in rosa.
+6. **Dati mutilati = pagina bianca**, e la cache non era validata affatto.
+7. **Squadra fuori dal turno** -> certezza fino al 100% senza avviso.
+
+**Negli scraper:**
+8. **Ammonizioni buttate**: sono una classe sul voto, non un bonus. Senza, i bonus non potevano
+   spiegare il fantavoto (31 scarti su 293, tutti da -0.5).
+9. **Riconciliazione mancante**: ora si ricostruisce fantavoto = voto + bonus + ammonizione. I
+   pesi sono ricavati dai dati (262 + 31 = 293, zero non spiegati), non dati per scontati.
+10. **L'ordine delle colonne di voto** era verificato solo sulla prima tabella su venti.
+11. Unicita squadre, soglie su indisponibili/ballottaggi/percentuali/panchine, matchweek
+    concordi, timeout, HTML troncato, ancoraggio del nome squadra, marcatori fragili.
+
+**Lezione**: i miei test passavano tutti perche usavano una rosa "sana", con valori uniformi.
+Il bug numero 1 esisteva solo quando le certezze DIFFERISCONO fra loro. Le prove vanno fatte su
+dati che variano, non su dati comodi.
+
+**Limite accettato e dichiarato**: se il sito riordinasse le celle dei voti lasciando ferme le
+intestazioni, nessun controllo sul contenuto potrebbe accorgersene, perche ogni colonna e
+internamente coerente. E il prezzo della lettura per posizione.
+
+**Domanda aperta per l'utente**: dove va il portiere di riserva in panchina dipende dal
+regolamento — in molte leghe il cambio del portiere non consuma i tre cambi di movimento. Non
+l'ho indovinato.
