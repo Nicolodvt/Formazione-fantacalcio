@@ -12,7 +12,10 @@
    servite dalla stessa, quella dell'asta intercetterebbe questa e in offline mostrerebbe
    se stessa. Il nome della cache qui e' comunque distinto, cosi' non si calpestano. */
 
-const CACHE = 'formazione-v0-1';
+/* Il nome della cache va cambiato a ogni versione: e la chiave con cui activate() cancella
+   le vecchie. Con la strategia rete-per-prima l'app si aggiorna comunque da sola, ma senza
+   cambiarlo la copia vecchia resta occupata sul telefono per sempre. */
+const CACHE = 'formazione-v0-3';
 const FILES = ['./', './index.html', './manifest.webmanifest', './dati/probabili.json'];
 
 self.addEventListener('install', (e) => {
