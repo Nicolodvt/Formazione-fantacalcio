@@ -67,6 +67,22 @@ jobs:
           echo "Scarico i voti della giornata $GIORNATA"
           node "tools/fetch-voti.mjs" "$GIORNATA"
 
+      # Gli scraper riscrivono sempre il campo "generato", quindi senza questo passo la Action
+      # committerebbe a ogni giro anche quando i dati non sono cambiati: sei commit a settimana
+      # di puro rumore, altrettanti deploy, e una storia git in cui diventa impossibile vedere
+      # quando i dati sono cambiati per davvero.
+      # Se in un file l'unica riga diversa e il timestamp, la modifica viene annullata.
+      - name: Scarta i file in cui e cambiato solo il timestamp
+        run: |
+          for f in $(git diff --name-only -- dati/); do
+            cambiate=$(git diff -U0 -- "$f" | grep -c '^[+-][^+-]' || true)
+            solotimestamp=$(git diff -U0 -- "$f" | grep '^[+-][^+-]' | grep -c '"generato"' || true)
+            if [ "$cambiate" = "2" ] && [ "$solotimestamp" = "2" ]; then
+              echo "$f: solo il timestamp, annullo"
+              git checkout -- "$f"
+            fi
+          done
+
       - name: Committa se e cambiato qualcosa
         run: |
           git config user.name "github-actions[bot]"

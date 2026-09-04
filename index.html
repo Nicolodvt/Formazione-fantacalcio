@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  App Formazione — v0.1 (03/09/2026)
+  App Formazione — v0.3 (04/09/2026)
 
   Serve a decidere CHI SCHIERARE ogni giornata. E' la seconda meta' dell'app asta:
   quella compra, questa manda in campo.
@@ -9,6 +9,20 @@
   quirks mode.
 
   CHANGELOG
+  v0.3  Correzioni dopo una revisione indipendente del codice. La piu grave: contributoAtteso
+        sottraeva 6.0 come riferimento, e sotto quella soglia — dove stanno TUTTI i portieri e
+        meta dei difensori — una certezza piu alta peggiorava il punteggio. L'app preferiva
+        chi NON gioca: con un portiere dato al 90% e due riserve al 5%, mandava in porta una
+        riserva. Corretti anche: il subentro che annullava i tetti su infortunati e non
+        convocati, i cambi scorsi dai titolari invece che dalla panchina, la panchina che non
+        pesava se un cambio serve in quel ruolo, i fissati troncati in ordine di inserimento,
+        i dati mutilati che davano pagina bianca, e le squadre fuori turno che salivano al 100%
+        di certezza senza avviso.
+        Aggiunti: il rendimento reale nella scheda giocatore (dai voti gia giocati) e
+        l'avversario di giornata sulle caselle del campo.
+  v0.2  Bersagli da dito a norma nella testata (il pulsante impostazioni era 30x28 contro i
+        44x44 della linea guida). Avviso quando i dati di giornata sono vecchi. Campo elastico:
+        le caselle si dividono lo spazio, cosi la difesa a 5 resta su una riga sola.
   v0.1  Prima versione. Import rosa dall'app asta (schema 1) o composizione a mano.
         Motore certezza/resa, campo, ottimizzatore di modulo con simulazione, panchina
         ordinata. Dati di giornata da dati/probabili.json, con inserimento manuale come
