@@ -1,8 +1,11 @@
 {
  "schema": 1,
- "generato": "2026-09-03T20:07:18.512Z",
+ "generato": "2026-09-04T01:17:30.146Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 3,
+ "giornateDiscordi": [
+  3
+ ],
  "partite": [
   {
    "casa": "Genoa",
@@ -1681,9 +1684,9 @@
    "nome": "Kossounou",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 40,
+   "titolare": false,
+   "incerto": true
   },
   "5585": {
    "id": 5585,
@@ -2510,6 +2513,15 @@
    "squadra": "Lazio",
    "ruolo": "P",
    "pct": 90,
+   "titolare": true,
+   "incerto": false
+  },
+  "6485": {
+   "id": 6485,
+   "nome": "Kristensen T.",
+   "squadra": "Atalanta",
+   "ruolo": "D",
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -5202,11 +5214,6 @@
    "id": 6434,
    "tipo": "infortunato",
    "nota": "frattura metatarso piede sinistro, ipotesi rientro da fine novembre"
-  },
-  "6485": {
-   "id": 6485,
-   "tipo": "infortunato",
-   "nota": "problema alla caviglia, da valutare contro la Roma"
   },
   "6629": {
    "id": 6629,
