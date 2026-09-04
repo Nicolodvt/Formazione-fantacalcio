@@ -1,8 +1,10 @@
 # App Formazione — Diario di bordo
 
 **Stato: v0.3 (04/09/2026).** Fasi 0, 1 e 2 chiuse, Fase 3 avviata. L'app schiera, sceglie il
-modulo, funziona offline ed è online su Netlify; la GitHub Action scarica probabili e voti da
-sola. Traguardo: **4ª giornata**.
+modulo, funziona offline; la GitHub Action scarica probabili e voti da sola. **Non è ancora online
+su Netlify** — una nota precedente lo dava per fatto, era sbagliata: l'utente non se lo ricordava e
+non c'è nessuna traccia di un deploy reale. Resta da fare, apposta, a lavoro finito (vedi
+*Aggiornamenti e crediti Netlify* sotto). Traguardo: **4ª giornata**.
 
 Progetto separato dall'app asta, che vive nella cartella superiore. Quella serve a *comprare* ed è
 finita lunedì; questa serve a *schierare* e deve reggere 38 giornate.
@@ -25,6 +27,38 @@ Finché non viene tolta esplicitamente, vale questa regola:
 - Quando l'utente dice di essere pronto a pubblicare: merge `dev` → `main`, poi si decide insieme
   se riattivare i build automatici o fare un deploy manuale singolo.
 
+## Aggiornamenti e crediti Netlify (04/09/2026)
+
+**Problema individuato prima di collegare Netlify, non dopo.** La Action scrive su `dati/` fino a
+7 volte a settimana (vedi orari sotto). Con un collegamento Netlify normale (continuous deployment
+sul push), **ognuna di quelle scritture pubblicherebbe il sito**: non un rischio di un'altra notte
+fuori controllo, ma il comportamento strutturale e permanente del collegamento standard, ogni
+settimana, per sempre. L'utente ha fatto bene a fermarsi a chiederlo prima di collegare qualcosa.
+
+**Soluzione: i dati non passano più da un deploy per raggiungere il telefono.**
+`fetchDati()` in `index.html` prova prima a leggere `dati/*.json` **direttamente da GitHub**
+(gratis, istantaneo, nessuna build coinvolta) e solo se GitHub non risponde ripiega sulla copia
+locale pubblicata con l'app — che resta comunque come rete di sicurezza, mai rimossa. `sw.js`
+precarica anche la copia GitHub per l'offline.
+
+**Condizione: il repository deve essere pubblico.** Deciso in chat il 04/09 — niente di sensibile
+dentro (formazioni Serie A pubbliche, nessuna password). Finché resta privato GitHub risponde 404 e
+l'app usa semplicemente il ripiego locale: nessuna rottura, solo nessun guadagno finché non si
+rende pubblico. **Da fare (manuale, è un cambio di impostazioni dell'account, non lo faccio io):**
+Settings del repo su GitHub → Danger Zone → *Change visibility* → *Make public*.
+
+**Rete di sicurezza aggiuntiva**, anche a prescindere dal punto sopra: `netlify.toml` ha un
+`ignore` che salta il deploy se rispetto all'ultimo pubblicato cambia solo dentro `dati/` o solo un
+file `.md`. Vale anche se in futuro qualcosa touchasse per errore `main` con un commit solo-dati.
+
+**Perché non l'API di Claude al posto dello scraper (chiesto e valutato il 04/09):** il costo dei
+deploy non dipende da come arrivano i dati, solo da come li pubblichiamo — quindi non risolverebbe
+niente qui. Sul merito, la pagina probabili è già scritta da fantacalcio.it in un formato ordinato:
+leggerla è gratis e affidabile al 100%. Un'API a pagamento avrebbe senso per compiti di *giudizio*
+che lo scraper strutturalmente non può fare (leggere un articolo di cronaca e dedurne un dubbio non
+ancora nella pagina strutturata, scrivere il perché di un consiglio) — non per sostituire una
+lettura di dati già pronti.
+
 ## File
 
 - `index.html` — l'app. Single-file, stessa filosofia dell'asta: CSS in `<style>`, listone in
@@ -32,8 +66,12 @@ Finché non viene tolta esplicitamente, vale questa regola:
 - `manifest.webmanifest` + `sw.js` — installazione e funzionamento offline. Hanno effetto solo se
   la cartella è servita via http/https.
 - `tools/fetch-probabili.mjs` — lo scraper. **Gira solo in CI, mai nel browser.**
-- `dati/probabili.json` — output dello scraper, letto dall'app con fetch same-origin.
-- `.github/workflows/dati.yml` — il cron: probabili 5 volte a settimana, voti il martedì sera.
+- `dati/probabili.json` — output dello scraper. L'app lo legge **prima direttamente da GitHub**
+  (`fetchDati()` in `index.html`), e solo se non risponde ripiega sulla copia locale pubblicata
+  con l'app. Vedi *Aggiornamenti e crediti Netlify*.
+- `.github/workflows/dati.yml` — il cron: probabili 7 volte a settimana (4 il venerdì, 2 il
+  sabato, 1 la domenica — spostato sul venerdì il 04/09 su richiesta, prima erano 5 con un giro
+  anche il giovedì), voti il martedì sera.
 - `tools/fetch-voti.mjs` — scraper dei voti a giornata conclusa.
 - `tools/taratura.mjs` — confronta le stime del modello con i fantavoti reali.
 - `tools/controlla.mjs` — controllo di integrità, **da lanciare dopo ogni modifica**.
@@ -49,9 +87,12 @@ soli" — non stanno insieme senza un pezzo che gira su un server. La soluzione 
 scarica da chi decide**:
 
 ```
-GitHub Action (5×/sett.)  →  dati/probabili.json  →  app (fetch same-origin)
+GitHub Action (7×/sett.)  →  dati/probabili.json  →  app (fetch da GitHub, poi same-origin)
    fragile, sacrificabile        il contratto          stupida, autosufficiente
 ```
+
+(Diagramma aggiornato il 04/09: il fetch legge prima da GitHub direttamente, non solo
+same-origin — vedi *Aggiornamenti e crediti Netlify*. Il same-origin resta come ripiego.)
 
 Conseguenze, tutte volute:
 - **Nessuna credenziale nel browser.** Niente password in un file che chiunque guardi lo schermo
@@ -345,18 +386,32 @@ cancellazione non è mai avvenuta.
   spaziatura normale). Già in `main`.
 - Riga squadra/avversario sul campo: scelto il badge CASA/TRASFERTA + nome avversario per esteso,
   squadra propria tolta. È su `dev`, non ancora pubblicato (vedi regola in testa al file).
+- Cadenza degli aggiornamenti: spostato il peso sul venerdì (4 giri invece di 1), tolto il giro
+  del giovedì. Dati letti prima da GitHub direttamente, non solo dalla copia Netlify — vedi
+  *Aggiornamenti e crediti Netlify*. Manca solo il passaggio manuale (rendere pubblico il repo).
+- API di Claude a pagamento al posto dello scraper: valutato e scartato per questo compito (vedi
+  sopra) — resta un'idea buona per compiti di giudizio/sintesi, non di lettura dati.
 
 **Da fare:**
-1. **Verificare che la Action giri davvero.** Il primo giro automatico delle probabili è il
-   venerdì alle 18:00; i voti il martedì alle 21:00. Si può forzare da Actions → Run workflow —
-   ma è un'azione su GitHub, non tocca `main` né consuma build Netlify, quindi è permessa anche
+1. **Rendere pubblico il repository GitHub** (Settings → Danger Zone → Change visibility) — unico
+   passo manuale rimasto perché `fetchDati()` cominci davvero a leggere da GitHub invece di
+   ripiegare sempre sulla copia locale. Non lo faccio io: è un cambio di impostazioni
+   dell'account, tocca all'utente.
+2. **Promemoria per schierare prima della prima partita**: chiesto il 04/09, non ancora deciso
+   come. Due strade proposte: un evento calendario generato dall'app (semplice, nessuna
+   infrastruttura, ma va aggiunto a mano ogni settimana) vs. una notifica push vera (arriva da
+   sola anche ad app chiusa, ma richiede una funzione Netlify + storage per salvare l'iscrizione
+   del telefono, quindi più pezzi da mantenere). L'utente stava valutando; riprendere da lì.
+3. **Verificare che la Action giri davvero** con la nuova cadenza (primo giro utile: venerdì
+   11/09, dato che il round in corso il 04/09 è già partito con la cadenza vecchia). Si può
+   forzare da Actions → Run workflow — non tocca `main` né consuma build Netlify, permesso anche
    sotto la regola dev-only.
-2. Fase 3 — usare i voti scaricati dentro l'app: storico delle giornate, punteggio calcolato,
+4. Fase 3 — usare i voti scaricati dentro l'app: storico delle giornate, punteggio calcolato,
    e medie voto misurate che sostituiscono progressivamente quelle stimate.
-3. Fase 4 — mercato di riparazione e svincoli.
-4. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
+5. Fase 4 — mercato di riparazione e svincoli.
+6. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
    `main` almeno una volta, quindi va coordinato con l'utente.
-5. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
+7. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
    riattivare i build automatici Netlify o fare un deploy manuale singolo (vedi regola in testa
    al file — non decidere in autonomia).
 
