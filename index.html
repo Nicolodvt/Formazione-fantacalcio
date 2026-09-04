@@ -134,7 +134,10 @@
      Cosi le caselle si dividono lo spazio e la riga resta una riga sempre. */
   .slot{ flex:1 1 0; min-width:0; max-width:84px; background:var(--surface); border:1px solid var(--line-2);
     border-radius:var(--radius-sm); padding:6px 4px 5px; text-align:center;
-    box-shadow:var(--lift); position:relative; overflow:hidden; }
+    /* Ombra piu marcata di --lift apposta: sul verde a righe del campo il filo di luce
+       sottile non basta a staccare la tessera dallo sfondo, che qui e' molto piu vivo del
+       resto dell'app. Provato in Figma prima di portarlo qui. */
+    box-shadow:0 2px 6px rgba(0,0,0,.4); position:relative; overflow:hidden; }
   .slot:active{ background:var(--surface2); }
   .slot::before{ content:''; position:absolute; inset:0 0 auto 0; height:3px; }
   .slot.P::before{ background:var(--role-p); } .slot.D::before{ background:var(--role-d); }
