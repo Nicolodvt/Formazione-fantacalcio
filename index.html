@@ -110,12 +110,23 @@
   .warnbar.info{ background:rgba(240,188,70,.12); border-color:rgba(240,188,70,.3); color:#F2D89A; }
 
   /* ---------- Campo ---------- */
-  .pitch{ margin:0 10px 14px; border-radius:var(--radius); border:1px solid var(--line);
+  /* Erba vera: righe di taglio ALTERNATE (un verde piu chiaro e uno piu scuro, non trasparenza
+     su un fondo unico) piu bordo del campo e cerchio di centrocampo. Le caselle dei giocatori
+     restano scure (var(--surface)): solo il campo doveva sembrare un campo, i riquadri gia
+     funzionavano e schiarirli avrebbe rotto la coerenza col resto dell'app. */
+  .pitch{ position:relative; margin:0 10px 14px; border-radius:var(--radius);
+    border:1px solid rgba(255,255,255,.14);
     background:
-      repeating-linear-gradient(180deg, rgba(255,255,255,.022) 0 34px, transparent 34px 68px),
-      linear-gradient(180deg, #1A3A24, #142C1C);
-    padding:14px 8px 12px; box-shadow:var(--lift-2); }
-  .pitch-line{ display:flex; justify-content:center; gap:7px; margin-bottom:9px; }
+      repeating-linear-gradient(180deg, #1D4429 0 40px, #17371F 40px 80px);
+    padding:16px 8px 14px; box-shadow:var(--lift-2), inset 0 0 60px rgba(0,0,0,.35);
+    overflow:hidden; }
+  /* Segnature decorative: non devono mai intercettare un tocco. */
+  .pitch::before{ content:''; position:absolute; inset:8px; border:2px solid rgba(255,255,255,.13);
+    border-radius:6px; pointer-events:none; }
+  .pitch::after{ content:''; position:absolute; left:50%; top:50%; width:110px; height:110px;
+    transform:translate(-50%,-50%); border:2px solid rgba(255,255,255,.11);
+    border-radius:50%; pointer-events:none; }
+  .pitch-line{ position:relative; z-index:1; display:flex; justify-content:center; gap:7px; margin-bottom:9px; }
   .pitch-line:last-child{ margin-bottom:0; }
 
   /* Larghezza elastica invece che fissa: con la difesa a 5 i riquadri da 78px non ci
