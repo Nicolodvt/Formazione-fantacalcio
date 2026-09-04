@@ -59,6 +59,53 @@ che lo scraper strutturalmente non può fare (leggere un articolo di cronaca e d
 ancora nella pagina strutturata, scrivere il perché di un consiglio) — non per sostituire una
 lettura di dati già pronti.
 
+## Notifiche push (04/09/2026)
+
+**Scelta dell'utente**, esplicitamente: notifica push vera, non un promemoria da calendario —
+sapendo che significa più infrastruttura da costruire e mantenere, apposta per spingere i limiti
+attuali del progetto. Implementato tutto tranne l'unico pezzo che richiede l'account
+dell'utente stesso.
+
+**Come funziona:**
+- `index.html`, foglio Impostazioni → *Notifiche*: "Attiva promemoria" chiede il permesso al
+  browser, iscrive il service worker al servizio push (chiave pubblica VAPID — pubblica per
+  definizione, sta nel codice), poi mostra l'abbonamento come testo da copiare.
+- Quell'abbonamento va incollato **una tantum** come secret GitHub `PUSH_SUBSCRIPTION`
+  (repository → Settings → Secrets and variables → Actions). Deciso di NON costruire un server
+  che lo salvi da solo (una funzione Netlify + storage): con un solo utente e un abbonamento che
+  cambia raramente, un copia-incolla occasionale è più semplice di un pezzo di infrastruttura in
+  più da mantenere — scelta coerente con "poche cose che si possono rompere in silenzio" già
+  seguita nel resto del progetto.
+- `tools/invia-promemoria.mjs`, dentro `.github/workflows/dati.yml` subito dopo il fetch delle
+  probabili: trova la prima partita della giornata in `dati/probabili.json`, e se non ha già
+  avvisato per quella giornata (il numero sta in `dati/promemoria.json`) spedisce un push con
+  orario e avversari. Se i secret non sono impostati esce senza errore — è un extra sopra lo
+  scraper, non deve poterlo rompere.
+- `sw.js` gestisce `push` (mostra la notifica, un solo `tag` fisso così non se ne accumulano più
+  di una) e `notificationclick` (riporta all'app).
+- `web-push` (libreria npm, non l'ho scritta a mano: firma e cifra i messaggi secondo RFC8291,
+  reinventarla da zero avrebbe significato crittografia scritta a mano per nessun guadagno) si
+  scarica al volo nel workflow con `npm install --no-save` — niente `package.json`/lockfile nel
+  repo, stessa scelta di dipendenza-zero già fatta per gli scraper.
+
+**Chiavi VAPID**: generate localmente il 04/09 (`web-push` installato temporaneo, mai committato,
+già in `.gitignore` via `node_modules/`). La pubblica è nel codice (`index.html` e
+`invia-promemoria.mjs`, devono restare identiche — controllato). La privata **non è in nessun
+file**: sta scritta nel diario dell'agente di quella sessione, resta da impostarla come secret
+GitHub `VAPID_PRIVATE_KEY` quando l'utente torna al PC — se le chiavi si rigenerano mai, vanno
+cambiate in entrambi i posti insieme o gli abbonamenti già fatti smettono di funzionare.
+
+**Cosa NON è verificabile da qui**: il browser di questa sessione ha `Notification.permission`
+già a `"denied"` di default (politica dell'ambiente sandbox), quindi il vero click "Attiva
+promemoria" → notifica reale sul telefono non si può testare in questo ambiente. Verificato
+invece tutto il resto: la gestione del permesso negato non rompe nulla (mostra un avviso, niente
+crash — provato dal vivo), `tools/invia-promemoria.mjs` gira senza errori contro
+`dati/probabili.json` vero (trova Genoa-Como venerdì 20:45, formatta "venerdì 4 settembre alle
+ore 20:45"), gestisce correttamente sia i secret mancanti che un abbonamento non valido (provato
+con un abbonamento finto: fallisce nel punto giusto, con l'errore giusto, senza scrivere il
+marker di "già avvisato"). Stessa categoria del limite già dichiarato sul service worker
+dell'asta: mai verificato su un telefono vero.
+
 ## File
 
 - `index.html` — l'app. Single-file, stessa filosofia dell'asta: CSS in `<style>`, listone in
@@ -249,8 +296,11 @@ Valgono identiche qui, e sono state imparate sbagliando:
 
 ## Cosa è arrivato con la notte del 03→04/09
 
-**Online.** Repo su GitHub (`Nicolodvt/Formazione-fantacalcio`) e sito Netlify collegato, con
-deploy automatico a ogni push. Service worker verificato `activated` sull'origine vera.
+**Online (nota corretta il 04/09, era sbagliata: vedi sopra).** Repo creato su GitHub
+(`Nicolodvt/Formazione-fantacalcio`). Il sito Netlify **non** è mai stato collegato — questa nota
+lo dava per fatto, l'utente non se lo ricordava e non c'è traccia di un deploy reale da nessuna
+parte. Il service worker era stato verificato `activated` durante un test locale via http, non su
+un sito pubblicato davvero.
 
 **Bersagli da dito.** Misurando l'area toccabile reale con `elementFromPoint` — non la dimensione
 visiva — il pulsante impostazioni risultava 30×28 px contro i 44×44 della linea guida. Corretto
@@ -388,20 +438,23 @@ cancellazione non è mai avvenuta.
   squadra propria tolta. È su `dev`, non ancora pubblicato (vedi regola in testa al file).
 - Cadenza degli aggiornamenti: spostato il peso sul venerdì (4 giri invece di 1), tolto il giro
   del giovedì. Dati letti prima da GitHub direttamente, non solo dalla copia Netlify — vedi
-  *Aggiornamenti e crediti Netlify*. Manca solo il passaggio manuale (rendere pubblico il repo).
+  *Aggiornamenti e crediti Netlify*. Repository reso pubblico dall'utente il 04/09: verificato che
+  `fetchDati()` legge davvero da GitHub ora (200, non più 404).
 - API di Claude a pagamento al posto dello scraper: valutato e scartato per questo compito (vedi
   sopra) — resta un'idea buona per compiti di giudizio/sintesi, non di lettura dati.
+- Promemoria per schierare: scelta la notifica push vera (non il calendario), implementata per
+  intero — vedi *Notifiche push* sopra.
 
 **Da fare:**
-1. **Rendere pubblico il repository GitHub** (Settings → Danger Zone → Change visibility) — unico
-   passo manuale rimasto perché `fetchDati()` cominci davvero a leggere da GitHub invece di
-   ripiegare sempre sulla copia locale. Non lo faccio io: è un cambio di impostazioni
-   dell'account, tocca all'utente.
-2. **Promemoria per schierare prima della prima partita**: chiesto il 04/09, non ancora deciso
-   come. Due strade proposte: un evento calendario generato dall'app (semplice, nessuna
-   infrastruttura, ma va aggiunto a mano ogni settimana) vs. una notifica push vera (arriva da
-   sola anche ad app chiusa, ma richiede una funzione Netlify + storage per salvare l'iscrizione
-   del telefono, quindi più pezzi da mantenere). L'utente stava valutando; riprendere da lì.
+1. **Impostare due secret su GitHub** (repository → Settings → Secrets and variables → Actions)
+   perché le notifiche comincino davvero a funzionare — tocca all'utente, non lo faccio io:
+   - `VAPID_PRIVATE_KEY`: generata il 04/09, sta nel diario di quella sessione (non in nessun
+     file del repo).
+   - `PUSH_SUBSCRIPTION`: si ottiene aprendo l'app → Impostazioni → Notifiche → "Attiva
+     promemoria", poi copiando il testo che appare.
+2. **Provare le notifiche sul telefono vero**: attivarle dall'app, aspettare il prossimo giro
+   della Action (o forzarlo da Actions → Run workflow) e controllare che arrivi davvero. Non
+   verificabile da qui — vedi *Notifiche push*, il permesso è bloccato in questo ambiente.
 3. **Verificare che la Action giri davvero** con la nuova cadenza (primo giro utile: venerdì
    11/09, dato che il round in corso il 04/09 è già partito con la cadenza vecchia). Si può
    forzare da Actions → Run workflow — non tocca `main` né consuma build Netlify, permesso anche
