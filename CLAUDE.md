@@ -1,7 +1,8 @@
 # App Formazione — Diario di bordo
 
-**Stato: v0.3 (04/09/2026).** Fasi 0, 1 e 2 chiuse, Fase 3 avviata. L'app schiera, sceglie il
-modulo, funziona offline; la GitHub Action scarica probabili e voti da sola. **Non è ancora online
+**Stato: v0.3 (04/09/2026).** Fasi 0, 1, 2 e 3 chiuse, notifiche push implementate. L'app schiera,
+sceglie il modulo, funziona offline, e la stima si mescola da sola con i voti veri man mano che
+arrivano; la GitHub Action scarica probabili e voti da sola. **Non è ancora online
 su Netlify** — una nota precedente lo dava per fatto, era sbagliata: l'utente non se lo ricordava e
 non c'è nessuna traccia di un deploy reale. Resta da fare, apposta, a lavoro finito (vedi
 *Aggiornamenti e crediti Netlify* sotto). Traguardo: **4ª giornata**.
@@ -394,16 +395,50 @@ in `fetch-probabili`, tre su tre in `fetch-voti`.
 intestazioni, nessun controllo sul contenuto potrebbe accorgersene, perché ogni colonna è
 internamente coerente. È il prezzo della lettura per posizione.
 
-## Il rendimento reale (primo pezzo della Fase 3)
+## Fase 3 — i voti veri prendono il sopravvento (chiusa il 04/09)
 
-L'app carica i voti delle giornate già giocate e nella scheda giocatore mostra quanto ha reso
-**davvero**, accanto a quanto il modello prevede. Non c'è un indice dei file: si scende dalla
-giornata corrente e ci si ferma al primo che manca.
+L'app carica i voti delle giornate già giocate (`caricaStorico()`, che dal 04/09 riscarica solo
+le giornate ancora assenti dallo storico invece di rifare tutto da capo a ogni apertura — vedi
+sotto) e li usa in **due modi distinti**.
 
-Lo scarto fra reale e stimato si mostra **solo da quattro giornate in su**. Su due partite un
-attaccante che ha segnato una doppietta esce con +8 di scarto — Malen oggi fa 15.50 di media
-contro una stima di 7.57 — e sembrerebbe che il modello sia rotto quando invece è varianza.
-Meglio mostrare i numeri e dire che non bastano, che far dedurre una conclusione falsa.
+**1. Mostrati accanto alla stima**, nella scheda giocatore: quanto ha reso *davvero* rispetto a
+quanto il modello prevedeva all'inizio. Lo scarto si mostra **solo da quattro giornate in su**:
+su due partite un attaccante che segna una doppietta esce con +8 di scarto e sembrerebbe che il
+modello sia rotto, quando è solo varianza. Meglio mostrare i numeri e dire che non bastano, che
+far dedurre una conclusione falsa.
+
+**2. Mescolati dentro la stima stessa**, per pilotare davvero le scelte dell'app (l'undici
+proposto, il modificatore proiettato). Stesso schema prior→dati dell'app asta
+(`B_PESO_PRIOR=15` per i prezzi): qui la costante è `PESO_PRIOR_STAGIONE=10`, più alta perché il
+fantavoto di una singola giornata oscilla molto di più del prezzo pagato da un mercato intero —
+serve più tempo prima di fidarsi dei dati più della stima.
+
+- `mvPura()`/`fantamediaStimata()` — le stime pure da quotazioni, **invariate** nella logica
+  (solo rinominate: erano `mvStimata()`/`fantamediaAttesa()`). Servono da *prior* e da termine
+  di paragone onesto per lo scarto sopra — confrontare il reale con un numero che lo contiene
+  già si azzererebbe da solo per costruzione, senza dire nulla.
+- `mvStimata()`/`fantamediaAttesa()` — ora sono le versioni **mescolate**: la stima pura più
+  quanto misurato finora (`votoMisurato()` per il voto puro/modificatore, `rendimento()` per la
+  fantamedia coi bonus). Con zero giornate reali coincidono esattamente con le versioni pure —
+  nessuna differenza di comportamento a inizio stagione. Sono queste due, non le pure, che il
+  resto dell'app continua a chiamare (`contributoAtteso`, `scegliUndici`, `simula`, la scheda):
+  **zero modifiche ai punti di chiamata**, il miglioramento arriva da sé.
+- Esempio vero, verificato in questa sessione: Malen dopo G1+G2 (17.5 e 13.5 di fantavoto, media
+  reale 15.50) passa da una fantamedia attesa di 7.57 (pura) a **8.89** (mescolata,
+  `(10×7.57 + 2×15.50)/12`) — spostata verso il dato vero ma non catapultata lì, perché due
+  giornate non bastano ancora a fidarsene del tutto.
+- `tools/taratura.mjs` **non** deve testare le versioni mescolate: confrontarle con gli stessi
+  voti reali che contengono già sarebbe circolare. Aggiornato per estrarre ed eseguire
+  `fantamediaStimata()` (pura) — stesso numero di prima (6.13 di media stimata), invariato.
+- `tools/prova-motore.mjs` esegue con `STORICO = {}` (zero giornate reali, come l'app
+  all'avvio): le sei invarianti restano tutte valide con le versioni mescolate che ricadono
+  sulle pure — verificato dopo la modifica, nessuna regressione.
+
+**Trovato dalla scansione di audit del 04/09** (indipendente da questo lavoro, girata in
+parallelo): `caricaStorico()` riscaricava *ogni* giornata passata a ogni apertura dell'app —
+fino a 37 richieste sequenziali avvicinandosi a fine stagione — e il risultato **sostituiva**
+integralmente lo storico salvato, così un singolo errore di rete cancellava in silenzio dati già
+buoni. Corretto: ora si scarica solo ciò che manca e si somma, mai si riparte da zero.
 
 ## Esplorazione grafica in Figma (04/09)
 
@@ -444,6 +479,10 @@ cancellazione non è mai avvenuta.
   sopra) — resta un'idea buona per compiti di giudizio/sintesi, non di lettura dati.
 - Promemoria per schierare: scelta la notifica push vera (non il calendario), implementata per
   intero — vedi *Notifiche push* sopra.
+- Fase 3: i voti veri ora si mescolano da soli nella stima (non solo mostrati accanto), con lo
+  stesso schema prior→dati dell'app asta. Corretto in parallelo un bug reale trovato dalla
+  scansione di audit (`caricaStorico()` riscaricava tutto da zero a ogni apertura, e un errore
+  di rete poteva cancellare dati già buoni) — vedi sopra.
 
 **Da fare:**
 1. **Impostare due secret su GitHub** (repository → Settings → Secrets and variables → Actions)
@@ -459,8 +498,10 @@ cancellazione non è mai avvenuta.
    11/09, dato che il round in corso il 04/09 è già partito con la cadenza vecchia). Si può
    forzare da Actions → Run workflow — non tocca `main` né consuma build Netlify, permesso anche
    sotto la regola dev-only.
-4. Fase 3 — usare i voti scaricati dentro l'app: storico delle giornate, punteggio calcolato,
-   e medie voto misurate che sostituiscono progressivamente quelle stimate.
+4. **Ritarare `PESO_PRIOR_STAGIONE`** dopo qualche giornata in più (ora è 10, scelto a intuito
+   come `B_PESO_PRIOR` lo fu per i prezzi): con più dati veri si potrà controllare se converge
+   alla velocità giusta, non prima — su 2 giornate sarebbe rumore, stesso discorso già fatto per
+   le costanti `BONUS_MAX`.
 5. Fase 4 — mercato di riparazione e svincoli.
 6. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
    `main` almeno una volta, quindi va coordinato con l'utente.

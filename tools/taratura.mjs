@@ -17,6 +17,12 @@
    Le formule non sono ricopiate: vengono estratte da index.html ed eseguite, cosi si prova
    il codice vero e le due copie non possono divergere.
 
+   NOTA (Fase 3, 04/09): da quando fantamediaAttesa() si mescola da sola con i voti reali
+   (dati/voti-N.json), confrontarla con quegli stessi voti sarebbe circolare — l'accordo
+   salirebbe per costruzione, non perche' il modello e' bravo. Questo script estrae ed
+   esegue fantamediaStimata(), la versione PURA senza alcun dato reale dentro: e' quella,
+   non l'altra, che ha senso validare contro il campo.
+
    USO
      node tools/taratura.mjs
 */
@@ -52,11 +58,11 @@ const sorgente = [
   pezzo('BONUS_PIAZZATI', 'const'),
   pezzo('MALUS_FISSO', 'const'),
   pezzo('calcolaMvSquadre'),
-  pezzo('mvStimata'),
+  pezzo('mvPura'),
   pezzo('golSubitiAttesi'),
-  pezzo('fantamediaAttesa'),
+  pezzo('fantamediaStimata'),
   'calcolaMvSquadre();',
-  'return { fantamediaAttesa, mvStimata, MV_SQUADRA };'
+  'return { fantamediaStimata, mvPura, MV_SQUADRA };'
 ].join('\n\n');
 
 const motore = new Function('LISTONE', sorgente)(LISTONE);
@@ -78,7 +84,7 @@ const campione = Object.entries(reali)
   .map(([id, voti]) => {
     const l = byId[id];
     if (!l) return null;
-    const stima = motore.fantamediaAttesa(l);
+    const stima = motore.fantamediaStimata(l);
     if (stima == null) return null;
     return {
       nome: l.n, ruolo: l.r, squadra: l.s, presenze: voti.length,

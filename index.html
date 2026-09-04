@@ -417,8 +417,11 @@ function calcolaMvSquadre(){
   });
 }
 
-/* Media voto nelle giornate in cui gioca. Solo P e D: il modificatore riguarda loro. */
-function mvStimata(p){
+/* Media voto nelle giornate in cui gioca, SOLO dalla quotazione — non sa ancora nulla di come
+   il giocatore sta rendendo davvero in questa stagione. Serve come "prior" per mvStimata()
+   sotto, e come termine di paragone onesto per il rendimento reale nella scheda. Solo P e D:
+   il modificatore riguarda loro. */
+function mvPura(p){
   if(!p || (p.r!=='P' && p.r!=='D')) return null;
   const base = MV_SQUADRA[p.s];
   if(base==null) return null;
@@ -435,13 +438,54 @@ function mvStimata(p){
 }
 
 /* =======================================================================================
+   FASE 3 — I DATI VERI PRENDONO IL SOPRAVVENTO
+   Le stime sopra partono dalle quotazioni: servono finche non c'e altro. Da quando esistono
+   voti reali per un giocatore (dati/voti-N.json, scaricati in automatico), si mescolano con
+   quelli. Stesso schema prior->dati gia usato nell'app asta per la curva dei prezzi
+   (B_PESO_PRIOR): con poche giornate la stima pesa quasi tutto, salendo con le presenze il
+   dato misurato prende il sopravvento da solo, senza deciderlo a mano giornata per giornata.
+   ======================================================================================= */
+
+/* "Giornate" di fiducia nella stima prima che i dati reali comincino a prevalere. Piu alto
+   della curva dei prezzi dell'asta (li erano 15 osservazioni di MERCATO — tante persone che
+   pagano insieme un prezzo, un dato stabile; qui e' UN giocatore sceso in campo poche volte,
+   e il fantavoto di una singola giornata oscilla parecchio: un rosso, una tripletta). Serve
+   piu tempo prima di fidarsi dei dati piu della stima. */
+const PESO_PRIOR_STAGIONE = 10;
+
+function mescola(stima, misurato, n){
+  if(stima==null) return misurato;
+  if(misurato==null || !n) return stima;
+  return (PESO_PRIOR_STAGIONE*stima + n*misurato) / (PESO_PRIOR_STAGIONE + n);
+}
+
+/* Media voto REALE (non fantavoto) nelle giornate in cui il giocatore ha preso un voto: e il
+   dato che il modificatore di difesa vuole, non i fantapunti coi bonus. */
+function votoMisurato(id){
+  const v = STORICO[id];
+  if(!v || !v.length) return {media:null, n:0};
+  const conVoto = v.filter(x=> x.voto != null);
+  if(!conVoto.length) return {media:null, n:0};
+  return { media: conVoto.reduce((s,x)=> s+x.voto, 0)/conVoto.length, n: conVoto.length };
+}
+
+/* Versione che il resto dell'app usa davvero: la pura stima, mescolata con quanto misurato
+   finora. Con zero giornate reali coincide esattamente con mvPura(). */
+function mvStimata(p){
+  const stima = mvPura(p);
+  if(!p) return stima;
+  const r = votoMisurato(p.id);
+  return mescola(stima, r.media, r.n);
+}
+
+/* =======================================================================================
    MODELLO 2 — FANTAMEDIA ATTESA
    Quanto rende quando gioca, in fantapunti.
 
-   ATTENZIONE, LIMITE DICHIARATO: i bonus sono STIMATI dal percentile di valore dentro il
-   ruolo, non misurati su gol e assist reali. Servono a ordinare due attaccanti tra loro,
-   non a prevedere il fantavoto di domenica. Dalla Fase 3, con i voti veri, questa stima
-   verra' sostituita progressivamente dai dati.
+   I bonus restano STIMATI dal percentile di valore dentro il ruolo, non misurati su gol e
+   assist reali — servono a ordinare due attaccanti tra loro finche' non c'e' altro. Ma il
+   NUMERO FINALE (fantamediaAttesa, sotto) dalla Fase 3 si mescola con i voti veri quando ci
+   sono: vedi la sezione "I dati veri prendono il sopravvento" qualche riga sopra.
    ======================================================================================= */
 
 /* Bonus massimo per ruolo, in fantapunti a partita, per chi sta al vertice del suo ruolo.
@@ -465,11 +509,15 @@ function golSubitiAttesi(sq){
   return 1.75 - 0.85*t;
 }
 
-function fantamediaAttesa(p){
+/* La pura stima da quotazioni, senza alcun dato reale — usata come "prior" da
+   fantamediaAttesa() sotto, e come termine di paragone onesto nella scheda giocatore contro
+   il rendimento vero (confrontare i dati reali con un numero che li contiene gia' non
+   direbbe niente: lo scarto si azzererebbe da solo per costruzione). */
+function fantamediaStimata(p){
   if(!p) return null;
   let voto;
   if(p.r==='P' || p.r==='D'){
-    voto = mvStimata(p);
+    voto = mvPura(p);
   }else{
     /* Per C e A il voto base conta poco: quello che sposta e' il bonus. Si parte da 6 con
        un piccolo aggiustamento per la forza della squadra. */
@@ -487,6 +535,16 @@ function fantamediaAttesa(p){
   let fm = voto + bonus - MALUS_FISSO;
   if(p.r==='P') fm -= golSubitiAttesi(p.s);
   return fm;
+}
+
+/* Versione che guida davvero le scelte dell'app (contributoAtteso, l'ottimizzatore di
+   modulo, la scheda): la stima, mescolata con quanto il giocatore ha reso finora quest'anno.
+   Con zero giornate reali coincide esattamente con fantamediaStimata(). */
+function fantamediaAttesa(p){
+  const stima = fantamediaStimata(p);
+  if(!p) return stima;
+  const r = rendimento(p.id);
+  return r ? mescola(stima, r.media, r.presenze) : stima;
 }
 
 /* =======================================================================================
@@ -1179,7 +1237,10 @@ function schedaGiocatore(id){
      Meglio mostrare i numeri e dire che non bastano, che far dedurre una conclusione falsa. */
   const rend = rendimento(id);
   if(rend && rend.media != null){
-    const scarto = rend.media - fm;
+    /* Confrontato con la stima PURA (fantamediaStimata), non con fm: fm da qui in poi e' gia'
+       mescolato con questo stesso dato reale, e uno scarto contro se stesso si azzererebbe
+       sempre da solo senza dire nulla. */
+    const scarto = rend.media - fantamediaStimata(l);
     const segno = scarto >= 0 ? '+' : '';
     h += '<div class="info-cell wide"><div class="k">Rendimento reale</div>' +
       '<div class="v">' + rend.media.toFixed(2) + ' su ' + rend.presenze +
@@ -1187,7 +1248,8 @@ function schedaGiocatore(id){
       '<div class="n">' + rend.elenco.map(x=>
         'G'+x.giornata+' '+(x.fantavoto==null ? 's.v.' : x.fantavoto.toFixed(1))).join(' · ') +
       (rend.presenze >= 4
-        ? ' — rispetto alla stima ' + segno + scarto.toFixed(2)
+        ? ' — rispetto alla stima iniziale ' + segno + scarto.toFixed(2) +
+          ' (la fantamedia attesa qui sopra ne tiene gia\' conto)'
         : ' — troppe poche giornate per giudicare la stima') + '</div></div>';
   }else if(rend){
     h += '<div class="info-cell wide"><div class="k">Rendimento reale</div>' +
