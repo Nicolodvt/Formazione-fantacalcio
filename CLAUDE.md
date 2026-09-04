@@ -734,10 +734,20 @@ cancellazione non è mai avvenuta.
    tarare anche `CASA_BONUS`/`PESO_AVVERSARIO` sui risultati veri — non deciso, vedi *L'app
    impara dalla stagione*. E se vale la pena del resoconto "formazione consigliata vs esito",
    già previsto nel piano originale e non ancora costruito.
-7. Fase 4 — mercato di riparazione e svincoli.
-8. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
+7. **Verso l'"oracolo" — due passi concordati il 04/09, non ancora costruiti** (vedi anche la
+   memoria di sessione `app-formazione-visione-modello`, per il ragionamento completo):
+   - Salvare in `STORICO` anche gol/assist/rigori/cartellini che `dati/voti-N.json` porta già
+     e che oggi si scartano — prepara la taratura vera di `BONUS_PIAZZATI`/`BONUS_MAX` quando
+     ci saranno abbastanza partite. Basso rischio: solo memoria in più, nessun nuovo
+     meccanismo di modello.
+   - Verificare se esiste una fonte scaricabile di dati "sottostanti" (tiri, occasioni create)
+     per la Serie A — gol e assist sono rumorosi partita per partita, i dati sottostanti sono
+     più stabili e prevedono meglio. Se esiste, potrebbe essere il salto di qualità più grande
+     fatto finora. Domanda di ricerca aperta, non ancora verificata.
+8. Fase 4 — mercato di riparazione e svincoli.
+9. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
    `main` almeno una volta, quindi va coordinato con l'utente.
-9. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
+10. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
    riattivare i build automatici Netlify o fare un deploy manuale singolo (vedi regola in testa
    al file — non decidere in autonomia).
 
