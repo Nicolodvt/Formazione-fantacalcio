@@ -491,11 +491,15 @@ function certezza(id){
     p = 0.02;
   }
 
-  if(d.ind && d.ind.tipo==='infortunato') p = Math.min(p, 0.12);
-  if(d.ind && d.ind.tipo==='dubbio') p *= 0.65;
+  /* La coda del subentro va applicata PRIMA dei tetti, e solo a chi risulta comunque
+     convocato. Applicandola dopo, come faceva la versione precedente, un infortunato risaliva
+     da 0.12 a 0.196 e uno fuori dai convocati da 0.02 a 0.196: i due tetti non tenevano piu
+     nulla, e tutti e 42 gli infortunati della giornata uscivano identici al 19,6%. */
+  if(d.prob && !d.prob.titolare) p = p + SUBENTRO*(1-p);
 
-  const parteTitolare = !!(d.prob && d.prob.titolare);
-  if(!parteTitolare) p = p + SUBENTRO*(1-p);
+  /* Questi sono tetti, non sconti: vengono per ultimi e nessuno li deve poter risalire. */
+  if(d.ind && d.ind.tipo==='dubbio') p *= 0.65;
+  if(d.ind && d.ind.tipo==='infortunato') p = Math.min(p, 0.12);
   return Math.max(0, Math.min(1, p));
 }
 
@@ -510,9 +514,23 @@ function certezza(id){
 
 const N_SIM = 1500;
 
+/* Valore atteso di un giocatore per la formazione.
+
+   ATTENZIONE, QUI C'ERA UN BUG GRAVE. La versione precedente sottraeva 6.0 come "voto di
+   riferimento": certezza * (fantamedia - 6). Sembra innocuo, ma per chi ha fantamedia SOTTO 6
+   il fattore diventa negativo, e moltiplicarlo per una certezza piu alta lo rende PIU negativo.
+   Risultato: fra due giocatori l'app preferiva quello che aveva meno probabilita di giocare.
+
+   Colpiva tutti i portieri (nessuno arriva a 6, perche la fantamedia include i gol subiti) e
+   piu di meta dei difensori. Con Svilar, Sportiello e Radunovic in rosa, mandava in campo
+   Sportiello — dato al 5% dalle probabili — e lasciava Svilar ultimo in panchina.
+
+   Il criterio giusto discende da come funziona simula(): chi non prende voto e non ha un
+   sostituto vale ZERO, non 6. Quindi il valore atteso e semplicemente certezza * fantamedia. */
 function contributoAtteso(id){
   const l = LIS[id];
-  return certezza(id) * (fantamediaAttesa(l) - 6.0);   // rispetto al voto di riferimento
+  const fm = fantamediaAttesa(l);
+  return fm == null ? 0 : certezza(id) * fm;
 }
 
 function scegliUndici(modulo){
