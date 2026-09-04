@@ -12,7 +12,7 @@ A fine notte va riassunto in CLAUDE.md e cancellato.
 - [x] 5. Esplorazione grafica — FATTO, branch grafica-varianti, 3 varianti + pagina di confronto
 - [x] 6. Scaffolding scraper voti — FATTO e validato su G1+G2
 - [x] 7. Sanity check fantamedia — FATTO: scala confermata dai dati veri
-- [ ] 8. Feature e fix (continuo)
+- [x] 8. Feature e fix — FATTO: rendimento reale, avversario sul campo, 11 bug corretti
 - [x] 9. Verifica con subagent — FATTO, 2 revisori, 11 bug trovati e corretti
 - [ ] 10. Memoria aggiornata
 
@@ -164,3 +164,31 @@ internamente coerente. E il prezzo della lettura per posizione.
 **Domanda aperta per l'utente**: dove va il portiere di riserva in panchina dipende dal
 regolamento — in molte leghe il cambio del portiere non consuma i tre cambi di movimento. Non
 l'ho indovinato.
+
+### 03:32 — chiusura
+
+**Tutti e dieci i punti chiusi.** `main` pushato, Netlify ha ridistribuito, verificato che online
+ci sia il codice corretto e che gli header di cache siano attivi (non supposti: controllati con
+una HEAD su ogni file).
+
+**Feature aggiunte oltre alla lista:**
+- Il **rendimento reale** nella scheda giocatore: quanto ha reso davvero nelle giornate giocate,
+  accanto alla stima. Lo scarto si mostra solo da 4 giornate in su, perche su 2 partite Malen
+  esce con +8 di scarto (ha segnato molto) e sembrerebbe che il modello sia rotto.
+- Sul campo si legge **contro chi gioca** ("@JUV") invece della propria squadra, che gia sai.
+- La Action scarica anche i **voti** il martedi sera.
+
+**`tools/prova-motore.mjs`**: prove sulle INVARIANTI, non su casi particolari. Dominanza,
+monotonia, scelta del portiere, tetti, struttura dell'undici, regola dei cambi. Verificato che
+FALLISCE se si reintroduce il bug del riferimento 6.0 (803 coppie violate fra i portieri): una
+prova che non fallisce quando deve non e una prova.
+
+**Cosa resta all'utente, in ordine:**
+1. Aprire `confronto-grafica.html` sul branch `grafica-varianti` e scegliere (o scartare tutto).
+2. Dire il regolamento della lega, in particolare **se il cambio del portiere consuma uno dei
+   tre cambi di movimento**: da questo dipende dove va messo il secondo portiere in panchina, e
+   non l'ho indovinato.
+3. Lanciare la Action a mano da GitHub per vederla girare, se non vuole aspettare venerdi.
+
+**Questo file va riassunto in CLAUDE.md e cancellato** una volta che l'utente l'ha letto: le
+parti che valgono oltre stanotte sono gia state travasate.
