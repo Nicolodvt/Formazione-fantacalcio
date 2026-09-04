@@ -16,6 +16,10 @@
    le vecchie. Con la strategia rete-per-prima l'app si aggiorna comunque da sola, ma senza
    cambiarlo la copia vecchia resta occupata sul telefono per sempre. */
 const CACHE = 'formazione-v0-4';
+
+/* Stessa icona 192x192 del manifest, incollata qui: showNotification() vuole un URL
+   diretto a un'immagine, non puo' pescarla dal manifest. Un data URI evita un file a parte. */
+const ICONA = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAADQUlEQVR42u3asU3EQBBAUVeAREJATEABJFADEenVQgnUQkBFZGS0QICEgJPAt16PvTNP+vnI4ycO2zudnV9IzU1WIIAEkAASQBJAAkgACSAJIAEkgH52eXel7uUE5L7mVjVxQ9K+ALlVpRhN6GC0C0DuSk1DEz0MbQnIbSjOaKJH2wCyd4YA0kaAbJyhdkB2zVA7IFtmCCBtBMh+GQJIGwGyWYYAEkAaEZCdMgSQABJAAkgAASSANAYg22QIIAEkgASQABoT0Ovh8D3jAGpc7tqLzj2uHKA/9tt90XNmBY8DKNsdHXdcOUAz99try7nHlQN00n6Xbzn3OIAAAsgdBQgggAACCCCAAAIIIO+BvAcCCCCfMnzKAGjRlo0DyHEOxzliMUWOy3ppjrQKIAEkgAASQAJIAAkggASQdgTo+uFGBQNI+wDkj7mfMIAEkAASQAIIIAEkgASQAAJI+QEdnt6PMw6gxuWut+jc48oB+ne/fbece1w5QDP322vLuccBBBBAq+13+ZZzjwMIIIDcUYAAAggggAACCCCAAPIeyHsggADyLcy3MIB8jfc13nkg54GcSBRAAkgACSCAAAJIAAkgASSAABJAAkgACSCABJAAEkACCCABJIAEkACKB3T//PjZ0CMyXcgYgL528auAEZmmVAT0x8Y77iVgRMyUmHUNA2jOOpYvJWBEzJSYdeUE1LyUgBGZLmQkQCdtJGbvbVPSXAhAS0dkmgJQh6WkARRzISMBatgIQFsZAggggAACyD/R/on2GO8x3otELxJ9ytjblDQX4mPqZlPSXMh4xzli1pHmOEewnpEOlAUcbYk5QBM/xYlEOdIqgAASQAJIAAkggASQABJAAggggAASQAJINQExRA9AAiiwt5fb4wACqF1PNUMAdaZTjRFAa+kpYggggPYEKL2hk/SkNzRfBUAAAQTQEIByGwKoQQ9AAMUCSmwIoAY9AAEUDoghepYCymqoOKA2CY2AihuiB6B2Q368+gAq+FTvub0zICcVi+vpAAijsnR6AmKopp6egBgqqKczIIxK0VkLEEZF6KwLiKTcbuIAUZXGyo4AKU0ACSABJIAEkASQABJAAkgCSABpx30ARXk9ws9KjMIAAAAASUVORK5CYII=';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './dati/probabili.json',
   /* L'app legge i dati di giornata direttamente da GitHub quando puo (vedi fetchDati() in
@@ -56,5 +60,33 @@ self.addEventListener('fetch', (e) => {
         return r;
       })
       .catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
+  );
+});
+
+/* Promemoria di schierare la formazione. Il corpo arriva da tools/invia-promemoria.mjs come
+   JSON: {titolo, corpo}. Se per qualche motivo non e' JSON valido si mostra comunque qualcosa
+   invece di far sparire silenziosamente la notifica. */
+self.addEventListener('push', (e) => {
+  let dati = { titolo: 'Formazione', corpo: 'Controlla la formazione della giornata.' };
+  try{ if(e.data) dati = Object.assign(dati, e.data.json()); }catch(err){}
+  e.waitUntil(
+    self.registration.showNotification(dati.titolo, {
+      body: dati.corpo,
+      icon: ICONA,
+      badge: ICONA,
+      tag: 'promemoria-formazione',     // una sola notifica alla volta: la successiva sostituisce, non si accumula
+      data: { url: './' }
+    })
+  );
+});
+
+/* Tap sulla notifica: porta all'app, riusando una scheda gia' aperta se c'e'. */
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(elenco => {
+      for(const c of elenco){ if('focus' in c) return c.focus(); }
+      if(self.clients.openWindow) return self.clients.openWindow('./');
+    })
   );
 });
