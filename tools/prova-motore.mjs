@@ -42,6 +42,7 @@ const sorgente = [
   "const ROLE_ORDER = ['P','D','C','A'];",
   'const MV_MIN = 5.75, MV_MAX = 6.15, MV_AGG_MAX = 0.12;',
   'let MV_SQUADRA = {};',
+  'let ATT_SQUADRA = {};',
   /* STORICO vuoto: zero giornate reali, come l'app all'avvio prima che caricaStorico() giri.
      mvStimata()/fantamediaAttesa() (Fase 3) devono ricadere sulla pura stima con dati vuoti —
      e proprio quello che queste prove verificano restando valide senza modificarle. */
@@ -52,13 +53,15 @@ const sorgente = [
   pezzo('MODULI', 'const'), pezzo('SLOT_MAX', 'const'), pezzo('MAX_CAMBI', 'const'),
   pezzo('MOD_RIF', 'const'), pezzo('MOD_PESO', 'const'), pezzo('N_SIM', 'const'),
   pezzo('PESO_PRIOR_STAGIONE', 'const'),
-  pezzo('calcolaMvSquadre'), pezzo('mvPura'), pezzo('mescola'), pezzo('votoMisurato'),
-  pezzo('mvStimata'), pezzo('golSubitiAttesi'), pezzo('fantamediaStimata'), pezzo('rendimento'),
-  pezzo('fantamediaAttesa'),
-  pezzo('datiGiornata'), pezzo('certezza'), pezzo('contributoAtteso'),
+  pezzo('DECADIMENTO_FORMA', 'const'), pezzo('pesoForma'), pezzo('mediaPesataForma'),
+  pezzo('normalizzaSquadre'), pezzo('calcolaMvSquadre'), pezzo('mvPura'), pezzo('mescola'),
+  pezzo('votoMisurato'), pezzo('mvStimata'), pezzo('golSubitiAttesi'), pezzo('fantamediaStimata'),
+  pezzo('rendimento'), pezzo('fantamediaAttesa'),
+  pezzo('CASA_BONUS', 'const'), pezzo('PESO_AVVERSARIO', 'const'), pezzo('rettificaPartita'),
+  pezzo('datiGiornata'), pezzo('tassoSubentro'), pezzo('certezza'), pezzo('contributoAtteso'),
   pezzo('scegliUndici'), pezzo('simula'), pezzo('valuta'), pezzo('classificaModuli'),
   'calcolaMvSquadre();',
-  'return { fantamediaAttesa, certezza, contributoAtteso, scegliUndici, valuta, classificaModuli, LIS };'
+  'return { fantamediaAttesa, certezza, contributoAtteso, rettificaPartita, scegliUndici, valuta, classificaModuli, LIS };'
 ].join('\n\n');
 
 const S = { rosa: [], bloccati: {}, override: {}, modulo: '4-3-3' };
@@ -72,17 +75,28 @@ const ko = (t, dett) => { falliti++; console.log('  FALLITA  ' + t); (dett || []
 const perRuolo = (r) => LISTONE.filter(p => p.r === r);
 
 /* ---------- 1. DOMINANZA ----------
-   Se un giocatore e migliore o uguale a un altro SIA per certezza SIA per resa, non puo essere
-   classificato sotto di lui. E' la proprieta che il bug del riferimento 6.0 violava in massa. */
-console.log('\n1. DOMINANZA — chi e migliore in entrambe le dimensioni deve stare davanti');
+   Se un giocatore e migliore o uguale a un altro su TUTTE le dimensioni che contano — certezza,
+   resa media, aggiustamento della prossima partita — non puo essere classificato sotto di lui.
+   E' la proprieta che il bug del riferimento 6.0 violava in massa.
+
+   NOTA (Fase 4, "prossima partita"): rettificaPartita() e' un terzo ingrediente legittimo,
+   diverso da certezza e resa - due giocatori identici su quelle due possono finire ordinati
+   diversamente perche' le loro squadre affrontano avversari diversi questa settimana, ed e'
+   proprio il comportamento voluto. La dominanza quindi si controlla su tutte e tre le
+   dimensioni insieme, non piu solo sulle prime due. */
+console.log('\n1. DOMINANZA — chi e migliore su tutte le dimensioni deve stare davanti');
 for (const r of ['P', 'D', 'C', 'A']) {
   const gg = perRuolo(r).filter(p => M.fantamediaAttesa(p) != null).slice(0, 120);
-  const dati = gg.map(p => ({ id: p.id, n: p.n, c: M.certezza(p.id), fm: M.fantamediaAttesa(p), v: M.contributoAtteso(p.id) }));
+  const dati = gg.map(p => ({
+    id: p.id, n: p.n, c: M.certezza(p.id), fm: M.fantamediaAttesa(p),
+    rp: M.rettificaPartita(p), v: M.contributoAtteso(p.id)
+  }));
   const violazioni = [];
   for (const a of dati) for (const b of dati) {
     if (a.id === b.id) continue;
-    if (b.c >= a.c && b.fm >= a.fm && (b.c > a.c || b.fm > a.fm) && b.v < a.v) {
-      violazioni.push(`${b.n} (${Math.round(b.c*100)}%, ${b.fm.toFixed(2)}) sotto ${a.n} (${Math.round(a.c*100)}%, ${a.fm.toFixed(2)})`);
+    if (b.c >= a.c && b.fm >= a.fm && b.rp >= a.rp &&
+        (b.c > a.c || b.fm > a.fm || b.rp > a.rp) && b.v < a.v) {
+      violazioni.push(`${b.n} (${Math.round(b.c*100)}%, ${b.fm.toFixed(2)}, partita ${b.rp>=0?'+':''}${b.rp.toFixed(2)}) sotto ${a.n} (${Math.round(a.c*100)}%, ${a.fm.toFixed(2)}, partita ${a.rp>=0?'+':''}${a.rp.toFixed(2)})`);
     }
   }
   if (violazioni.length) ko(`ruolo ${r}: ${violazioni.length} coppie violate`, violazioni.slice(0, 3));

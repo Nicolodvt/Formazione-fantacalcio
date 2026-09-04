@@ -52,11 +52,13 @@ function pezzo(nome, tipo = 'function') {
 const sorgente = [
   'const MV_MIN = 5.75, MV_MAX = 6.15, MV_AGG_MAX = 0.12;',
   'let MV_SQUADRA = {};',
+  'let ATT_SQUADRA = {};',
   pezzo('MV_ZONA', 'const'),
   pezzo('BONUS_MAX', 'const'),
   pezzo('BONUS_CURVA', 'const'),
   pezzo('BONUS_PIAZZATI', 'const'),
   pezzo('MALUS_FISSO', 'const'),
+  pezzo('normalizzaSquadre'),
   pezzo('calcolaMvSquadre'),
   pezzo('mvPura'),
   pezzo('golSubitiAttesi'),
