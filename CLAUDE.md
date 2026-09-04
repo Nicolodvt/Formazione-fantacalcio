@@ -1,6 +1,6 @@
 # App Formazione — Diario di bordo
 
-**Stato: v0.2 (04/09/2026).** Fasi 0, 1 e 2 chiuse, Fase 3 avviata. L'app schiera, sceglie il
+**Stato: v0.3 (04/09/2026).** Fasi 0, 1 e 2 chiuse, Fase 3 avviata. L'app schiera, sceglie il
 modulo, funziona offline ed è online su Netlify; la GitHub Action scarica probabili e voti da
 sola. Traguardo: **4ª giornata**.
 
@@ -226,6 +226,76 @@ attaccanti l'ottimizzatore mette in cima 5-4-1 e 4-5-1, cioè i moduli che sprec
 `confronto-grafica.html` che le mostra affiancate a 375px come app vere e interattive: A "Campo
 vero", B "Chiara", C "Densa". I colori di ruolo non cambiano in nessuna. Da decidere.
 
+## La revisione indipendente, e gli undici bug che ha trovato
+
+Nella notte del 03→04/09 due revisori indipendenti hanno riletto il motore e gli scraper. È
+stato il giro più redditizio del progetto: **tutti i test scritti fino a quel momento passavano**,
+e i bug c'erano lo stesso.
+
+### Il peggiore: l'app preferiva chi non gioca
+
+`contributoAtteso()` sottraeva 6.0 come voto di riferimento — `certezza × (fantamedia − 6)`.
+Per chi ha fantamedia **sotto** 6 quel fattore è negativo, quindi moltiplicarlo per una certezza
+più alta lo rende *più* negativo. Colpiva **tutti** i portieri (nessuno arriva a 6, perché la
+loro fantamedia include i gol subiti) e più di metà dei difensori.
+
+Riprodotto: con Svilar dato al 90% e due riserve al 5%, l'app mandava in porta una riserva.
+
+Il criterio giusto discende da come funziona `simula()`: chi resta senza voto e senza sostituto
+vale **zero**, non 6. Quindi il valore atteso è `certezza × fantamedia`.
+
+**Perché i test non l'avevano visto:** la rosa di prova aveva i tre portieri tutti al 90%. A
+certezza costante l'ordinamento tornava giusto per caso. *Le prove vanno fatte su dati che
+variano, non su dati comodi* — è la lezione più importante della notte.
+
+### Gli altri, nel motore
+
+- **Il subentro annullava i tetti.** La coda del subentro si sommava *dopo* i tetti su
+  infortunati e non convocati: un infortunato risaliva da 0.12 a 0.196, e tutti e 42 gli
+  infortunati della giornata uscivano identici al 19,6%.
+- **I cambi si scorrevano dai titolari mancanti** invece che dalla panchina. Il regolamento fa
+  il contrario, e l'ordine di panchina è proprio quello che l'app fa ricopiare sul sito.
+- **La panchina non pesava se un cambio serve** in quel ruolo: un riserva entra solo se manca
+  qualcuno del suo reparto.
+- **I fissati eccedenti** venivano troncati in ordine di inserimento in rosa, quindi la stessa
+  rosa dava formazioni diverse a seconda di come era stata composta.
+- **Dati mutilati = pagina bianca.** Un file senza `squadre` o `indisponibili` faceva esplodere
+  il primo calcolo, e la copia in cache non era validata affatto — proprio quella usata offline.
+- **Squadra fuori dal turno** → certezza fino al 100% e nessun avviso.
+
+### Negli scraper
+
+- **Le ammonizioni venivano buttate.** Non sono un bonus: sono una classe sul voto
+  (`player-grade yellow-card`). Senza, i bonus non potevano spiegare il fantavoto — 31 scarti
+  su 293, tutti di esattamente −0.5.
+- **Mancava la riconciliazione**, che è il controllo più potente disponibile: ricostruire
+  `fantavoto = voto + bonus + ammonizione` e verificare che torni. I pesi non sono dati per
+  scontati ma **ricavati dai dati**: su G1, 262 giocatori quadrano coi pesi base e i restanti 31
+  aggiungendo il malus da ammonizione. Zero casi non spiegati su 293.
+- **L'ordine delle tre colonne di voto** era verificato solo sulla prima tabella su venti.
+- Più: unicità delle squadre, soglie su indisponibili/ballottaggi/percentuali/panchine,
+  `matchweek` concordi, timeout sulle fetch, HTML troncato, ancoraggio del nome squadra,
+  marcatori senza `>` finale, `numeroVoto()` separato da `numero()`.
+
+**Il metodo che ha funzionato:** non fidarsi che una validazione sia buona perché passa sui dati
+veri, ma **sabotare l'HTML** e guardare cosa intercetta. Cinque sabotaggi su cinque ora bloccati
+in `fetch-probabili`, tre su tre in `fetch-voti`.
+
+**Limite accettato e dichiarato:** se il sito riordinasse le celle dei voti lasciando ferme le
+intestazioni, nessun controllo sul contenuto potrebbe accorgersene, perché ogni colonna è
+internamente coerente. È il prezzo della lettura per posizione.
+
+## Il rendimento reale (primo pezzo della Fase 3)
+
+L'app carica i voti delle giornate già giocate e nella scheda giocatore mostra quanto ha reso
+**davvero**, accanto a quanto il modello prevede. Non c'è un indice dei file: si scende dalla
+giornata corrente e ci si ferma al primo che manca.
+
+Lo scarto fra reale e stimato si mostra **solo da quattro giornate in su**. Su due partite un
+attaccante che ha segnato una doppietta esce con +8 di scarto — Malen oggi fa 15.50 di media
+contro una stima di 7.57 — e sembrerebbe che il modello sia rotto quando invece è varianza.
+Meglio mostrare i numeri e dire che non bastano, che far dedurre una conclusione falsa.
+
 ## Da fare
 
 
@@ -239,5 +309,6 @@ vero", B "Chiara", C "Densa". I colori di ruolo non cambiano in nessuna. Da deci
 5. Provare installazione e offline **sul telefono vero**.
 
 **Aperto, non bloccante:** il regolamento della lega (moduli ammessi, numero di cambi, soglie del
-modificatore). Si è partiti con i default: sono costanti in testa al file, sotto *COSTANTI DI
+modificatore, e **se il cambio del portiere consuma uno dei tre cambi di movimento** — in molte
+leghe no, e questo cambia dove va messo il secondo portiere in panchina: non l'ho indovinato). Si è partiti con i default: sono costanti in testa al file, sotto *COSTANTI DI
 LEGA*, e cambiarle non tocca altro.
