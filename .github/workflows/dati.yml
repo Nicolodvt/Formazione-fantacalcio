@@ -60,6 +60,19 @@ jobs:
       - name: Probabili formazioni
         run: node "tools/fetch-probabili.mjs"
 
+      # Promemoria push per schierare, un tanto per giornata (vedi tools/invia-promemoria.mjs
+      # per come evita di rispedirlo a ogni giro). Se i secret non sono ancora impostati esce
+      # subito senza errore: e' un extra sopra lo scraper, non deve poterlo far fallire.
+      # web-push non e' installato come dipendenza del repo (niente package.json/lockfile,
+      # stessa scelta fatta per gli scraper): si scarica al volo solo qui, solo quando serve.
+      - name: Promemoria push (se configurato)
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_SUBSCRIPTION: ${{ secrets.PUSH_SUBSCRIPTION }}
+        run: |
+          npm install --no-save web-push@3.6.7 --silent
+          node "tools/invia-promemoria.mjs"
+
       # I voti si scaricano solo quando ha senso: al giro del martedi, o quando li si chiede
       # a mano. `continue-on-error` perche una giornata non ancora conclusa fa fallire lo
       # scraper di proposito, e non e un motivo per marcare rosso tutto il workflow.

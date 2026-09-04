@@ -1279,6 +1279,50 @@ function alternativePerRuolo(ruolo, idAttuale){
 }
 
 /* =======================================================================================
+   NOTIFICHE PUSH: promemoria prima della prima partita della giornata
+   ======================================================================================= */
+
+/* Chiave pubblica VAPID: e' pubblica per definizione, e' cosi' che il servizio push del
+   browser verifica che sia proprio questo sito ad avere il diritto di mandare notifiche a
+   un abbonamento. La chiave PRIVATA (che firma i messaggi in uscita) non sta mai qui: e' un
+   secret di GitHub Actions, usata solo da tools/invia-promemoria.mjs. Vedi CLAUDE.md,
+   "Notifiche push", per come e' stata generata e dove sta la coppia completa. */
+const VAPID_PUBLIC_KEY = 'BHWwgaSHRz5TzxveQbvlZ6Cx__SgARqi_-hEXlD1g6Av-gYH_Y8cq48pY6-Zb2bcLlLNgDWwdFrDGn5M00ICRjM';
+
+function urlBase64ToUint8Array(s){
+  const pad = '='.repeat((4 - s.length % 4) % 4);
+  const raw = atob((s + pad).replace(/-/g,'+').replace(/_/g,'/'));
+  const out = new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+
+async function abbonamentoAttuale(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    return await reg.pushManager.getSubscription();
+  }catch(e){ return null; }
+}
+
+async function attivaNotifiche(){
+  const permesso = await Notification.requestPermission();
+  if(permesso !== 'granted') return null;
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    return await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+    });
+  }catch(e){ toast('Iscrizione non riuscita'); return null; }
+}
+
+async function disattivaNotifiche(){
+  const sub = await abbonamentoAttuale();
+  if(sub){ try{ await sub.unsubscribe(); }catch(e){} }
+}
+
+/* =======================================================================================
    IMPOSTAZIONI: import rosa, composizione a mano, formazione da copiare
    ======================================================================================= */
 
@@ -1309,6 +1353,12 @@ function apriSettings(){
       '<textarea id="boxOut" readonly>'+esc(testoFormazione())+'</textarea>' +
       '<button class="btn btn-sec" id="btnCopia">Copia negli appunti</button>';
   }
+
+  h += '<h4>Notifiche</h4>' +
+    '<p class="note" style="margin:0 0 8px">Un promemoria push quando manca poco alla prima ' +
+    'partita della giornata, cosi non ti scordi di schierare.</p>' +
+    '<div id="notifStato" class="note" style="margin:0 0 8px">Controllo lo stato...</div>' +
+    '<div class="btn-row" id="notifBtns"></div>';
 
   h += '<h4>Azzeramenti</h4>' +
     '<button class="btn btn-sec" id="btnResetMano">Togli tutte le correzioni a mano</button>' +
@@ -1349,6 +1399,46 @@ function apriSettings(){
     salva(); chiudiSheet(); render(); toast('Azzerato');
   });
   el('#btnChiudiSet').addEventListener('click', chiudiSheet);
+
+  /* Async e separato dal resto: apriSettings() e sincrona (costruisce l'HTML tutto insieme),
+     ma sapere se un abbonamento push esiste gia' richiede di chiedere al service worker. Si
+     aggiorna la sezione un attimo dopo, invece di far aspettare tutto il resto del foglio. */
+  (async ()=>{
+    if(!('serviceWorker' in navigator) || !('PushManager' in window)){
+      const s = el('#notifStato');
+      if(s) s.textContent = 'Questo browser non supporta le notifiche push.';
+      return;
+    }
+    const sub = await abbonamentoAttuale();
+    const statoEl = el('#notifStato'), btnEl = el('#notifBtns');
+    if(!statoEl || !btnEl) return;   // il foglio potrebbe essere gia stato chiuso nel frattempo
+    if(sub){
+      statoEl.textContent = 'Promemoria attivo su questo dispositivo.';
+      btnEl.innerHTML = '<button class="btn btn-sec" id="btnNotifOff">Disattiva</button>';
+      el('#btnNotifOff').addEventListener('click', async ()=>{
+        await disattivaNotifiche();
+        toast('Promemoria disattivato');
+        apriSettings();
+      });
+    }else{
+      statoEl.textContent = 'Non ancora attivo su questo dispositivo.';
+      btnEl.innerHTML = '<button class="btn btn-primary" id="btnNotifOn">Attiva promemoria</button>';
+      el('#btnNotifOn').addEventListener('click', async ()=>{
+        const nuovaSub = await attivaNotifiche();
+        if(!nuovaSub){ toast('Permesso negato o non riuscito'); return; }
+        const json = JSON.stringify(nuovaSub.toJSON ? nuovaSub.toJSON() : nuovaSub);
+        statoEl.innerHTML = '<b>Attivato.</b> Ultimo passo, una tantum: copia il testo qui ' +
+          'sotto e incollalo come secret <b>PUSH_SUBSCRIPTION</b> su GitHub (repository → ' +
+          'Settings → Secrets and variables → Actions → New repository secret). Serve al ' +
+          'robot che spedisce il promemoria per sapere a chi mandarlo.';
+        btnEl.innerHTML = '<textarea id="boxSub" readonly style="height:100px">'+esc(json)+'</textarea>' +
+          '<button class="btn btn-sec" id="btnCopiaSub">Copia</button>';
+        el('#btnCopiaSub').addEventListener('click', ()=>{
+          navigator.clipboard.writeText(json).then(()=>toast('Copiato')).catch(()=>toast('Copia a mano'));
+        });
+      });
+    }
+  })();
 }
 
 function importaRosa(testo){
