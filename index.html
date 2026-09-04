@@ -545,7 +545,12 @@ function scegliUndici(modulo){
 
   ROLE_ORDER.forEach(r=>{
     const tutti = S.rosa.filter(id=> LIS[id] && LIS[id].r===r);
-    const fissi = bloccatiSet[r].slice(0, need[r]);
+    /* Se l'utente ne fissa piu di quanti ne preveda il modulo, i posti vanno ai migliori e non
+       a chi capita per primo nell'ordine di inserimento in rosa: altrimenti la stessa rosa con
+       gli stessi fissaggi dava formazioni diverse a seconda di come era stata composta. */
+    const fissi = bloccatiSet[r].slice()
+                    .sort((a,b)=> contributoAtteso(b)-contributoAtteso(a))
+                    .slice(0, need[r]);
     const resto = tutti.filter(id=> fissi.indexOf(id)===-1)
                        .sort((a,b)=> contributoAtteso(b)-contributoAtteso(a));
     const scelti = fissi.concat(resto.slice(0, Math.max(0, need[r]-fissi.length)));
@@ -555,7 +560,24 @@ function scegliUndici(modulo){
     panchina.push.apply(panchina, resto.slice(Math.max(0, need[r]-fissi.length)));
   });
 
-  panchina.sort((a,b)=> contributoAtteso(b)-contributoAtteso(a));
+  /* La panchina non si ordina per bravura, e nemmeno solo per "bravura per probabilita di
+     giocare": un riserva entra solo se in campo manca qualcuno DEL SUO RUOLO. Un secondo
+     portiere dietro a un titolare dato al 90% e quasi inutile; lo stesso portiere dietro a un
+     titolare in dubbio al 40% diventa la prima cosa da mettere in panchina.
+
+     Quindi si pesa anche la probabilita che in quel ruolo serva davvero un cambio, cioe che
+     almeno un titolare di quel ruolo resti senza voto. Con i cambi che si scorrono in ordine
+     di panchina (vedi simula), questo e cio che decide se il sostituto entrera mai. */
+  const serveCambio = {};
+  ROLE_ORDER.forEach(r=>{
+    const tit = titolari.filter(id=> LIS[id] && LIS[id].r===r);
+    let nessunoManca = 1;
+    tit.forEach(id=> { nessunoManca *= certezza(id); });
+    serveCambio[r] = 1 - nessunoManca;
+  });
+  panchina.sort((a,b)=>
+    contributoAtteso(b)*serveCambio[LIS[b].r] - contributoAtteso(a)*serveCambio[LIS[a].r]);
+
   return {titolari, panchina};
 }
 
@@ -569,14 +591,20 @@ function simula(titolari, panchina){
   const daSostituire = [];
   titolari.forEach(id=>{ (gioca[id] ? inCampo : daSostituire).push(id); });
 
-  /* I cambi entrano in ordine di panchina, uno per ruolo, fino al massimo consentito. */
+  /* I cambi si scorrono dalla PANCHINA nell'ordine in cui e stata messa, non dai titolari
+     mancanti: e cosi che funziona il regolamento, ed e anche l'ordine che l'app stampa nel
+     testo da ricopiare sul sito della lega. La versione precedente scorreva i mancanti in
+     ordine P->D->C->A, e quando i mancanti erano piu di tre assegnava i cambi a giocatori
+     diversi da quelli che sarebbero entrati davvero. */
   let cambi = 0;
-  const usati = {};
-  for(const id of daSostituire){
+  const buchiPerRuolo = {};
+  for(const id of daSostituire){ const r = LIS[id].r; buchiPerRuolo[r] = (buchiPerRuolo[r]||0) + 1; }
+  for(const sost of panchina){
     if(cambi >= MAX_CAMBI) break;
-    const r = LIS[id].r;
-    const sost = panchina.find(x=> !usati[x] && gioca[x] && LIS[x].r===r);
-    if(sost){ usati[sost]=true; inCampo.push(sost); cambi++; }
+    const r = LIS[sost].r;
+    if(!buchiPerRuolo[r]) continue;        // in quel ruolo non manca nessuno
+    if(!gioca[sost]) continue;             // un sostituto senza voto non consuma il cambio
+    buchiPerRuolo[r]--; inCampo.push(sost); cambi++;
   }
 
   let punti = 0;
