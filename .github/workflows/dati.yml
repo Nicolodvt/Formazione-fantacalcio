@@ -2,21 +2,31 @@ name: Aggiorna dati di giornata
 
 # Due lavori distinti con ritmi diversi:
 #
-# PROBABILI — si assestano fra giovedi e il giorno della partita, quindi si passa piu volte
-# invece di fidarsi di una lettura sola. Orari in UTC (d'estate l'Italia e UTC+2):
-#   giovedi e venerdi 18:00 CEST  -> quando escono le prime probabili serie
-#   sabato 09:00 e 12:00 CEST     -> aggiornamenti prima delle partite del pomeriggio
-#   domenica 09:00 CEST           -> ultimo giro prima del grosso della giornata
+# PROBABILI — la pagina che leggiamo e' la stessa per tutta la settimana, ma fantacalcio.it la
+# aggiorna in continuazione man mano che arrivano notizie: rileggerla piu' spesso non e' un
+# secondo scraper per le "ultime notizie", e' lo stesso scraper che intercetta gli stessi
+# aggiornamenti prima. Il grosso delle notizie vere (allenamenti, dubbi, ballottaggi che si
+# sciolgono) arriva il venerdi, quindi e' li' che si concentrano i passaggi. Niente lettura di
+# giovedi: troppo presto per essere piu' che rumore, e il venerdi la copre comunque. L'ultimo
+# giro di venerdi e' alle 19:30, non piu' tardi: col venerdi sera che spesso ha gia' una partita
+# alle 20:45, un giro dopo il fischio d'inizio sarebbe uno sprecato. Orari in UTC (d'estate
+# l'Italia e' UTC+2):
+#   venerdi 13:00 / 16:00 / 18:00 / 19:30 CEST  -> il grosso delle notizie della vigilia
+#   sabato 09:00 e 12:00 CEST                   -> aggiornamenti prima delle partite del pomeriggio
+#   domenica 09:00 CEST                         -> ultimo giro prima del grosso della giornata
 #
 # VOTI — hanno senso solo a giornata conclusa. Si prova il martedi sera: se la giornata non e
 # ancora chiusa lo scraper se ne accorge da solo e non scrive nulla.
 #
-# Sono sei letture a settimana in tutto: abbastanza da non arrivare mai con dati vecchi,
+# Sono sette letture a settimana in tutto: abbastanza da non arrivare mai con dati vecchi,
 # poche abbastanza da non pesare su fantacalcio.it.
 
 on:
   schedule:
-    - cron: '0 16 * * 4,5'
+    - cron: '0 11 * * 5'      # venerdi 13:00 CEST
+    - cron: '0 14 * * 5'      # venerdi 16:00 CEST
+    - cron: '0 16 * * 5'      # venerdi 18:00 CEST
+    - cron: '30 17 * * 5'     # venerdi 19:30 CEST (75 min prima di un eventuale 20:45)
     - cron: '0 7,10 * * 6'
     - cron: '0 7 * * 0'
     - cron: '0 19 * * 2'      # martedi 21:00 CEST: voti della giornata appena conclusa
