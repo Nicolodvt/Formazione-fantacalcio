@@ -15,8 +15,14 @@
 /* Il nome della cache va cambiato a ogni versione: e la chiave con cui activate() cancella
    le vecchie. Con la strategia rete-per-prima l'app si aggiorna comunque da sola, ma senza
    cambiarlo la copia vecchia resta occupata sul telefono per sempre. */
-const CACHE = 'formazione-v0-3';
-const FILES = ['./', './index.html', './manifest.webmanifest', './dati/probabili.json'];
+const CACHE = 'formazione-v0-4';
+const FILES = [
+  './', './index.html', './manifest.webmanifest', './dati/probabili.json',
+  /* L'app legge i dati di giornata direttamente da GitHub quando puo (vedi fetchDati() in
+     index.html): precaricarli qui vuol dire che anche al primissimo avvio, prima di ogni
+     altra richiesta, l'ultima copia buona e gia' pronta per l'offline. */
+  'https://raw.githubusercontent.com/Nicolodvt/Formazione-fantacalcio/main/dati/probabili.json'
+];
 
 self.addEventListener('install', (e) => {
   /* addAll fallisce tutto se un solo file manca: probabili.json potrebbe non esserci ancora
