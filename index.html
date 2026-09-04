@@ -821,7 +821,19 @@ function oreDati(){
 /* Scarica i voti delle giornate gia giocate. Non c'e un indice dei file: si prova a
    scendere dalla giornata corrente e ci si ferma al primo che manca. Le giornate sono al
    massimo 38 e i file stanno nella cache del service worker, quindi il costo e trascurabile
-   e funziona anche senza rete. */
+   e funziona anche senza rete.
+
+   Una giornata gia chiusa non cambia piu: i voti ufficiali non vengono corretti col tempo.
+   Percio si riscaricano solo le giornate ANCORA ASSENTI dallo storico in memoria, non tutte
+   da 1 in su a ogni apertura. Senza questo accorgimento, avanzando la stagione, ogni singola
+   apertura dell'app (e ogni tocco su "Ricarica") rifaceva in sequenza una richiesta per
+   OGNI giornata gia giocata — fino a 37 andando verso la 38esima, una dietro l'altra, non in
+   parallelo — solo per ritrovare dati che aveva gia. Si accumula anche un secondo difetto,
+   piu subdolo: il risultato del giro sostituiva integralmente lo storico salvato. Una singola
+   giornata che quel giro non fosse riuscita a scaricare (rete instabile, un attimo di down)
+   spariva dallo storico e dalla cache anche se una volta era stata scaricata con successo,
+   finche non ritornava a scaricarsi bene — un dato perso in silenzio per un guaio temporaneo.
+   Ora si SOMMA solo cio che manca, non si riparte mai da zero. */
 async function caricaStorico(){
   try{
     const raw = localStorage.getItem(CACHE_STORICO);
@@ -831,26 +843,28 @@ async function caricaStorico(){
   const ultima = (PROB && PROB.giornata) ? PROB.giornata - 1 : 0;
   if(ultima < 1) return;
 
-  const nuovo = {};
-  let trovate = 0;
+  const note = new Set();
+  for(const id in STORICO) for(const v of STORICO[id]) note.add(v.giornata);
+
+  let cambiato = false;
   for(let g = 1; g <= ultima; g++){
+    if(note.has(g)) continue;    // gia in storico: giornata chiusa, non si riscarica
     try{
       const r = await fetchDati('dati/voti-' + g + '.json');
       if(!r.ok) continue;
       const d = await r.json();
       if(!d || d.schema!==1 || !d.giocatori) continue;
-      trovate++;
       for(const id in d.giocatori){
         const x = d.giocatori[id];
-        (nuovo[id] || (nuovo[id] = [])).push({
+        (STORICO[id] || (STORICO[id] = [])).push({
           giornata: g, voto: x.voto, fantavoto: x.fantavoto, senzaVoto: !!x.senzaVoto
         });
       }
-    }catch(e){ /* giornata non disponibile: si va avanti */ }
+      cambiato = true;
+    }catch(e){ /* giornata non disponibile: si va avanti, si riprova al prossimo giro */ }
   }
-  if(trovate){
-    STORICO = nuovo;
-    try{ localStorage.setItem(CACHE_STORICO, JSON.stringify(nuovo)); }catch(e){}
+  if(cambiato){
+    try{ localStorage.setItem(CACHE_STORICO, JSON.stringify(STORICO)); }catch(e){}
   }
 }
 
