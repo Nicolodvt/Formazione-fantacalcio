@@ -586,11 +586,15 @@ function fantamediaStimata(p){
 }
 
 /* Versione che guida davvero le scelte dell'app (contributoAtteso, l'ottimizzatore di
-   modulo, la scheda): la stima, mescolata con quanto il giocatore ha reso finora quest'anno.
-   Con zero giornate reali coincide esattamente con fantamediaStimata(). */
+   modulo, la scheda): la stima, corretta dell'eventuale scarto sistematico del ruolo (vedi
+   RETTIFICA_RUOLO sopra e tools/ricalibra.mjs), poi mescolata con quanto il giocatore ha reso
+   finora quest'anno. La correzione di ruolo entra PRIMA della mescola, non dopo, apposta: e'
+   un prior migliorato, e deve valere pieno per chi ha pochi dati personali e sfumare da solo
+   per chi ne ha molti — esattamente quello che mescola() gia' fa in base a r.presenze. Con
+   zero giornate reali E zero correzione coincide esattamente con fantamediaStimata(). */
 function fantamediaAttesa(p){
-  const stima = fantamediaStimata(p);
-  if(!p) return stima;
+  if(!p) return fantamediaStimata(p);
+  const stima = fantamediaStimata(p) + (RETTIFICA_RUOLO[p.r] || 0);
   const r = rendimento(p.id);
   return r ? mescola(stima, r.media, r.presenze) : stima;
 }
@@ -878,6 +882,12 @@ let PROB = null;
    finche non ci sono file di voti, e l'app funziona identica senza. */
 let STORICO = {};
 
+/* Quanto il modello sbaglia SISTEMATICAMENTE per ruolo, calcolato fuori dall'app (vedi
+   tools/ricalibra.mjs) confrontando la stima pura con tutti i voti reali scaricati finora, e
+   scritto in dati/costanti.json. Zero finche' quel file non esiste o non risponde: l'app si
+   comporta esattamente come oggi, non un'ipotesi silenziosa. */
+let RETTIFICA_RUOLO = {P:0, D:0, C:0, A:0};
+
 let S = {
   rosa: [],              // id dei miei giocatori
   prezzi: {},            // id -> crediti pagati all'asta (solo informativo)
@@ -971,6 +981,24 @@ async function caricaProbabili(forza){
     /* Aperta da file:// il fetch fallisce sempre: non e' un errore da mostrare come tale. */
     return false;
   }
+}
+
+/* Nessuna cache locale apposta: e' una piccola correzione, non un dato di giornata — se non
+   risponde RETTIFICA_RUOLO resta a zero, che e' gia' il comportamento sicuro di sempre, non
+   uno stato rotto da segnalare. */
+async function caricaCostanti(){
+  try{
+    const r = await fetchDati('dati/costanti.json');
+    if(!r.ok) return;
+    const d = await r.json();
+    if(!d || d.schema!==1 || !d.rettificaRuolo || typeof d.rettificaRuolo!=='object') return;
+    ROLE_ORDER.forEach(ruolo=>{
+      const v = d.rettificaRuolo[ruolo];
+      // tetto di sicurezza piu' ampio di quello del generatore (0.4): protegge da un file
+      // corrotto o modificato a mano, senza litigare con valori legittimi.
+      if(typeof v === 'number' && isFinite(v)) RETTIFICA_RUOLO[ruolo] = Math.max(-1, Math.min(1, v));
+    });
+  }catch(e){ /* nessuna correzione: fantamediaAttesa resta quella di sempre */ }
 }
 
 /* Oltre questa soglia i dati non sono piu una fotografia della giornata in corso: le
@@ -1786,6 +1814,7 @@ calcolaMvSquadre();
 caricaProbabili(false)
   .then(()=> { render(); return caricaStorico(); })
   .then(()=> render());
+caricaCostanti().then(()=> render());
 render();
 
 if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
