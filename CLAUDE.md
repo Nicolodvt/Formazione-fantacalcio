@@ -197,25 +197,34 @@ assente e basta → è fuori dai 24, non giocherà.
 
 ## Come funziona il motore
 
-Due grandezze **tenute separate**, mai fuse in un numero solo: un fuoriclasse al 20% non è un
-fuoriclasse, quella domenica, e un punteggio unico lo nasconderebbe.
+**Questa è la parte dell'app che conta di più — è il motivo per cui esiste.** L'utente l'ha
+chiesto esplicitamente il 04/09: "la cosa che deve essere più curata in assoluto è proprio il
+modello di scelta della formazione consigliata". Ogni scelta di questa sezione va soppesata con
+questo in mente, non come una feature fra le altre.
 
-- **certezza** — probabilità di prendere voto. Dalla percentuale delle probabili, corretta da
-  squalifiche, infortuni e dubbi dichiarati dalla fonte.
-- **resa** (`fantamediaAttesa`) — quanto vale quando gioca. Per P e D è la media voto ripresa
-  dall'app asta; per C e A sono i bonus stimati dal percentile nel ruolo, più i piazzati.
+Tre grandezze **tenute separate**, mai fuse in un numero solo prima della fine: un fuoriclasse al
+20% non è un fuoriclasse quella domenica, e un punteggio unico lo nasconderebbe. Il numero finale
+che decide la formazione (`contributoAtteso`) è `certezza × (resa + prossima_partita)`:
 
-Due cose imparate facendolo, che non erano ovvie:
+- **certezza** (`certezza()`) — probabilità di prendere voto. Dalla percentuale delle probabili,
+  corretta da squalifiche, infortuni, dubbi dichiarati dalla fonte — e dal 04/09 anche da quanto
+  spesso il giocatore è entrato dalla panchina di recente nonostante fosse "titolare" sulla
+  carta (vedi *condizione*, sotto).
+- **resa** (`fantamediaAttesa()`) — quanto vale IN MEDIA quando gioca. Stima da quotazioni
+  all'inizio, mescolata dal 04/09 con l'andamento reale della stagione (Fase 3, sotto) — le
+  giornate più recenti pesano di più di quelle vecchie, non tutte uguali.
+- **prossima partita** (`rettificaPartita()`, dal 04/09) — quanto la partita SPECIFICA di questa
+  settimana sposta la resa media: fattore campo, e forza dell'avversario nel reparto che conta
+  per il ruolo del giocatore. Sommata, non moltiplicata: un forte contro un forte resta forte,
+  l'avversario sposta l'ago, non ribalta il giudizio. Vedi *Modello 4* più sotto per i dettagli.
+
+Due cose imparate facendolo all'inizio, che non erano ovvie:
 
 - **Il subentro va sommato solo a chi non parte titolare.** Sommandolo a tutti, i titolari
   diventavano tutti 91% e la lista perdeva ogni informazione. Le riserve, invece, hanno una coda
   vera: entrare a mezz'ora dalla fine e prendere voto capita spesso, e 0.08 era troppo poco.
 - **`data-status="warn"` ce l'hanno TUTTE le riserve** (260 su 260): è un dubbio dichiarato solo
   quando sta su un titolare (43 casi). Applicarlo a tutti significava penalizzare due volte.
-
-**Limite dichiarato:** i bonus di C e A sono *stimati* dal percentile di valore, non misurati su
-gol e assist reali. Servono a ordinare due attaccanti fra loro, non a prevedere il fantavoto di
-domenica. La Fase 3 li sostituirà con i dati veri.
 
 ### Perché la scelta del modulo passa da una simulazione
 
@@ -440,6 +449,88 @@ fino a 37 richieste sequenziali avvicinandosi a fine stagione — e il risultato
 integralmente lo storico salvato, così un singolo errore di rete cancellava in silenzio dati già
 buoni. Corretto: ora si scarica solo ciò che manca e si somma, mai si riparte da zero.
 
+## Modello 4 — la prossima partita, l'andamento, la condizione (04/09)
+
+Richiesta esplicita dell'utente, con priorità dichiarata sopra ogni altra cosa in corso:
+"deve essere un bilanciamento tra l'andamento del giocatore nella stagione, [...] la prossima
+partita (se casa/trasferta, contro che avversario, condizione fisica del giocatore)". I tre
+pezzi, e come sono stati costruiti:
+
+### 1. La prossima partita — `rettificaPartita()`
+
+Prima non contava *nulla* per la scelta: solo mostrata (avversario, casa/trasferta) nel badge sul
+campo, mai usata per decidere. Ora sposta la resa attesa, sommando due termini:
+
+- **Fattore campo**: `CASA_BONUS = 0.08`, in casa aggiunge, in trasferta toglie. Piccolo e
+  dichiaratamente stimato, non misurato — vedi *limite* sotto.
+- **Forza dell'avversario nel reparto che conta**: per P/D conta la forza OFFENSIVA
+  dell'avversario (`ATT_SQUADRA`, nuovo indice, costruito come `MV_SQUADRA` ma dai migliori
+  centrocampisti/attaccanti invece che da difensori — stessa normalizzazione, `normalizzaSquadre()`
+  estratta come funzione condivisa); per C/A conta la forza DIFENSIVA dell'avversario
+  (`MV_SQUADRA`, già esistente per il modificatore). Scalato da `PESO_AVVERSARIO = 1.4`.
+
+Sommato, non moltiplicato: un forte contro un forte resta forte, l'avversario sposta l'ago di
+qualche decimo, non ribalta il giudizio. Si applica in **tre punti**, non uno solo, perché la
+partita specifica conta ovunque un voto viene proiettato: `contributoAtteso()` (decide chi
+schierare), `simula()` sia sul totale punti sia sul voto che alimenta il modificatore proiettato
+(prima usava solo la media stagionale, ignorando l'avversario di questa settimana), e la scheda
+giocatore (mostrata separata, mai un numero che nasconde da dove viene: "media X → +Y, in casa
+contro Z (difesa debole)").
+
+**Limite dichiarato, uguale a `BONUS_MAX`/`PESO_PRIOR_STAGIONE`**: `CASA_BONUS` e
+`PESO_AVVERSARIO` sono stimati a intuito, non tarati su risultati veri — con 2-3 giornate di
+campionato non c'è ancora campo a sufficienza. Tenuti piccoli apposta per questo. Da ritarare con
+`taratura.mjs` quando ci saranno più giornate (vedi *Da fare*).
+
+**Test di dominanza aggiornato di conseguenza** (`tools/prova-motore.mjs`): la prova 1 già
+verificava che un giocatore migliore su certezza e resa non potesse mai finire sotto uno peggiore
+su entrambe. Con `rettificaPartita()` due giocatori identici su certezza e resa possono ora finire
+ordinati diversamente perché le loro squadre affrontano avversari diversi — è il comportamento
+VOLUTO, non un bug. La prova ora controlla la dominanza su tutte e tre le dimensioni insieme
+(certezza, resa, aggiustamento partita), non più solo sulle prime due: **più stretta di prima**,
+non allentata — verificato che passa comunque su tutti i ruoli.
+
+### 2. L'andamento in stagione — pesatura per la forma recente
+
+`rendimento()` e `votoMisurato()` (l'ingrediente "misurato" che si mescola con la stima, Fase 3)
+usavano una media PIATTA su tutte le giornate giocate: un giocatore in un vero momento di forma
+nelle ultime 3 partite pesava uguale a uno stesso giocatore di inizio stagione. Ora
+`mediaPesataForma()` pesa ogni giornata con `DECADIMENTO_FORMA = 0.85` elevato a quante giornate
+fa è stata giocata: la più recente pesa 1, quella precedente 0.85, e così via — dimezza il peso
+ogni 4-5 giornate. Condivisa fra voto puro e fantavoto coi bonus, così invecchiano allo stesso
+modo. Con 2 giornate come oggi la differenza è minima (Malen passa da 15.50 piatto a 15.34
+pesato); è con la stagione avviata che comincia a contare davvero.
+
+### 3. La condizione fisica — `tassoSubentro()`
+
+Il segnale più difficile da ottenere bene, e il più limitato dai pochi dati di oggi. Non esiste
+un "indice di condizione fisica" nella fonte: quello che c'è, e prima veniva scartato, è il campo
+`subentrato` di ogni voto (entrato dalla panchina invece di partire titolare) —
+`caricaStorico()` ora lo salva in `STORICO` insieme a voto e fantavoto.
+
+**Migrazione necessaria**: chi aveva già uno storico salvato prima di questa modifica ce l'ha
+senza quel campo, e il controllo "giornata già presente, non riscaricare" lo terrebbe così per
+sempre. Aggiunto un controllo una tantum in `caricaStorico()`: se una voce manca di
+`subentrato`, tutto lo storico si azzera e si riscarica da capo (economico, sono file JSON
+piccoli).
+
+**Uso, deliberatamente conservativo**: non un segnale nuovo indipendente (con 2 giornate sarebbe
+solo rumore), ma un affinamento di uno sconto che esisteva già. `certezza()` scontava già dello
+0.85 fisso un titolare "in dubbio" secondo la fonte; ora lo sconto scala fra 0.85 (mai subentrato
+di recente) e 0.70 (sempre subentrato nelle ultime presenze), solo quando la fonte segnala già
+un dubbio — mai in contraddizione con il segnale principale della settimana, solo un modo più
+preciso di quantificare un dubbio che c'era comunque. Mostrato anche nella scheda giocatore,
+accanto a ogni fantavoto storico, con l'etichetta "(sub)" — così l'utente vede il segnale grezzo
+e può giudicare da solo, non solo il numero che ne esce.
+
+**Verificato dal vivo nel browser**, non solo con gli strumenti da terminale: Malen (in casa
+contro Atalanta, difesa nella media) passa da 8.86 di resa media a 8.91 finale (+0.05); Svilar
+(stesso avversario, portiere) da 5.46 a 5.49; Bernardeschi (in casa contro Sassuolo, difesa
+debole) da 6.46 a 6.73 (+0.27, il caso con lo sbalzo più marcato fra quelli provati) — e la sua
+riga G1 mostra correttamente "(sub)", confermando che il campo nuovo arriva fino all'interfaccia.
+Tutti i conti tornano a mano. `node --check`, `controlla.mjs`, `prova-motore.mjs` e
+`taratura.mjs` puliti prima e dopo ogni pezzo.
+
 ## Esplorazione grafica in Figma (04/09)
 
 Su richiesta esplicita dell'utente ho ricostruito in Figma campo, testata, tab, KPI e righe della
@@ -483,6 +574,9 @@ cancellazione non è mai avvenuta.
   stesso schema prior→dati dell'app asta. Corretto in parallelo un bug reale trovato dalla
   scansione di audit (`caricaStorico()` riscaricava tutto da zero a ogni apertura, e un errore
   di rete poteva cancellare dati già buoni) — vedi sopra.
+- **Modello 4 — la prossima partita, l'andamento pesato, la condizione fisica**: i tre pezzi
+  chiesti esplicitamente dall'utente come priorità sopra ogni altra cosa in corso, tutti e tre
+  implementati e verificati dal vivo — vedi la sezione dedicata sopra.
 
 **Da fare:**
 1. **Impostare due secret su GitHub** (repository → Settings → Secrets and variables → Actions)
@@ -498,10 +592,10 @@ cancellazione non è mai avvenuta.
    11/09, dato che il round in corso il 04/09 è già partito con la cadenza vecchia). Si può
    forzare da Actions → Run workflow — non tocca `main` né consuma build Netlify, permesso anche
    sotto la regola dev-only.
-4. **Ritarare `PESO_PRIOR_STAGIONE`** dopo qualche giornata in più (ora è 10, scelto a intuito
-   come `B_PESO_PRIOR` lo fu per i prezzi): con più dati veri si potrà controllare se converge
-   alla velocità giusta, non prima — su 2 giornate sarebbe rumore, stesso discorso già fatto per
-   le costanti `BONUS_MAX`.
+4. **Ritarare le costanti scelte a intuito** dopo qualche giornata in più — tutte segnate come
+   tali nel codice, nessuna nascosta: `PESO_PRIOR_STAGIONE` (10), `CASA_BONUS` (0.08),
+   `PESO_AVVERSARIO` (1.4), `DECADIMENTO_FORMA` (0.85). Con `taratura.mjs`, quando ci saranno
+   abbastanza giornate da distinguere un segnale vero dal rumore — su 2-3 non ancora.
 5. Fase 4 — mercato di riparazione e svincoli.
 6. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
    `main` almeno una volta, quindi va coordinato con l'utente.
