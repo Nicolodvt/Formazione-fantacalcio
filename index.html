@@ -662,6 +662,11 @@ LISTONE.forEach(p=> LIS[p.id] = p);
 const CHIAVE = 'fantaFormazione_v1';
 let PROB = null;
 
+/* Storico dei voti realmente presi, giornata per giornata: id -> [{giornata, voto, fantavoto,
+   senzaVoto}]. Serve a mettere accanto alla stima quello che e successo davvero. Resta vuoto
+   finche non ci sono file di voti, e l'app funziona identica senza. */
+let STORICO = {};
+
 let S = {
   rosa: [],              // id dei miei giocatori
   prezzi: {},            // id -> crediti pagati all'asta (solo informativo)
@@ -697,6 +702,7 @@ function carica(){
    ======================================================================================= */
 
 const CACHE_PROB = 'fantaFormazione_probabili';
+const CACHE_STORICO = 'fantaFormazione_storico';
 
 /* Un file di giornata mutilato non deve poter entrare in circolo. Il resto del codice
    dereferenzia sempre `squadre`, `giocatori` e `indisponibili`: se ne manca uno l'app va in
@@ -749,6 +755,56 @@ const ORE_DATI_VECCHI = 96;
 function oreDati(){
   if(!PROB || !PROB.generato) return null;
   return (Date.now() - new Date(PROB.generato).getTime())/3600000;
+}
+
+/* Scarica i voti delle giornate gia giocate. Non c'e un indice dei file: si prova a
+   scendere dalla giornata corrente e ci si ferma al primo che manca. Le giornate sono al
+   massimo 38 e i file stanno nella cache del service worker, quindi il costo e trascurabile
+   e funziona anche senza rete. */
+async function caricaStorico(){
+  try{
+    const raw = localStorage.getItem(CACHE_STORICO);
+    if(raw) STORICO = JSON.parse(raw) || {};
+  }catch(e){ STORICO = {}; }
+
+  const ultima = (PROB && PROB.giornata) ? PROB.giornata - 1 : 0;
+  if(ultima < 1) return;
+
+  const nuovo = {};
+  let trovate = 0;
+  for(let g = 1; g <= ultima; g++){
+    try{
+      const r = await fetch('./dati/voti-' + g + '.json', {cache:'no-cache'});
+      if(!r.ok) continue;
+      const d = await r.json();
+      if(!d || d.schema!==1 || !d.giocatori) continue;
+      trovate++;
+      for(const id in d.giocatori){
+        const x = d.giocatori[id];
+        (nuovo[id] || (nuovo[id] = [])).push({
+          giornata: g, voto: x.voto, fantavoto: x.fantavoto, senzaVoto: !!x.senzaVoto
+        });
+      }
+    }catch(e){ /* giornata non disponibile: si va avanti */ }
+  }
+  if(trovate){
+    STORICO = nuovo;
+    try{ localStorage.setItem(CACHE_STORICO, JSON.stringify(nuovo)); }catch(e){}
+  }
+}
+
+/* Riassunto del rendimento vero di un giocatore. null se non ha mai giocato. */
+function rendimento(id){
+  const v = STORICO[id];
+  if(!v || !v.length) return null;
+  const conVoto = v.filter(x=> x.fantavoto != null);
+  if(!conVoto.length) return {presenze:0, senzaVoto:v.length, media:null, elenco:v};
+  return {
+    presenze: conVoto.length,
+    senzaVoto: v.length - conVoto.length,
+    media: conVoto.reduce((s,x)=> s+x.fantavoto, 0)/conVoto.length,
+    elenco: v
+  };
 }
 
 function etaDati(){
@@ -1024,6 +1080,28 @@ function schedaGiocatore(id){
   }
   h += '<div class="info-cell"><div class="k">Quotazione</div><div class="v">'+l.q+'</div>' +
        '<div class="n">'+(l.pz?esc(l.pz):'nessun piazzato')+'</div></div>';
+
+  /* Il rendimento vero accanto alla stima. Lo scarto fra i due si mostra solo da quattro
+     giornate in su: su due partite un attaccante che ha segnato una doppietta esce con +8 di
+     scarto, e sembrerebbe che il modello sia rotto quando invece e semplicemente varianza.
+     Meglio mostrare i numeri e dire che non bastano, che far dedurre una conclusione falsa. */
+  const rend = rendimento(id);
+  if(rend && rend.media != null){
+    const scarto = rend.media - fm;
+    const segno = scarto >= 0 ? '+' : '';
+    h += '<div class="info-cell wide"><div class="k">Rendimento reale</div>' +
+      '<div class="v">' + rend.media.toFixed(2) + ' su ' + rend.presenze +
+      (rend.presenze===1 ? ' presenza' : ' presenze') + '</div>' +
+      '<div class="n">' + rend.elenco.map(x=>
+        'G'+x.giornata+' '+(x.fantavoto==null ? 's.v.' : x.fantavoto.toFixed(1))).join(' · ') +
+      (rend.presenze >= 4
+        ? ' — rispetto alla stima ' + segno + scarto.toFixed(2)
+        : ' — troppe poche giornate per giudicare la stima') + '</div></div>';
+  }else if(rend){
+    h += '<div class="info-cell wide"><div class="k">Rendimento reale</div>' +
+      '<div class="v">mai una valutazione</div>' +
+      '<div class="n">' + rend.senzaVoto + ' presenze senza voto</div></div>';
+  }
 
   if(d.ind && d.ind.nota){
     h += '<div class="info-cell wide"><div class="k">Dalla fonte</div><div class="n">'+esc(d.ind.nota)+'</div></div>';
@@ -1314,13 +1392,16 @@ document.querySelectorAll('.tab').forEach(t=>{
 el('#btnSettings').addEventListener('click', apriSettings);
 el('#btnRicarica').addEventListener('click', async ()=>{
   const ok = await caricaProbabili(true);
+  await caricaStorico();
   render(); toast(ok ? 'Dati aggiornati' : 'Dati non raggiungibili');
 });
 el('#overlay').addEventListener('click', chiudiSheet);
 
 carica();
 calcolaMvSquadre();
-caricaProbabili(false).then(()=> render());
+caricaProbabili(false)
+  .then(()=> { render(); return caricaStorico(); })
+  .then(()=> render());
 render();
 
 if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
