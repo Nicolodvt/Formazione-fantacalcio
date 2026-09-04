@@ -477,9 +477,11 @@ function certezza(id){
 
   let p;
   if(!PROB || !d.squadraInCampo){
-    /* Nessun dato di giornata: si ripiega sulla titolarita' fotografata all'asta. E' il
-       dato peggiore che abbiamo, ma e' meglio di un numero inventato. */
-    p = (l.t==null ? 70 : l.t)/100;
+    /* Nessun dato di giornata, oppure la sua squadra non compare in questo turno (rinvio, o
+       scarico parziale). Si ripiega sulla titolarita' fotografata all'asta, ma con un tetto:
+       senza il dato di giornata non si puo affermare che uno scenda in campo di sicuro, e
+       lasciarlo salire al 100% lo faceva schierare davanti a chi era davvero confermato. */
+    p = Math.min((l.t==null ? 70 : l.t)/100, 0.75);
   }else if(d.prob){
     p = (d.prob.pct==null ? (d.prob.titolare?0.85:0.20) : d.prob.pct/100);
     /* data-status="warn" e' un dubbio dichiarato dalla fonte, ma le riserve ce l'hanno
@@ -696,25 +698,42 @@ function carica(){
 
 const CACHE_PROB = 'fantaFormazione_probabili';
 
+/* Un file di giornata mutilato non deve poter entrare in circolo. Il resto del codice
+   dereferenzia sempre `squadre`, `giocatori` e `indisponibili`: se ne manca uno l'app va in
+   pagina bianca al primo calcolo, senza un messaggio. Meglio rifiutarlo e comportarsi come
+   se non ci fossero dati, che e una situazione gia gestita e dichiarata all'utente. */
+function probabiliValide(d){
+  return !!(d && d.schema===1
+    && d.giocatori && typeof d.giocatori === 'object'
+    && d.squadre && typeof d.squadre === 'object'
+    && d.indisponibili && typeof d.indisponibili === 'object'
+    && Object.keys(d.giocatori).length > 0);
+}
+
 async function caricaProbabili(forza){
   /* Prima la copia in memoria locale: l'app deve aprirsi anche in aereo. Poi si prova la
-     rete, e se va meglio si aggiorna. */
+     rete, e se va meglio si aggiorna. La copia in cache va validata come quella di rete —
+     anzi di piu: e proprio quella che viene usata quando non c'e modo di riscaricare. */
   if(!forza){
     try{
       const raw = localStorage.getItem(CACHE_PROB);
-      if(raw) PROB = JSON.parse(raw);
-    }catch(e){}
+      if(raw){
+        const c = JSON.parse(raw);
+        if(probabiliValide(c)) PROB = c;
+        else localStorage.removeItem(CACHE_PROB);   // rotta: meglio nessun dato che dati finti
+      }
+    }catch(e){ try{ localStorage.removeItem(CACHE_PROB); }catch(e2){} }
   }
   try{
     const r = await fetch('./dati/probabili.json', {cache:'no-cache'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     const d = await r.json();
-    if(d && d.schema===1 && d.giocatori){
+    if(probabiliValide(d)){
       PROB = d;
       try{ localStorage.setItem(CACHE_PROB, JSON.stringify(d)); }catch(e){}
       return true;
     }
-    throw new Error('schema non riconosciuto');
+    throw new Error('file di giornata non valido');
   }catch(e){
     /* Aperta da file:// il fetch fallisce sempre: non e' un errore da mostrare come tale. */
     return false;
@@ -949,7 +968,15 @@ function render(){
     w.style.display = 'none';
   }else{
     const scoperti = S.rosa.filter(id=>{ const d=datiGiornata(id); return !d.prob && !d.ind && d.squadraInCampo; }).length;
-    if(scoperti){
+    /* Chi ha la squadra fuori dal turno e un caso diverso e piu insidioso: non manca il
+       giocatore dai convocati, manca proprio la sua partita. Prima non generava alcun avviso
+       e l'app lo schierava come se fosse sicuro. */
+    const fuoriTurno = S.rosa.filter(id=>{ const d=datiGiornata(id); return !d.squadraInCampo; }).length;
+    if(fuoriTurno){
+      w.style.display='block'; w.className='warnbar';
+      w.textContent = fuoriTurno + (fuoriTurno===1?' giocatore ha la squadra' : ' giocatori hanno la squadra') +
+        ' fuori da questa giornata: per loro non ci sono dati, controllali a mano.';
+    }else if(scoperti){
       w.style.display='block'; w.className='warnbar info';
       w.textContent = scoperti + (scoperti===1?' giocatore non e':' giocatori non sono') + ' tra i convocati di questa giornata.';
     }else{ w.style.display='none'; }
@@ -1141,7 +1168,7 @@ function apriSettings(){
   el('#btnProbIncolla').addEventListener('click', ()=>{
     try{
       const d = JSON.parse(el('#boxProb').value);
-      if(!d || d.schema!==1 || !d.giocatori) throw new Error();
+      if(!probabiliValide(d)) throw new Error();
       PROB = d;
       try{ localStorage.setItem(CACHE_PROB, JSON.stringify(d)); }catch(e){}
       chiudiSheet(); render(); toast('Dati di giornata caricati');
