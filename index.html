@@ -386,6 +386,18 @@ const MOD_PESO = 4.0;             // fantapunti per ogni punto pieno di media so
    ======================================================================================= */
 
 const MV_MIN = 5.75, MV_MAX = 6.15, MV_AGG_MAX = 0.12;
+
+/* PURE: solo da quotazioni di inizio stagione, non cambiano mai una volta calcolate. Usate
+   internamente da mvPura()/golSubitiAttesi() — la parte che deve restare non contaminata da
+   dati reali, per lo stesso motivo di fantamediaStimata (vedi taratura.mjs). */
+let MV_SQUADRA_PURA = {};
+let ATT_SQUADRA_PURA = {};
+
+/* OPERATIVE: quello che il resto dell'app usa davvero (rettificaPartita, la scheda). Partono
+   uguali alle pure e si mescolano da sole con quanto le squadre hanno reso finora in campo
+   (aggiornaForzaSquadre, sotto) — stesso schema prior->dati gia' usato per il singolo
+   giocatore, applicato ora alla squadra intera: una squadra che si sta rivelando piu' o meno
+   forte del previsto smette di essere giudicata solo sulle quotazioni di agosto. */
 let MV_SQUADRA = {};     // forza DIFENSIVA per squadra (portiere + migliori difensori)
 let ATT_SQUADRA = {};    // forza OFFENSIVA per squadra (migliori centrocampisti e attaccanti)
 
@@ -435,8 +447,32 @@ function calcolaMvSquadre(){
     const mC = C.length ? C.reduce((s,x)=>s+x.q,0)/C.length : 0;
     idxAtt[sq] = (mA && mC) ? 0.65*mA + 0.35*mC : (mA || mC || 0);
   });
-  MV_SQUADRA = normalizzaSquadre(idxDif);
-  ATT_SQUADRA = normalizzaSquadre(idxAtt);
+  MV_SQUADRA_PURA = normalizzaSquadre(idxDif);
+  ATT_SQUADRA_PURA = normalizzaSquadre(idxAtt);
+}
+
+/* Media pesata per la forma (mediaPesataForma, gia' usata per il singolo giocatore) di un
+   gruppo di giocatori insieme, non di uno solo: serve a misurare quanto una squadra intera sta
+   rendendo davvero, non quanto rende un suo singolo titolare. */
+function misuraGruppo(giocatori, campo){
+  const voci = [];
+  giocatori.forEach(p=>{ const v = STORICO[p.id]; if(v) voci.push.apply(voci, v); });
+  return mediaPesataForma(voci, campo);
+}
+
+/* Va richiamata ogni volta che STORICO cambia (dopo caricaStorico(), non solo all'avvio):
+   altrimenti MV_SQUADRA/ATT_SQUADRA resterebbero ferme alla fotografia di inizio stagione per
+   tutta la stagione, lo stesso difetto che aveva il singolo giocatore prima della Fase 3.
+   Con STORICO vuoto (avvio, o prima che i dati rispondano) coincide esattamente con le pure. */
+function aggiornaForzaSquadre(){
+  Object.keys(MV_SQUADRA_PURA).forEach(sq=>{
+    const membriDif = LISTONE.filter(p=> p.s===sq && (p.r==='P' || p.r==='D'));
+    const membriAtt = LISTONE.filter(p=> p.s===sq && (p.r==='C' || p.r==='A'));
+    const misDif = misuraGruppo(membriDif, 'voto');
+    const misAtt = misuraGruppo(membriAtt, 'fantavoto');
+    MV_SQUADRA[sq] = mescola(MV_SQUADRA_PURA[sq], misDif.media, misDif.n);
+    ATT_SQUADRA[sq] = mescola(ATT_SQUADRA_PURA[sq], misAtt.media, misAtt.n);
+  });
 }
 
 /* Media voto nelle giornate in cui gioca, SOLO dalla quotazione — non sa ancora nulla di come
@@ -445,7 +481,7 @@ function calcolaMvSquadre(){
    il modificatore riguarda loro. */
 function mvPura(p){
   if(!p || (p.r!=='P' && p.r!=='D')) return null;
-  const base = MV_SQUADRA[p.s];
+  const base = MV_SQUADRA_PURA[p.s];
   if(base==null) return null;
   const z = (p.r==='D' && p.z) ? (MV_ZONA[p.z]||null) : null;
   const pari = LISTONE.filter(x=> x.s===p.s && x.r===p.r);
@@ -551,7 +587,7 @@ const MALUS_FISSO = 0.10;         // ammonizioni e simili, forfettario
    fantacalcio classico ogni gol subito vale -1, ed e' il motivo per cui la fantamedia di
    un portiere sta sotto quella di ogni altro ruolo. */
 function golSubitiAttesi(sq){
-  const b = MV_SQUADRA[sq];
+  const b = MV_SQUADRA_PURA[sq];
   if(b==null) return 1.35;
   const t = (b - MV_MIN)/(MV_MAX - MV_MIN);      // 0 = difesa peggiore, 1 = migliore
   return 1.75 - 0.85*t;
@@ -569,7 +605,7 @@ function fantamediaStimata(p){
   }else{
     /* Per C e A il voto base conta poco: quello che sposta e' il bonus. Si parte da 6 con
        un piccolo aggiustamento per la forza della squadra. */
-    const b = MV_SQUADRA[p.s];
+    const b = MV_SQUADRA_PURA[p.s];
     voto = 6.0 + (b==null ? 0 : (b - 5.95)*0.5);
   }
   if(voto==null) voto = 6.0;
@@ -1805,15 +1841,17 @@ el('#btnSettings').addEventListener('click', apriSettings);
 el('#btnRicarica').addEventListener('click', async ()=>{
   const ok = await caricaProbabili(true);
   await caricaStorico();
+  aggiornaForzaSquadre();
   render(); toast(ok ? 'Dati aggiornati' : 'Dati non raggiungibili');
 });
 el('#overlay').addEventListener('click', chiudiSheet);
 
 carica();
 calcolaMvSquadre();
+aggiornaForzaSquadre();    // popola subito MV_SQUADRA/ATT_SQUADRA (= le pure finche' STORICO e' vuoto)
 caricaProbabili(false)
   .then(()=> { render(); return caricaStorico(); })
-  .then(()=> render());
+  .then(()=> { aggiornaForzaSquadre(); render(); });
 caricaCostanti().then(()=> render());
 render();
 

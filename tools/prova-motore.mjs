@@ -41,6 +41,8 @@ function pezzo(nome, tipo = 'function') {
 const sorgente = [
   "const ROLE_ORDER = ['P','D','C','A'];",
   'const MV_MIN = 5.75, MV_MAX = 6.15, MV_AGG_MAX = 0.12;',
+  'let MV_SQUADRA_PURA = {};',
+  'let ATT_SQUADRA_PURA = {};',
   'let MV_SQUADRA = {};',
   'let ATT_SQUADRA = {};',
   /* STORICO vuoto: zero giornate reali, come l'app all'avvio prima che caricaStorico() giri.
@@ -57,13 +59,14 @@ const sorgente = [
   pezzo('MOD_RIF', 'const'), pezzo('MOD_PESO', 'const'), pezzo('N_SIM', 'const'),
   pezzo('PESO_PRIOR_STAGIONE', 'const'),
   pezzo('DECADIMENTO_FORMA', 'const'), pezzo('pesoForma'), pezzo('mediaPesataForma'),
-  pezzo('normalizzaSquadre'), pezzo('calcolaMvSquadre'), pezzo('mvPura'), pezzo('mescola'),
+  pezzo('normalizzaSquadre'), pezzo('calcolaMvSquadre'), pezzo('misuraGruppo'),
+  pezzo('aggiornaForzaSquadre'), pezzo('mvPura'), pezzo('mescola'),
   pezzo('votoMisurato'), pezzo('mvStimata'), pezzo('golSubitiAttesi'), pezzo('fantamediaStimata'),
   pezzo('rendimento'), pezzo('fantamediaAttesa'),
   pezzo('CASA_BONUS', 'const'), pezzo('PESO_AVVERSARIO', 'const'), pezzo('rettificaPartita'),
   pezzo('datiGiornata'), pezzo('tassoSubentro'), pezzo('certezza'), pezzo('contributoAtteso'),
   pezzo('scegliUndici'), pezzo('simula'), pezzo('valuta'), pezzo('classificaModuli'),
-  'calcolaMvSquadre();',
+  'calcolaMvSquadre(); aggiornaForzaSquadre();',
   'return { fantamediaAttesa, certezza, contributoAtteso, rettificaPartita, scegliUndici, valuta, classificaModuli, LIS };'
 ].join('\n\n');
 

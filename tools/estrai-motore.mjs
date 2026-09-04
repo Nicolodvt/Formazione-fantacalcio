@@ -28,8 +28,8 @@ export function motorePuro(radice) {
 
   const sorgente = [
     'const MV_MIN = 5.75, MV_MAX = 6.15, MV_AGG_MAX = 0.12;',
-    'let MV_SQUADRA = {};',
-    'let ATT_SQUADRA = {};',
+    'let MV_SQUADRA_PURA = {};',
+    'let ATT_SQUADRA_PURA = {};',
     p('MV_ZONA', 'const'),
     p('BONUS_MAX', 'const'),
     p('BONUS_CURVA', 'const'),
@@ -41,7 +41,7 @@ export function motorePuro(radice) {
     p('golSubitiAttesi'),
     p('fantamediaStimata'),
     'calcolaMvSquadre();',
-    'return { fantamediaStimata, mvPura, MV_SQUADRA };'
+    'return { fantamediaStimata, mvPura, MV_SQUADRA: MV_SQUADRA_PURA };'
   ].join('\n\n');
 
   const motore = new Function('LISTONE', sorgente)(LISTONE);
