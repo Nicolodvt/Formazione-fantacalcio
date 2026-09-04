@@ -143,6 +143,18 @@
     text-overflow:ellipsis; margin-top:2px; }
   .slot .sq{ font-size:9.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  /* Squadra propria + avversario sulla stessa riga, col pallino che distingue casa/trasferta
+     anche senza leggere il testo: pieno e acceso per la partita in casa, vuoto per la
+     trasferta. La combinazione pallino+colore e' ridondante col testo "vs"/"@" apposta: chi
+     guarda di corsa legge il pallino, chi vuole la certezza legge la lettera. */
+  .slot .match{ display:flex; align-items:center; justify-content:center; gap:3px;
+    font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.2px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .slot .match .dot{ width:5px; height:5px; border-radius:50%; flex:0 0 auto; }
+  .slot .match.casa .dot{ background:var(--pos); box-shadow:0 0 4px rgba(67,201,138,.7); }
+  .slot .match.trasferta .dot{ background:transparent; border:1px solid var(--muted); }
+  .slot .match .vs{ opacity:.7; }
+  .slot .match b{ color:var(--text-dim); font-weight:700; }
   .slot .fm{ font-size:12.5px; font-weight:700; margin-top:2px; }
   .slot .cz{ font-size:9.5px; color:var(--muted); }
   .slot.vuoto{ background:rgba(0,0,0,.25); border-style:dashed; color:var(--muted); }
@@ -868,13 +880,17 @@ function flagHtml(id){
   return h;
 }
 
-/* "vs ATALANTA" non ci sta in una casella del campo. Si abbrevia a tre lettere, con la @ per
-   la trasferta: "@ATA" si legge a colpo d'occhio e occupa quanto il nome della squadra. */
-function avversarioBreve(l){
-  if(!PROB || !PROB.squadre[l.s]) return l.s;
+const breve3 = (s) => s.slice(0,3).toUpperCase();
+
+/* Squadra propria + avversario, non solo l'avversario: la squadra la sai gia in astratto, ma
+   vederla scritta accanto all'avversario e' quello che permette di leggere "chi contro chi" in
+   un solo sguardo, senza dover ricordare a memoria dove gioca ciascuno dei tuoi 25. Il pallino
+   pieno/vuoto distingue casa e trasferta anche senza leggere il testo. */
+function infoPartita(l){
+  if(!PROB || !PROB.squadre[l.s]) return null;
   const sq = PROB.squadre[l.s];
-  if(!sq.avversario) return l.s;
-  return (sq.inCasa ? '' : '@') + sq.avversario.slice(0,3).toUpperCase();
+  if(!sq.avversario) return null;
+  return { propria: breve3(l.s), avversario: breve3(sq.avversario), inCasa: sq.inCasa };
 }
 
 function slotHtml(id, ruolo){
@@ -883,12 +899,20 @@ function slotHtml(id, ruolo){
   }
   const l = LIS[id], c = certezza(id), fm = fantamediaAttesa(l);
   const cls = 'slot ' + l.r + (c<0.4?' rischio':'') + (S.bloccati[id]?' bloccato':'');
+  const partita = infoPartita(l);
+  /* Squadra propria + avversario + pallino casa/trasferta, tutto su una riga sola: e' quello
+     che permette di leggere "chi contro chi" senza aprire la scheda. Se manca il dato di
+     giornata si ripiega sulla sola squadra, come prima. */
+  const rigaPartita = partita
+    ? '<div class="match '+(partita.inCasa?'casa':'trasferta')+'" title="'+
+        (partita.inCasa?'in casa con ':'in trasferta a ')+esc(partita.avversario)+'">' +
+        '<span class="dot"></span>'+esc(partita.propria)+
+        '<span class="vs">'+(partita.inCasa?'vs':'@')+'</span>'+
+        '<b>'+esc(partita.avversario)+'</b></div>'
+    : '<div class="sq">'+esc(l.s)+'</div>';
   return '<div class="'+cls+'" data-slot="'+id+'">' +
     '<div class="nm">'+esc(l.n)+'</div>' +
-    /* Sul campo si mostra CONTRO CHI gioca, non la sua squadra: la squadra la sai gia, e
-       l'avversario e l'informazione che ti fa decidere se schierarlo. Fuori casa si segna
-       con la @, che in una casella da 80px costa un carattere invece di sei. */
-    '<div class="sq">'+esc(avversarioBreve(l))+'</div>' +
+    rigaPartita +
     '<div class="fm">'+fm.toFixed(2)+'</div>' +
     '<div class="cz-bar '+classeCz(c)+'"><i style="width:'+Math.round(c*100)+'%"></i></div>' +
     '<div class="cz">'+Math.round(c*100)+'%</div>' +
