@@ -7,6 +7,24 @@ sola. Traguardo: **4ª giornata**.
 Progetto separato dall'app asta, che vive nella cartella superiore. Quella serve a *comprare* ed è
 finita lunedì; questa serve a *schierare* e deve reggere 38 giornate.
 
+## ⚠️ Regola di lavoro corrente: si sviluppa su `dev`, non su `main`
+
+**Dal 04/09/2026, dopo l'incidente dei crediti Netlify.** `main` è collegato in continuous
+deployment: ogni push ci fa partire una build di produzione, e GitHub Actions ha una quota
+mensile di minuti. Una notte di lavoro autonomo in loop ha fatto push ripetuti su `main` a ogni
+piccolo commit, bruciando **150 crediti Netlify in poche ore**. I build di produzione sono stati
+**fermati manualmente** dall'utente.
+
+Finché non viene tolta esplicitamente, vale questa regola:
+- Si lavora **sempre su branch `dev`**, mai commit diretti su `main`.
+- Push su `dev` solo a fine sessione o a milestone, non ad ogni modifica.
+- **Mai** mergiare `dev` → `main`, **mai** riattivare i build Netlify, **mai**
+  `netlify deploy`/login/config, **mai** push su `main` — nemmeno per "provare online" — senza
+  che l'utente lo chieda esplicitamente *in quella sessione*. Un'autorizzazione data prima non
+  vale più dopo questa nota.
+- Quando l'utente dice di essere pronto a pubblicare: merge `dev` → `main`, poi si decide insieme
+  se riattivare i build automatici o fare un deploy manuale singolo.
+
 ## File
 
 - `index.html` — l'app. Single-file, stessa filosofia dell'asta: CSS in `<style>`, listone in
