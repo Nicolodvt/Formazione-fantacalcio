@@ -386,7 +386,8 @@ const MOD_PESO = 4.0;             // fantapunti per ogni punto pieno di media so
    ======================================================================================= */
 
 const MV_MIN = 5.75, MV_MAX = 6.15, MV_AGG_MAX = 0.12;
-let MV_SQUADRA = {};
+let MV_SQUADRA = {};     // forza DIFENSIVA per squadra (portiere + migliori difensori)
+let ATT_SQUADRA = {};    // forza OFFENSIVA per squadra (migliori centrocampisti e attaccanti)
 
 /* Correzione posizionale: il modificatore conta il VOTO, non i bonus, quindi la quotazione
    di un esterno e' gonfiata da gol e assist che al modificatore non servono. */
@@ -396,25 +397,46 @@ const MV_ZONA = {
   'Terzino sx':{off:-0.04, smorza:0.7}, 'Terzino dx':{off:-0.04, smorza:0.7}
 };
 
+/* Da un indice grezzo per squadra (piu alto = piu forte) a un voto MV_MIN..MV_MAX: meta dal
+   rango (spazia le squadre in modo uniforme), meta dal valore normalizzato (non schiaccia la
+   meta classifica). Condivisa fra forza difensiva e offensiva: stessa scala per entrambe,
+   cosi un punto di ATT_SQUADRA e un punto di MV_SQUADRA si possono confrontare direttamente
+   in rettificaPartita() piu sotto. */
+function normalizzaSquadre(idx){
+  const squadre = Object.keys(idx);
+  const ord = squadre.slice().sort((a,b)=> idx[a]-idx[b]);
+  const vals = squadre.map(sq=>idx[sq]);
+  const vmin = Math.min.apply(null,vals), vmax = Math.max.apply(null,vals);
+  const out = {};
+  ord.forEach((sq,i)=>{
+    const pctRango = ord.length>1 ? i/(ord.length-1) : 0.5;
+    const pctValore = (vmax>vmin) ? (idx[sq]-vmin)/(vmax-vmin) : 0.5;
+    out[sq] = MV_MIN + (MV_MAX-MV_MIN)*(0.5*pctRango + 0.5*pctValore);
+  });
+  return out;
+}
+
 function calcolaMvSquadre(){
-  const idx = {}, squadre = [];
+  const idxDif = {}, idxAtt = {}, squadre = [];
   LISTONE.forEach(p=>{ if(squadre.indexOf(p.s)===-1) squadre.push(p.s); });
   squadre.forEach(sq=>{
     const D = LISTONE.filter(p=>p.s===sq && p.r==='D').sort((a,b)=>b.q-a.q).slice(0,4);
     const G = LISTONE.filter(p=>p.s===sq && p.r==='P').sort((a,b)=>b.q-a.q).slice(0,1);
     const mD = D.length ? D.reduce((s,x)=>s+x.q,0)/D.length : 0;
     const mP = G.length ? G[0].q : 0;
-    idx[sq] = 0.25*mP + 0.75*mD;      // stessi pesi del modificatore
+    idxDif[sq] = 0.25*mP + 0.75*mD;      // stessi pesi del modificatore
+
+    /* Stessa idea per l'attacco: i migliori centrocampisti e attaccanti, quotazione come
+       proxy di forza (la quotazione gia incorpora l'attesa del mercato su chi segna e chi
+       assiste). Pesato verso gli attaccanti: sono loro il primo indiziato del gol. */
+    const A = LISTONE.filter(p=>p.s===sq && p.r==='A').sort((a,b)=>b.q-a.q).slice(0,2);
+    const C = LISTONE.filter(p=>p.s===sq && p.r==='C').sort((a,b)=>b.q-a.q).slice(0,3);
+    const mA = A.length ? A.reduce((s,x)=>s+x.q,0)/A.length : 0;
+    const mC = C.length ? C.reduce((s,x)=>s+x.q,0)/C.length : 0;
+    idxAtt[sq] = (mA && mC) ? 0.65*mA + 0.35*mC : (mA || mC || 0);
   });
-  const ord = squadre.slice().sort((a,b)=> idx[a]-idx[b]);
-  const vals = squadre.map(sq=>idx[sq]);
-  const vmin = Math.min.apply(null,vals), vmax = Math.max.apply(null,vals);
-  MV_SQUADRA = {};
-  ord.forEach((sq,i)=>{
-    const pctRango = ord.length>1 ? i/(ord.length-1) : 0.5;
-    const pctValore = (vmax>vmin) ? (idx[sq]-vmin)/(vmax-vmin) : 0.5;
-    MV_SQUADRA[sq] = MV_MIN + (MV_MAX-MV_MIN)*(0.5*pctRango + 0.5*pctValore);
-  });
+  MV_SQUADRA = normalizzaSquadre(idxDif);
+  ATT_SQUADRA = normalizzaSquadre(idxAtt);
 }
 
 /* Media voto nelle giornate in cui gioca, SOLO dalla quotazione — non sa ancora nulla di come
@@ -453,6 +475,34 @@ function mvPura(p){
    piu tempo prima di fidarsi dei dati piu della stima. */
 const PESO_PRIOR_STAGIONE = 10;
 
+/* L'ANDAMENTO CONTA PIU DELLA MEDIA PIATTA. Un giocatore in un momento di forma nelle ultime
+   giornate non e la sua media di inizio stagione: le giornate piu vicine a quella che deve
+   arrivare pesano di piu' di quelle lontane, invece di valere tutte uguale. Ogni giornata
+   indietro nel tempo pesa l'85% di quella successiva — dimezza il peso ogni 4-5 giornate, un
+   compromesso deliberatamente prudente: abbastanza per far emergere un giocatore in un vero
+   momento di forma, non cosi' aggressivo da far ballare tutto per una singola prestazione
+   fuori scala (con 2 giornate come oggi la differenza e' comunque minima: e' con la stagione
+   avviata che questo comincia a contare davvero). */
+const DECADIMENTO_FORMA = 0.85;
+
+function pesoForma(giornata){
+  if(!PROB || PROB.giornata==null) return 1;
+  const distanza = Math.max(0, PROB.giornata - giornata - 1);
+  return Math.pow(DECADIMENTO_FORMA, distanza);
+}
+
+/* Media pesata per la forma di un campo di STORICO ('voto' o 'fantavoto'), sulle sole voci
+   che ce l'hanno valorizzato. Condivisa da votoMisurato() e rendimento() sotto, cosi le due
+   medie (voto puro per il modificatore, fantavoto coi bonus per la formazione) invecchiano
+   nello stesso identico modo. */
+function mediaPesataForma(voci, campo){
+  const buone = voci.filter(x=> x[campo] != null);
+  if(!buone.length) return {media:null, n:0};
+  let sp = 0, sw = 0;
+  buone.forEach(x=>{ const w = pesoForma(x.giornata); sp += x[campo]*w; sw += w; });
+  return { media: sw ? sp/sw : null, n: buone.length };
+}
+
 function mescola(stima, misurato, n){
   if(stima==null) return misurato;
   if(misurato==null || !n) return stima;
@@ -464,9 +514,7 @@ function mescola(stima, misurato, n){
 function votoMisurato(id){
   const v = STORICO[id];
   if(!v || !v.length) return {media:null, n:0};
-  const conVoto = v.filter(x=> x.voto != null);
-  if(!conVoto.length) return {media:null, n:0};
-  return { media: conVoto.reduce((s,x)=> s+x.voto, 0)/conVoto.length, n: conVoto.length };
+  return mediaPesataForma(v, 'voto');
 }
 
 /* Versione che il resto dell'app usa davvero: la pura stima, mescolata con quanto misurato
@@ -548,6 +596,45 @@ function fantamediaAttesa(p){
 }
 
 /* =======================================================================================
+   MODELLO 4 — LA PROSSIMA PARTITA
+   fantamediaAttesa() dice quanto un giocatore rende IN MEDIA. Restava fuori la domanda che
+   conta di piu' la domenica: contro CHI gioca, e se in CASA o in TRASFERTA. Qui sotto si
+   traduce in un piccolo aggiustamento, sommato al numero medio — non un moltiplicatore: un
+   giocatore forte contro un avversario forte resta un giocatore forte, l'avversario sposta
+   l'ago, non ribalta il giudizio.
+
+   Coefficienti scelti a intuito, DICHIARATAMENTE: con 2-3 giornate di campionato non c'e
+   ancora abbastanza campo per tararli sui risultati veri (lo stesso limite che vale per
+   BONUS_MAX e PESO_PRIOR_STAGIONE). Tenuti piccoli apposta per questo. Da rivedere con
+   taratura.mjs quando ci saranno piu' giornate — vedi "Da fare" in CLAUDE.md.
+   ======================================================================================= */
+
+const CASA_BONUS = 0.08;          // vantaggio del fattore campo: stima prudente, non misurata
+const PESO_AVVERSARIO = 1.4;      // quanto pesa la forza dell'avversario sul verdetto finale
+
+/* Quanto la prossima partita sposta la resa attesa di un giocatore, in fantapunti.
+   P/D: conta la forza OFFENSIVA dell'avversario (contro un attacco forte ci si aspetta di
+   subire di piu', quindi voto peggiore). C/A: conta la forza DIFENSIVA dell'avversario
+   (contro una difesa debole ci si aspetta di segnare/assistere di piu'). */
+function rettificaPartita(p){
+  if(!p || !PROB || !PROB.squadre[p.s]) return 0;
+  const sq = PROB.squadre[p.s];
+  if(!sq.avversario) return 0;
+
+  let d = sq.inCasa ? CASA_BONUS : -CASA_BONUS;
+  const centro = (MV_MIN+MV_MAX)/2;
+
+  if(p.r==='P' || p.r==='D'){
+    const attAvv = ATT_SQUADRA[sq.avversario];
+    if(attAvv!=null) d -= PESO_AVVERSARIO * (attAvv - centro);
+  }else{
+    const difAvv = MV_SQUADRA[sq.avversario];
+    if(difAvv!=null) d += PESO_AVVERSARIO * (centro - difAvv);
+  }
+  return d;
+}
+
+/* =======================================================================================
    MODELLO 3 — CERTEZZA DI PRENDERE VOTO
    Separata dalla resa di proposito: sono due domande diverse, e mescolarle in un numero
    solo nasconde il caso peggiore (il fortissimo che pero' non gioca).
@@ -569,6 +656,20 @@ function datiGiornata(id){
   };
 }
 
+/* CONDIZIONE: quanto spesso e' entrato dalla panchina nelle ultime presenze vere, invece di
+   partire titolare. Un segnale che il dato della settimana (titolare/pct) non cattura da
+   solo: un allenatore che continua a farlo entrare a gara in corso, nonostante le probabili
+   lo dessero "titolare", di solito lo sta ancora gestendo (rientro da un problema, minutaggio
+   contato) piu' di quanto un singolo dato settimanale lasci intuire. null con troppo poche
+   presenze per dire qualcosa (serve la stagione avviata, non i primi turni). */
+function tassoSubentro(id){
+  const v = STORICO[id];
+  if(!v || !v.length) return null;
+  const recenti = v.filter(x=> x.fantavoto != null).slice(-5);
+  if(recenti.length < 2) return null;
+  return recenti.filter(x=> x.subentrato).length / recenti.length;
+}
+
 function certezza(id){
   const ov = S.override[id];
   if(ov!=null) return ov;                       // il giudizio dell'utente vince sempre
@@ -588,8 +689,14 @@ function certezza(id){
   }else if(d.prob){
     p = (d.prob.pct==null ? (d.prob.titolare?0.85:0.20) : d.prob.pct/100);
     /* data-status="warn" e' un dubbio dichiarato dalla fonte, ma le riserve ce l'hanno
-       tutte per definizione: vale come segnale solo sui titolari. */
-    if(d.prob.incerto && d.prob.titolare) p *= 0.85;
+       tutte per definizione: vale come segnale solo sui titolari. Lo sconto base e' 0.85;
+       se nelle ultime presenze e' entrato spesso dalla panchina nonostante fosse "titolare"
+       sulla carta, il dubbio pesa di piu' (fino a 0.70 per chi e' sempre subentrato). Senza
+       abbastanza presenze per saperlo, resta lo sconto base di sempre. */
+    if(d.prob.incerto && d.prob.titolare){
+      const tasso = tassoSubentro(id);
+      p *= (tasso==null) ? 0.85 : (0.85 - 0.15*tasso);
+    }
   }else{
     /* La sua squadra gioca ma lui non e' tra i 24 convocabili elencati. Non e' un buco nei
        dati: e' l'informazione che non giochera'. */
@@ -635,7 +742,7 @@ const N_SIM = 1500;
 function contributoAtteso(id){
   const l = LIS[id];
   const fm = fantamediaAttesa(l);
-  return fm == null ? 0 : certezza(id) * fm;
+  return fm == null ? 0 : certezza(id) * (fm + rettificaPartita(l));
 }
 
 function scegliUndici(modulo){
@@ -716,9 +823,10 @@ function simula(titolari, panchina){
   const mvP = [], mvD = [];
   for(const id of inCampo){
     const l = LIS[id];
-    punti += fantamediaAttesa(l);
-    if(l.r==='P'){ const v=mvStimata(l); if(v!=null) mvP.push(v); }
-    if(l.r==='D'){ const v=mvStimata(l); if(v!=null) mvD.push(v); }
+    const rp = rettificaPartita(l);
+    punti += fantamediaAttesa(l) + rp;
+    if(l.r==='P'){ const v=mvStimata(l); if(v!=null) mvP.push(v+rp); }
+    if(l.r==='D'){ const v=mvStimata(l); if(v!=null) mvD.push(v+rp); }
   }
   /* Chi resta senza voto e senza sostituto vale 0: e' il buco che il quarto difensore evita. */
 
@@ -898,6 +1006,14 @@ async function caricaStorico(){
     if(raw) STORICO = JSON.parse(raw) || {};
   }catch(e){ STORICO = {}; }
 
+  /* Migrazione: 'subentrato' e' un campo nuovo. Chi aveva gia uno storico salvato prima di
+     questa modifica ce l'ha senza, e "gia in storico" lo terrebbe cosi per sempre - il
+     controllo sotto salta le giornate gia presenti, non le rifà mai. Si azzera una volta
+     sola: il ridownload che segue e economico (pochi file JSON piccoli). */
+  for(const id in STORICO){
+    if(STORICO[id].some(v=> typeof v.subentrato === 'undefined')){ STORICO = {}; break; }
+  }
+
   const ultima = (PROB && PROB.giornata) ? PROB.giornata - 1 : 0;
   if(ultima < 1) return;
 
@@ -915,7 +1031,8 @@ async function caricaStorico(){
       for(const id in d.giocatori){
         const x = d.giocatori[id];
         (STORICO[id] || (STORICO[id] = [])).push({
-          giornata: g, voto: x.voto, fantavoto: x.fantavoto, senzaVoto: !!x.senzaVoto
+          giornata: g, voto: x.voto, fantavoto: x.fantavoto, senzaVoto: !!x.senzaVoto,
+          subentrato: !!x.subentrato   // segnale di condizione: entrato dalla panchina, non partito titolare
         });
       }
       cambiato = true;
@@ -935,7 +1052,7 @@ function rendimento(id){
   return {
     presenze: conVoto.length,
     senzaVoto: v.length - conVoto.length,
-    media: conVoto.reduce((s,x)=> s+x.fantavoto, 0)/conVoto.length,
+    media: mediaPesataForma(v, 'fantavoto').media,   // le giornate recenti pesano di piu'
     elenco: v
   };
 }
@@ -1207,7 +1324,9 @@ function chiudiSheet(){
 
 function schedaGiocatore(id){
   const l = LIS[id], d = datiGiornata(id);
-  const c = certezza(id), fm = fantamediaAttesa(l);
+  const c = certezza(id), fmBase = fantamediaAttesa(l);
+  const rp = rettificaPartita(l);
+  const fm = fmBase + rp;    // il numero vero che decide la formazione (vedi contributoAtteso)
   const mv = mvStimata(l);
 
   let stato = 'Nessun dato di giornata';
@@ -1220,16 +1339,37 @@ function schedaGiocatore(id){
 
   h += '<div class="info-grid">' +
     '<div class="info-cell"><div class="k">Fantamedia attesa</div><div class="v">'+fm.toFixed(2)+'</div>' +
-      '<div class="n">quando gioca</div></div>' +
+      '<div class="n">quando gioca, con la prossima partita gia considerata</div></div>' +
     '<div class="info-cell"><div class="k">Prende voto</div><div class="v">'+Math.round(c*100)+'%</div>' +
       '<div class="n">'+esc(stato)+'</div></div>';
 
   if(mv!=null){
-    h += '<div class="info-cell"><div class="k">Media voto</div><div class="v">'+mv.toFixed(2)+'</div>' +
+    h += '<div class="info-cell"><div class="k">Media voto</div><div class="v">'+(mv+rp).toFixed(2)+'</div>' +
          '<div class="n">conta per il modificatore</div></div>';
   }
   h += '<div class="info-cell"><div class="k">Quotazione</div><div class="v">'+l.q+'</div>' +
        '<div class="n">'+(l.pz?esc(l.pz):'nessun piazzato')+'</div></div>';
+
+  /* Da dove viene l'aggiustamento qui sopra: mai un numero solo che nasconde come ci si e
+     arrivati. fmBase e' la resa media (stagione + stima); rp e' quanto la sposta la partita
+     specifica di questa settimana. */
+  if(PROB && PROB.squadre[l.s] && PROB.squadre[l.s].avversario){
+    const sq = PROB.squadre[l.s];
+    const cent = (MV_MIN+MV_MAX)/2, soglia = (MV_MAX-MV_MIN)*0.15;
+    const perRuoloP_D = (l.r==='P' || l.r==='D');
+    const rifAvv = perRuoloP_D ? ATT_SQUADRA[sq.avversario] : MV_SQUADRA[sq.avversario];
+    const cosa = perRuoloP_D ? 'attacco' : 'difesa';
+    let giudizio = 'nella media';
+    if(rifAvv!=null){
+      if(rifAvv > cent+soglia) giudizio = 'forte';
+      else if(rifAvv < cent-soglia) giudizio = 'debole';
+    }
+    const segnoRp = rp>=0 ? '+' : '';
+    h += '<div class="info-cell wide"><div class="k">Prossima partita</div>' +
+      '<div class="v">media '+fmBase.toFixed(2)+' &rarr; '+segnoRp+rp.toFixed(2)+'</div>' +
+      '<div class="n">'+(sq.inCasa?'in casa contro ':'in trasferta a ')+esc(sq.avversario)+
+      ' ('+cosa+' '+giudizio+')</div></div>';
+  }
 
   /* Il rendimento vero accanto alla stima. Lo scarto fra i due si mostra solo da quattro
      giornate in su: su due partite un attaccante che ha segnato una doppietta esce con +8 di
@@ -1242,11 +1382,11 @@ function schedaGiocatore(id){
        sempre da solo senza dire nulla. */
     const scarto = rend.media - fantamediaStimata(l);
     const segno = scarto >= 0 ? '+' : '';
-    h += '<div class="info-cell wide"><div class="k">Rendimento reale</div>' +
+    h += '<div class="info-cell wide"><div class="k">Rendimento reale <span class="note" style="font-weight:400">(pesato sulle giornate recenti)</span></div>' +
       '<div class="v">' + rend.media.toFixed(2) + ' su ' + rend.presenze +
       (rend.presenze===1 ? ' presenza' : ' presenze') + '</div>' +
       '<div class="n">' + rend.elenco.map(x=>
-        'G'+x.giornata+' '+(x.fantavoto==null ? 's.v.' : x.fantavoto.toFixed(1))).join(' · ') +
+        'G'+x.giornata+' '+(x.fantavoto==null ? 's.v.' : x.fantavoto.toFixed(1))+(x.subentrato?' (sub)':'')).join(' · ') +
       (rend.presenze >= 4
         ? ' — rispetto alla stima iniziale ' + segno + scarto.toFixed(2) +
           ' (la fantamedia attesa qui sopra ne tiene gia\' conto)'
