@@ -843,6 +843,15 @@ function flagHtml(id){
   return h;
 }
 
+/* "vs ATALANTA" non ci sta in una casella del campo. Si abbrevia a tre lettere, con la @ per
+   la trasferta: "@ATA" si legge a colpo d'occhio e occupa quanto il nome della squadra. */
+function avversarioBreve(l){
+  if(!PROB || !PROB.squadre[l.s]) return l.s;
+  const sq = PROB.squadre[l.s];
+  if(!sq.avversario) return l.s;
+  return (sq.inCasa ? '' : '@') + sq.avversario.slice(0,3).toUpperCase();
+}
+
 function slotHtml(id, ruolo){
   if(id==null){
     return '<div class="slot vuoto '+ruolo+'"><div class="nm">—</div><div class="sq">manca</div></div>';
@@ -851,7 +860,10 @@ function slotHtml(id, ruolo){
   const cls = 'slot ' + l.r + (c<0.4?' rischio':'') + (S.bloccati[id]?' bloccato':'');
   return '<div class="'+cls+'" data-slot="'+id+'">' +
     '<div class="nm">'+esc(l.n)+'</div>' +
-    '<div class="sq">'+esc(l.s)+'</div>' +
+    /* Sul campo si mostra CONTRO CHI gioca, non la sua squadra: la squadra la sai gia, e
+       l'avversario e l'informazione che ti fa decidere se schierarlo. Fuori casa si segna
+       con la @, che in una casella da 80px costa un carattere invece di sei. */
+    '<div class="sq">'+esc(avversarioBreve(l))+'</div>' +
     '<div class="fm">'+fm.toFixed(2)+'</div>' +
     '<div class="cz-bar '+classeCz(c)+'"><i style="width:'+Math.round(c*100)+'%"></i></div>' +
     '<div class="cz">'+Math.round(c*100)+'%</div>' +
