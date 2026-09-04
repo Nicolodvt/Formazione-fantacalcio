@@ -95,7 +95,14 @@ async function main() {
   catch (e) { console.error('Il secret PUSH_SUBSCRIPTION non e un JSON valido.'); process.exitCode = 1; return; }
 
   const { default: webpush } = await import('web-push');
-  webpush.setVapidDetails('mailto:nikde03@gmail.com', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+  /* Il protocollo Web Push vuole un contatto nel messaggio, per uso dei servizi push in caso
+     di abuso. Un URL pubblico del progetto vale quanto un'email per questo scopo, e con il
+     repository ormai pubblico non mette in giro un indirizzo personale senza motivo. */
+  webpush.setVapidDetails(
+    'https://github.com/Nicolodvt/Formazione-fantacalcio',
+    VAPID_PUBLIC_KEY,
+    VAPID_PRIVATE_KEY
+  );
 
   const oraItaliana = prima.quando.toLocaleString('it-IT', {
     timeZone: 'Europe/Rome', weekday: 'long', day: 'numeric', month: 'long',
