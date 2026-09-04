@@ -2,10 +2,10 @@
 
 **Stato: v0.3 (04/09/2026).** Fasi 0, 1, 2 e 3 chiuse, notifiche push implementate. L'app schiera,
 sceglie il modulo, funziona offline, e la stima si mescola da sola con i voti veri man mano che
-arrivano — sia a livello di singolo giocatore (Fase 3) sia a livello di ruolo, con una
-correzione automatica e smorzata (`RETTIFICA_RUOLO`) che tiene conto anche della prossima
-partita (avversario, casa/trasferta) e della condizione fisica recente. La GitHub Action scarica
-probabili e voti da sola. **Non è ancora online
+arrivano — a livello di singolo giocatore (Fase 3), di ruolo (`RETTIFICA_RUOLO`) e di squadra
+intera (`MV_SQUADRA`/`ATT_SQUADRA`, per la prossima partita: avversario, casa/trasferta) — più
+la condizione fisica recente. La GitHub Action scarica probabili e voti da sola. **Non è ancora
+online
 su Netlify** — una nota precedente lo dava per fatto, era sbagliata: l'utente non se lo ricordava e
 non c'è nessuna traccia di un deploy reale. Resta da fare, apposta, a lavoro finito (vedi
 *Aggiornamenti e crediti Netlify* sotto). Traguardo: **4ª giornata**.
@@ -607,6 +607,48 @@ invariate), `taratura.mjs` (rifattorizzato insieme a `ricalibra.mjs` su un modul
 lo smorzamento, poi ripristinato a un singolo giro pulito prima del commit. Dal vivo nel browser,
 Malen verificato a mano come sopra.
 
+## Le squadre imparano anche loro — MV_SQUADRA/ATT_SQUADRA operative (04/09)
+
+Osservazione mia, chiesta esplicitamente dall'utente dopo che gliel'ho segnalata: la forza delle
+squadre usata dal *Modello 4* (`MV_SQUADRA`, `ATT_SQUADRA`) veniva calcolata una volta sola dalle
+quotazioni di inizio stagione e non si aggiornava mai più — una squadra che si rivela più forte o
+più debole del previsto restava giudicata su agosto fino a maggio, mentre singolo giocatore
+(Fase 3) e ruolo (`RETTIFICA_RUOLO`) già si correggevano da soli.
+
+**La priorità dell'utente, dichiarata esplicitamente**, e il motivo per cui questo non è stato
+rimandato come gli altri due punti lasciati fuori: *"l'obiettivo non è avere un modello perfetto
+all'ultima giornata [...] l'obiettivo sarebbe costruirmi un oracolo da consultare prima di
+schierare ogni formazione [già dalla prossima giornata]"*. Un miglioramento che si attiva subito
+(con 2 giornate già dice qualcosa) vale più di uno che aspetta fine stagione per convergere.
+
+**Come funziona**: stesso schema prior→dati di tutto il resto, applicato ora alla squadra
+intera invece che al singolo giocatore.
+- `MV_SQUADRA_PURA`/`ATT_SQUADRA_PURA` (rinominate da `MV_SQUADRA`/`ATT_SQUADRA`, calcolo
+  invariato) restano il *prior*, calcolate una volta da `calcolaMvSquadre()`.
+- `misuraGruppo()` (nuova) applica `mediaPesataForma()` — già esistente per il singolo
+  giocatore — a un **gruppo** di giocatori insieme: la media pesata sulla forma recente di
+  tutti i difensori/portiere di una squadra (voto puro, per `MV_SQUADRA`) o di tutti i suoi
+  centrocampisti/attaccanti (fantavoto coi bonus, per `ATT_SQUADRA`).
+- `aggiornaForzaSquadre()` (nuova) mescola pura e misurata con `mescola()`, per ogni squadra, e
+  scrive il risultato in `MV_SQUADRA`/`ATT_SQUADRA` — questi restano i nomi che
+  `rettificaPartita()` e la scheda giocatore già usavano, **zero modifiche ai punti di
+  chiamata**. Va richiamata ogni volta che `STORICO` cambia, non solo all'avvio: aggiunta dopo
+  `caricaStorico()` sia nella sequenza di apertura sia nel bottone "Aggiorna".
+
+**Attenzione alla contaminazione, stessa disciplina di sempre**: `mvPura()`, `golSubitiAttesi()`
+e il ramo C/A di `fantamediaStimata()` leggono esplicitamente le versioni `_PURA` — dovevano
+restare non toccate da dati reali per lo stesso motivo per cui `fantamediaStimata()` stessa
+doveva restarlo (altrimenti `taratura.mjs` diventa un confronto circolare). `tools/estrai-motore.mjs`
+e `tools/prova-motore.mjs` aggiornati di conseguenza.
+
+**Verificato dal vivo, non solo con gli strumenti**: dopo G1+G2, Atalanta passa da "difesa nella
+media" e "attacco nella media" a **"difesa forte"** e **"attacco forte"** — una squadra che si
+sta rivelando più forte del previsto su entrambe le fasi, esattamente il caso che questo pezzo
+doveva coprire. Malen (Roma, in casa contro Atalanta) passa da +0.05 a **-0.01**: il fattore
+campo non basta più a compensare un avversario che i dati dicono più forte della quotazione.
+Svilar, stesso avversario, da un aggiustamento quasi nullo a **-0.37**. `node --check`,
+`controlla.mjs`, `prova-motore.mjs`, `taratura.mjs` puliti prima e dopo.
+
 ## Esplorazione grafica in Figma (04/09)
 
 Su richiesta esplicita dell'utente ho ricostruito in Figma campo, testata, tab, KPI e righe della
@@ -659,6 +701,11 @@ cancellazione non è mai avvenuta.
   `CASA_BONUS`/`PESO_AVVERSARIO` (serve un calendario storico che non esiste ancora) e un
   resoconto "cosa avevo consigliato vs cosa è successo" (feature di fiducia separata, non di
   correzione del modello) — entrambe buone idee per dopo, non decise qui.
+- **Le squadre imparano anche loro**: `MV_SQUADRA`/`ATT_SQUADRA` (Modello 4) non sono più
+  ferme alle quotazioni di agosto, si mescolano con quanto ogni squadra ha reso davvero — vedi
+  la sezione dedicata sopra. Deciso subito, non rimandato come gli altri due punti sopra: priorità
+  dichiarata dall'utente è un aiuto valido già dalla prossima giornata, non un modello perfetto
+  a fine stagione.
 
 **Da fare:**
 1. **Impostare due secret su GitHub** (repository → Settings → Secrets and variables → Actions)
