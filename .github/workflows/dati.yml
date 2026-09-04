@@ -90,6 +90,15 @@ jobs:
           echo "Scarico i voti della giornata $GIORNATA"
           node "tools/fetch-voti.mjs" "$GIORNATA"
 
+      # L'app che impara dalla stagione: confronta la stima pura con tutti i voti reali
+      # scaricati finora e corregge un po' per volta uno scarto sistematico per ruolo, se il
+      # campione e' abbastanza grande da fidarsene (vedi tools/ricalibra.mjs per le soglie e
+      # perche' sono li'). Stesso gate della Action sopra: ha senso solo quando i voti possono
+      # essere appena cambiati.
+      - name: Ricalibrazione del modello
+        if: github.event.schedule == '0 19 * * 2' || github.event.inputs.giornata_voti != ''
+        run: node "tools/ricalibra.mjs"
+
       # Gli scraper riscrivono sempre il campo "generato", quindi senza questo passo la Action
       # committerebbe a ogni giro anche quando i dati non sono cambiati: sei commit a settimana
       # di puro rumore, altrettanti deploy, e una storia git in cui diventa impossibile vedere

@@ -27,51 +27,26 @@
      node tools/taratura.mjs
 */
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { motorePuro } from './estrai-motore.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
 const RADICE = resolve(QUI, '..');
 
-const html = readFileSync(resolve(RADICE, 'index.html'), 'utf8');
-const script = /<script>([\s\S]*?)<\/script>/.exec(html)[1];
-const LISTONE = JSON.parse(/<script id="listone-data"[^>]*>([\s\S]*?)<\/script>/.exec(html)[1]);
-
-/* Estrae dal sorgente dell'app un pezzo di codice delimitato, per nome. */
-function pezzo(nome, tipo = 'function') {
-  const re = tipo === 'function'
-    ? new RegExp('^function ' + nome + '\\([\\s\\S]*?\\n\\}', 'm')
-    : new RegExp('^const ' + nome + ' = [\\s\\S]*?;', 'm');
-  const m = re.exec(script);
-  if (!m) throw new Error('non trovato nel sorgente: ' + nome);
-  return m[0];
-}
-
-/* Ricostruisco l'ambiente minimo di cui quelle funzioni hanno bisogno. */
-const sorgente = [
-  'const MV_MIN = 5.75, MV_MAX = 6.15, MV_AGG_MAX = 0.12;',
-  'let MV_SQUADRA = {};',
-  'let ATT_SQUADRA = {};',
-  pezzo('MV_ZONA', 'const'),
-  pezzo('BONUS_MAX', 'const'),
-  pezzo('BONUS_CURVA', 'const'),
-  pezzo('BONUS_PIAZZATI', 'const'),
-  pezzo('MALUS_FISSO', 'const'),
-  pezzo('normalizzaSquadre'),
-  pezzo('calcolaMvSquadre'),
-  pezzo('mvPura'),
-  pezzo('golSubitiAttesi'),
-  pezzo('fantamediaStimata'),
-  'calcolaMvSquadre();',
-  'return { fantamediaStimata, mvPura, MV_SQUADRA };'
-].join('\n\n');
-
-const motore = new Function('LISTONE', sorgente)(LISTONE);
+const { motore, LISTONE } = motorePuro(RADICE);
 
 /* ---------- dati reali ---------- */
 
-const giornate = [1, 2];
+/* Tutte le giornate disponibili in dati/, non un elenco scritto a mano: altrimenti a ogni
+   nuova giornata scaricata bisognerebbe ricordarsi di tornare qui ad aggiungerla. */
+const giornate = readdirSync(resolve(RADICE, 'dati'))
+  .map(f => /^voti-(\d+)\.json$/.exec(f))
+  .filter(Boolean)
+  .map(m => Number(m[1]))
+  .sort((a, b) => a - b);
+
 const reali = {};          // id -> array di fantavoti effettivi
 for (const g of giornate) {
   const V = JSON.parse(readFileSync(resolve(RADICE, 'dati', `voti-${g}.json`), 'utf8'));

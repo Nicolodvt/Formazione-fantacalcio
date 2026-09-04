@@ -47,6 +47,9 @@ const sorgente = [
      mvStimata()/fantamediaAttesa() (Fase 3) devono ricadere sulla pura stima con dati vuoti —
      e proprio quello che queste prove verificano restando valide senza modificarle. */
   'let STORICO = {};',
+  /* Zero correzione, come l'app all'avvio prima che caricaCostanti() risponda: le prove
+     verificano che il motore resti valido a RETTIFICA_RUOLO tutto a zero, senza modificarle. */
+  'let RETTIFICA_RUOLO = {P:0, D:0, C:0, A:0};',
   'const LIS = {}; LISTONE.forEach(p=> LIS[p.id]=p);',
   pezzo('MV_ZONA', 'const'), pezzo('BONUS_MAX', 'const'), pezzo('BONUS_CURVA', 'const'),
   pezzo('BONUS_PIAZZATI', 'const'), pezzo('MALUS_FISSO', 'const'), pezzo('SUBENTRO', 'const'),
