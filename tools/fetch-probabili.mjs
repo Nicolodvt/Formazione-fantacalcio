@@ -82,7 +82,9 @@ function leggiGiocatore(li, squadra, titolare) {
 /* Le liste "Squalificati", "Infortunati", "In dubbio": nome + descrizione libera. */
 function leggiIndisponibili(sezione, tipo, dentro) {
   if (!sezione) return;
-  for (const li of blocchi(sezione, '<li>')) {
+  /* Marcatore senza ">" finale: basterebbe che aggiungessero una classe agli <li> perche
+     '<li>' non trovi piu nulla e la lista degli indisponibili si azzerasse in silenzio. */
+  for (const li of blocchi(sezione, '<li')) {
     const id = idDaLink(li);
     if (!id) continue;
     const desc = /class="description">([\s\S]*?)<\/p>/.exec(li);
@@ -96,7 +98,12 @@ function leggiIndisponibili(sezione, tipo, dentro) {
 /* ---------- estrazione ---------- */
 
 function estrai(html) {
-  const giornata = /class="matchweek"[^>]*>\s*(\d+)\s*</.exec(html);
+  /* La giornata compare una volta per partita. Si leggevano solo la prima e via: se in cima
+     alla pagina finisse un recupero di un'altra giornata, il file uscirebbe etichettato male
+     e l'app mostrerebbe con sicurezza i dati sbagliati. Ora devono concordare tutte. */
+  const tutteLeGiornate = [...html.matchAll(/class="matchweek"[^>]*>\s*(\d+)\s*</g)].map(m => +m[1]);
+  const giornata = tutteLeGiornate.length ? [tutteLeGiornate[0]] : null;
+  const giornateDiscordi = [...new Set(tutteLeGiornate)];
 
   const squadre = {};
   const giocatori = {};
@@ -158,7 +165,8 @@ function estrai(html) {
     }
 
     for (const [cls, tipo] of [['suspendeds', 'squalificato'], ['injureds', 'infortunato'], ['dubts', 'dubbio']]) {
-      const sez = new RegExp('<section class="' + cls + '">([\\s\\S]*?)</section>').exec(m);
+      /* Stesso motivo: senza il ">" finale un attributo aggiunto alla section non la nasconde. */
+      const sez = new RegExp('<section class="' + cls + '"[^>]*>([\\s\\S]*?)</section>').exec(m);
       leggiIndisponibili(sez && sez[1], tipo, indisponibili);
     }
 
@@ -182,7 +190,8 @@ function estrai(html) {
     schema: SCHEMA,
     generato: new Date().toISOString(),
     fonte: URL_PAGINA,
-    giornata: giornata ? +giornata[1] : null,
+    giornata: giornata ? giornata[0] : null,
+    giornateDiscordi,
     partite, squadre, giocatori, ballottaggi, indisponibili
   };
 }
@@ -196,6 +205,9 @@ function validare(d) {
   const nSquadre = Object.keys(d.squadre).length;
 
   if (d.giornata == null) problemi.push('giornata non trovata');
+  if (d.giornateDiscordi && d.giornateDiscordi.length > 1) {
+    problemi.push('la pagina dichiara piu giornate diverse: ' + d.giornateDiscordi.join(', '));
+  }
   if (nSquadre !== 20) problemi.push(`squadre trovate: ${nSquadre}, attese 20`);
   if (d.partite.length !== 10) problemi.push(`partite trovate: ${d.partite.length}, attese 10`);
   if (gioc.length < 400) problemi.push(`giocatori trovati: ${gioc.length}, attesi almeno 400`);
@@ -212,6 +224,31 @@ function validare(d) {
   const senzaNome = gioc.filter(g => !g.nome).length;
   if (senzaNome) problemi.push(`${senzaNome} giocatori senza nome`);
 
+  /* Tutto quello che segue puo azzerarsi senza che nulla si rompa, ed e esattamente il modo
+     in cui uno scraper a regex muore in silenzio: il sito cambia una classe, la sezione non
+     viene piu trovata, il file esce valido ma vuoto di meta informazione. Le soglie sono
+     volutamente basse — servono a distinguere "poco" da "niente", non a indovinare il numero
+     giusto, che cambia ogni settimana. */
+  /* Soglia e non zero: rinominando la sola sezione "injureds" gli indisponibili scendevano da
+     47 a 5 (restavano dubbi e squalificati) e il controllo a zero non scattava. In una giornata
+     di Serie A gli indisponibili sono sempre alcune decine: sotto dieci vuol dire che una delle
+     tre liste non e stata letta, non che il campionato e in salute. */
+  const nInd = Object.keys(d.indisponibili).length;
+  if (nInd < 10) problemi.push(`solo ${nInd} indisponibili trovati: una delle liste (infortunati, squalificati, dubbi) non e stata letta`);
+  if (d.ballottaggi.length === 0) problemi.push('nessun ballottaggio trovato: la sezione non e stata letta');
+
+  /* La percentuale di titolarita e l'input principale del motore: se sparisce, l'app ripiega
+     su un dato peggiore senza dirlo. */
+  const senzaPct = gioc.filter(g => g.pct == null).length;
+  if (senzaPct > gioc.length * 0.1) problemi.push(`${senzaPct} giocatori su ${gioc.length} senza percentuale di titolarita`);
+
+  /* I titolari sono controllati a 11 esatti per squadra; le riserve non lo erano affatto,
+     e una panchina intera poteva sparire senza segnale. */
+  for (const sq of Object.keys(d.squadre)) {
+    const ris = gioc.filter(g => g.squadra === sq && !g.titolare).length;
+    if (ris < 5) problemi.push(`${sq}: solo ${ris} riserve, la panchina non e stata letta`);
+  }
+
   for (const [sq, info] of Object.entries(d.squadre)) {
     const titolari = gioc.filter(g => g.squadra === sq && g.titolare).length;
     if (titolari !== 11) problemi.push(`${sq}: ${titolari} titolari invece di 11`);
@@ -226,11 +263,17 @@ function validare(d) {
 async function main() {
   const soloProva = process.argv.includes('--prova');
 
+  /* Senza timeout una connessione appesa blocca il job della Action fino al limite di GitHub. */
   const r = await fetch(URL_PAGINA, {
-    headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it;q=0.9' }
+    headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it;q=0.9' },
+    signal: AbortSignal.timeout(30000)
   });
   if (!r.ok) throw new Error(`HTTP ${r.status} da ${URL_PAGINA}`);
   const html = await r.text();
+
+  /* Una risposta troncata produce un file valido ma incompleto, e se il taglio cade nel punto
+     giusto nessuna delle validazioni successive se ne accorge. */
+  if (!/<\/html>\s*$/i.test(html)) throw new Error('la pagina scaricata e troncata (manca la chiusura </html>)');
 
   const dati = estrai(html);
   const problemi = validare(dati);

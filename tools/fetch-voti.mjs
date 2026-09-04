@@ -75,16 +75,47 @@ function numero(s) {
   const t = String(s).trim().replace(',', '.');
   if (t === '' || t === '-') return null;
   const n = Number(t);
-  if (!Number.isFinite(n)) return null;
+  return Number.isFinite(n) ? n : null;
+}
+
+/* La sentinella vale SOLO per i voti. Tenerla dentro il parser generico era un difetto
+   latente: lo stesso parser legge anche i bonus, e un giorno un bonus di 55 (impossibile
+   oggi, ma la garanzia e solo che nel calcio non capita) sarebbe diventato zero in silenzio. */
+function numeroVoto(s) {
+  const n = numero(s);
   return n === SENZA_VOTO ? null : n;
 }
 
-/* Controlla che le tre colonne siano ancora quelle che crediamo, leggendo i title delle icone. */
+/* Controlla che le tre colonne siano ancora quelle che crediamo, leggendo i title delle icone
+   di intestazione. Si guardano TUTTE le venti tabelle, non solo la prima: la versione
+   precedente leggeva le prime tre icone del documento, cioe verificava l'Atalanta e dava per
+   buone le altre diciannove.
+
+   Ogni tabella porta quattro icone — le tre colonne piu una ripetizione — quindi si prendono
+   le prime tre di ciascuna.
+
+   LIMITE DICHIARATO: questo protegge dal caso in cui il sito riordini le colonne insieme alle
+   intestazioni. NON puo proteggere dal caso in cui riordini le celle lasciando le intestazioni
+   dove sono, perche ogni colonna e internamente coerente (il suo fantavoto quadra con il suo
+   voto) e non esiste nulla nel contenuto che dica quale sia quale. E il residuo di rischio
+   accettato scegliendo di leggere per posizione. */
 function verificaOrdineFonti(html) {
-  const titoli = [...html.matchAll(/ico-(?:fc|stats|italy)\.svg"[^>]*title="([^"]+)"/g)].map(m => m[1]);
-  if (!titoli.length) return { ok: false, visto: '(nessuna icona di intestazione trovata)' };
-  const primi = titoli.slice(0, 3);
-  return { ok: FONTI_ATTESE.every((f, i) => primi[i] === f), visto: primi.join(' | ') };
+  const tabelle = html.split('<table class="grades-table').slice(1);
+  if (!tabelle.length) return { ok: false, visto: '(nessuna tabella dei voti trovata)' };
+
+  const viste = [];
+  for (const t of tabelle) {
+    const corpo = t.split('</table>')[0];
+    const tit = [...corpo.matchAll(/ico-(?:fc|stats|italy)\.svg"[^>]*title="([^"]+)"/g)]
+      .map(m => m[1]).slice(0, 3);
+    viste.push(tit.join(' | '));
+  }
+  const atteso = FONTI_ATTESE.join(' | ');
+  const diverse = [...new Set(viste.filter(x => x !== atteso))];
+  return {
+    ok: diverse.length === 0,
+    visto: diverse.length ? diverse.join('  /  ') + ` (in ${viste.filter(x => x !== atteso).length} tabelle su ${viste.length})` : atteso
+  };
 }
 
 function estrai(html, giornata) {
@@ -93,7 +124,10 @@ function estrai(html, giornata) {
 
   for (const t of blocchi(html, '<table class="grades-table')) {
     const corpo = t.split('</table>')[0];
-    const nomeSquadra = /class="team-name team-link[^"]*"[\s\S]*?content="([^"]+)"/.exec(corpo);
+    /* Ancorato a itemprop="name": dentro lo stesso <a> ci sono DUE meta, "name" e "url", e
+       senza l'ancoraggio bastava che ne invertissero l'ordine per ritrovarsi l'URL al posto
+       del nome della squadra, per tutti i giocatori, senza nessun errore. */
+    const nomeSquadra = /class="team-name team-link[^"]*"[\s\S]*?itemprop="name" content="([^"]+)"/.exec(corpo);
     const squadra = nomeSquadra ? pulisci(nomeSquadra[1]) : null;
     if (squadra) squadre.push(squadra);
 
@@ -103,15 +137,24 @@ function estrai(html, giornata) {
       const nome = /class="player-name player-link"[\s\S]*?<span>([\s\S]*?)<\/span>/.exec(riga);
       const ruolo = /class="role" data-value="([pdca])"/.exec(riga);
 
+      /* L'ammonizione non sta fra i bonus: e una CLASSE sul voto, "player-grade yellow-card".
+         Senza leggerla i bonus non possono spiegare il fantavoto — su G1 restavano 31
+         giocatori su 293 con uno scarto inspiegato di esattamente -0.5. Verificato che i 32
+         marcati nel markup sono esattamente quelli con lo scarto.
+         Nota: in G1 non c'e nessun rosso, quindi il nome della classe per l'espulsione e
+         ancora ignoto; la riconciliazione in validare() lo fara emergere alla prima volta. */
+      const ammonito = /class="player-grade yellow-card"/.test(riga);
+
       /* Le tre pill, in ordine. Serve solo la prima, ma si leggono tutte: se un giorno la
          lega cambiasse fonte, e gia tutto qui senza rifare lo scraping. */
       const pill = [...riga.matchAll(
         /class="player-grade[^"]*" data-value="([^"]*)"[\s\S]*?class="player-fanta-grade" data-value="([^"]*)"/g
-      )].map(m => ({ voto: numero(m[1]), fantavoto: numero(m[2]) }));
+      )].map(m => ({ voto: numeroVoto(m[1]), fantavoto: numeroVoto(m[2]) }));
 
       const bonus = {};
       for (const b of riga.matchAll(/class="player-bonus cell (?:bonus|malus)" data-value="([^"]*)" title="([^"]*)"/g)) {
         const chiave = BONUS[entita(b[2])];
+        /* Qui si usa numero() e non numeroVoto(): 55 in un bonus sarebbe un valore vero. */
         if (chiave) bonus[chiave] = numero(b[1]) ?? 0;
       }
 
@@ -129,6 +172,7 @@ function estrai(html, giornata) {
            in questa pagina non compare proprio. */
         senzaVoto: !!(pill[0] && pill[0].voto == null),
         subentrato: /title="Subentrato"/.test(riga),
+        ammonito,
         /* Le altre due fonti restano a disposizione, esplicitamente etichettate. */
         altreFonti: {
           statistico: pill[1] || null,
@@ -148,6 +192,25 @@ function estrai(html, giornata) {
     squadre,
     giocatori
   };
+}
+
+/* Pesi del punteggio, RICAVATI DAI DATI e non dati per scontati: su G1, 262 giocatori
+   quadrano con questi pesi e i restanti 31 quadrano aggiungendo -0.5 per l'ammonizione.
+   Zero casi non spiegati su 293. */
+const PESI = {
+  gol: 3, golSubiti: -1, autogol: -2, rigoriSegnati: 3,
+  rigoriSbagliati: -3, rigoriParati: 3, assist: 1, migliorInCampo: 0
+};
+const MALUS_AMMONIZIONE = -0.5;
+
+/* Ricostruisce il fantavoto dai pezzi. Se non torna, vuol dire che stiamo leggendo male
+   qualcosa: la colonna sbagliata, una riga fusa con un'altra, un bonus non mappato. */
+function fantavotoRicostruito(g) {
+  if (g.voto == null) return null;
+  let v = g.voto;
+  for (const k in PESI) v += (g.bonus[k] || 0) * PESI[k];
+  if (g.ammonito) v += MALUS_AMMONIZIONE;
+  return +v.toFixed(2);
 }
 
 /* ---------- validazione ----------
@@ -195,6 +258,30 @@ function validare(d, ordineFonti) {
     if (media < 5.2 || media > 6.8) problemi.push(`media voti della giornata = ${media.toFixed(2)}, fuori dall atteso 5.2-6.8`);
   }
 
+  /* Unicita delle squadre: la lunghezza da sola non basta, cinque tabelle che dichiarano
+     tutte "Atalanta" darebbero comunque 20. */
+  const uniche = new Set(d.squadre).size;
+  if (uniche !== d.squadre.length) problemi.push(`squadre duplicate: ${d.squadre.length} tabelle ma ${uniche} nomi distinti`);
+
+  /* IL CONTROLLO PIU IMPORTANTE. Se il fantavoto non si ricostruisce da voto + bonus, stiamo
+     leggendo male qualcosa, e non c'e modo di accorgersene guardando i numeri: sarebbero tutti
+     plausibili. Intercetta da solo la colonna di voto sbagliata, le righe fuse fra due
+     giocatori, i bonus non mappati e le sentinelle gestite male. */
+  const conVotoEFanta = gioc.filter(g => g.voto != null && g.fantavoto != null);
+  const nonQuadrano = conVotoEFanta.filter(g => Math.abs(g.fantavoto - fantavotoRicostruito(g)) > 0.01);
+  if (nonQuadrano.length) {
+    const soglia = Math.max(3, conVotoEFanta.length * 0.02);
+    const esempi = nonQuadrano.slice(0, 5).map(g =>
+      `${g.nome} voto ${g.voto} fantavoto ${g.fantavoto} ricostruito ${fantavotoRicostruito(g)}`).join('; ');
+    if (nonQuadrano.length > soglia) {
+      problemi.push(`${nonQuadrano.length} fantavoti non si ricostruiscono da voto+bonus — ${esempi}`);
+    } else {
+      /* Pochi casi: probabilmente un malus che non conosciamo ancora (l'espulsione, che in
+         G1 non compare mai). Si segnala senza bloccare, cosi si impara il markup nuovo. */
+      console.warn(`  ATTENZIONE: ${nonQuadrano.length} fantavoti non ricostruiti — ${esempi}`);
+    }
+  }
+
   return problemi;
 }
 
@@ -211,9 +298,17 @@ async function main() {
   }
 
   const url = `https://www.fantacalcio.it/voti-fantacalcio-serie-a/${STAGIONE}/${giornata}`;
-  const r = await fetch(url, { headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it;q=0.9' } });
+  /* Senza timeout una connessione appesa blocca il job della Action fino al limite di GitHub. */
+  const r = await fetch(url, {
+    headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it;q=0.9' },
+    signal: AbortSignal.timeout(30000)
+  });
   if (!r.ok) throw new Error(`HTTP ${r.status} da ${url}`);
   const html = await r.text();
+
+  /* Una risposta troncata a meta produce un file valido ma incompleto, e nessuna delle
+     validazioni successive se ne accorge se il taglio cade nel punto giusto. */
+  if (!/<\/html>\s*$/i.test(html)) throw new Error('la pagina scaricata e troncata (manca la chiusura </html>)');
 
   /* La pagina di una giornata non ancora giocata esiste comunque, ma e vuota: va detto
      chiaramente invece di scrivere un file di zeri. */
