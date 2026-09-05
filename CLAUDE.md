@@ -820,12 +820,15 @@ schiera, si chiude. Un Wake Lock qui consumerebbe batteria per un beneficio che 
 **Altri dettagli, minori ma verificati:** `touch-action:manipulation` su bottoni e tab toglie il
 ritardo di ~300ms prima di ogni tap e il doppio-tap-zoom accidentale; `overscroll-behavior-y:
 contain` su `<main>` evita che scorrere fino in fondo a una lista faccia "rimbalzare" anche la
-pagina intorno; una vibrazione breve (`navigator.vibrate`, con controllo di esistenza — manca su
-iOS Safari) conferma le azioni che cambiano stato (giocatore fissato, modulo cambiato, reparto
-pieno), non ogni tap; meta tag `apple-mobile-web-app-*` e `apple-touch-icon` per quando l'app
-viene aperta da schermata Home su iPhone (**non verificato su un iPhone vero**: alcune versioni
-di iOS ignorano le icone in data URI per questo tag specifico — stesso tipo di limite già
-dichiarato per il service worker dell'app asta).
+pagina intorno; meta tag `apple-mobile-web-app-*` e `apple-touch-icon` per quando l'app viene
+aperta da schermata Home su iPhone (**non verificato su un iPhone vero**: alcune versioni di iOS
+ignorano le icone in data URI per questo tag specifico — stesso tipo di limite già dichiarato per
+il service worker dell'app asta).
+
+**Costruito e tolto lo stesso giorno: la vibrazione.** Una `vibra()` breve confermava le azioni
+che cambiano stato (giocatore fissato, modulo cambiato, reparto pieno). L'utente ha chiesto di
+toglierla appena vista la lista — rimossa insieme a tutti i suoi punti di chiamata, non solo
+disattivata, per non lasciare codice morto.
 
 **Verificato ma non nel modo consueto.** Il browser di prova in questo ambiente non renderizza
 sempre il pannello (i click via coordinate schermo andavano a vuoto silenziosamente): la verifica
