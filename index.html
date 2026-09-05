@@ -35,6 +35,15 @@
 <meta name="theme-color" content="#0E1116">
 <meta name="description" content="Assistente di formazione: probabili, moduli, modificatore di difesa.">
 <link rel="manifest" href="./manifest.webmanifest">
+<!-- iOS non legge il manifest per l'aspetto da "app installata": senza queste, aperta da
+     schermata Home su iPhone si vedrebbe la barra del browser invece di sembrare un'app vera.
+     Su Android basta gia' il manifest. apple-touch-icon riusa gli stessi byte dell'icona 192x192
+     del manifest — nessun asset in piu' da mantenere, ma non verificato su un iPhone vero:
+     alcune versioni di iOS ignorano le icone in data URI per questo tag specifico. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Formazione">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAADQUlEQVR42u3asU3EQBBAUVeAREJATEABJFADEenVQgnUQkBFZGS0QICEgJPAt16PvTNP+vnI4ycO2zudnV9IzU1WIIAEkAASQBJAAkgACSAJIAEkgH52eXel7uUE5L7mVjVxQ9K+ALlVpRhN6GC0C0DuSk1DEz0MbQnIbSjOaKJH2wCyd4YA0kaAbJyhdkB2zVA7IFtmCCBtBMh+GQJIGwGyWYYAEkAaEZCdMgSQABJAAkgAASSANAYg22QIIAEkgASQABoT0Ovh8D3jAGpc7tqLzj2uHKA/9tt90XNmBY8DKNsdHXdcOUAz99try7nHlQN00n6Xbzn3OIAAAsgdBQgggAACCCCAAAIIIO+BvAcCCCCfMnzKAGjRlo0DyHEOxzliMUWOy3ppjrQKIAEkgAASQAJIAAkggASQdgTo+uFGBQNI+wDkj7mfMIAEkAASQAIIIAEkgASQAAJI+QEdnt6PMw6gxuWut+jc48oB+ne/fbece1w5QDP322vLuccBBBBAq+13+ZZzjwMIIIDcUYAAAggggAACCCCAAPIeyHsggADyLcy3MIB8jfc13nkg54GcSBRAAkgACSCAAAJIAAkgASSAABJAAkgACSCABJAAEkACCCABJIAEkACKB3T//PjZ0CMyXcgYgL528auAEZmmVAT0x8Y77iVgRMyUmHUNA2jOOpYvJWBEzJSYdeUE1LyUgBGZLmQkQCdtJGbvbVPSXAhAS0dkmgJQh6WkARRzISMBatgIQFsZAggggAACyD/R/on2GO8x3otELxJ9ytjblDQX4mPqZlPSXMh4xzli1pHmOEewnpEOlAUcbYk5QBM/xYlEOdIqgAASQAJIAAkggASQABJAAggggAASQAJINQExRA9AAiiwt5fb4wACqF1PNUMAdaZTjRFAa+kpYggggPYEKL2hk/SkNzRfBUAAAQTQEIByGwKoQQ9AAMUCSmwIoAY9AAEUDoghepYCymqoOKA2CY2AihuiB6B2Q368+gAq+FTvub0zICcVi+vpAAijsnR6AmKopp6egBgqqKczIIxK0VkLEEZF6KwLiKTcbuIAUZXGyo4AKU0ACSABJIAEkASQABJAAkgCSABpx30ARXk9ws9KjMIAAAAASUVORK5CYII=">
 <title>Formazione — Paradiso della Brugola</title>
 <style>
   :root{
@@ -67,7 +76,11 @@
       radial-gradient(760px 320px at 90% 0%, rgba(240,188,70,.05), transparent 70%),
       var(--bg); background-attachment:fixed;
       display:flex; flex-direction:column; overscroll-behavior:none; }
-  button, .tap{ font-family:inherit; user-select:none; -webkit-user-select:none; cursor:pointer; }
+  /* touch-action:manipulation toglie il ritardo di ~300ms che il browser mobile mette prima di
+     ogni tap (aspetta di escludere un doppio-tap per lo zoom) e impedisce lo zoom stesso sui
+     bottoni: un doppio tap veloce per correggere un errore non deve ingrandire la pagina. */
+  button, .tap{ font-family:inherit; user-select:none; -webkit-user-select:none; cursor:pointer;
+    touch-action:manipulation; }
 
   /* Cifre tabulari ovunque compaia un numero: i valori si ricalcolano di continuo e senza
      questo le colonne ballano a ogni ridisegno. */
@@ -78,7 +91,15 @@
   /* ---------- Shell ---------- */
   #app{ display:flex; flex-direction:column; height:100%; height:100dvh; }
   header{ position:sticky; top:0; z-index:20; background:var(--bg-2); border-bottom:1px solid var(--line); }
-  main{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:10px 0 40px; }
+  main{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:10px 0 40px;
+    overscroll-behavior-y:contain; }
+  /* Cresce da 0 quando si tira in basso dalla cima del contenuto (vedi il pull-to-refresh piu
+     sotto nello script). E' un fratello di <main>, non un figlio: main.innerHTML viene
+     riscritto in continuo da render(), un indicatore messo li dentro sparirebbe a ogni
+     ridisegno. Da fuori, in flusso normale, spinge semplicemente main piu in basso mentre cresce. */
+  .pull-indicator{ height:0; overflow:hidden; display:flex; align-items:center;
+    justify-content:center; font-size:12px; color:var(--muted); background:var(--bg-2);
+    flex-shrink:0; transition:height .18s var(--ease); }
 
   .status-strip{ display:flex; align-items:center; gap:10px; padding:8px 12px 6px;
     font-size:12px; color:var(--text-dim); }
@@ -244,8 +265,13 @@
     max-height:88vh; max-height:88dvh; overflow-y:auto;
     padding:6px 16px calc(24px + env(safe-area-inset-bottom));
     overscroll-behavior:contain; box-shadow:0 -18px 50px rgba(0,0,0,.6);
-    animation:sheetUp .24s var(--ease); }
-  .handle{ width:40px; height:4px; background:var(--surface3); border-radius:99px; margin:9px auto 14px; }
+    animation:sheetUp .24s var(--ease); transition:transform .2s var(--ease); }
+  /* Mentre si trascina la maniglia il movimento deve seguire il dito senza ritardo: la
+     transizione normale (usata per lo scatto indietro o per lo scivolamento via alla chiusura)
+     andrebbe in conflitto con l'aggiornamento continuo della posizione. */
+  .sheet.trascinando{ transition:none; }
+  .handle{ width:40px; height:4px; background:var(--surface3); border-radius:99px; margin:9px auto 14px;
+    touch-action:none; }
   .sheet h3{ margin:0 0 3px; font-size:18px; }
   .sheet .sub{ color:var(--muted); font-size:12.5px; margin-bottom:14px; }
   .sheet h4{ margin:18px 0 8px; font-size:11px; color:var(--muted); text-transform:uppercase;
@@ -341,6 +367,7 @@
     </div>
     <div class="warnbar" id="warnbar" style="display:none"></div>
   </header>
+  <div class="pull-indicator" id="pullTira"></div>
   <main id="main"></main>
 </div>
 
@@ -1384,14 +1411,45 @@ function render(){
    SCHEDA GIOCATORE E ALTERNATIVE
    ======================================================================================= */
 
+/* Il tasto/gesto "indietro" del telefono deve chiudere la sheet aperta, non uscire dall'app:
+   di default un browser mobile tratta "indietro" come "torna alla pagina precedente", e qui
+   non ce n'e' una — il risultato sarebbe uscire dall'app installata. Si spinge una voce finta
+   nella cronologia quando si apre una sheet, cosi "indietro" la trova e la consuma prima di
+   arrivare a uscire davvero. */
+let storiaSheetSpinta = false;
+function spingiStoriaSheet(){
+  if(storiaSheetSpinta) return;
+  storiaSheetSpinta = true;
+  history.pushState({sheet:true}, '');
+}
+window.addEventListener('popstate', ()=>{
+  if(el('#sheet').style.display==='block' || el('#settingsSheet').style.display==='block'){
+    chiudiSheet(true);
+  }
+});
+
 function apriSheet(html){
   el('#sheet').innerHTML = '<div class="handle"></div>' + html;
   el('#sheet').style.display = 'block';
   el('#overlay').style.display = 'block';
+  spingiStoriaSheet();
 }
-function chiudiSheet(){
+/* daIndietro deve essere il booleano letterale true, non un valore genericamente "vero": quattro
+   punti del codice passano chiudiSheet direttamente come callback di un click (`addEventListener
+   ('click', chiudiSheet)`), e li il primo argomento che arriva e' l'oggetto Event del click, che
+   e' sempre "vero" — un controllo con !daIndietro li avrebbe scambiati tutti per chiusure "da
+   indietro", saltando history.back() e lasciando in giro voci di cronologia mai consumate.
+   daIndietro=true arriva SOLO dal gestore di popstate qui sopra: li' la voce di cronologia e'
+   gia' stata consumata dal browser stesso, richiamare history.back() spingerebbe l'utente fuori
+   dall'app invece di fermarsi alla chiusura della sheet. */
+function chiudiSheet(daIndietro){
   el('#sheet').style.display='none'; el('#settingsSheet').style.display='none';
   el('#overlay').style.display='none';
+  el('#sheet').style.transform=''; el('#settingsSheet').style.transform='';
+  if(storiaSheetSpinta){
+    storiaSheetSpinta = false;
+    if(daIndietro !== true) history.back();
+  }
 }
 
 function schedaGiocatore(id){
@@ -1560,7 +1618,7 @@ function alternativePerRuolo(ruolo, idAttuale){
          dei due sparisce senza spiegazione. */
       if(idAttuale!=null) delete S.bloccati[idAttuale];
       S.bloccati[nuovo] = true;
-      salva(); chiudiSheet(); render(); toast(LIS[nuovo].n + ' in formazione');
+      salva(); chiudiSheet(); render(); vibra(); toast(LIS[nuovo].n + ' in formazione');
     });
   });
   el('#btnChiudi2').addEventListener('click', chiudiSheet);
@@ -1656,6 +1714,7 @@ function apriSettings(){
   el('#settingsSheet').innerHTML = h;
   el('#settingsSheet').style.display='block';
   el('#overlay').style.display='block';
+  spingiStoriaSheet();
 
   el('#btnImporta').addEventListener('click', ()=> importaRosa(el('#boxRosa').value));
   el('#btnComponi').addEventListener('click', componiRosa);
@@ -1797,7 +1856,7 @@ function componiRosa(){
       const c2=el('#cerca'); c2.focus(); c2.setSelectionRange(p,p); });
     document.querySelectorAll('[data-aggiungi]').forEach(n=> n.addEventListener('click', ()=>{
       const id = +n.dataset.aggiungi, l = LIS[id];
-      if(cnt(l.r) >= SLOT_MAX[l.r]){ toast('Reparto pieno'); return; }
+      if(cnt(l.r) >= SLOT_MAX[l.r]){ vibra(20); toast('Reparto pieno'); return; }
       S.rosa.push(id); salva(); disegna();
     }));
     document.querySelectorAll('[data-togli]').forEach(n=> n.addEventListener('click', ()=>{
@@ -1838,21 +1897,158 @@ document.addEventListener('click', (e)=>{
   const g = e.target.closest('[data-giocatore]');
   if(g){ schedaGiocatore(+g.dataset.giocatore); return; }
   const m = e.target.closest('[data-modulo]');
-  if(m){ S.modulo = m.dataset.modulo; salva(); render(); toast('Modulo '+S.modulo); return; }
+  if(m){ S.modulo = m.dataset.modulo; salva(); render(); vibra(); toast('Modulo '+S.modulo); return; }
   if(e.target.id==='btnVuotaImporta'){ apriSettings(); return; }
 });
 
+/* Un tocco breve, solo dove serve conferma di un'azione presa (assegnato/tolto dal campo,
+   correzione applicata): un telefono che vibra ad ogni tap sarebbe fastidioso, non utile.
+   navigator.vibrate manca su iOS Safari — la chiamata semplicemente non fa nulla li, non va
+   protetta oltre il controllo di esistenza. */
+function vibra(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms||12); }catch(e){} }
+
+const VISTE = ['campo','rosa','moduli'];
+function vaiA(vista){ S.vista = vista; render(); }
+
 document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click', ()=>{ S.vista = t.dataset.vista; render(); });
+  t.addEventListener('click', ()=> vaiA(t.dataset.vista));
 });
 el('#btnSettings').addEventListener('click', apriSettings);
-el('#btnRicarica').addEventListener('click', async ()=>{
+
+/* mostraToast=false per i risvegli automatici (pull-to-refresh ha gia' il suo indicatore,
+   il refresh quando l'app torna in primo piano non deve interrompere nessuno con un avviso
+   per un aggiornamento che l'utente non ha chiesto). */
+async function aggiornaDati(mostraToast){
   const ok = await caricaProbabili(true);
   await caricaStorico();
   aggiornaForzaSquadre();
-  render(); toast(ok ? 'Dati aggiornati' : 'Dati non raggiungibili');
-});
+  render();
+  if(mostraToast!==false) toast(ok ? 'Dati aggiornati' : 'Dati non raggiungibili');
+  return ok;
+}
+el('#btnRicarica').addEventListener('click', ()=> aggiornaDati());
 el('#overlay').addEventListener('click', chiudiSheet);
+
+/* ---------- Gesti ---------- */
+
+/* Swipe in basso sulla maniglia per chiudere la sheet aperta, come i fogli nativi. Parte SOLO
+   dalla maniglia (vedi touch-action:none li' sopra), non da tutto il foglio: il contenuto sotto
+   (liste, testo, textarea) deve restare scorribile/selezionabile senza che un tocco un po'
+   verticale lo chiuda per sbaglio. Un solo gestore per sheet, agganciato una volta sola: la
+   maniglia dentro viene rifatta da capo a ogni apertura (innerHTML), quindi si delega il click
+   sul contenitore stabile invece di riattaccare l'evento ogni volta. */
+function attivaTrascinamentoSheet(sheetEl){
+  let inizioY = null, altezza = 0, pid = null;
+  sheetEl.addEventListener('pointerdown', (e)=>{
+    if(!e.target.closest('.handle')) return;
+    inizioY = e.clientY; altezza = sheetEl.getBoundingClientRect().height; pid = e.pointerId;
+    sheetEl.classList.add('trascinando');
+    try{ sheetEl.setPointerCapture(pid); }catch(err){}
+  });
+  sheetEl.addEventListener('pointermove', (e)=>{
+    if(inizioY==null || e.pointerId!==pid) return;
+    const dy = Math.max(0, e.clientY - inizioY);
+    sheetEl.style.transform = 'translateY(' + dy + 'px)';
+  });
+  function fine(e){
+    if(inizioY==null || e.pointerId!==pid) return;
+    const dy = Math.max(0, e.clientY - inizioY);
+    sheetEl.classList.remove('trascinando');
+    inizioY = null; pid = null;
+    if(dy > altezza * 0.28){
+      sheetEl.style.transform = 'translateY(100%)';
+      setTimeout(()=>{ chiudiSheet(); }, 200);
+    }else{
+      sheetEl.style.transform = '';
+    }
+  }
+  sheetEl.addEventListener('pointerup', fine);
+  sheetEl.addEventListener('pointercancel', fine);
+}
+attivaTrascinamentoSheet(el('#sheet'));
+attivaTrascinamentoSheet(el('#settingsSheet'));
+
+/* Swipe orizzontale su Campo/Rosa/Moduli per cambiare tab senza tornare su alla testata.
+   Il blocco di direzione e' la parte che conta: nei primi millimetri di movimento si guarda
+   se il gesto e' piu orizzontale o piu verticale, UNA volta sola, e da li' in poi si resta
+   fedeli a quella scelta. Deciso verticale, non si tocca piu nulla: lo scroll della lista
+   funziona esattamente come se questo listener non esistesse. Deciso orizzontale, si
+   preventDefault() cosi la pagina non scorre di lato mentre si segue il dito. */
+(function(){
+  const main = el('#main');
+  let inizioX = null, inizioY = null, direzione = null, pid = null;
+  main.addEventListener('pointerdown', (e)=>{
+    if(e.pointerType==='mouse') return;   // lo swipe e' un gesto touch, non da trascinare col mouse
+    inizioX = e.clientX; inizioY = e.clientY; direzione = null; pid = e.pointerId;
+  });
+  main.addEventListener('pointermove', (e)=>{
+    if(inizioX==null || e.pointerId!==pid) return;
+    const dx = e.clientX - inizioX, dy = e.clientY - inizioY;
+    if(direzione==null && (Math.abs(dx)>10 || Math.abs(dy)>10)){
+      direzione = Math.abs(dx) > Math.abs(dy) ? 'orizzontale' : 'verticale';
+    }
+    if(direzione==='orizzontale') e.preventDefault();
+  }, { passive:false });
+  function fine(e){
+    if(inizioX==null || e.pointerId!==pid) return;
+    const dx = e.clientX - inizioX;
+    if(direzione==='orizzontale' && Math.abs(dx) > 70){
+      const i = VISTE.indexOf(S.vista);
+      const nuovo = dx < 0 ? VISTE[i+1] : VISTE[i-1];   // sinistra -> tab dopo, destra -> tab prima
+      if(nuovo) vaiA(nuovo);
+    }
+    inizioX = null; direzione = null; pid = null;
+  }
+  main.addEventListener('pointerup', fine);
+  main.addEventListener('pointercancel', fine);
+})();
+
+/* Pull-to-refresh: tirare in basso dalla cima del contenuto riaggiorna i dati di giornata, come
+   le app native — in piu' rispetto al tasto "Aggiorna" in testata, che resta comunque il modo
+   principale (piu' visibile, sempre raggiungibile con un pollice). Parte SOLO se main e' gia'
+   scrollato in cima: un trascinamento in basso quando c'e' altro sopra e' scroll normale, non un
+   gesto di refresh, e overscroll-behavior-y:contain su main (vedi CSS) evita che ci si impasti
+   col pull-to-refresh nativo del browser mentre il nostro e' attivo. */
+(function(){
+  const main = el('#main'), tira = el('#pullTira');
+  const SOGLIA = 64;
+  let inizioY = null, pid = null, attivo = false;
+  main.addEventListener('pointerdown', (e)=>{
+    if(e.pointerType==='mouse' || main.scrollTop>0) return;
+    inizioY = e.clientY; pid = e.pointerId; attivo = false;
+  });
+  main.addEventListener('pointermove', (e)=>{
+    if(inizioY==null || e.pointerId!==pid) return;
+    const dy = e.clientY - inizioY;
+    if(dy<=0 || main.scrollTop>0){ inizioY=null; tira.style.height='0'; return; }
+    attivo = true;
+    tira.style.height = Math.min(SOGLIA, dy*0.5) + 'px';
+    tira.textContent = dy*0.5 >= SOGLIA ? 'Rilascia per aggiornare' : 'Tira per aggiornare';
+  });
+  async function fine(e){
+    if(inizioY==null || e.pointerId!==pid) return;
+    const scattato = attivo && (parseFloat(tira.style.height)||0) >= SOGLIA;
+    inizioY = null; pid = null; attivo = false;
+    if(scattato){
+      tira.textContent = 'Aggiornamento...'; vibra(8);
+      await aggiornaDati(false);
+    }
+    tira.style.height = '0';
+  }
+  main.addEventListener('pointerup', fine);
+  main.addEventListener('pointercancel', fine);
+})();
+
+/* Aggiornamento quando l'app torna in primo piano, non un timer che gira in sottofondo: un
+   controllo periodico continuerebbe a girare (e a consumare batteria) anche quando il telefono
+   e' in tasca con lo schermo spento. Aspettare che l'utente riapra l'app e farlo solo se i dati
+   sono passati di moda costa zero quando l'app resta chiusa, che e' la stragrande maggioranza
+   del tempo per un'app che si apre una volta a settimana. */
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='visible' && oreDati()!=null && oreDati()>0.75){
+    aggiornaDati(false);
+  }
+});
 
 carica();
 calcolaMvSquadre();

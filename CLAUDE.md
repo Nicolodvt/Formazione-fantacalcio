@@ -770,6 +770,71 @@ non ha mai letto `STORICO`, quindi non c'era nulla da disallineare. Verificato c
 quattro gli strumenti (`controlla.mjs`, `prova-motore.mjs`, `taratura.mjs`): numeri identici a
 prima, nessuna perdita di funzioni/listener/selettori.
 
+## Manovrabilità da smartphone (05/09)
+
+Richiesta esplicita dell'utente: gesti, tasto indietro, attenzione alla batteria, "tutto quello
+che viene in mente" per un'app pensata per essere usata dal telefono. Tutto verificato dal vivo
+in emulazione mobile (375×812, touch) prima di considerarlo fatto — non solo per sintassi.
+
+**Tasto/gesto "indietro" chiude la sheet aperta, non esce dall'app.** Prima non c'era nessun
+collegamento con la cronologia del browser: su un'app installata, "indietro" senza una pagina
+precedente vera esce semplicemente dall'app. Ora aprire una sheet (`apriSheet()`, `apriSettings()`)
+spinge una voce finta nella cronologia (`history.pushState`); un "indietro" la trova e la consuma
+(`popstate` → `chiudiSheet(true)`) invece di uscire. **Bug preso prima di spedirlo**: quattro punti
+del codice passano `chiudiSheet` direttamente come callback di un click
+(`addEventListener('click', chiudiSheet)`), quindi ricevono l'oggetto `Event` del click come primo
+argomento — sempre "vero". Un controllo tipo `if(!daIndietro)` li avrebbe scambiati tutti per
+chiusure "da indietro", saltando `history.back()` e lasciando in giro voci di cronologia mai
+consumate (un "indietro" vero, dopo, sarebbe sembrato non fare nulla la prima volta). Il controllo
+è `daIndietro !== true`: solo il gestore di popstate passa il booleano letterale `true`.
+Verificato aprendo/chiudendo la sheet più volte di fila: la lunghezza della cronologia resta
+piatta, non cresce mai.
+
+**Swipe in basso sulla maniglia per chiudere** (`attivaTrascinamentoSheet()`), come i fogli
+nativi. Parte solo dalla maniglia — il resto della sheet (liste, testo, textarea) deve restare
+scorribile/selezionabile senza rischiare una chiusura per un tocco un po' verticale. Sotto il 28%
+dell'altezza della sheet scatta indietro, sopra scivola via e chiude.
+
+**Swipe orizzontale fra Campo/Rosa/Moduli** (sul contenuto principale, non serve toccare la
+testata). Il blocco di direzione è la parte che conta: nei primi 10px di movimento si decide UNA
+volta se il gesto è più orizzontale o più verticale, e da lì non si cambia idea — deciso
+verticale, lo scroll delle liste funziona esattamente come se lo swipe non esistesse. Ignorato
+per `pointerType==='mouse'`: è un gesto touch, un trascinamento col mouse non deve spostare tab
+per sbaglio mentre si seleziona del testo.
+
+**Pull-to-refresh** in cima al contenuto, oltre al tasto "Aggiorna" in testata che resta il modo
+principale. Parte solo se il contenuto è già scrollato in cima — altrimenti è scroll normale.
+L'indicatore (`#pullTira`) è un fratello di `<main>`, non un figlio: `render()` riscrive
+`main.innerHTML` di continuo, un indicatore messo lì dentro sparirebbe ad ogni ridisegno.
+
+**Aggiornamento quando l'app torna in primo piano, non un timer.** `visibilitychange` controlla
+se i dati sono passati di moda (`oreDati()>0.75`, cioè 45 minuti) solo nel momento in cui l'utente
+riapre l'app, invece di un controllo periodico che girerebbe (e consumerebbe batteria) anche a
+schermo spento in tasca. Per un'app che si apre una volta a settimana, un timer in sottofondo
+costerebbe sempre per un guadagno quasi sempre nullo.
+
+**Deliberatamente NON aggiunto: nessun Wake Lock.** Non è un'app da tenere aperta a schermo acceso
+per minuti (a differenza, potenzialmente, dell'app asta durante un'asta dal vivo): si apre, si
+schiera, si chiude. Un Wake Lock qui consumerebbe batteria per un beneficio che non esiste.
+
+**Altri dettagli, minori ma verificati:** `touch-action:manipulation` su bottoni e tab toglie il
+ritardo di ~300ms prima di ogni tap e il doppio-tap-zoom accidentale; `overscroll-behavior-y:
+contain` su `<main>` evita che scorrere fino in fondo a una lista faccia "rimbalzare" anche la
+pagina intorno; una vibrazione breve (`navigator.vibrate`, con controllo di esistenza — manca su
+iOS Safari) conferma le azioni che cambiano stato (giocatore fissato, modulo cambiato, reparto
+pieno), non ogni tap; meta tag `apple-mobile-web-app-*` e `apple-touch-icon` per quando l'app
+viene aperta da schermata Home su iPhone (**non verificato su un iPhone vero**: alcune versioni
+di iOS ignorano le icone in data URI per questo tag specifico — stesso tipo di limite già
+dichiarato per il service worker dell'app asta).
+
+**Verificato ma non nel modo consueto.** Il browser di prova in questo ambiente non renderizza
+sempre il pannello (i click via coordinate schermo andavano a vuoto silenziosamente): la verifica
+vera è stata rifatta creando eventi `PointerEvent` sintetici via `javascript_tool` e leggendo lo
+stato del DOM prima/dopo (posizione della sheet, testo dell'indicatore, tab attivo, lunghezza
+della cronologia) — non solo un controllo a occhio su uno screenshot. Limite dichiarato: eventi
+sintetici provano che la LOGICA reagisce correttamente, non la sensazione al tatto reale (velocità,
+inerzia) di un dispositivo vero, mai testata qui.
+
 ## Da fare
 
 **Decise e chiuse dal 04/09:**
@@ -872,6 +937,10 @@ prima, nessuna perdita di funzioni/listener/selettori.
 11. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
    riattivare i build automatici Netlify o fare un deploy manuale singolo (vedi regola in testa
    al file — non decidere in autonomia).
+12. **Provare sul telefono vero i gesti aggiunti il 05/09** (vedi *Manovrabilità da smartphone*):
+   verificati solo con eventi sintetici in emulazione, mai il tatto reale. In particolare lo
+   swipe fra tab e il pull-to-refresh, che dipendono di più dalla sensazione (velocità, inerzia)
+   di quanto la logica da sola possa garantire.
 
 **Aperto, non bloccante:** il regolamento della lega (moduli ammessi, numero di cambi, soglie del
 modificatore, e **se il cambio del portiere consuma uno dei tre cambi di movimento** — in molte
