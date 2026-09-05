@@ -8,7 +8,11 @@ la condizione fisica recente. La GitHub Action scarica probabili e voti da sola.
 online
 su Netlify** — una nota precedente lo dava per fatto, era sbagliata: l'utente non se lo ricordava e
 non c'è nessuna traccia di un deploy reale. Resta da fare, apposta, a lavoro finito (vedi
-*Aggiornamenti e crediti Netlify* sotto). Traguardo: **4ª giornata**.
+*Aggiornamenti e crediti Netlify* sotto). **Attenzione:** per lo stesso motivo, tutto ciò che è
+descritto qui come "automatico" (cadenza rinforzata del venerdì, promemoria push, ricalibrazione)
+gira davvero solo su `dev` — GitHub esegue lo `schedule` di una Action solo dalla copia sul branch
+di default (`main`), quindi finché non c'è il merge l'automazione reale in produzione è ancora
+quella vecchia (vedi *Da fare*, punto 3). Traguardo: **4ª giornata**.
 
 Progetto separato dall'app asta, che vive nella cartella superiore. Quella serve a *comprare* ed è
 finita lunedì; questa serve a *schierare* e deve reggere 38 giornate.
@@ -673,6 +677,27 @@ ambiente; l'utente doveva farlo lui (tasto destro sul file → Move to trash). *
 confermato** — se una sessione futura trova questo file ancora lì, o è stato dimenticato o la
 cancellazione non è mai avvenuta.
 
+## Dettaglio grezzo in STORICO (05/09)
+
+`caricaStorico()` salvava solo voto/fantavoto/senzaVoto/subentrato da ogni `dati/voti-N.json`,
+scartando il resto — che però lo scraper scarica già per ogni giocatore: gol, assist, rigori
+(segnati/sbagliati/parati), autogol, gol subiti (per i portieri), ammonizione. Ora finisce anche
+questo in `STORICO`, con la stessa migrazione una tantum già usata per `subentrato` (si controlla
+un campo nuovo, se manca si azzera la cache e si riscarica — righe piccole, costo nullo).
+
+**Deliberatamente non usato ancora da nessun calcolo.** Oggi il modello continua a leggere solo
+`voto`/`fantavoto` da `STORICO`; gol/assist/rigori restano lì fermi, in attesa che ci siano
+abbastanza giornate vere per tarare `BONUS_PIAZZATI`/`BONUS_MAX` sull'osservato invece che
+sull'intuito (oggi 2 giornate, troppo poche per distinguere un segnale da rumore — stessa soglia
+di prudenza di `RETTIFICA_RUOLO`, `MIN_CAMPIONE`). È il primo dei due passi verso l'"oracolo"
+concordati il 04/09 (vedi *Da fare*, punto 7): a rischio pressoché nullo perché è solo memoria in
+più, nessun nuovo meccanismo che possa sbagliare qualcosa oggi.
+
+Non tocca `tools/estrai-motore.mjs`: il motore "puro" condiviso da `taratura.mjs`/`ricalibra.mjs`
+non ha mai letto `STORICO`, quindi non c'era nulla da disallineare. Verificato con tutti e
+quattro gli strumenti (`controlla.mjs`, `prova-motore.mjs`, `taratura.mjs`): numeri identici a
+prima, nessuna perdita di funzioni/listener/selettori.
+
 ## Da fare
 
 **Decise e chiuse dal 04/09:**
@@ -717,10 +742,15 @@ cancellazione non è mai avvenuta.
 2. **Provare le notifiche sul telefono vero**: attivarle dall'app, aspettare il prossimo giro
    della Action (o forzarlo da Actions → Run workflow) e controllare che arrivi davvero. Non
    verificabile da qui — vedi *Notifiche push*, il permesso è bloccato in questo ambiente.
-3. **Verificare che la Action giri davvero** con la nuova cadenza (primo giro utile: venerdì
-   11/09, dato che il round in corso il 04/09 è già partito con la cadenza vecchia). Si può
-   forzare da Actions → Run workflow — non tocca `main` né consuma build Netlify, permesso anche
-   sotto la regola dev-only.
+3. **Verificare che la Action giri davvero** con la nuova cadenza. **Corretto il 05/09: non parte
+   da sola venerdì 11/09 come scritto qui prima.** GitHub legge lo schedule (`on: schedule:`) di
+   un workflow SOLO dalla versione del file che sta sul branch di default (`main`), mai da `dev`,
+   anche se il workflow gira comunque ad ogni push su `dev`. Verificato lo storico Action su
+   GitHub: un solo run finora, con la cadenza vecchia (quella ancora presente su `main`, senza il
+   giro di venerdì rinforzato, senza promemoria push, senza ricalibrazione). La cadenza nuova
+   diventa reale solo al merge `dev` → `main` (vedi punto 10) — fino ad allora **su `main` non
+   sta girando niente di quello che sembra deciso qui**, non solo la cadenza: neanche i promemoria
+   né la ricalibrazione automatica.
 4. **Ritarare le costanti scelte a intuito** dopo qualche giornata in più — tutte segnate come
    tali nel codice, nessuna nascosta: `PESO_PRIOR_STAGIONE` (10), `CASA_BONUS` (0.08),
    `PESO_AVVERSARIO` (1.4), `DECADIMENTO_FORMA` (0.85). Con `taratura.mjs`, quando ci saranno
@@ -734,16 +764,28 @@ cancellazione non è mai avvenuta.
    tarare anche `CASA_BONUS`/`PESO_AVVERSARIO` sui risultati veri — non deciso, vedi *L'app
    impara dalla stagione*. E se vale la pena del resoconto "formazione consigliata vs esito",
    già previsto nel piano originale e non ancora costruito.
-7. **Verso l'"oracolo" — due passi concordati il 04/09, non ancora costruiti** (vedi anche la
-   memoria di sessione `app-formazione-visione-modello`, per il ragionamento completo):
-   - Salvare in `STORICO` anche gol/assist/rigori/cartellini che `dati/voti-N.json` porta già
-     e che oggi si scartano — prepara la taratura vera di `BONUS_PIAZZATI`/`BONUS_MAX` quando
-     ci saranno abbastanza partite. Basso rischio: solo memoria in più, nessun nuovo
-     meccanismo di modello.
-   - Verificare se esiste una fonte scaricabile di dati "sottostanti" (tiri, occasioni create)
-     per la Serie A — gol e assist sono rumorosi partita per partita, i dati sottostanti sono
-     più stabili e prevedono meglio. Se esiste, potrebbe essere il salto di qualità più grande
-     fatto finora. Domanda di ricerca aperta, non ancora verificata.
+7. **Verso l'"oracolo" — dati sottostanti (tiri, xG)**: ricerca fatta il 05/09 (vedi anche la
+   memoria di sessione `app-formazione-visione-modello`). La fonte esiste davvero: Understat
+   copre la Serie A e ha già la stagione 2026/27 in corso, per giocatore, aggiornata live
+   (verificato dal vivo su `understat.com/league/Serie_A`) — con la stessa metrica xG che regge
+   l'analisi sportiva professionale. Prova concreta che aiuterebbe: Malen è lo scarto più grande
+   di `taratura.mjs` (stima 7.57, reale 15.50) e su Understat ha davvero 5 gol da soli 3.80 xG in
+   140 minuti — un sovra-rendimento che un modello guidato dai gol non può distinguere da un vero
+   salto di livello, un dato sui tiri sì. **Ma non è un "sì" pulito, per due motivi:**
+   - **Nessun id in comune con fantacalcio.it.** L'aggancio dovrebbe essere per nome+squadra
+     ("Donyell Malen" vs il "Malen" del listone), non per id come con fantacalcio.it — la stessa
+     fragilità ("Martinez L." vs "Lautaro Martinez") che il progetto ha evitato apposta altrove.
+   - **Le fonti gratuite più note non vogliono essere scaricate in automatico.** Il
+     `robots.txt` di Understat è `Disallow: /` per chiunque, senza eccezioni — un "no" esplicito
+     ai bot, diverso da fantacalcio.it che non ne ha uno. FBref (l'alternativa più nota) risponde
+     con la sfida anti-bot di Cloudflare ("Just a moment...") a un fetch semplice come quelli già
+     scritti in questo progetto (zero dipendenze): non è un limite tecnico superabile con lo
+     stesso stile di scraper, servirebbe un browser vero.
+   Conclusione: **il salto di qualità sarebbe reale, ma costruirlo oggi vorrebbe dire o ignorare
+   il `robots.txt` dichiarato di un sito o inseguire un blocco anti-bot** — un compromesso diverso
+   da quello fatto finora con fantacalcio.it (scraper gentile, User-Agent dichiarato, poche
+   richieste, nessun blocco da parte loro). Non costruito: da decidere insieme se e come, non una
+   cosa da avviare in autonomia.
 8. Fase 4 — mercato di riparazione e svincoli.
 9. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
    `main` almeno una volta, quindi va coordinato con l'utente.
