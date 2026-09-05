@@ -748,7 +748,7 @@ prima, nessuna perdita di funzioni/listener/selettori.
    anche se il workflow gira comunque ad ogni push su `dev`. Verificato lo storico Action su
    GitHub: un solo run finora, con la cadenza vecchia (quella ancora presente su `main`, senza il
    giro di venerdì rinforzato, senza promemoria push, senza ricalibrazione). La cadenza nuova
-   diventa reale solo al merge `dev` → `main` (vedi punto 10) — fino ad allora **su `main` non
+   diventa reale solo al merge `dev` → `main` (vedi punto 11) — fino ad allora **su `main` non
    sta girando niente di quello che sembra deciso qui**, non solo la cadenza: neanche i promemoria
    né la ricalibrazione automatica.
 4. **Ritarare le costanti scelte a intuito** dopo qualche giornata in più — tutte segnate come
@@ -760,11 +760,17 @@ prima, nessuna perdita di funzioni/listener/selettori.
    nuovi). Occasione buona anche per guardare come si muove `RETTIFICA_RUOLO` giornata dopo
    giornata: se oscilla parecchio lo smorzamento va indurito, se non si muove mai forse è troppo
    prudente — solo i dati veri lo diranno.
-6. **Decidere se costruire il calendario storico** (chi ha giocato contro chi, dove) per poter
+6. **Usare per il modello il dettaglio gol/assist/rigori/cartellini salvato in `STORICO` dal
+   05/09** (vedi *Dettaglio grezzo in STORICO* sopra): oggi è solo memoria, non entra in nessun
+   calcolo. Quando ci saranno abbastanza giornate vere (stessa soglia di prudenza di
+   `RETTIFICA_RUOLO`), usarlo per tarare `BONUS_PIAZZATI`/`BONUS_MAX` sull'osservato — chi segna
+   davvero i rigori della propria squadra, quanto valgono in media i suoi bonus — invece che a
+   intuito come oggi. Richiesto esplicitamente dall'utente il 05/09.
+7. **Decidere se costruire il calendario storico** (chi ha giocato contro chi, dove) per poter
    tarare anche `CASA_BONUS`/`PESO_AVVERSARIO` sui risultati veri — non deciso, vedi *L'app
    impara dalla stagione*. E se vale la pena del resoconto "formazione consigliata vs esito",
    già previsto nel piano originale e non ancora costruito.
-7. **Verso l'"oracolo" — dati sottostanti (tiri, xG)**: ricerca fatta il 05/09 (vedi anche la
+8. **Verso l'"oracolo" — dati sottostanti (tiri, xG)**: ricerca fatta il 05/09 (vedi anche la
    memoria di sessione `app-formazione-visione-modello`). La fonte esiste davvero: Understat
    copre la Serie A e ha già la stagione 2026/27 in corso, per giocatore, aggiornata live
    (verificato dal vivo su `understat.com/league/Serie_A`) — con la stessa metrica xG che regge
@@ -785,11 +791,13 @@ prima, nessuna perdita di funzioni/listener/selettori.
    il `robots.txt` dichiarato di un sito o inseguire un blocco anti-bot** — un compromesso diverso
    da quello fatto finora con fantacalcio.it (scraper gentile, User-Agent dichiarato, poche
    richieste, nessun blocco da parte loro). Non costruito: da decidere insieme se e come, non una
-   cosa da avviare in autonomia.
-8. Fase 4 — mercato di riparazione e svincoli.
-9. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
+   cosa da avviare in autonomia. **L'utente ha detto il 05/09 di rimandare questa decisione a
+   quando il resto sarà finito** — non ha gli strumenti tecnici per valutarla ora, e da sola non
+   è urgente (è un miglioramento, non blocca nulla di ciò che serve per la 4ª giornata).
+9. Fase 4 — mercato di riparazione e svincoli.
+10. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
    `main` almeno una volta, quindi va coordinato con l'utente.
-10. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
+11. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
    riattivare i build automatici Netlify o fare un deploy manuale singolo (vedi regola in testa
    al file — non decidere in autonomia).
 
