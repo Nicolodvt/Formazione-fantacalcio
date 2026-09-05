@@ -1618,7 +1618,7 @@ function alternativePerRuolo(ruolo, idAttuale){
          dei due sparisce senza spiegazione. */
       if(idAttuale!=null) delete S.bloccati[idAttuale];
       S.bloccati[nuovo] = true;
-      salva(); chiudiSheet(); render(); vibra(); toast(LIS[nuovo].n + ' in formazione');
+      salva(); chiudiSheet(); render(); toast(LIS[nuovo].n + ' in formazione');
     });
   });
   el('#btnChiudi2').addEventListener('click', chiudiSheet);
@@ -1856,7 +1856,7 @@ function componiRosa(){
       const c2=el('#cerca'); c2.focus(); c2.setSelectionRange(p,p); });
     document.querySelectorAll('[data-aggiungi]').forEach(n=> n.addEventListener('click', ()=>{
       const id = +n.dataset.aggiungi, l = LIS[id];
-      if(cnt(l.r) >= SLOT_MAX[l.r]){ vibra(20); toast('Reparto pieno'); return; }
+      if(cnt(l.r) >= SLOT_MAX[l.r]){ toast('Reparto pieno'); return; }
       S.rosa.push(id); salva(); disegna();
     }));
     document.querySelectorAll('[data-togli]').forEach(n=> n.addEventListener('click', ()=>{
@@ -1897,15 +1897,9 @@ document.addEventListener('click', (e)=>{
   const g = e.target.closest('[data-giocatore]');
   if(g){ schedaGiocatore(+g.dataset.giocatore); return; }
   const m = e.target.closest('[data-modulo]');
-  if(m){ S.modulo = m.dataset.modulo; salva(); render(); vibra(); toast('Modulo '+S.modulo); return; }
+  if(m){ S.modulo = m.dataset.modulo; salva(); render(); toast('Modulo '+S.modulo); return; }
   if(e.target.id==='btnVuotaImporta'){ apriSettings(); return; }
 });
-
-/* Un tocco breve, solo dove serve conferma di un'azione presa (assegnato/tolto dal campo,
-   correzione applicata): un telefono che vibra ad ogni tap sarebbe fastidioso, non utile.
-   navigator.vibrate manca su iOS Safari — la chiamata semplicemente non fa nulla li, non va
-   protetta oltre il controllo di esistenza. */
-function vibra(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms||12); }catch(e){} }
 
 const VISTE = ['campo','rosa','moduli'];
 function vaiA(vista){ S.vista = vista; render(); }
@@ -2030,7 +2024,7 @@ attivaTrascinamentoSheet(el('#settingsSheet'));
     const scattato = attivo && (parseFloat(tira.style.height)||0) >= SOGLIA;
     inizioY = null; pid = null; attivo = false;
     if(scattato){
-      tira.textContent = 'Aggiornamento...'; vibra(8);
+      tira.textContent = 'Aggiornamento...';
       await aggiornaDati(false);
     }
     tira.style.height = '0';
