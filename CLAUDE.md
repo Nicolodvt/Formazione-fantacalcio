@@ -703,6 +703,18 @@ cominciasse lunedì mattina prestissimo, la prima occasione di avviso (lunedì 0
 potrebbe arrivare a ridosso della partita — caso limite non risolvibile con cron fissi, mai
 verificato perché non ancora capitato.
 
+**Aggiornamento 05/09, richiesto dall'utente**: il martedì ora diventa da solo orario (come il
+venerdì di un turno normale) quando serve davvero. `tools/turno-infrasettimanale.mjs` legge
+l'ultimo `dati/probabili.json` già sul disco e risponde vero/falso; il workflow lo consulta prima
+di ogni giro extra del martedì (`0 6,8-18 * * 2`, in aggiunta al giro base delle 09/21) e salta
+senza toccare fantacalcio.it se la risposta è falsa. Stessa domanda ("che giorno cade la prima
+partita, fuso di Roma") ora vive in un solo posto, `tools/calendario.mjs`, condiviso fra questo
+script e `invia-promemoria.mjs` — prima la stessa logica era duplicata lì dentro. Il lunedì
+resta senza giro extra apposta: renderlo orario non anticiperebbe comunque il primo avviso utile
+delle 09:00 (vedi il limite qui sopra). Il testo del promemoria ora contiene la frase esatta
+"turno infrasettimanale" sia nel titolo sia nel corpo, non solo nel titolo: chiesto esplicitamente,
+per restare leggibile anche se il telefono mostra solo una riga della notifica.
+
 ## Dettaglio grezzo in STORICO (05/09)
 
 `caricaStorico()` salvava solo voto/fantavoto/senzaVoto/subentrato da ogni `dati/voti-N.json`,
