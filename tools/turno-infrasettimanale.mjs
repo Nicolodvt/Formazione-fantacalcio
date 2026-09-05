@@ -7,7 +7,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { primaPartita, infrasettimanale } from './calendario.mjs';
+import { infrasettimanale } from './calendario.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
 const FILE_PROB = join(QUI, '..', 'dati', 'probabili.json');
@@ -18,5 +18,4 @@ function leggi() {
 }
 
 const prob = leggi();
-const prima = prob ? primaPartita(prob) : null;
-console.log(prima ? infrasettimanale(prima.quando) : false);
+console.log(prob ? infrasettimanale(prob) : false);
