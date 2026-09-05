@@ -9,11 +9,15 @@ name: Aggiorna dati di giornata
 # concluso (mattina e sera, cosi' si intercettano anche se pubblicati presto). Sono anche i due
 # giorni di riserva per un TURNO INFRASETTIMANALE: se le probabili appena scaricate rivelano che
 # la prossima giornata comincia lunedi-giovedi invece che nel weekend, la preparazione che di
-# norma sta tra mercoledi e venerdi non farebbe in tempo — deve succedere qui. Lo stesso scraper
-# delle probabili gira sempre (vedi sotto), quindi non serve un giro dedicato apposta: basta che
-# questi due giorni non siano troppo radi. `tools/invia-promemoria.mjs` riconosce da solo il
-# turno infrasettimanale (guarda il giorno della prima partita) e manda un promemoria diverso,
-# piu' urgente, invece di aspettare la cadenza normale.
+# norma sta tra mercoledi e venerdi non farebbe in tempo — deve succedere qui.
+# `tools/invia-promemoria.mjs` riconosce da solo il turno infrasettimanale (guarda il giorno
+# della prima partita) e manda un promemoria diverso, piu' esplicito, invece di aspettare la
+# cadenza normale. E il MARTEDI diventa da solo orario, come il venerdi di un turno normale: un
+# giro extra (`tools/turno-infrasettimanale.mjs`) controlla prima di tutto se il turno noto in
+# quel momento e' infrasettimanale — se non lo e' non tocca nemmeno fantacalcio.it, se lo e'
+# funziona esattamente come il giro base. Non serve invece nessun giro extra per il lunedi: se
+# un turno comincia lunedi mattina prestissimo il primo avviso utile arriva comunque solo alle
+# 09:00 (vedi limite dichiarato in CLAUDE.md), quindi renderlo orario non guadagnerebbe nulla.
 #
 # DA MERCOLEDI — si passa a preparare la formazione della giornata successiva (weekend normale).
 # Mercoledi e giovedi sono ancora "presto": poche notizie vere, ma si comincia a farsi un'idea.
@@ -21,7 +25,8 @@ name: Aggiorna dati di giornata
 # che si concentra la lettura piu' fitta, un giro all'ora. L'ultimo giro di venerdi e' alle 20:00,
 # non piu' tardi: col venerdi sera che spesso ha gia' una partita alle 20:45, un giro dopo il
 # fischio d'inizio sarebbe uno sprecato. Orari in UTC (d'estate l'Italia e' UTC+2):
-#   lunedi e martedi  09:00 e 21:00 CEST   -> voti del turno concluso + riserva turno infrasettimanale
+#   lunedi e martedi  09:00 e 21:00 CEST   -> voti del turno concluso, sempre
+#   martedi           08:00-20:00 CEST     -> in piu', un giro all'ora ma solo se infrasettimanale
 #   mercoledi         09:00 e 15:00 CEST   -> due letture, si comincia a preparare
 #   giovedi           08/11/14/17/20 CEST  -> cinque letture nella giornata
 #   venerdi           08:00-20:00 CEST     -> un giro all'ora, si ferma prima delle partite serali
@@ -41,7 +46,9 @@ name: Aggiorna dati di giornata
 
 on:
   schedule:
-    - cron: '0 7,19 * * 1,2'    # lunedi e martedi, 09:00 e 21:00 CEST
+    - cron: '0 7,19 * * 1,2'    # lunedi e martedi, 09:00 e 21:00 CEST (voti, sempre)
+    - cron: '0 6,8-18 * * 2'    # martedi, giro extra ogni ora — SOLO se il turno e' infrasettimanale
+                                 # (l'ora 07 e' gia' coperta dalla riga sopra, per non farle scattare insieme)
     - cron: '0 7,13 * * 3'      # mercoledi, 09:00 e 15:00 CEST
     - cron: '0 6,9,12,15,18 * * 4'   # giovedi, 5 giri (08/11/14/17/20 CEST)
     - cron: '0 6-18 * * 5'      # venerdi, ogni ora dalle 08:00 alle 20:00 CEST
@@ -71,10 +78,25 @@ jobs:
         with:
           node-version: '22'
 
+      # Solo per il giro extra del martedi (vedi commento in testa al file): legge l'ultimo
+      # dati/probabili.json gia' sul disco, quello di PRIMA di questo giro, per decidere se vale
+      # la pena controllare fantacalcio.it un'altra volta o se si puo' saltare in silenzio. Per
+      # tutti gli altri giri (compreso il martedi base delle 09/21) questo passo non gira nemmeno:
+      # "infra" resta vuoto, e la condizione sotto lo legge come "non applicabile", non come "no".
+      - name: Turno infrasettimanale? (solo per il giro extra del martedi)
+        id: turno
+        if: github.event.schedule == '0 6,8-18 * * 2'
+        run: echo "infra=$(node tools/turno-infrasettimanale.mjs)" >> "$GITHUB_OUTPUT"
+
       # Nessuno scraper ha dipendenze: niente npm install, niente lockfile che invecchia.
       # Se la validazione fallisce, lo script esce con codice 1 e il workflow diventa rosso
       # SENZA aver scritto niente: si tiene il file vecchio, sempre meglio di uno rotto.
+      #
+      # Gate identico su questo passo e sul prossimo: girano sempre, TRANNE al giro extra del
+      # martedi quando il turno non e' infrasettimanale — li' non c'e' niente da controllare ne
+      # da avvisare, e si salta senza toccare fantacalcio.it.
       - name: Probabili formazioni
+        if: github.event.schedule != '0 6,8-18 * * 2' || steps.turno.outputs.infra == 'true'
         run: node "tools/fetch-probabili.mjs"
 
       # Promemoria push per schierare, un tanto per giornata (vedi tools/invia-promemoria.mjs
@@ -83,6 +105,7 @@ jobs:
       # web-push non e' installato come dipendenza del repo (niente package.json/lockfile,
       # stessa scelta fatta per gli scraper): si scarica al volo solo qui, solo quando serve.
       - name: Promemoria push (se configurato)
+        if: github.event.schedule != '0 6,8-18 * * 2' || steps.turno.outputs.infra == 'true'
         env:
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
           PUSH_SUBSCRIPTION: ${{ secrets.PUSH_SUBSCRIPTION }}
