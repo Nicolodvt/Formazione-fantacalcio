@@ -1070,12 +1070,12 @@ async function caricaStorico(){
     if(raw) STORICO = JSON.parse(raw) || {};
   }catch(e){ STORICO = {}; }
 
-  /* Migrazione: 'subentrato' e' un campo nuovo. Chi aveva gia uno storico salvato prima di
-     questa modifica ce l'ha senza, e "gia in storico" lo terrebbe cosi per sempre - il
+  /* Migrazione: 'subentrato' e poi 'gol' sono campi aggiunti in tempi diversi. Chi aveva gia
+     uno storico salvato prima ce l'ha senza, e "gia in storico" lo terrebbe cosi per sempre - il
      controllo sotto salta le giornate gia presenti, non le rifà mai. Si azzera una volta
-     sola: il ridownload che segue e economico (pochi file JSON piccoli). */
+     sola per ogni campo nuovo: il ridownload che segue e economico (pochi file JSON piccoli). */
   for(const id in STORICO){
-    if(STORICO[id].some(v=> typeof v.subentrato === 'undefined')){ STORICO = {}; break; }
+    if(STORICO[id].some(v=> typeof v.subentrato === 'undefined' || typeof v.gol === 'undefined')){ STORICO = {}; break; }
   }
 
   const ultima = (PROB && PROB.giornata) ? PROB.giornata - 1 : 0;
@@ -1094,9 +1094,17 @@ async function caricaStorico(){
       if(!d || d.schema!==1 || !d.giocatori) continue;
       for(const id in d.giocatori){
         const x = d.giocatori[id];
+        const b = x.bonus || {};
         (STORICO[id] || (STORICO[id] = [])).push({
           giornata: g, voto: x.voto, fantavoto: x.fantavoto, senzaVoto: !!x.senzaVoto,
-          subentrato: !!x.subentrato   // segnale di condizione: entrato dalla panchina, non partito titolare
+          subentrato: !!x.subentrato,   // segnale di condizione: entrato dalla panchina, non partito titolare
+          /* Dettaglio scaricato per ogni giornata ma non ancora usato dal modello: oggi serve
+             solo da riserva dati per quando (dopo diverse giornate vere) avra senso tarare
+             BONUS_PIAZZATI/BONUS_MAX sull'osservato invece che a intuito. Vedi CLAUDE.md. */
+          gol: b.gol||0, assist: b.assist||0,
+          rigoriSegnati: b.rigoriSegnati||0, rigoriSbagliati: b.rigoriSbagliati||0, rigoriParati: b.rigoriParati||0,
+          autogol: b.autogol||0, golSubiti: b.golSubiti||0,
+          ammonito: !!x.ammonito
         });
       }
       cambiato = true;
