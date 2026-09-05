@@ -1,35 +1,52 @@
 name: Aggiorna dati di giornata
 
-# Due lavori distinti con ritmi diversi:
+# Due lavori distinti, con un ritmo che segue quanto ogni giorno e' utile — non un giro fisso
+# uguale tutta la settimana. Leggere piu' spesso costa zero (vedi sotto), quindi il limite non e'
+# "quante letture ci possiamo permettere" ma "quando una lettura in piu' puo' davvero dire
+# qualcosa di nuovo".
 #
-# PROBABILI — la pagina che leggiamo e' la stessa per tutta la settimana, ma fantacalcio.it la
-# aggiorna in continuazione man mano che arrivano notizie: rileggerla piu' spesso non e' un
-# secondo scraper per le "ultime notizie", e' lo stesso scraper che intercetta gli stessi
-# aggiornamenti prima. Il grosso delle notizie vere (allenamenti, dubbi, ballottaggi che si
-# sciolgono) arriva il venerdi, quindi e' li' che si concentrano i passaggi. Niente lettura di
-# giovedi: troppo presto per essere piu' che rumore, e il venerdi la copre comunque. L'ultimo
-# giro di venerdi e' alle 19:30, non piu' tardi: col venerdi sera che spesso ha gia' una partita
-# alle 20:45, un giro dopo il fischio d'inizio sarebbe uno sprecato. Orari in UTC (d'estate
-# l'Italia e' UTC+2):
-#   venerdi 13:00 / 16:00 / 18:00 / 19:30 CEST  -> il grosso delle notizie della vigilia
-#   sabato 09:00 e 12:00 CEST                   -> aggiornamenti prima delle partite del pomeriggio
-#   domenica 09:00 CEST                         -> ultimo giro prima del grosso della giornata
+# LUNEDI E MARTEDI — servono innanzitutto a raccogliere i VOTI del turno di campionato appena
+# concluso (mattina e sera, cosi' si intercettano anche se pubblicati presto). Sono anche i due
+# giorni di riserva per un TURNO INFRASETTIMANALE: se le probabili appena scaricate rivelano che
+# la prossima giornata comincia lunedi-giovedi invece che nel weekend, la preparazione che di
+# norma sta tra mercoledi e venerdi non farebbe in tempo — deve succedere qui. Lo stesso scraper
+# delle probabili gira sempre (vedi sotto), quindi non serve un giro dedicato apposta: basta che
+# questi due giorni non siano troppo radi. `tools/invia-promemoria.mjs` riconosce da solo il
+# turno infrasettimanale (guarda il giorno della prima partita) e manda un promemoria diverso,
+# piu' urgente, invece di aspettare la cadenza normale.
 #
-# VOTI — hanno senso solo a giornata conclusa. Si prova il martedi sera: se la giornata non e
+# DA MERCOLEDI — si passa a preparare la formazione della giornata successiva (weekend normale).
+# Mercoledi e giovedi sono ancora "presto": poche notizie vere, ma si comincia a farsi un'idea.
+# Il grosso arriva il venerdi (allenamenti, dubbi, ballottaggi che si sciolgono), quindi e' li'
+# che si concentra la lettura piu' fitta, un giro all'ora. L'ultimo giro di venerdi e' alle 20:00,
+# non piu' tardi: col venerdi sera che spesso ha gia' una partita alle 20:45, un giro dopo il
+# fischio d'inizio sarebbe uno sprecato. Orari in UTC (d'estate l'Italia e' UTC+2):
+#   lunedi e martedi  09:00 e 21:00 CEST   -> voti del turno concluso + riserva turno infrasettimanale
+#   mercoledi         09:00 e 15:00 CEST   -> due letture, si comincia a preparare
+#   giovedi           08/11/14/17/20 CEST  -> cinque letture nella giornata
+#   venerdi           08:00-20:00 CEST     -> un giro all'ora, si ferma prima delle partite serali
+#   sabato            09:00 e 12:00 CEST   -> aggiornamenti prima delle partite del pomeriggio
+#   domenica          09:00 CEST           -> ultimo giro prima del grosso della giornata
+#
+# VOTI — hanno senso solo a giornata conclusa. Si prova lunedi e martedi: se la giornata non e
 # ancora chiusa lo scraper se ne accorge da solo e non scrive nulla.
 #
-# Sono sette letture a settimana in tutto: abbastanza da non arrivare mai con dati vecchi,
-# poche abbastanza da non pesare su fantacalcio.it.
+# PERCHE' COSI' TANTE LETTURE, E PERCHE' NON COSTA NIENTE: il repository e' pubblico, quindi
+# GitHub Actions e' gratis e senza limite di minuti (la quota mensile vale solo per repository
+# privati). Ogni lettura in piu' e' un piccolo script Node che legge una pagina pubblica e scrive
+# un file: nessun costo Netlify, perche' questi dati arrivano al telefono passando direttamente
+# da GitHub (vedi *Aggiornamenti e crediti Netlify* in CLAUDE.md), non da una pubblicazione del
+# sito. L'unico limite resta la cortesia verso fantacalcio.it: uno User-Agent dichiarato, nessuna
+# raffica piu' fitta di una volta all'ora, mai di notte.
 
 on:
   schedule:
-    - cron: '0 11 * * 5'      # venerdi 13:00 CEST
-    - cron: '0 14 * * 5'      # venerdi 16:00 CEST
-    - cron: '0 16 * * 5'      # venerdi 18:00 CEST
-    - cron: '30 17 * * 5'     # venerdi 19:30 CEST (75 min prima di un eventuale 20:45)
-    - cron: '0 7,10 * * 6'
-    - cron: '0 7 * * 0'
-    - cron: '0 19 * * 2'      # martedi 21:00 CEST: voti della giornata appena conclusa
+    - cron: '0 7,19 * * 1,2'    # lunedi e martedi, 09:00 e 21:00 CEST
+    - cron: '0 7,13 * * 3'      # mercoledi, 09:00 e 15:00 CEST
+    - cron: '0 6,9,12,15,18 * * 4'   # giovedi, 5 giri (08/11/14/17/20 CEST)
+    - cron: '0 6-18 * * 5'      # venerdi, ogni ora dalle 08:00 alle 20:00 CEST
+    - cron: '0 7,10 * * 6'      # sabato, invariato
+    - cron: '0 7 * * 0'         # domenica, invariato
   workflow_dispatch:
     inputs:
       giornata_voti:
@@ -73,11 +90,14 @@ jobs:
           npm install --no-save web-push@3.6.7 --silent
           node "tools/invia-promemoria.mjs"
 
-      # I voti si scaricano solo quando ha senso: al giro del martedi, o quando li si chiede
-      # a mano. `continue-on-error` perche una giornata non ancora conclusa fa fallire lo
-      # scraper di proposito, e non e un motivo per marcare rosso tutto il workflow.
+      # I voti si scaricano solo quando ha senso: ai giri di lunedi e martedi, o quando li si
+      # chiede a mano. `continue-on-error` perche una giornata non ancora conclusa fa fallire lo
+      # scraper di proposito, e non e un motivo per marcare rosso tutto il workflow. Piu'
+      # tentativi nella stessa finestra non fanno danno: se i voti sono gia' quelli scaricati
+      # l'ultima volta, il file riscritto e identico e il passo "scarta se cambia solo il
+      # timestamp" sotto lo annulla, senza produrre un commit in piu'.
       - name: Voti della giornata conclusa
-        if: github.event.schedule == '0 19 * * 2' || github.event.inputs.giornata_voti != ''
+        if: github.event.schedule == '0 7,19 * * 1,2' || github.event.inputs.giornata_voti != ''
         continue-on-error: true
         run: |
           if [ -n "${{ github.event.inputs.giornata_voti }}" ]; then
@@ -96,7 +116,7 @@ jobs:
       # perche' sono li'). Stesso gate della Action sopra: ha senso solo quando i voti possono
       # essere appena cambiati.
       - name: Ricalibrazione del modello
-        if: github.event.schedule == '0 19 * * 2' || github.event.inputs.giornata_voti != ''
+        if: github.event.schedule == '0 7,19 * * 1,2' || github.event.inputs.giornata_voti != ''
         run: node "tools/ricalibra.mjs"
 
       # Gli scraper riscrivono sempre il campo "generato", quindi senza questo passo la Action

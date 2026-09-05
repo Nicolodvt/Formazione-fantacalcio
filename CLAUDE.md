@@ -677,6 +677,32 @@ ambiente; l'utente doveva farlo lui (tasto destro sul file → Move to trash). *
 confermato** — se una sessione futura trova questo file ancora lì, o è stato dimenticato o la
 cancellazione non è mai avvenuta.
 
+## Cadenza degli aggiornamenti, seconda revisione (05/09)
+
+**Confermato che leggere piu' spesso non costa niente**, prima di farlo: repository pubblico →
+GitHub Actions gratis e senza limite di minuti; i dati arrivano al telefono leggendo direttamente
+da GitHub (`fetchDati()`), non attraverso una pubblicazione Netlify — quindi nessuna delle due
+quote di cui parla *Aggiornamenti e crediti Netlify* sopra viene toccata da quante volte lo
+scraper gira. L'unico limite reale resta la cortesia verso fantacalcio.it (User-Agent dichiarato,
+niente raffiche), non un costo.
+
+Su questa base, richiesta dell'utente il 05/09: **lunedi e martedi** ora scaricano i voti del
+turno appena concluso (mattina e sera, prima solo martedi sera); **mercoledi** 2 giri, **giovedi**
+5, **venerdi** un giro all'ora dalle 08:00 alle 20:00 (prima erano 4 letture fisse). Dettagli e
+orari esatti in `.github/workflows/dati.yml`.
+
+**Turno infrasettimanale.** Se la prossima giornata comincia lunedi-giovedi invece che nel
+weekend, la preparazione che normalmente sta fra mercoledi e venerdi arriverebbe dopo il fischio
+d'inizio. Non si può far scattare una lettura extra "al bisogno" (i cron di GitHub sono fissi),
+quindi la soluzione è che lunedi e martedi restano già abbastanza fitti da coprire anche questo
+caso, in aggiunta al loro scopo normale di raccogliere i voti. `tools/invia-promemoria.mjs`
+riconosce da solo il caso (guarda in che giorno della settimana, fuso di Roma, cade la prima
+partita della giornata appena scaricata) e manda un promemoria diverso e più esplicito invece del
+solito "Giornata N: schiera la formazione". **Limite dichiarato:** se un turno infrasettimanale
+cominciasse lunedì mattina prestissimo, la prima occasione di avviso (lunedì 09:00 CEST)
+potrebbe arrivare a ridosso della partita — caso limite non risolvibile con cron fissi, mai
+verificato perché non ancora capitato.
+
 ## Dettaglio grezzo in STORICO (05/09)
 
 `caricaStorico()` salvava solo voto/fantavoto/senzaVoto/subentrato da ogni `dati/voti-N.json`,

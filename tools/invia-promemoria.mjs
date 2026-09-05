@@ -108,7 +108,23 @@ async function main() {
     timeZone: 'Europe/Rome', weekday: 'long', day: 'numeric', month: 'long',
     hour: '2-digit', minute: '2-digit'
   });
-  const payload = JSON.stringify({
+
+  /* Un turno che comincia lunedi-giovedi e' un turno infrasettimanale: la preparazione normale
+     (concentrata fra mercoledi e venerdi per un turno che comincia il venerdi sera) non farebbe
+     in tempo. Vedi .github/workflows/dati.yml per come lunedi e martedi restano abbastanza
+     frequenti da coprire anche questo caso. Il giorno si legge nel fuso di Roma, non in UTC/del
+     server: una partita delle 00:30 UTC di lunedi e' gia' martedi in Italia, e viceversa vicino
+     alla mezzanotte. Intl non ha un weekday "numeric": si passa dal nome in inglese e si cerca
+     nell'elenco, ordinato apposta a partire da lunedi. */
+  const GIORNI = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const nomeGiornoRoma = prima.quando.toLocaleString('en-US', { timeZone: 'Europe/Rome', weekday: 'long' });
+  const infrasettimanale = GIORNI.indexOf(nomeGiornoRoma) <= 3;   // lunedi(0)..giovedi(3)
+
+  const payload = JSON.stringify(infrasettimanale ? {
+    titolo: `Turno infrasettimanale — Giornata ${prob.giornata}`,
+    corpo: `Si gioca gia' ${oraItaliana} (${prima.casa}-${prima.trasferta}): schiera prima, ` +
+      `questa settimana la preparazione e' compressa su lunedi e martedi.`
+  } : {
     titolo: `Giornata ${prob.giornata}: schiera la formazione`,
     corpo: `Si comincia ${oraItaliana} con ${prima.casa}-${prima.trasferta}.`
   });
