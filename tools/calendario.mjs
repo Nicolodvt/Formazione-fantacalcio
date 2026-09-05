@@ -40,12 +40,21 @@ export function primaPartita(prob) {
 }
 
 /* Il giorno si legge nel fuso di Roma, non in UTC/del server: una partita delle 00:30 UTC di
-   lunedi e' gia' martedi in Italia, e viceversa vicino alla mezzanotte. Intl non ha un weekday
-   "numeric": si passa dal nome in inglese e si cerca nell'elenco, ordinato apposta a partire
-   da lunedi. */
-const GIORNI = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+   lunedi e' gia' martedi in Italia, e viceversa vicino alla mezzanotte. */
+function nomeGiornoRoma(quando) {
+  return quando.toLocaleString('en-US', { timeZone: 'Europe/Rome', weekday: 'long' });
+}
 
-export function infrasettimanale(quando) {
-  const nomeGiornoRoma = quando.toLocaleString('en-US', { timeZone: 'Europe/Rome', weekday: 'long' });
-  return GIORNI.indexOf(nomeGiornoRoma) <= 3;   // lunedi(0)..giovedi(3)
+/* Un turno di weekend normale finisce spesso di lunedi (Cagliari-Lecce e Udinese-Lazio, nella
+   giornata 3, giocano proprio di lunedi sera): "l'ultima partita cade lunedi" NON basta a dire
+   infrasettimanale, la prima bozza di questa funzione sbagliava esattamente su questo, verificato
+   sui dati veri della giornata 3. Il vero segno distintivo e' un altro: un turno infrasettimanale
+   non tocca MAI venerdi/sabato/domenica — e' tutto compresso fra lunedi e giovedi. Un turno di
+   weekend con un anticipo spostato al giovedi resta comunque un turno di weekend, perche' il
+   grosso delle partite sta ancora nel weekend vero. */
+export function infrasettimanale(prob) {
+  const partite = (prob.partite || []).map(p => parseData(p.data)).filter(Boolean);
+  if (!partite.length) return false;
+  const WEEKEND = ['Friday', 'Saturday', 'Sunday'];
+  return !partite.some(quando => WEEKEND.includes(nomeGiornoRoma(quando)));
 }

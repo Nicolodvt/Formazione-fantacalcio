@@ -115,23 +115,34 @@ jobs:
 
       # I voti si scaricano solo quando ha senso: ai giri di lunedi e martedi, o quando li si
       # chiede a mano. `continue-on-error` perche una giornata non ancora conclusa fa fallire lo
-      # scraper di proposito, e non e un motivo per marcare rosso tutto il workflow. Piu'
-      # tentativi nella stessa finestra non fanno danno: se i voti sono gia' quelli scaricati
-      # l'ultima volta, il file riscritto e identico e il passo "scarta se cambia solo il
-      # timestamp" sotto lo annulla, senza produrre un commit in piu'.
-      - name: Voti della giornata conclusa
+      # scraper di proposito, e non e un motivo per marcare rosso tutto il workflow.
+      #
+      # SI RIPROVA OGNI GIORNATA MANCANTE, NON SOLO "l'ultima meno uno". Prima si scaricava solo
+      # la giornata immediatamente precedente a quella dichiarata nelle probabili: bastava un
+      # turno infrasettimanale infilato in mezzo (due giornate concluse nella stessa settimana,
+      # invece della solita una) perche' la piu' vecchia delle due sparisse per sempre — la
+      # settimana dopo il conto "meno uno" sarebbe gia' avanzato alla giornata successiva, senza
+      # essersi mai accorto del buco. Ora si scorrono tutte le giornate da 1 fino a quella
+      # conclusa, e si prova a scaricare solo quelle il cui file manca ancora: economico (un
+      # controllo su disco, nessuna richiesta) per le giornate gia' a posto, e recupera da solo
+      # anche un giro saltato per un guasto della Action, non solo un turno infrasettimanale.
+      - name: Voti delle giornate concluse
         if: github.event.schedule == '0 7,19 * * 1,2' || github.event.inputs.giornata_voti != ''
         continue-on-error: true
         run: |
           if [ -n "${{ github.event.inputs.giornata_voti }}" ]; then
-            GIORNATA="${{ github.event.inputs.giornata_voti }}"
+            echo "Scarico la giornata ${{ github.event.inputs.giornata_voti }} (richiesta a mano)"
+            node "tools/fetch-voti.mjs" "${{ github.event.inputs.giornata_voti }}"
           else
-            # Al giro automatico si prende la giornata dichiarata dalle probabili appena
-            # scaricate, meno uno: quella che si e appena conclusa.
-            GIORNATA=$(node -e "const g=require('./dati/probabili.json').giornata; console.log(g>1?g-1:1)")
+            ULTIMA=$(node -e "const g=require('./dati/probabili.json').giornata; console.log(g>1?g-1:0)")
+            for G in $(seq 1 "$ULTIMA" 2>/dev/null || true); do
+              if [ ! -f "dati/voti-$G.json" ]; then
+                echo "Manca dati/voti-$G.json: provo a scaricarlo"
+                node "tools/fetch-voti.mjs" "$G" || true
+              fi
+            done
           fi
-          echo "Scarico i voti della giornata $GIORNATA"
-          node "tools/fetch-voti.mjs" "$GIORNATA"
+          exit 0
 
       # L'app che impara dalla stagione: confronta la stima pura con tutti i voti reali
       # scaricati finora e corregge un po' per volta uno scarto sistematico per ruolo, se il

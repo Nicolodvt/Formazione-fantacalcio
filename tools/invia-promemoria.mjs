@@ -76,12 +76,14 @@ async function main() {
     hour: '2-digit', minute: '2-digit'
   });
 
-  /* Un turno che comincia lunedi-giovedi e' un turno infrasettimanale: la preparazione normale
+  /* Un turno che finisce lunedi-giovedi e' un turno infrasettimanale: la preparazione normale
      (concentrata fra mercoledi e venerdi per un turno che comincia il venerdi sera) non farebbe
      in tempo. Vedi .github/workflows/dati.yml per come lunedi e martedi restano abbastanza
      frequenti da coprire anche questo caso (e diventano orari quando serve, vedi
-     turno-infrasettimanale.mjs). */
-  const infra = infrasettimanale(prima.quando);
+     turno-infrasettimanale.mjs). Si guarda tutto il turno (funzione in calendario.mjs), non solo
+     "prima" qui sopra: un turno di weekend con un solo anticipo di giovedi non deve essere
+     scambiato per infrasettimanale. */
+  const infra = infrasettimanale(prob);
 
   /* La frase "turno infrasettimanale" compare parola per parola, sia nel titolo sia nel corpo:
      chiesto esplicitamente, cosi' resta leggibile anche se la notifica sul telefono mostra solo

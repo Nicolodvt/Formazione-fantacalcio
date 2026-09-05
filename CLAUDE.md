@@ -696,9 +696,8 @@ weekend, la preparazione che normalmente sta fra mercoledi e venerdi arriverebbe
 d'inizio. Non si può far scattare una lettura extra "al bisogno" (i cron di GitHub sono fissi),
 quindi la soluzione è che lunedi e martedi restano già abbastanza fitti da coprire anche questo
 caso, in aggiunta al loro scopo normale di raccogliere i voti. `tools/invia-promemoria.mjs`
-riconosce da solo il caso (guarda in che giorno della settimana, fuso di Roma, cade la prima
-partita della giornata appena scaricata) e manda un promemoria diverso e più esplicito invece del
-solito "Giornata N: schiera la formazione". **Limite dichiarato:** se un turno infrasettimanale
+riconosce da solo il caso e manda un promemoria diverso e più esplicito invece del solito
+"Giornata N: schiera la formazione". **Limite dichiarato:** se un turno infrasettimanale
 cominciasse lunedì mattina prestissimo, la prima occasione di avviso (lunedì 09:00 CEST)
 potrebbe arrivare a ridosso della partita — caso limite non risolvibile con cron fissi, mai
 verificato perché non ancora capitato.
@@ -714,6 +713,41 @@ resta senza giro extra apposta: renderlo orario non anticiperebbe comunque il pr
 delle 09:00 (vedi il limite qui sopra). Il testo del promemoria ora contiene la frase esatta
 "turno infrasettimanale" sia nel titolo sia nel corpo, non solo nel titolo: chiesto esplicitamente,
 per restare leggibile anche se il telefono mostra solo una riga della notifica.
+
+**Audit richiesto dall'utente lo stesso giorno** ("abbiamo coperto tutte le casistiche?"), due
+correzioni reali trovate e sistemate subito, non solo segnalate:
+
+1. **La classificazione "infrasettimanale" era sbagliata su un caso reale**, non ipotetico. La
+   prima versione guardava solo la PRIMA partita del turno: un turno di weekend normale che
+   comincia con un anticipo di giovedì risulterebbe "infrasettimanale" anche se il resto sta nel
+   weekend come sempre. Il tentativo di correzione — guardare l'ULTIMA partita invece della prima
+   — si è rivelato **peggiore**, verificato sui dati veri: la giornata 3 (weekend normalissimo)
+   chiude con Udinese-Lazio di lunedì sera, quindi sarebbe stata segnalata come infrasettimanale
+   per errore. La regola giusta, quella ora in `tools/calendario.mjs`, guarda **tutte** le
+   partite: è infrasettimanale solo se **nessuna** cade di venerdì, sabato o domenica — cioè se
+   il turno non tocca il weekend per niente, non se comincia o finisce vicino a un giorno feriale.
+   Verificato con tre casi (un vero turno infrasettimanale, un weekend con un anticipo di
+   giovedì, e la giornata 3 vera) prima di fidarsene.
+2. **Un turno infrasettimanale infilato in mezzo poteva far perdere per sempre i voti di
+   un'altra giornata.** Lo scraper dei voti calcolava quale giornata scaricare come "quella nelle
+   probabili meno uno": funziona quando si conclude esattamente una giornata a settimana, ma se
+   un turno infrasettimanale ne fa concludere due nella stessa settimana, la settimana dopo il
+   conto è già avanzato oltre la prima delle due — che non viene mai più ritentata da nessuna
+   parte. Non è un errore che si vede: nessun avviso, nessun rosso nella Action, solo uno
+   `voti-N.json` che manca in silenzio e uno storico con un buco. **Sistemato**: ora lo script
+   scorre tutte le giornate da 1 fino all'ultima conclusa e riprova solo quelle il cui file manca
+   ancora — economico per le giornate già a posto (un controllo su disco, zero richieste), e in
+   più recupera da solo anche un giro perso per un guasto della Action, non solo questo caso.
+3. **Limite non risolto, giudicato a rischio troppo basso per meritare una soluzione oggi**: se
+   un turno infrasettimanale iniziasse lunedì mattina prestissimo (mai capitato, e strutturalmente
+   raro: la Serie A lascia sempre almeno un giorno di riposo dopo il weekend prima di un turno
+   compresso), l'unico avviso arriverebbe alle 09:00, a ridosso della partita. Già dichiarato
+   sopra, confermato qui dopo l'audit.
+4. **Limite non affrontato, fuori scope per ora**: il cambio dall'ora legale a quella solare
+   (ultima domenica di ottobre) sposta di un'ora tutti gli orari "CEST" scritti nei cron e nei
+   commenti — la stagione arriva fino a maggio, quindi li attraversa. Da rivedere quando ci si
+   arriva, non prima: sistemarlo ora per un evento di fine ottobre sarebbe ottimizzare su una
+   scadenza lontana invece che su quelle vere di settembre.
 
 ## Dettaglio grezzo in STORICO (05/09)
 
