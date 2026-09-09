@@ -204,13 +204,71 @@ Actions → **Variables**, non secrets: è solo l'URL pubblico del sito) — fin
 funziona lo stesso ma non può verificare "schierato" e quindi manda comunque il promemoria
 (fail-open dichiarato, vedi sopra).
 
+## Seconda fonte per le probabili (09/09/2026)
+
+Richiesta esplicita dell'utente: fetch-probabili.mjs ha una sola fonte (fantacalcio.it), nessuna
+di riserva. **Fantagazzetta.com, il candidato più ovvio, non esiste più** — l'utente ha
+confermato che è confluito dentro fantacalcio.it stesso (coerente con quanto trovato: il dominio
+non risponde più a nessuna richiesta https, anche se il DNS lo risolve ancora). Anche
+fantapazza.com risulta un dominio non più registrato (NXDOMAIN).
+
+**Trovato tramite ricerca web, non a memoria**: `fantacalcio-online.com`, un **aggregatore**
+— mette affiancate le previsioni di quattro redazioni indipendenti (Fantacalcio.it, Gazzetta,
+SOS Fanta, Sky) con una percentuale media, pagina `.../probabili-formazioni/ultima-giornata`
+(url stabile, non lega alla giornata specifica). Verificato scaricando la pagina vera (non un
+riassunto): markup pulito con classi semantiche (`prb-tabella`, `prb-nome`, `prb-cella--certo/
+probabile/dubbio/fuori`, `prb-cella--media` per la media), `robots.txt` insolito — scritto in
+prosa, nomina esplicitamente crawler di addestramento IA (ClaudeBot, GPTBot, ecc.) e le
+impostazioni Cloudflare che li bloccano — ma con `User-agent: * / Allow: /` esplicito per un
+crawler generico dichiarato come questo (non è uno di quelli nominati). Segnalato all'utente per
+trasparenza, non trattato come un'istruzione: non contiene nulla diretto all'agente.
+
+**`tools/fetch-probabili-alt.mjs`** — gira SOLO se `fetch-probabili.mjs` fallisce
+(`.github/workflows/dati.yml`, passo con `if: failure() && (...)`, stesso gate della fonte
+principale). Stesso stile di parsing (regex, zero dipendenze, fallisce rumorosamente). **Non è
+un sostituto alla pari**, dichiarato nel codice: fantacalcio-online.com non condivide gli id
+numerici di fantacalcio.it, quindi l'aggancio è per COGNOME, scoped alla squadra (mai in tutto
+il listone) — la fragilità che il progetto evita apposta ovunque altrove. Mitigazione: se il
+cognome non è univoco nemmeno dentro la squadra, il giocatore viene saltato e loggato, mai
+indovinato.
+
+**Costruito e testato contro la pagina vera** (non a tavolino), tre bug trovati provandolo:
+- **Trappola di split**: `"prb-incontro__lato--ospite"` contiene `"prb-incontro__lato"` come
+  prefisso, quindi uno split ingenuo su quel marcatore trovava un terzo pezzo vuoto invece di
+  due lati puliti — ogni partita risultava senza nome squadra ospite, **zero giocatori
+  agganciati** al primo giro reale. Corretto passando a `indexOf` sul marcatore esatto.
+- **Formati di cognome incompatibili**: fantacalcio-online scrive "NUNO TAVARES" o "DIALLO
+  THIAO" (nome+cognome o doppio cognome), il listone scrive "Tavares N." o "Diallo O."
+  (cognome+iniziale, per disambiguare gli omonimi) — nessuna delle due stringhe è prefisso
+  dell'altra. Aggiunto un confronto ulteriore: la PRIMA parola del nome nel listone (il cognome
+  vero) cercata fra le parole del nome trovato sulla pagina. Da 11 giocatori non agganciati su
+  228 a 5, sui dati veri della giornata 4.
+- **Spazi**: "Del Prato" (pagina) contro "Delprato" (listone, senza spazio) — aggiunto un
+  confronto anche senza spazi.
+Dei 5 rimasti non agganciati sui dati veri: 2 sono ambiguità reali (due "Martinez" all'Inter,
+Lautaro e Josep — corretto scartarli, non indovinare), 3 sono giocatori assenti dal listone
+(Yildiz, Israel, Sierro — confermato con una ricerca diretta, non un limite del matching).
+
+**Il numero di giornata** non è scritto in chiaro nella pagina: si ricava dai link interni
+`/voti/N-giornata/...` sparsi nell'HTML (prendendo il più frequente, non il primo, come
+protezione contro un singolo link fuori posto).
+
+**Limiti dichiarati, non risolti oggi** (coerente con "minimo indispensabile" chiesto
+dall'utente): nessun campo `modulo` per squadra (lasciato `null`), nessuna sfumatura
+`incerto`+tasso di subentro come la fonte principale, mai girato per davvero dentro una Action
+(solo `--prova` in locale, che valida senza scrivere). Se in futuro cambia il markup della
+pagina, la soglia minima di sicurezza (100 giocatori agganciati) blocca la scrittura invece di
+salvare un JSON mezzo vuoto — stessa disciplina della fonte principale.
+
 ## File
 
 - `index.html` — l'app. Single-file, stessa filosofia dell'asta: CSS in `<style>`, listone in
   `<script id="listone-data">`, logica in un unico IIFE. Nessuna dipendenza esterna.
 - `manifest.webmanifest` + `sw.js` — installazione e funzionamento offline. Hanno effetto solo se
   la cartella è servita via http/https.
-- `tools/fetch-probabili.mjs` — lo scraper. **Gira solo in CI, mai nel browser.**
+- `tools/fetch-probabili.mjs` — lo scraper principale. **Gira solo in CI, mai nel browser.**
+- `tools/fetch-probabili-alt.mjs` — fonte di **riserva**, gira solo se quella principale fallisce
+  (vedi *Seconda fonte per le probabili* sotto).
 - `dati/probabili.json` — output dello scraper. L'app lo legge **prima direttamente da GitHub**
   (`fetchDati()` in `index.html`), e solo se non risponde ripiega sulla copia locale pubblicata
   con l'app. Vedi *Aggiornamenti e crediti Netlify*.
