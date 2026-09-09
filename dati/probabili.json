@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-08T21:44:47.005Z",
+ "generato": "2026-09-09T09:27:40.901Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 4,
  "giornateDiscordi": [
@@ -757,7 +757,7 @@
    "nome": "Martinez L.",
    "squadra": "Inter",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 75,
    "titolare": true,
    "incerto": false
   },
@@ -874,9 +874,9 @@
    "nome": "Akanji",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 90,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4177": {
    "id": 4177,
@@ -2017,7 +2017,7 @@
    "nome": "Carlos Augusto",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -3232,7 +3232,7 @@
    "nome": "Esposito F.P.",
    "squadra": "Inter",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 60,
    "titolare": true,
    "incerto": true
   },
@@ -4940,18 +4940,6 @@
     "pct": 55
    },
    {
-    "id": 4177,
-    "nome": "Pavard",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 4159,
-    "nome": "Akanji",
-    "pct": 55
-   },
-   {
     "id": 2514,
     "nome": "Stones",
     "pct": 45
@@ -4973,12 +4961,12 @@
    {
     "id": 7071,
     "nome": "Esposito F.P.",
-    "pct": 55
+    "pct": 60
    },
    {
     "id": 4871,
     "nome": "Thuram",
-    "pct": 45
+    "pct": 40
    }
   ]
  ],
@@ -5111,7 +5099,7 @@
   "5735": {
    "id": 5735,
    "tipo": "infortunato",
-   "nota": "problema muscolare alla gamba, out contro Juventus"
+   "nota": "lesione di grado moderato al flessore della gamba destra, rientro da inizio ottobre"
   },
   "5880": {
    "id": 5880,
