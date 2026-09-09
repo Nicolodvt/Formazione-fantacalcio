@@ -130,6 +130,22 @@
     padding:7px 12px; text-align:center; }
   .warnbar.info{ background:rgba(240,188,70,.12); border-color:rgba(240,188,70,.3); color:#F2D89A; }
 
+  /* Countdown per schierare, ben visibile appena si apre l'app — prima cosa dopo la testata.
+     Sfondo distinto da status-strip per farla notare senza essere un altro warnbar (non e'
+     un avviso finche' la scadenza non e' passata). */
+  .deadline-strip{ display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:9px 12px; background:var(--surface2); border-bottom:1px solid var(--line); }
+  .deadline-strip.scaduta{ background:rgba(240,99,95,.14); }
+  .dl-info{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+  .dl-label{ font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px; }
+  .dl-tempo{ font-size:18px; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .deadline-strip.scaduta .dl-tempo{ color:var(--neg); }
+  .dl-btn{ flex-shrink:0; background:var(--surface3); border:1px solid var(--line-2);
+    color:var(--text-dim); border-radius:var(--radius-sm); padding:9px 12px; font-size:12.5px;
+    font-weight:700; position:relative; }
+  .dl-btn::after{ content:""; position:absolute; inset:-6px; }
+  .dl-btn.on{ background:var(--role-d-soft); border-color:var(--role-d); color:var(--pos); }
+
   /* ---------- Campo ---------- */
   /* Erba vera: righe di taglio ALTERNATE (un verde piu chiaro e uno piu scuro, non trasparenza
      su un fondo unico) piu bordo del campo e cerchio di centrocampo. Le caselle dei giocatori
@@ -342,7 +358,7 @@
 
   /* Su tablet la lista a tutta larghezza sparpaglia i numeri agli antipodi dello schermo. */
   @media (min-width:820px){
-    .tabs, .status-strip, .pitch, .kpis, .prow, .modulo-row, .sec-title, .warnbar{
+    .tabs, .status-strip, .deadline-strip, .pitch, .kpis, .prow, .modulo-row, .sec-title, .warnbar{
       max-width:880px; margin-left:auto; margin-right:auto; }
     .sheet{ max-width:880px; left:50%; transform:translateX(-50%); border-radius:22px 22px 0 0; }
   }
@@ -359,6 +375,13 @@
       <span class="sp"></span>
       <button class="icon-btn" id="btnRicarica">Aggiorna</button>
       <button class="icon-btn" id="btnSettings">⚙</button>
+    </div>
+    <div class="deadline-strip" id="deadlineStrip" style="display:none">
+      <div class="dl-info">
+        <span class="dl-label" id="dlLabel">Tempo rimasto per schierare</span>
+        <span class="dl-tempo" id="dlTempo">—</span>
+      </div>
+      <button class="dl-btn" id="btnSchierato">Ho schierato</button>
     </div>
     <div class="tabs">
       <button class="tab on" data-vista="campo">Campo</button>
@@ -958,14 +981,16 @@ let S = {
   modulo: '4-3-3',
   bloccati: {},          // id -> true: casella fissata a mano
   override: {},          // id -> certezza forzata a mano (0..1)
-  vista: 'campo'
+  vista: 'campo',
+  giornataSchierata: null  // numero di giornata gia segnata come "ho schierato", o null
 };
 
 function salva(){
   try{
     localStorage.setItem(CHIAVE, JSON.stringify({
       rosa:S.rosa, prezzi:S.prezzi, squadraNome:S.squadraNome,
-      modulo:S.modulo, bloccati:S.bloccati, override:S.override
+      modulo:S.modulo, bloccati:S.bloccati, override:S.override,
+      giornataSchierata:S.giornataSchierata
     }));
   }catch(e){ /* private browsing o quota piena: si continua in memoria */ }
 }
@@ -978,6 +1003,7 @@ function carica(){
     S.squadraNome = d.squadraNome||'La mia squadra';
     S.modulo = MODULI[d.modulo] ? d.modulo : '4-3-3';
     S.bloccati = d.bloccati||{}; S.override = d.override||{};
+    S.giornataSchierata = (typeof d.giornataSchierata==='number') ? d.giornataSchierata : null;
   }catch(e){}
 }
 
@@ -1073,6 +1099,125 @@ const ORE_DATI_VECCHI = 96;
 function oreDati(){
   if(!PROB || !PROB.generato) return null;
   return (Date.now() - new Date(PROB.generato).getTime())/3600000;
+}
+
+/* =======================================================================================
+   SCADENZA DELLA GIORNATA — countdown in testata
+   Due momenti diversi contano: la SCADENZA (qualche minuto prima del calcio d'inizio della
+   prima partita del turno, l'ultimo istante utile per schierare) e il CALCIO D'INIZIO vero e
+   proprio. Finche' non hai segnato la formazione come schierata, il countdown punta alla
+   scadenza ("tempo rimasto per schierare"); dopo, contare verso un termine gia rispettato non
+   direbbe piu nulla di utile, quindi punta al fischio d'inizio ("tempo all'inizio della
+   giornata") — la stessa informazione che il promemoria push gia usa, ma qui sempre visibile
+   in testata, non solo quando arriva una notifica.
+   ======================================================================================= */
+
+/* Stessa regex di tools/calendario.mjs (parseData), duplicata apposta: quello gira in Node
+   per gli script, questo nel browser, e il progetto non condivide codice fra i due mondi se
+   non per il motore (vedi tools/estrai-motore.mjs). Se cambia il formato della data scaricata
+   da fantacalcio.it va aggiornata in ENTRAMBI i posti. */
+const MESI_IT = { gennaio:0, febbraio:1, marzo:2, aprile:3, maggio:4, giugno:5,
+  luglio:6, agosto:7, settembre:8, ottobre:9, novembre:10, dicembre:11 };
+function parseDataPartita(s){
+  if(!s) return null;
+  const m = s.match(/(\d{1,2})\s+([a-zàèìòù]+),?\s+(\d{1,2}):(\d{2})/i);
+  if(!m) return null;
+  const mese = MESI_IT[m[2].toLowerCase()];
+  if(mese==null) return null;
+  const oggi = new Date(), anno = oggi.getFullYear();
+  let d = new Date(anno, mese, +m[1], +m[3], +m[4]);
+  if(d.getTime() < oggi.getTime() - 7*24*3600*1000) d = new Date(anno+1, mese, +m[1], +m[3], +m[4]);
+  return d;
+}
+
+/* Quanti minuti prima del calcio d'inizio scade la formazione su Leghe Fantacalcio. Dichiarato
+   a intuito, non verificato sul regolamento della lega — stessa cautela gia usata altrove per
+   le costanti non misurate (vedi CASA_BONUS). */
+const MINUTI_SCADENZA = 5;
+
+/* Il momento piu vicino fra TUTTE le partite del turno, non solo quella della tua squadra: se
+   il turno si apre con un anticipo di venerdi, la scadenza per schierare e quella, anche se la
+   tua prima partita e domenica. */
+function calcioInizioGiornata(){
+  if(!PROB || !PROB.partite || !PROB.partite.length) return null;
+  const tempi = PROB.partite.map(p=> parseDataPartita(p.data)).filter(Boolean);
+  if(!tempi.length) return null;
+  return new Date(Math.min.apply(null, tempi.map(d=> d.getTime())));
+}
+
+/* A cosa punta il countdown adesso, e con quale scritta — secondo se la formazione e gia
+   segnata come schierata per QUESTA giornata. S.giornataSchierata si confronta con
+   PROB.giornata invece di essere un semplice booleano: cosi si "dimentica" da solo appena
+   arriva una giornata nuova, senza bisogno di azzerarlo a mano da nessuna parte. */
+function statoScadenza(){
+  const inizio = calcioInizioGiornata();
+  if(!inizio || PROB.giornata==null) return null;
+  const scadenza = new Date(inizio.getTime() - MINUTI_SCADENZA*60000);
+  const schierato = S.giornataSchierata === PROB.giornata;
+  const ora = Date.now();
+  if(ora >= inizio.getTime()) return { label:'Giornata in corso', target:null, schierato, scaduta:false };
+  if(schierato || ora >= scadenza.getTime()){
+    return {
+      label: schierato ? 'Tempo all\'inizio della giornata' : 'Scaduto — si comincia tra',
+      target: inizio, schierato, scaduta: !schierato
+    };
+  }
+  return { label:'Tempo rimasto per schierare', target:scadenza, schierato:false, scaduta:false };
+}
+
+function formattaCountdown(ms){
+  if(ms==null || ms<=0) return '00:00';
+  const tot = Math.floor(ms/1000);
+  const gg = Math.floor(tot/86400), hh = Math.floor((tot%86400)/3600),
+        mm = Math.floor((tot%3600)/60), ss = tot%60;
+  if(gg>0) return gg+'g '+hh+'h '+mm+'m';
+  if(hh>0) return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+  return String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+}
+
+/* Aggiorna solo il testo della striscia, non l'intera vista: gira ogni secondo (vedi
+   avviaCountdown piu sotto), e un render() completo ogni secondo ridisegnerebbe anche
+   campo/rosa/moduli per nulla — lo stesso principio gia seguito per il resto dell'app. */
+function aggiornaCountdown(){
+  const strip = el('#deadlineStrip');
+  if(!strip) return;
+  const st = statoScadenza();
+  if(!st){ strip.style.display = 'none'; return; }
+  strip.style.display = 'flex';
+  strip.classList.toggle('scaduta', st.scaduta);
+  el('#dlLabel').textContent = st.label;
+  el('#dlTempo').textContent = st.target ? formattaCountdown(st.target.getTime() - Date.now()) : '';
+  const btn = el('#btnSchierato');
+  btn.textContent = st.schierato ? '✓ Schierato' : 'Ho schierato';
+  btn.classList.toggle('on', st.schierato);
+}
+
+/* Il timer gira solo mentre l'app e' davvero in primo piano: un setInterval che continua a
+   girare a schermo spento sprecherebbe batteria per un numero che nessuno sta guardando —
+   stesso principio gia seguito per l'aggiornamento dati (vedi visibilitychange piu sotto). */
+let countdownTimer = null;
+function avviaCountdown(){
+  aggiornaCountdown();
+  if(countdownTimer) return;
+  countdownTimer = setInterval(aggiornaCountdown, 1000);
+}
+function fermaCountdown(){
+  if(countdownTimer){ clearInterval(countdownTimer); countdownTimer = null; }
+}
+
+/* Comunica il tuo "ho schierato" alla funzione Netlify (netlify/functions/schierato.mjs, dati
+   condivisi con la Action che manda i promemoria — vedi tools/promemoria-scadenza.mjs): e il
+   canale che permette alla Action di NON avvisarti per una formazione gia fatta. Se fallisce
+   (offline, o la funzione non e ancora pubblicata) il segno resta comunque valido qui sul
+   telefono: si ritenta da solo al prossimo "Aggiorna" (vedi aggiornaDati), senza bloccare
+   l'interazione nel frattempo — stessa disciplina di "degradare dicendolo" gia vista altrove. */
+async function sincronizzaSchierato(giornata, schierato){
+  try{
+    await fetch('./.netlify/functions/schierato', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({giornata, schierato})
+    });
+  }catch(e){ /* offline o funzione non raggiungibile: si ritenta al prossimo giro */ }
 }
 
 /* Scarica i voti delle giornate gia giocate. Non c'e un indice dei file: si prova a
@@ -1405,6 +1550,7 @@ function render(){
   }
 
   document.querySelectorAll('.tab').forEach(t=> t.classList.toggle('on', t.dataset.vista===S.vista));
+  aggiornaCountdown();
 }
 
 /* =======================================================================================
@@ -1701,8 +1847,9 @@ function apriSettings(){
   }
 
   h += '<h4>Notifiche</h4>' +
-    '<p class="note" style="margin:0 0 8px">Un promemoria push quando manca poco alla prima ' +
-    'partita della giornata, cosi non ti scordi di schierare.</p>' +
+    '<p class="note" style="margin:0 0 8px">Promemoria push scaglionati (24, 12, 6, 2, 1 ora e ' +
+    '30 minuti prima della scadenza), cosi non ti scordi di schierare. Si fermano da soli ' +
+    'appena tocchi "Ho schierato" in cima alla schermata Campo.</p>' +
     '<div id="notifStato" class="note" style="margin:0 0 8px">Controllo lo stato...</div>' +
     '<div class="btn-row" id="notifBtns"></div>';
 
@@ -1917,11 +2064,29 @@ async function aggiornaDati(mostraToast){
   await caricaStorico();
   aggiornaForzaSquadre();
   render();
+  /* Ritenta in silenzio la sincronizzazione dello "schierato": se il primo tentativo (al tocco
+     del bottone) era fallito perche' offline, un aggiornamento dati riuscito e il momento giusto
+     per riprovare, senza bisogno che l'utente tocchi di nuovo il bottone. */
+  if(PROB && S.giornataSchierata===PROB.giornata) sincronizzaSchierato(PROB.giornata, true);
   if(mostraToast!==false) toast(ok ? 'Dati aggiornati' : 'Dati non raggiungibili');
   return ok;
 }
 el('#btnRicarica').addEventListener('click', ()=> aggiornaDati());
 el('#overlay').addEventListener('click', chiudiSheet);
+
+/* "Ho schierato": un tap segna/toglie la giornata corrente come schierata. E' un toggle
+   apposta (si puo' tornare indietro per errore), e la sincronizzazione col resto (countdown,
+   notifiche) e' immediata: aggiornaCountdown() aggiorna la scritta senza un render() completo,
+   sincronizzaSchierato() avvisa la funzione Netlify che decide se mandare ancora i promemoria. */
+el('#btnSchierato').addEventListener('click', ()=>{
+  if(!PROB || PROB.giornata==null) return;
+  const eraSchierato = S.giornataSchierata === PROB.giornata;
+  S.giornataSchierata = eraSchierato ? null : PROB.giornata;
+  salva();
+  aggiornaCountdown();
+  toast(eraSchierato ? 'Segnato come non ancora schierato' : 'Segnato: hai schierato');
+  sincronizzaSchierato(PROB.giornata, !eraSchierato);
+});
 
 /* ---------- Gesti ---------- */
 
@@ -2033,14 +2198,20 @@ attivaTrascinamentoSheet(el('#settingsSheet'));
   main.addEventListener('pointercancel', fine);
 })();
 
-/* Aggiornamento quando l'app torna in primo piano, non un timer che gira in sottofondo: un
-   controllo periodico continuerebbe a girare (e a consumare batteria) anche quando il telefono
-   e' in tasca con lo schermo spento. Aspettare che l'utente riapra l'app e farlo solo se i dati
-   sono passati di moda costa zero quando l'app resta chiusa, che e' la stragrande maggioranza
-   del tempo per un'app che si apre una volta a settimana. */
+/* Aggiornamento dei DATI quando l'app torna in primo piano, non un timer che gira in
+   sottofondo: un controllo periodico continuerebbe a girare (e a consumare batteria) anche
+   quando il telefono e' in tasca con lo schermo spento. Aspettare che l'utente riapra l'app e
+   farlo solo se i dati sono passati di moda costa zero quando l'app resta chiusa, che e' la
+   stragrande maggioranza del tempo per un'app che si apre una volta a settimana.
+   Il COUNTDOWN e' l'unica eccezione dichiarata a questo principio: per restare un vero
+   secondo-per-secondo deve girare mentre l'app e' aperta (avviaCountdown/fermaCountdown), ma si
+   ferma comunque appena l'app va in background, cosi non gira mai a schermo spento. */
 document.addEventListener('visibilitychange', ()=>{
-  if(document.visibilityState==='visible' && oreDati()!=null && oreDati()>0.75){
-    aggiornaDati(false);
+  if(document.visibilityState==='visible'){
+    avviaCountdown();
+    if(oreDati()!=null && oreDati()>0.75) aggiornaDati(false);
+  }else{
+    fermaCountdown();
   }
 });
 
@@ -2052,6 +2223,7 @@ caricaProbabili(false)
   .then(()=> { aggiornaForzaSquadre(); render(); });
 caricaCostanti().then(()=> render());
 render();
+avviaCountdown();
 
 if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
