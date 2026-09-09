@@ -1,20 +1,20 @@
 # App Formazione — Diario di bordo
 
-**Stato: v0.4 (09/09/2026).** Fasi 0, 1, 2 e 3 chiuse, notifiche push implementate e ora
-scaglionate su una scadenza vera (vedi *Countdown e promemoria scaglionati* sotto). L'app
-schiera, sceglie il modulo, funziona offline, e la stima si mescola da sola con i voti veri man
-mano che arrivano — a livello di singolo giocatore (Fase 3), di ruolo (`RETTIFICA_RUOLO`) e di
-squadra intera (`MV_SQUADRA`/`ATT_SQUADRA`, per la prossima partita: avversario, casa/trasferta) —
-più la condizione fisica recente. La GitHub Action scarica probabili e voti da sola. **Non è
-ancora online su Netlify** — una nota precedente lo dava per fatto, era sbagliata: l'utente non se
-lo ricordava e non c'è nessuna traccia di un deploy reale. Il prossimo deploy sarà anche il primo
-per questo progetto, e stavolta porta con sé una vera dipendenza (`@netlify/blobs`, per la
-funzione `netlify/functions/schierato.mjs`): serve un deploy con build vera (git collegato, non
-un drag&drop), non solo file statici — vedi *Da fare*. **Attenzione:** per lo stesso motivo, tutto
-ciò che è descritto qui come "automatico" (cadenza rinforzata del venerdì, promemoria push,
-ricalibrazione) gira davvero solo su `dev` — GitHub esegue lo `schedule` di una Action solo dalla
-copia sul branch di default (`main`), quindi finché non c'è il merge l'automazione reale in
-produzione è ancora quella vecchia (vedi *Da fare*). Traguardo: **4ª giornata**.
+**Stato: v0.5 (09/09/2026) — ONLINE E IN USO.** Pubblicata su Netlify (repository GitHub collegato
+con build vera, non drag&drop: serve per la dipendenza della funzione `schierato.mjs`), rosa vera
+dell'utente importata, app installata sul telefono, notifiche push attivate (entrambi i secret e
+la variable impostati su GitHub), verificato dal vivo con un giro manuale del workflow
+(`workflow_dispatch`, completato con successo). `main` e `dev` sono allineati: tutto quello che
+sembra "automatico" in questo file gira davvero in produzione, non solo su `dev` come nelle note
+precedenti di questo stesso paragrafo (correzione, non più un rischio da tenere a mente).
+
+Fasi 0, 1, 2 e 3 chiuse. L'app schiera, sceglie il modulo, funziona offline, e la stima si mescola
+da sola con i voti veri man mano che arrivano — a livello di singolo giocatore (Fase 3), di ruolo
+(`RETTIFICA_RUOLO`) e di squadra intera (`MV_SQUADRA`/`ATT_SQUADRA`, per la prossima partita:
+avversario, casa/trasferta) — più la condizione fisica recente. Countdown e promemoria scaglionati
+su una scadenza vera (vedi sezione dedicata). La GitHub Action scarica probabili e voti da sola,
+con una seconda fonte di riserva se la prima fallisce. Traguardo raggiunto: **4ª giornata**, l'app
+è ora lo strumento vero con cui l'utente schiera, non più un prototipo.
 
 Progetto separato dall'app asta, che vive nella cartella superiore. Quella serve a *comprare* ed è
 finita lunedì; questa serve a *schierare* e deve reggere 38 giornate.
@@ -1111,6 +1111,16 @@ inerzia) di un dispositivo vero, mai testata qui.
    verificati solo con eventi sintetici in emulazione, mai il tatto reale. In particolare lo
    swipe fra tab e il pull-to-refresh, che dipendono di più dalla sensazione (velocità, inerzia)
    di quanto la logica da sola possa garantire.
+13. **Vista Moduli lenta al tocco** (segnalato dall'utente il 09/09, dopo il primo giro vero
+   sull'app pubblicata). Causa trovata: `vistaModuli()` chiama `classificaModuli()`, che rifà
+   `valuta()` — 1500 giornate simulate, `N_SIM` — per **tutti e 7** i moduli ad OGNI tocco su una
+   riga, anche se l'unica cosa cambiata e' quale modulo e' evidenziato come "attuale": 10.500
+   partite simulate per un tocco che di fatto non cambia i 7 numeri, solo quale riga li porta in
+   cima. La correzione giusta: mettere in cache i risultati dei 7 moduli (calcolati una volta
+   sola) e invalidare la cache solo quando cambiano davvero rosa o dati — non quando cambia solo
+   quale modulo e' "attuale". Scartate: ridurre `N_SIM` (piu' veloce ma stime piu' rumorose, tocca
+   la qualita' del modello) e spostare la simulazione in un Web Worker (evita il blocco della UI
+   ma aggiunge complessita' vera). Non ancora implementato, solo diagnosticato.
 
 **Aperto, non bloccante:** il regolamento della lega (moduli ammessi, numero di cambi, soglie del
 modificatore, e **se il cambio del portiere consuma uno dei tre cambi di movimento** — in molte
