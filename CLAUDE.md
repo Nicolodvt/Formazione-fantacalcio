@@ -116,6 +116,64 @@ con un abbonamento finto: fallisce nel punto giusto, con l'errore giusto, senza 
 marker di "già avvisato"). Stessa categoria del limite già dichiarato sul service worker
 dell'asta: mai verificato su un telefono vero.
 
+## Sette correzioni dal primo uso vero (09/09/2026, sera)
+
+Dopo il primo giro reale sull'app pubblicata, l'utente ha segnalato sette cose da rivedere.
+Discusse una per una con un piano e una stima di rischio prima di scrivere codice — nessuna
+ha richiesto un cambio architetturale, tutte contenute.
+
+1. **Vista Moduli lenta** — causa gia' diagnosticata la sera prima (vedi sopra): `classificaModuli()`
+   ora ha una cache con un fingerprint economico (`chiaveModuli()`, nessuna simulazione) di
+   rosa/bloccati/override/dati/storico/correzioni/forza-squadre; si ricalcola solo se quel
+   fingerprint cambia davvero. `vistaCampo()` ora legge lo stesso risultato invece di rifare
+   `scegliUndici`+`valuta()` una seconda volta per conto suo.
+2. **Modulo migliore di default, non 4-3-3 fisso** — `applicaModuloAutomatico()`, chiamata in
+   testa a `render()`: se per la giornata corrente non hai ancora scelto un modulo a mano
+   (`S.giornataModuloManuale !== PROB.giornata`), imposta da solo quello con piu' punti attesi.
+   **Opzione A** scelta esplicitamente dall'utente fra due: si applica solo finche' non tocchi
+   tu un modulo diverso, dopo resta quello finche' non arriva una giornata nuova — mai
+   sovrascrive una scelta deliberata senza dirlo. Verificato dal vivo: 3-4-3 (il migliore per
+   la rosa vera) si autoseleziona all'apertura; scegliendo 4-4-2 a mano, resta 4-4-2 anche dopo
+   un refresh della pagina.
+3. **"Le tue scelte vs il modello"** — nuova sezione in Impostazioni, sotto "Formazione da
+   copiare". Risponde alla domanda esplicita dell'utente ("se schiero diverso dal consiglio, ha
+   senso dirlo all'app?"): la risposta e' che il modello impara gia' da solo dai voti veri,
+   indipendentemente da cosa schieri — quindi questa non e' una correzione al modello, e'
+   trasparenza/fiducia. Al tocco di "Ho schierato" (`catturaResoconto()`), si salva sia l'undici
+   che schieri davvero sia quello che il modello puro avrebbe scelto per lo stesso modulo
+   (stesso calcolo con `S.bloccati` svuotato per un istante, cosi isola esattamente l'effetto
+   delle tue forzature manuali). Quando arrivano i voti veri di quella giornata,
+   `puntiRealiXI()` — stessa formula di `simula()` ma sui fantavoti reali, zero incertezza da
+   stimare — confronta i due undici, e `otticoAPosteriori()` calcola anche il massimo possibile
+   scoperto solo col senno di poi (nessuna simulazione: si sa gia' chi ha preso voto).
+   Verificato con dati veri della giornata 3 (due giocatori scambiati apposta, scarto reale di
+   4.0 fantavoto): il confronto mostrato torna esatto. Salvato in una chiave localStorage a
+   parte (`fantaFormazione_resoconto`), cresce di una riga per giornata, mai piu' di 38 in una
+   stagione.
+4. **Swipe dall'intestazione della scheda giocatore** — `attivaTrascinamentoSheet()` accettava
+   il gesto solo dalla maniglia sottile; ora anche da `.sheet-head` (nome+sottotitolo, dove non
+   c'e' nulla da scorrere). Solo la scheda giocatore, non quella Impostazioni — richiesta
+   specifica, non estesa per simmetria.
+5. **Doppia conferma** per "Cancella rosa" e "Disattiva notifiche" — `confermaPericolosa()`,
+   un riquadro nello stile dell'app (non il `confirm()` del telefono, troppo facile da toccare
+   per abitudine) con "Annulla" e "Conferma" ben distinti. Prima "Disattiva notifiche" non ne
+   aveva nessuna.
+6. **Colori nella scheda giocatore** — prima tutta una tinta neutra tranne il pallino
+   percentuale. Aggiunto, riusando lo stesso linguaggio cromatico gia' in uso altrove (mai
+   colori nuovi inventati): `rolebar` di ruolo accanto al nome (stesso componente delle righe
+   rosa/ballottaggio), "Fantamedia attesa" in colore accento, "Prende voto" come badge colorato
+   (`pct-badge`+`classePct`, gia' usato altrove), il segno dell'aggiustamento "prossima
+   partita" e lo scarto di "rendimento reale" colorati verde/rosso in base al segno.
+7. **Contatore rosa realistico** — "Difensore 8/8" era "quanti ne hai / quanto te ne permette
+   il regolamento" (sempre pieno a stagione avviata, informazione morta dopo l'asta). Ora e'
+   "quanti disponibili questa giornata / quanti ne hai in rosa", escludendo solo infortunati e
+   squalificati (i dubbi restano contati: potrebbero comunque giocare).
+
+**Verificato**: `controlla.mjs`, `prova-motore.mjs`, `taratura.mjs` puliti prima e dopo ogni
+pezzo. Tutti e sette i punti provati dal vivo nel browser (non solo letti nel codice): tap sui
+moduli, refresh con modulo manuale che resiste, scheda con colori e swipe dall'intestazione,
+doppia conferma su entrambi i bottoni, resoconto con numeri reali verificati a mano.
+
 ## Countdown e promemoria scaglionati (09/09/2026)
 
 Richiesta esplicita dell'utente, in due parti: un countdown sempre visibile in testata verso
