@@ -1,0 +1,69 @@
+name: Promemoria scadenza formazione
+
+# Workflow separato da "Aggiorna dati di giornata" apposta: quello scarica pagine vere da
+# fantacalcio.it e per rispetto verso il sito non gira piu' spesso di una volta all'ora (vedi
+# dati.yml). Questo NON tocca fantacalcio.it per niente - legge solo dati/probabili.json gia'
+# sul disco - quindi puo' girare molto piu' spesso senza alcun costo di cortesia. Serve
+# davvero questa frequenza: le soglie piu' vicine alla scadenza (1 ora, 30 minuti) hanno una
+# finestra di 20 minuti (vedi tools/promemoria-scadenza.mjs) da centrare, ogni giorno della
+# settimana - i turni si giocano anche il weekend, quando dati.yml non gira quasi mai.
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: promemoria-scadenza
+  cancel-in-progress: false
+
+jobs:
+  controlla:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Se i secret non sono impostati lo script esce subito da solo (vedi
+      # promemoria-scadenza.mjs): l'install qui sotto e' innocuo anche in quel caso, costa solo
+      # qualche secondo in piu' quando non serve a nulla.
+      - name: Promemoria, se dovuto
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_SUBSCRIPTION: ${{ secrets.PUSH_SUBSCRIPTION }}
+          # Variabile (non secret: e' solo l'URL pubblico del sito) da impostare una tantum in
+          # Settings -> Secrets and variables -> Actions -> Variables, una volta pubblicato su
+          # Netlify. Finche' manca lo script funziona lo stesso ma non puo' sapere se hai gia'
+          # schierato, quindi manda comunque il promemoria (vedi eGiaSchierato in
+          # promemoria-scadenza.mjs: fallisce "aperto", non "chiuso").
+          NETLIFY_SITE_URL: ${{ vars.NETLIFY_SITE_URL }}
+        run: |
+          npm install --no-save web-push@3.6.7 --silent
+          node "tools/promemoria-scadenza.mjs"
+
+      - name: Committa se e cambiato qualcosa
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Il file potrebbe non esistere ancora (nessuna soglia e' mai scattata): "git add" su
+          # un percorso inesistente fallirebbe il passo, quindi si controlla prima.
+          if [ ! -f dati/scadenza-promemoria.json ]; then
+            echo "Nessun file da committare."
+            exit 0
+          fi
+          # git add PRIMA del controllo: al primissimo giro il file non e' ancora tracciato, e
+          # "git diff" (a differenza di "git diff --cached") non vede i file non tracciati - il
+          # controllo direbbe "nessuna variazione" anche quando il file e' appena stato creato.
+          git add dati/scadenza-promemoria.json
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione: niente commit."
+            exit 0
+          fi
+          git commit -m "Promemoria scadenza — $(date -u '+%d/%m %H:%M UTC')"
+          git push

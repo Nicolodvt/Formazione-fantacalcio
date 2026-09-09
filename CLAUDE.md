@@ -1,18 +1,20 @@
 # App Formazione — Diario di bordo
 
-**Stato: v0.3 (04/09/2026).** Fasi 0, 1, 2 e 3 chiuse, notifiche push implementate. L'app schiera,
-sceglie il modulo, funziona offline, e la stima si mescola da sola con i voti veri man mano che
-arrivano — a livello di singolo giocatore (Fase 3), di ruolo (`RETTIFICA_RUOLO`) e di squadra
-intera (`MV_SQUADRA`/`ATT_SQUADRA`, per la prossima partita: avversario, casa/trasferta) — più
-la condizione fisica recente. La GitHub Action scarica probabili e voti da sola. **Non è ancora
-online
-su Netlify** — una nota precedente lo dava per fatto, era sbagliata: l'utente non se lo ricordava e
-non c'è nessuna traccia di un deploy reale. Resta da fare, apposta, a lavoro finito (vedi
-*Aggiornamenti e crediti Netlify* sotto). **Attenzione:** per lo stesso motivo, tutto ciò che è
-descritto qui come "automatico" (cadenza rinforzata del venerdì, promemoria push, ricalibrazione)
-gira davvero solo su `dev` — GitHub esegue lo `schedule` di una Action solo dalla copia sul branch
-di default (`main`), quindi finché non c'è il merge l'automazione reale in produzione è ancora
-quella vecchia (vedi *Da fare*, punto 3). Traguardo: **4ª giornata**.
+**Stato: v0.4 (09/09/2026).** Fasi 0, 1, 2 e 3 chiuse, notifiche push implementate e ora
+scaglionate su una scadenza vera (vedi *Countdown e promemoria scaglionati* sotto). L'app
+schiera, sceglie il modulo, funziona offline, e la stima si mescola da sola con i voti veri man
+mano che arrivano — a livello di singolo giocatore (Fase 3), di ruolo (`RETTIFICA_RUOLO`) e di
+squadra intera (`MV_SQUADRA`/`ATT_SQUADRA`, per la prossima partita: avversario, casa/trasferta) —
+più la condizione fisica recente. La GitHub Action scarica probabili e voti da sola. **Non è
+ancora online su Netlify** — una nota precedente lo dava per fatto, era sbagliata: l'utente non se
+lo ricordava e non c'è nessuna traccia di un deploy reale. Il prossimo deploy sarà anche il primo
+per questo progetto, e stavolta porta con sé una vera dipendenza (`@netlify/blobs`, per la
+funzione `netlify/functions/schierato.mjs`): serve un deploy con build vera (git collegato, non
+un drag&drop), non solo file statici — vedi *Da fare*. **Attenzione:** per lo stesso motivo, tutto
+ciò che è descritto qui come "automatico" (cadenza rinforzata del venerdì, promemoria push,
+ricalibrazione) gira davvero solo su `dev` — GitHub esegue lo `schedule` di una Action solo dalla
+copia sul branch di default (`main`), quindi finché non c'è il merge l'automazione reale in
+produzione è ancora quella vecchia (vedi *Da fare*). Traguardo: **4ª giornata**.
 
 Progetto separato dall'app asta, che vive nella cartella superiore. Quella serve a *comprare* ed è
 finita lunedì; questa serve a *schierare* e deve reggere 38 giornate.
@@ -114,6 +116,94 @@ con un abbonamento finto: fallisce nel punto giusto, con l'errore giusto, senza 
 marker di "già avvisato"). Stessa categoria del limite già dichiarato sul service worker
 dell'asta: mai verificato su un telefono vero.
 
+## Countdown e promemoria scaglionati (09/09/2026)
+
+Richiesta esplicita dell'utente, in due parti: un countdown sempre visibile in testata verso
+la scadenza per schierare, e promemoria push scaglionati (24h/12h/6h/2h/1h/30min prima) che si
+fermano da soli appena la formazione è segnata come schierata.
+
+**Il countdown, tutto client-side.** `index.html`: `calcioInizioGiornata()` trova il momento
+più vicino fra **tutte** le partite del turno (non solo quella della tua squadra: se il turno
+si apre con un anticipo di venerdì, la scadenza è quella), riusando la stessa logica di
+`tools/calendario.mjs` (`parseData`) **duplicata** apposta in `parseDataPartita()` — il
+progetto non condivide codice fra Node e browser se non per il motore (`estrai-motore.mjs`); se
+cambia il formato data di fantacalcio.it va aggiornato in entrambi i posti. `MINUTI_SCADENZA=5`:
+la scadenza è il calcio d'inizio meno 5 minuti, dichiarato a intuito come `CASA_BONUS` e simili,
+non verificato sul regolamento della lega. `statoScadenza()` decide a cosa punta il countdown e
+con quale scritta: verso la scadenza ("Tempo rimasto per schierare") finché `S.giornataSchierata`
+non è marcata per la giornata corrente, poi verso il calcio d'inizio ("Tempo all'inizio della
+giornata"). `S.giornataSchierata` è un **confronto**, non un flag da azzerare a mano: si
+"dimentica" da solo appena arriva una giornata nuova (`PROB.giornata` cambia). Il timer
+(`avviaCountdown`/`fermaCountdown`) è l'unica eccezione dichiarata al principio "nessun timer in
+sottofondo" (vedi *Manovrabilità da smartphone*): gira ogni secondo ma **solo mentre l'app è in
+primo piano**, agganciato allo stesso `visibilitychange` che già gestiva il refresh dati.
+
+**Il bottone "Ho schierato"**, in cima alla vista Campo: un toggle (si può tornare indietro per
+errore), salva subito in locale (`salva()`) e aggiorna il countdown senza un `render()` completo.
+
+**Il problema architetturale vero: far sapere a GitHub che hai schierato.** I promemoria partono
+da una GitHub Action con cron fisso — il server non sa nulla di quello che fai sul telefono, ed è
+voluto (vedi *La decisione che regge tutto*: zero credenziali nel browser, repository pubblico).
+Sopprimere la notifica **lato telefono** (il service worker la riceve ma non la mostra) è stato
+scartato: iOS può revocare l'iscrizione push se un push arriva e non produce una notifica
+visibile, quindi rischierebbe di rompere le notifiche vere per risparmiarne alcune di troppo.
+**Discusso esplicitamente con l'utente** tre opzioni (funzione Netlify, nessuna soppressione,
+meno soglie senza soppressione): ha scelto la funzione Netlify, dopo aver verificato che le
+Functions hanno una quota **separata** dai build minutes (quelli bruciati nell'incidente dei 150
+crediti) — build minutes solo quando Netlify *ricompila e ripubblica* il sito, Functions gira su
+richiesta e non fa scattare nessun deploy. Quota gratuita (~125.000 invocazioni/mese) enormemente
+sopra l'uso reale (poche centinaia di chiamate in tutta la stagione).
+
+**`netlify/functions/schierato.mjs`** — l'unica funzione del progetto, e l'unica dipendenza vera
+(`@netlify/blobs`, in `package.json`+`package-lock.json` alla radice: l'app e gli scraper restano
+a dipendenze zero, qui serve davvero un passo di build che la installi — stessa eccezione già
+accettata per `web-push`). GET `?giornata=N` legge lo stato, POST `{giornata,schierato}` lo
+scrive, su un unico blob JSON (`formazione-stato/schierato`) con al massimo le ultime 6 giornate
+tenute (evita crescita illimitata su 38 giornate). **Nessuna autenticazione**: app per una sola
+persona, il peggio che può succedere se qualcuno trova l'endpoint è un promemoria in più o in
+meno — non vale la complessità di un login per quel rischio, stessa disciplina di "poche cose che
+si possono rompere in silenzio" già seguita altrove.
+
+**`tools/promemoria-scadenza.mjs`** (nuovo, workflow separato `.github/workflows/promemoria.yml`,
+`*/15 * * * *` tutto il giorno tutti i giorni) — **non tocca mai fantacalcio.it**, legge solo
+`dati/probabili.json` già sul disco: nessun limite di cortesia da rispettare, a differenza di
+`dati.yml`. Per ognuna delle 6 soglie non ancora registrate in `dati/scadenza-promemoria.json`
+(si azzera da solo a ogni giornata nuova), se il momento è arrivato entro una finestra di 20
+minuti (il giro è ogni 15: un margine contro un ritardo) chiama la funzione Netlify
+(`eGiaSchierato`, fallisce "aperto" — cioè assume NON schierato — se la funzione non risponde:
+tacere un promemoria per un dubbio tecnico sarebbe peggio che mandarne uno di troppo) e se non sei
+già schierato manda il push, altrimenti salta silenziosamente. Se una soglia viene trovata già
+scaduta OLTRE la finestra (tipico: primissimo giro dopo aver attivato la funzione a metà
+settimana, con soglie da 24h/12h già superate) si segna **"saltata"** invece di spedirla in
+ritardo — un promemoria per un'ora ormai passata confonde più di quanto aiuti. In quel caso le
+soglie si smaltiscono una per giro (il codice valuta sempre e solo la prima non ancora registrata
+in ordine), quindi ci vuole qualche giro prima di raggiungere quella dal vivo.
+**Bug preso in fase di test, non spedito**: `webpush.setVapidDetails()` lancia un'eccezione NON
+gestita se la chiave privata è malformata — su `invia-promemoria.mjs` capitava raramente (poche
+esecuzioni a settimana), ma questo script gira ogni 15 minuti: una chiave sbagliata avrebbe fatto
+crashare il processo 96 volte al giorno invece di fallire una volta con un messaggio pulito. Ora
+avvolto in try/catch. Verificato anche il resto del flusso (soglie che si smaltiscono una per
+giro, scrittura del file solo dopo un invio riuscito o un salto esplicito) con date finte in
+`dati/probabili.json`, mai committate.
+
+**Resta distinto da `invia-promemoria.mjs`/`dati.yml`**: quello avvisa una volta sola che una
+giornata nuova si è aperta ("Giornata N: schiera la formazione"), scopo diverso da "insisti finché
+non hai schierato". Entrambi restano attivi — da rivedere insieme se in pratica sembrano
+ridondanti una volta viste le notifiche vere.
+
+**Testo delle Notifiche in Impostazioni** aggiornato per riflettere le 6 soglie e il bottone che
+le ferma. **Verificato**: `node tools/controlla.mjs` (nessuna perdita), `tools/prova-motore.mjs`
+e `tools/taratura.mjs` (nessuna variazione, il motore non è stato toccato), dal vivo nel browser
+(countdown che parte a "Tempo rimasto per schierare", bottone che lo porta a "Tempo all'inizio
+della giornata" con la scadenza spostata di +5 minuti come atteso, toast di conferma).
+
+**Da fare prima che funzioni davvero** (vedi *Da fare* per il dettaglio):
+pubblicare su Netlify con build vera (non drag&drop: la funzione ha una dipendenza da installare),
+poi impostare la variabile `NETLIFY_SITE_URL` su GitHub (Settings → Secrets and variables →
+Actions → **Variables**, non secrets: è solo l'URL pubblico del sito) — finché manca, lo script
+funziona lo stesso ma non può verificare "schierato" e quindi manda comunque il promemoria
+(fail-open dichiarato, vedi sopra).
+
 ## File
 
 - `index.html` — l'app. Single-file, stessa filosofia dell'asta: CSS in `<style>`, listone in
@@ -139,6 +229,15 @@ dell'asta: mai verificato su un telefono vero.
 - `dati/costanti.json` — output di `ricalibra.mjs`, letto dall'app allo stesso modo dei dati di
   giornata (`fetchDati()`). Assente o irraggiungibile ⇒ correzione zero, comportamento di sempre.
 - `tools/controlla.mjs` — controllo di integrità, **da lanciare dopo ogni modifica**.
+- `netlify/functions/schierato.mjs` — l'unica funzione Netlify del progetto: ricorda se la
+  giornata corrente è già schierata, condiviso fra `index.html` (scrive) e
+  `tools/promemoria-scadenza.mjs` (legge). Vedi *Countdown e promemoria scaglionati*.
+- `package.json`/`package-lock.json` — solo per `@netlify/blobs`, la dipendenza della funzione
+  sopra. L'app e gli scraper restano a dipendenze zero.
+- `tools/promemoria-scadenza.mjs` — promemoria scaglionati verso la scadenza (24h→30min),
+  workflow separato `.github/workflows/promemoria.yml` (ogni 15 minuti, non tocca
+  fantacalcio.it). Diverso da `tools/invia-promemoria.mjs` (quello avvisa una volta sola
+  dell'apertura di una giornata nuova, resta anche lui).
 
 ## La decisione che regge tutto: fetcher fuori dall'app
 
@@ -873,12 +972,17 @@ inerzia) di un dispositivo vero, mai testata qui.
   a fine stagione.
 
 **Da fare:**
-1. **Impostare due secret su GitHub** (repository → Settings → Secrets and variables → Actions)
-   perché le notifiche comincino davvero a funzionare — tocca all'utente, non lo faccio io:
+1. **Impostare secret e variabili su GitHub** (repository → Settings → Secrets and variables →
+   Actions) perché le notifiche comincino davvero a funzionare — tocca all'utente, non lo faccio
+   io:
    - `VAPID_PRIVATE_KEY`: generata il 04/09, sta nel diario di quella sessione (non in nessun
      file del repo).
    - `PUSH_SUBSCRIPTION`: si ottiene aprendo l'app → Impostazioni → Notifiche → "Attiva
      promemoria", poi copiando il testo che appare.
+   - `NETLIFY_SITE_URL` (09/09, sotto **Variables**, non Secrets: è solo l'URL pubblico del
+     sito): serve a `tools/promemoria-scadenza.mjs` per sapere dove chiedere se hai già
+     schierato. Finché manca funziona lo stesso ma manda il promemoria comunque (fail-open
+     dichiarato, vedi *Countdown e promemoria scaglionati*).
 2. **Provare le notifiche sul telefono vero**: attivarle dall'app, aspettare il prossimo giro
    della Action (o forzarlo da Actions → Run workflow) e controllare che arrivi davvero. Non
    verificabile da qui — vedi *Notifiche push*, il permesso è bloccato in questo ambiente.
@@ -937,9 +1041,14 @@ inerzia) di un dispositivo vero, mai testata qui.
 9. Fase 4 — mercato di riparazione e svincoli.
 10. Provare installazione e offline **sul telefono vero** — richiede di pubblicare `dev` su
    `main` almeno una volta, quindi va coordinato con l'utente.
-11. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi decidere insieme se
-   riattivare i build automatici Netlify o fare un deploy manuale singolo (vedi regola in testa
-   al file — non decidere in autonomia).
+11. **Quando l'utente dice di essere pronto**: merge `dev` → `main`, poi pubblicare — **da qui
+   in poi non basta più un drag&drop di file statici** (come l'app asta): dal 09/09 il sito ha
+   una vera dipendenza (`@netlify/blobs` per `netlify/functions/schierato.mjs`), quindi serve un
+   deploy con un vero passo di build che la installi. Le strade praticabili sono collegare il
+   repository GitHub a Netlify (continuous deployment — sicuro anche per i crediti, grazie
+   all'`ignore` già in `netlify.toml` che salta i deploy quando cambia solo `dati/**`/`*.md`) o
+   la Netlify CLI (`netlify deploy`) da locale. Non decidere in autonomia quale, vedi regola in
+   testa al file.
 12. **Provare sul telefono vero i gesti aggiunti il 05/09** (vedi *Manovrabilità da smartphone*):
    verificati solo con eventi sintetici in emulazione, mai il tatto reale. In particolare lo
    swipe fra tab e il pull-to-refresh, che dipendono di più dalla sensazione (velocità, inerzia)

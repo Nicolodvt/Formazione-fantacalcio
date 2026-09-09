@@ -14,6 +14,13 @@
   # non si pone nemmeno: promemoria in CLAUDE.md.
   ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)dati/**' ':(exclude)*.md'"
 
+[functions]
+  # netlify/functions/schierato.mjs: l'unica funzione del progetto, ricorda se hai gia
+  # schierato la giornata corrente (vedi il file per il perche'). Ha una dipendenza vera
+  # (@netlify/blobs, in package.json) - a differenza dell'app e degli scraper, che restano a
+  # dipendenze zero apposta - quindi qui serve davvero un passo di build che la installi.
+  directory = "netlify/functions"
+
 # ---------------------------------------------------------------------------
 # Cache: la parte che conta davvero.
 #
