@@ -99,6 +99,15 @@ jobs:
         if: github.event.schedule != '0 6,8-18 * * 2' || steps.turno.outputs.infra == 'true'
         run: node "tools/fetch-probabili.mjs"
 
+      # Fonte di riserva, SOLO se la principale fallisce (vedi tools/fetch-probabili-alt.mjs
+      # per il perche' e per i suoi limiti: abbina per nome, non per id, quindi e' peggiore
+      # della principale per costruzione — meglio di niente, non un sostituto alla pari).
+      # Stesso gate della principale: non gira affatto al giro extra del martedi quando il
+      # turno non e' infrasettimanale.
+      - name: Probabili formazioni — fonte di riserva (solo se la principale fallisce)
+        if: failure() && (github.event.schedule != '0 6,8-18 * * 2' || steps.turno.outputs.infra == 'true')
+        run: node "tools/fetch-probabili-alt.mjs"
+
       # Promemoria push per schierare, un tanto per giornata (vedi tools/invia-promemoria.mjs
       # per come evita di rispedirlo a ogni giro). Se i secret non sono ancora impostati esce
       # subito senza errore: e' un extra sopra lo scraper, non deve poterlo far fallire.
@@ -158,7 +167,12 @@ jobs:
       # di puro rumore, altrettanti deploy, e una storia git in cui diventa impossibile vedere
       # quando i dati sono cambiati per davvero.
       # Se in un file l'unica riga diversa e il timestamp, la modifica viene annullata.
+      # !cancelled(): deve girare anche quando la fonte principale e' fallita ma quella di
+      # riserva (sopra) l'ha rimpiazzata con successo — altrimenti il recupero sarebbe inutile,
+      # i dati buoni della riserva resterebbero sul runner e non finirebbero mai committati.
+      # Non gira solo se il job viene annullato a mano.
       - name: Scarta i file in cui e cambiato solo il timestamp
+        if: ${{ !cancelled() }}
         run: |
           for f in $(git diff --name-only -- dati/); do
             cambiate=$(git diff -U0 -- "$f" | grep -c '^[+-][^+-]' || true)
@@ -169,7 +183,11 @@ jobs:
             fi
           done
 
+      # Stesso motivo di !cancelled() del passo sopra: deve poter committare anche il recupero
+      # della fonte di riserva. Se nessuna delle due fonti ha scritto nulla di buono, "git diff
+      # --quiet" sotto non trova differenze e il passo esce senza fare danni.
       - name: Committa se e cambiato qualcosa
+        if: ${{ !cancelled() }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
