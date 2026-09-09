@@ -3,6 +3,23 @@
 
 [build]
   publish = "."
+  # Rete di sicurezza sui crediti di build: la Action che scarica i dati di
+  # giornata scrive SOLO dentro dati/ (fino a 7 volte a settimana) e i suoi
+  # commit non devono mai contare come una pubblicazione nuova del sito -
+  # per quello serve una modifica vera a un file dell'app. Se l'unica cosa
+  # cambiata rispetto all'ultima pubblicazione e' dentro dati/ (o e' un file
+  # .md, cioe' solo diario), il comando sotto restituisce "nessuna
+  # differenza" e Netlify salta il deploy. Vedi anche il piano per far si
+  # che il telefono legga dati/ direttamente da GitHub, cosi' la questione
+  # non si pone nemmeno: promemoria in CLAUDE.md.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)dati/**' ':(exclude)*.md'"
+
+[functions]
+  # netlify/functions/schierato.mjs: l'unica funzione del progetto, ricorda se hai gia
+  # schierato la giornata corrente (vedi il file per il perche'). Ha una dipendenza vera
+  # (@netlify/blobs, in package.json) - a differenza dell'app e degli scraper, che restano a
+  # dipendenze zero apposta - quindi qui serve davvero un passo di build che la installi.
+  directory = "netlify/functions"
 
 # ---------------------------------------------------------------------------
 # Cache: la parte che conta davvero.

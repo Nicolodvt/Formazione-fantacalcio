@@ -35,6 +35,15 @@
 <meta name="theme-color" content="#0E1116">
 <meta name="description" content="Assistente di formazione: probabili, moduli, modificatore di difesa.">
 <link rel="manifest" href="./manifest.webmanifest">
+<!-- iOS non legge il manifest per l'aspetto da "app installata": senza queste, aperta da
+     schermata Home su iPhone si vedrebbe la barra del browser invece di sembrare un'app vera.
+     Su Android basta gia' il manifest. apple-touch-icon riusa gli stessi byte dell'icona 192x192
+     del manifest — nessun asset in piu' da mantenere, ma non verificato su un iPhone vero:
+     alcune versioni di iOS ignorano le icone in data URI per questo tag specifico. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Formazione">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAADQUlEQVR42u3asU3EQBBAUVeAREJATEABJFADEenVQgnUQkBFZGS0QICEgJPAt16PvTNP+vnI4ycO2zudnV9IzU1WIIAEkAASQBJAAkgACSAJIAEkgH52eXel7uUE5L7mVjVxQ9K+ALlVpRhN6GC0C0DuSk1DEz0MbQnIbSjOaKJH2wCyd4YA0kaAbJyhdkB2zVA7IFtmCCBtBMh+GQJIGwGyWYYAEkAaEZCdMgSQABJAAkgAASSANAYg22QIIAEkgASQABoT0Ovh8D3jAGpc7tqLzj2uHKA/9tt90XNmBY8DKNsdHXdcOUAz99try7nHlQN00n6Xbzn3OIAAAsgdBQgggAACCCCAAAIIIO+BvAcCCCCfMnzKAGjRlo0DyHEOxzliMUWOy3ppjrQKIAEkgAASQAJIAAkggASQdgTo+uFGBQNI+wDkj7mfMIAEkAASQAIIIAEkgASQAAJI+QEdnt6PMw6gxuWut+jc48oB+ne/fbece1w5QDP322vLuccBBBBAq+13+ZZzjwMIIIDcUYAAAggggAACCCCAAPIeyHsggADyLcy3MIB8jfc13nkg54GcSBRAAkgACSCAAAJIAAkgASSAABJAAkgACSCABJAAEkACCCABJIAEkACKB3T//PjZ0CMyXcgYgL528auAEZmmVAT0x8Y77iVgRMyUmHUNA2jOOpYvJWBEzJSYdeUE1LyUgBGZLmQkQCdtJGbvbVPSXAhAS0dkmgJQh6WkARRzISMBatgIQFsZAggggAACyD/R/on2GO8x3otELxJ9ytjblDQX4mPqZlPSXMh4xzli1pHmOEewnpEOlAUcbYk5QBM/xYlEOdIqgAASQAJIAAkggASQABJAAggggAASQAJINQExRA9AAiiwt5fb4wACqF1PNUMAdaZTjRFAa+kpYggggPYEKL2hk/SkNzRfBUAAAQTQEIByGwKoQQ9AAMUCSmwIoAY9AAEUDoghepYCymqoOKA2CY2AihuiB6B2Q368+gAq+FTvub0zICcVi+vpAAijsnR6AmKopp6egBgqqKczIIxK0VkLEEZF6KwLiKTcbuIAUZXGyo4AKU0ACSABJIAEkASQABJAAkgCSABpx30ARXk9ws9KjMIAAAAASUVORK5CYII=">
 <title>Formazione — Paradiso della Brugola</title>
 <style>
   :root{
@@ -67,7 +76,11 @@
       radial-gradient(760px 320px at 90% 0%, rgba(240,188,70,.05), transparent 70%),
       var(--bg); background-attachment:fixed;
       display:flex; flex-direction:column; overscroll-behavior:none; }
-  button, .tap{ font-family:inherit; user-select:none; -webkit-user-select:none; cursor:pointer; }
+  /* touch-action:manipulation toglie il ritardo di ~300ms che il browser mobile mette prima di
+     ogni tap (aspetta di escludere un doppio-tap per lo zoom) e impedisce lo zoom stesso sui
+     bottoni: un doppio tap veloce per correggere un errore non deve ingrandire la pagina. */
+  button, .tap{ font-family:inherit; user-select:none; -webkit-user-select:none; cursor:pointer;
+    touch-action:manipulation; }
 
   /* Cifre tabulari ovunque compaia un numero: i valori si ricalcolano di continuo e senza
      questo le colonne ballano a ogni ridisegno. */
@@ -78,7 +91,15 @@
   /* ---------- Shell ---------- */
   #app{ display:flex; flex-direction:column; height:100%; height:100dvh; }
   header{ position:sticky; top:0; z-index:20; background:var(--bg-2); border-bottom:1px solid var(--line); }
-  main{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:10px 0 40px; }
+  main{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:10px 0 40px;
+    overscroll-behavior-y:contain; }
+  /* Cresce da 0 quando si tira in basso dalla cima del contenuto (vedi il pull-to-refresh piu
+     sotto nello script). E' un fratello di <main>, non un figlio: main.innerHTML viene
+     riscritto in continuo da render(), un indicatore messo li dentro sparirebbe a ogni
+     ridisegno. Da fuori, in flusso normale, spinge semplicemente main piu in basso mentre cresce. */
+  .pull-indicator{ height:0; overflow:hidden; display:flex; align-items:center;
+    justify-content:center; font-size:12px; color:var(--muted); background:var(--bg-2);
+    flex-shrink:0; transition:height .18s var(--ease); }
 
   .status-strip{ display:flex; align-items:center; gap:10px; padding:8px 12px 6px;
     font-size:12px; color:var(--text-dim); }
@@ -108,6 +129,22 @@
     border-bottom:1px solid rgba(240,99,95,.3); color:#FFC9C7; font-size:12px;
     padding:7px 12px; text-align:center; }
   .warnbar.info{ background:rgba(240,188,70,.12); border-color:rgba(240,188,70,.3); color:#F2D89A; }
+
+  /* Countdown per schierare, ben visibile appena si apre l'app — prima cosa dopo la testata.
+     Sfondo distinto da status-strip per farla notare senza essere un altro warnbar (non e'
+     un avviso finche' la scadenza non e' passata). */
+  .deadline-strip{ display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:9px 12px; background:var(--surface2); border-bottom:1px solid var(--line); }
+  .deadline-strip.scaduta{ background:rgba(240,99,95,.14); }
+  .dl-info{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+  .dl-label{ font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px; }
+  .dl-tempo{ font-size:18px; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .deadline-strip.scaduta .dl-tempo{ color:var(--neg); }
+  .dl-btn{ flex-shrink:0; background:var(--surface3); border:1px solid var(--line-2);
+    color:var(--text-dim); border-radius:var(--radius-sm); padding:9px 12px; font-size:12.5px;
+    font-weight:700; position:relative; }
+  .dl-btn::after{ content:""; position:absolute; inset:-6px; }
+  .dl-btn.on{ background:var(--role-d-soft); border-color:var(--role-d); color:var(--pos); }
 
   /* ---------- Campo ---------- */
   /* Erba vera: righe di taglio ALTERNATE (un verde piu chiaro e uno piu scuro, non trasparenza
@@ -146,18 +183,23 @@
     text-overflow:ellipsis; margin-top:2px; }
   .slot .sq{ font-size:9.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  /* Squadra propria + avversario sulla stessa riga, col pallino che distingue casa/trasferta
-     anche senza leggere il testo: pieno e acceso per la partita in casa, vuoto per la
-     trasferta. La combinazione pallino+colore e' ridondante col testo "vs"/"@" apposta: chi
-     guarda di corsa legge il pallino, chi vuole la certezza legge la lettera. */
-  .slot .match{ display:flex; align-items:center; justify-content:center; gap:3px;
-    font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.2px;
+  /* Etichetta CASA/TRASFERTA + avversario per esteso. La squadra propria non c'e' piu': era
+     ridondante (la sai gia, e' la tua rosa) e nella prima versione, tutta compressa in sigle da
+     3 lettere, rendeva difficile capire sia la squadra sia se fosse casa o trasferta — la
+     versione precedente aveva questo difetto, segnalato dall'utente dopo averla vista in uso.
+     Qui il colore del badge si legge prima ancora delle parole, e l'avversario e' scritto per
+     esteso: nessuna sigla da decifrare. */
+  .slot .match{ display:flex; flex-direction:column; align-items:center; gap:2px; margin-top:2px; }
+  .slot .match .badge{ font-size:8.5px; font-weight:800; letter-spacing:.3px; line-height:1.3;
+    padding:1.5px 6px; border-radius:5px; white-space:nowrap; }
+  /* Solo la casa e' colorata: e' lo stato che vale la pena segnalare (il vantaggio del fattore
+     campo). La trasferta resta neutra apposta, per non aggiungere un terzo significato al blu
+     che gia' identifica i centrocampisti nella barra di ruolo. */
+  .slot .match .badge.casa{ background:rgba(67,201,138,.20); color:var(--pos); }
+  .slot .match .badge.trasferta{ background:var(--surface3); color:var(--text-dim);
+    border:1px solid var(--line-2); }
+  .slot .match .opp{ font-size:10.5px; font-weight:700; color:var(--text); max-width:100%;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .slot .match .dot{ width:5px; height:5px; border-radius:50%; flex:0 0 auto; }
-  .slot .match.casa .dot{ background:var(--pos); box-shadow:0 0 4px rgba(67,201,138,.7); }
-  .slot .match.trasferta .dot{ background:transparent; border:1px solid var(--muted); }
-  .slot .match .vs{ opacity:.7; }
-  .slot .match b{ color:var(--text-dim); font-weight:700; }
   .slot .fm{ font-size:12.5px; font-weight:700; margin-top:2px; }
   .slot .cz{ font-size:9.5px; color:var(--muted); }
   .slot.vuoto{ background:rgba(0,0,0,.25); border-style:dashed; color:var(--muted); }
@@ -239,8 +281,13 @@
     max-height:88vh; max-height:88dvh; overflow-y:auto;
     padding:6px 16px calc(24px + env(safe-area-inset-bottom));
     overscroll-behavior:contain; box-shadow:0 -18px 50px rgba(0,0,0,.6);
-    animation:sheetUp .24s var(--ease); }
-  .handle{ width:40px; height:4px; background:var(--surface3); border-radius:99px; margin:9px auto 14px; }
+    animation:sheetUp .24s var(--ease); transition:transform .2s var(--ease); }
+  /* Mentre si trascina la maniglia il movimento deve seguire il dito senza ritardo: la
+     transizione normale (usata per lo scatto indietro o per lo scivolamento via alla chiusura)
+     andrebbe in conflitto con l'aggiornamento continuo della posizione. */
+  .sheet.trascinando{ transition:none; }
+  .handle{ width:40px; height:4px; background:var(--surface3); border-radius:99px; margin:9px auto 14px;
+    touch-action:none; }
   .sheet h3{ margin:0 0 3px; font-size:18px; }
   .sheet .sub{ color:var(--muted); font-size:12.5px; margin-bottom:14px; }
   .sheet h4{ margin:18px 0 8px; font-size:11px; color:var(--muted); text-transform:uppercase;
@@ -311,7 +358,7 @@
 
   /* Su tablet la lista a tutta larghezza sparpaglia i numeri agli antipodi dello schermo. */
   @media (min-width:820px){
-    .tabs, .status-strip, .pitch, .kpis, .prow, .modulo-row, .sec-title, .warnbar{
+    .tabs, .status-strip, .deadline-strip, .pitch, .kpis, .prow, .modulo-row, .sec-title, .warnbar{
       max-width:880px; margin-left:auto; margin-right:auto; }
     .sheet{ max-width:880px; left:50%; transform:translateX(-50%); border-radius:22px 22px 0 0; }
   }
@@ -329,6 +376,13 @@
       <button class="icon-btn" id="btnRicarica">Aggiorna</button>
       <button class="icon-btn" id="btnSettings">⚙</button>
     </div>
+    <div class="deadline-strip" id="deadlineStrip" style="display:none">
+      <div class="dl-info">
+        <span class="dl-label" id="dlLabel">Tempo rimasto per schierare</span>
+        <span class="dl-tempo" id="dlTempo">—</span>
+      </div>
+      <button class="dl-btn" id="btnSchierato">Ho schierato</button>
+    </div>
     <div class="tabs">
       <button class="tab on" data-vista="campo">Campo</button>
       <button class="tab" data-vista="rosa">Rosa</button>
@@ -336,6 +390,7 @@
     </div>
     <div class="warnbar" id="warnbar" style="display:none"></div>
   </header>
+  <div class="pull-indicator" id="pullTira"></div>
   <main id="main"></main>
 </div>
 
@@ -381,7 +436,20 @@ const MOD_PESO = 4.0;             // fantapunti per ogni punto pieno di media so
    ======================================================================================= */
 
 const MV_MIN = 5.75, MV_MAX = 6.15, MV_AGG_MAX = 0.12;
-let MV_SQUADRA = {};
+
+/* PURE: solo da quotazioni di inizio stagione, non cambiano mai una volta calcolate. Usate
+   internamente da mvPura()/golSubitiAttesi() — la parte che deve restare non contaminata da
+   dati reali, per lo stesso motivo di fantamediaStimata (vedi taratura.mjs). */
+let MV_SQUADRA_PURA = {};
+let ATT_SQUADRA_PURA = {};
+
+/* OPERATIVE: quello che il resto dell'app usa davvero (rettificaPartita, la scheda). Partono
+   uguali alle pure e si mescolano da sole con quanto le squadre hanno reso finora in campo
+   (aggiornaForzaSquadre, sotto) — stesso schema prior->dati gia' usato per il singolo
+   giocatore, applicato ora alla squadra intera: una squadra che si sta rivelando piu' o meno
+   forte del previsto smette di essere giudicata solo sulle quotazioni di agosto. */
+let MV_SQUADRA = {};     // forza DIFENSIVA per squadra (portiere + migliori difensori)
+let ATT_SQUADRA = {};    // forza OFFENSIVA per squadra (migliori centrocampisti e attaccanti)
 
 /* Correzione posizionale: il modificatore conta il VOTO, non i bonus, quindi la quotazione
    di un esterno e' gonfiata da gol e assist che al modificatore non servono. */
@@ -391,31 +459,79 @@ const MV_ZONA = {
   'Terzino sx':{off:-0.04, smorza:0.7}, 'Terzino dx':{off:-0.04, smorza:0.7}
 };
 
+/* Da un indice grezzo per squadra (piu alto = piu forte) a un voto MV_MIN..MV_MAX: meta dal
+   rango (spazia le squadre in modo uniforme), meta dal valore normalizzato (non schiaccia la
+   meta classifica). Condivisa fra forza difensiva e offensiva: stessa scala per entrambe,
+   cosi un punto di ATT_SQUADRA e un punto di MV_SQUADRA si possono confrontare direttamente
+   in rettificaPartita() piu sotto. */
+function normalizzaSquadre(idx){
+  const squadre = Object.keys(idx);
+  const ord = squadre.slice().sort((a,b)=> idx[a]-idx[b]);
+  const vals = squadre.map(sq=>idx[sq]);
+  const vmin = Math.min.apply(null,vals), vmax = Math.max.apply(null,vals);
+  const out = {};
+  ord.forEach((sq,i)=>{
+    const pctRango = ord.length>1 ? i/(ord.length-1) : 0.5;
+    const pctValore = (vmax>vmin) ? (idx[sq]-vmin)/(vmax-vmin) : 0.5;
+    out[sq] = MV_MIN + (MV_MAX-MV_MIN)*(0.5*pctRango + 0.5*pctValore);
+  });
+  return out;
+}
+
 function calcolaMvSquadre(){
-  const idx = {}, squadre = [];
+  const idxDif = {}, idxAtt = {}, squadre = [];
   LISTONE.forEach(p=>{ if(squadre.indexOf(p.s)===-1) squadre.push(p.s); });
   squadre.forEach(sq=>{
     const D = LISTONE.filter(p=>p.s===sq && p.r==='D').sort((a,b)=>b.q-a.q).slice(0,4);
     const G = LISTONE.filter(p=>p.s===sq && p.r==='P').sort((a,b)=>b.q-a.q).slice(0,1);
     const mD = D.length ? D.reduce((s,x)=>s+x.q,0)/D.length : 0;
     const mP = G.length ? G[0].q : 0;
-    idx[sq] = 0.25*mP + 0.75*mD;      // stessi pesi del modificatore
+    idxDif[sq] = 0.25*mP + 0.75*mD;      // stessi pesi del modificatore
+
+    /* Stessa idea per l'attacco: i migliori centrocampisti e attaccanti, quotazione come
+       proxy di forza (la quotazione gia incorpora l'attesa del mercato su chi segna e chi
+       assiste). Pesato verso gli attaccanti: sono loro il primo indiziato del gol. */
+    const A = LISTONE.filter(p=>p.s===sq && p.r==='A').sort((a,b)=>b.q-a.q).slice(0,2);
+    const C = LISTONE.filter(p=>p.s===sq && p.r==='C').sort((a,b)=>b.q-a.q).slice(0,3);
+    const mA = A.length ? A.reduce((s,x)=>s+x.q,0)/A.length : 0;
+    const mC = C.length ? C.reduce((s,x)=>s+x.q,0)/C.length : 0;
+    idxAtt[sq] = (mA && mC) ? 0.65*mA + 0.35*mC : (mA || mC || 0);
   });
-  const ord = squadre.slice().sort((a,b)=> idx[a]-idx[b]);
-  const vals = squadre.map(sq=>idx[sq]);
-  const vmin = Math.min.apply(null,vals), vmax = Math.max.apply(null,vals);
-  MV_SQUADRA = {};
-  ord.forEach((sq,i)=>{
-    const pctRango = ord.length>1 ? i/(ord.length-1) : 0.5;
-    const pctValore = (vmax>vmin) ? (idx[sq]-vmin)/(vmax-vmin) : 0.5;
-    MV_SQUADRA[sq] = MV_MIN + (MV_MAX-MV_MIN)*(0.5*pctRango + 0.5*pctValore);
+  MV_SQUADRA_PURA = normalizzaSquadre(idxDif);
+  ATT_SQUADRA_PURA = normalizzaSquadre(idxAtt);
+}
+
+/* Media pesata per la forma (mediaPesataForma, gia' usata per il singolo giocatore) di un
+   gruppo di giocatori insieme, non di uno solo: serve a misurare quanto una squadra intera sta
+   rendendo davvero, non quanto rende un suo singolo titolare. */
+function misuraGruppo(giocatori, campo){
+  const voci = [];
+  giocatori.forEach(p=>{ const v = STORICO[p.id]; if(v) voci.push.apply(voci, v); });
+  return mediaPesataForma(voci, campo);
+}
+
+/* Va richiamata ogni volta che STORICO cambia (dopo caricaStorico(), non solo all'avvio):
+   altrimenti MV_SQUADRA/ATT_SQUADRA resterebbero ferme alla fotografia di inizio stagione per
+   tutta la stagione, lo stesso difetto che aveva il singolo giocatore prima della Fase 3.
+   Con STORICO vuoto (avvio, o prima che i dati rispondano) coincide esattamente con le pure. */
+function aggiornaForzaSquadre(){
+  Object.keys(MV_SQUADRA_PURA).forEach(sq=>{
+    const membriDif = LISTONE.filter(p=> p.s===sq && (p.r==='P' || p.r==='D'));
+    const membriAtt = LISTONE.filter(p=> p.s===sq && (p.r==='C' || p.r==='A'));
+    const misDif = misuraGruppo(membriDif, 'voto');
+    const misAtt = misuraGruppo(membriAtt, 'fantavoto');
+    MV_SQUADRA[sq] = mescola(MV_SQUADRA_PURA[sq], misDif.media, misDif.n);
+    ATT_SQUADRA[sq] = mescola(ATT_SQUADRA_PURA[sq], misAtt.media, misAtt.n);
   });
 }
 
-/* Media voto nelle giornate in cui gioca. Solo P e D: il modificatore riguarda loro. */
-function mvStimata(p){
+/* Media voto nelle giornate in cui gioca, SOLO dalla quotazione — non sa ancora nulla di come
+   il giocatore sta rendendo davvero in questa stagione. Serve come "prior" per mvStimata()
+   sotto, e come termine di paragone onesto per il rendimento reale nella scheda. Solo P e D:
+   il modificatore riguarda loro. */
+function mvPura(p){
   if(!p || (p.r!=='P' && p.r!=='D')) return null;
-  const base = MV_SQUADRA[p.s];
+  const base = MV_SQUADRA_PURA[p.s];
   if(base==null) return null;
   const z = (p.r==='D' && p.z) ? (MV_ZONA[p.z]||null) : null;
   const pari = LISTONE.filter(x=> x.s===p.s && x.r===p.r);
@@ -430,13 +546,80 @@ function mvStimata(p){
 }
 
 /* =======================================================================================
+   FASE 3 — I DATI VERI PRENDONO IL SOPRAVVENTO
+   Le stime sopra partono dalle quotazioni: servono finche non c'e altro. Da quando esistono
+   voti reali per un giocatore (dati/voti-N.json, scaricati in automatico), si mescolano con
+   quelli. Stesso schema prior->dati gia usato nell'app asta per la curva dei prezzi
+   (B_PESO_PRIOR): con poche giornate la stima pesa quasi tutto, salendo con le presenze il
+   dato misurato prende il sopravvento da solo, senza deciderlo a mano giornata per giornata.
+   ======================================================================================= */
+
+/* "Giornate" di fiducia nella stima prima che i dati reali comincino a prevalere. Piu alto
+   della curva dei prezzi dell'asta (li erano 15 osservazioni di MERCATO — tante persone che
+   pagano insieme un prezzo, un dato stabile; qui e' UN giocatore sceso in campo poche volte,
+   e il fantavoto di una singola giornata oscilla parecchio: un rosso, una tripletta). Serve
+   piu tempo prima di fidarsi dei dati piu della stima. */
+const PESO_PRIOR_STAGIONE = 10;
+
+/* L'ANDAMENTO CONTA PIU DELLA MEDIA PIATTA. Un giocatore in un momento di forma nelle ultime
+   giornate non e la sua media di inizio stagione: le giornate piu vicine a quella che deve
+   arrivare pesano di piu' di quelle lontane, invece di valere tutte uguale. Ogni giornata
+   indietro nel tempo pesa l'85% di quella successiva — dimezza il peso ogni 4-5 giornate, un
+   compromesso deliberatamente prudente: abbastanza per far emergere un giocatore in un vero
+   momento di forma, non cosi' aggressivo da far ballare tutto per una singola prestazione
+   fuori scala (con 2 giornate come oggi la differenza e' comunque minima: e' con la stagione
+   avviata che questo comincia a contare davvero). */
+const DECADIMENTO_FORMA = 0.85;
+
+function pesoForma(giornata){
+  if(!PROB || PROB.giornata==null) return 1;
+  const distanza = Math.max(0, PROB.giornata - giornata - 1);
+  return Math.pow(DECADIMENTO_FORMA, distanza);
+}
+
+/* Media pesata per la forma di un campo di STORICO ('voto' o 'fantavoto'), sulle sole voci
+   che ce l'hanno valorizzato. Condivisa da votoMisurato() e rendimento() sotto, cosi le due
+   medie (voto puro per il modificatore, fantavoto coi bonus per la formazione) invecchiano
+   nello stesso identico modo. */
+function mediaPesataForma(voci, campo){
+  const buone = voci.filter(x=> x[campo] != null);
+  if(!buone.length) return {media:null, n:0};
+  let sp = 0, sw = 0;
+  buone.forEach(x=>{ const w = pesoForma(x.giornata); sp += x[campo]*w; sw += w; });
+  return { media: sw ? sp/sw : null, n: buone.length };
+}
+
+function mescola(stima, misurato, n){
+  if(stima==null) return misurato;
+  if(misurato==null || !n) return stima;
+  return (PESO_PRIOR_STAGIONE*stima + n*misurato) / (PESO_PRIOR_STAGIONE + n);
+}
+
+/* Media voto REALE (non fantavoto) nelle giornate in cui il giocatore ha preso un voto: e il
+   dato che il modificatore di difesa vuole, non i fantapunti coi bonus. */
+function votoMisurato(id){
+  const v = STORICO[id];
+  if(!v || !v.length) return {media:null, n:0};
+  return mediaPesataForma(v, 'voto');
+}
+
+/* Versione che il resto dell'app usa davvero: la pura stima, mescolata con quanto misurato
+   finora. Con zero giornate reali coincide esattamente con mvPura(). */
+function mvStimata(p){
+  const stima = mvPura(p);
+  if(!p) return stima;
+  const r = votoMisurato(p.id);
+  return mescola(stima, r.media, r.n);
+}
+
+/* =======================================================================================
    MODELLO 2 — FANTAMEDIA ATTESA
    Quanto rende quando gioca, in fantapunti.
 
-   ATTENZIONE, LIMITE DICHIARATO: i bonus sono STIMATI dal percentile di valore dentro il
-   ruolo, non misurati su gol e assist reali. Servono a ordinare due attaccanti tra loro,
-   non a prevedere il fantavoto di domenica. Dalla Fase 3, con i voti veri, questa stima
-   verra' sostituita progressivamente dai dati.
+   I bonus restano STIMATI dal percentile di valore dentro il ruolo, non misurati su gol e
+   assist reali — servono a ordinare due attaccanti tra loro finche' non c'e' altro. Ma il
+   NUMERO FINALE (fantamediaAttesa, sotto) dalla Fase 3 si mescola con i voti veri quando ci
+   sono: vedi la sezione "I dati veri prendono il sopravvento" qualche riga sopra.
    ======================================================================================= */
 
 /* Bonus massimo per ruolo, in fantapunti a partita, per chi sta al vertice del suo ruolo.
@@ -454,21 +637,25 @@ const MALUS_FISSO = 0.10;         // ammonizioni e simili, forfettario
    fantacalcio classico ogni gol subito vale -1, ed e' il motivo per cui la fantamedia di
    un portiere sta sotto quella di ogni altro ruolo. */
 function golSubitiAttesi(sq){
-  const b = MV_SQUADRA[sq];
+  const b = MV_SQUADRA_PURA[sq];
   if(b==null) return 1.35;
   const t = (b - MV_MIN)/(MV_MAX - MV_MIN);      // 0 = difesa peggiore, 1 = migliore
   return 1.75 - 0.85*t;
 }
 
-function fantamediaAttesa(p){
+/* La pura stima da quotazioni, senza alcun dato reale — usata come "prior" da
+   fantamediaAttesa() sotto, e come termine di paragone onesto nella scheda giocatore contro
+   il rendimento vero (confrontare i dati reali con un numero che li contiene gia' non
+   direbbe niente: lo scarto si azzererebbe da solo per costruzione). */
+function fantamediaStimata(p){
   if(!p) return null;
   let voto;
   if(p.r==='P' || p.r==='D'){
-    voto = mvStimata(p);
+    voto = mvPura(p);
   }else{
     /* Per C e A il voto base conta poco: quello che sposta e' il bonus. Si parte da 6 con
        un piccolo aggiustamento per la forza della squadra. */
-    const b = MV_SQUADRA[p.s];
+    const b = MV_SQUADRA_PURA[p.s];
     voto = 6.0 + (b==null ? 0 : (b - 5.95)*0.5);
   }
   if(voto==null) voto = 6.0;
@@ -482,6 +669,59 @@ function fantamediaAttesa(p){
   let fm = voto + bonus - MALUS_FISSO;
   if(p.r==='P') fm -= golSubitiAttesi(p.s);
   return fm;
+}
+
+/* Versione che guida davvero le scelte dell'app (contributoAtteso, l'ottimizzatore di
+   modulo, la scheda): la stima, corretta dell'eventuale scarto sistematico del ruolo (vedi
+   RETTIFICA_RUOLO sopra e tools/ricalibra.mjs), poi mescolata con quanto il giocatore ha reso
+   finora quest'anno. La correzione di ruolo entra PRIMA della mescola, non dopo, apposta: e'
+   un prior migliorato, e deve valere pieno per chi ha pochi dati personali e sfumare da solo
+   per chi ne ha molti — esattamente quello che mescola() gia' fa in base a r.presenze. Con
+   zero giornate reali E zero correzione coincide esattamente con fantamediaStimata(). */
+function fantamediaAttesa(p){
+  if(!p) return fantamediaStimata(p);
+  const stima = fantamediaStimata(p) + (RETTIFICA_RUOLO[p.r] || 0);
+  const r = rendimento(p.id);
+  return r ? mescola(stima, r.media, r.presenze) : stima;
+}
+
+/* =======================================================================================
+   MODELLO 4 — LA PROSSIMA PARTITA
+   fantamediaAttesa() dice quanto un giocatore rende IN MEDIA. Restava fuori la domanda che
+   conta di piu' la domenica: contro CHI gioca, e se in CASA o in TRASFERTA. Qui sotto si
+   traduce in un piccolo aggiustamento, sommato al numero medio — non un moltiplicatore: un
+   giocatore forte contro un avversario forte resta un giocatore forte, l'avversario sposta
+   l'ago, non ribalta il giudizio.
+
+   Coefficienti scelti a intuito, DICHIARATAMENTE: con 2-3 giornate di campionato non c'e
+   ancora abbastanza campo per tararli sui risultati veri (lo stesso limite che vale per
+   BONUS_MAX e PESO_PRIOR_STAGIONE). Tenuti piccoli apposta per questo. Da rivedere con
+   taratura.mjs quando ci saranno piu' giornate — vedi "Da fare" in CLAUDE.md.
+   ======================================================================================= */
+
+const CASA_BONUS = 0.08;          // vantaggio del fattore campo: stima prudente, non misurata
+const PESO_AVVERSARIO = 1.4;      // quanto pesa la forza dell'avversario sul verdetto finale
+
+/* Quanto la prossima partita sposta la resa attesa di un giocatore, in fantapunti.
+   P/D: conta la forza OFFENSIVA dell'avversario (contro un attacco forte ci si aspetta di
+   subire di piu', quindi voto peggiore). C/A: conta la forza DIFENSIVA dell'avversario
+   (contro una difesa debole ci si aspetta di segnare/assistere di piu'). */
+function rettificaPartita(p){
+  if(!p || !PROB || !PROB.squadre[p.s]) return 0;
+  const sq = PROB.squadre[p.s];
+  if(!sq.avversario) return 0;
+
+  let d = sq.inCasa ? CASA_BONUS : -CASA_BONUS;
+  const centro = (MV_MIN+MV_MAX)/2;
+
+  if(p.r==='P' || p.r==='D'){
+    const attAvv = ATT_SQUADRA[sq.avversario];
+    if(attAvv!=null) d -= PESO_AVVERSARIO * (attAvv - centro);
+  }else{
+    const difAvv = MV_SQUADRA[sq.avversario];
+    if(difAvv!=null) d += PESO_AVVERSARIO * (centro - difAvv);
+  }
+  return d;
 }
 
 /* =======================================================================================
@@ -506,6 +746,20 @@ function datiGiornata(id){
   };
 }
 
+/* CONDIZIONE: quanto spesso e' entrato dalla panchina nelle ultime presenze vere, invece di
+   partire titolare. Un segnale che il dato della settimana (titolare/pct) non cattura da
+   solo: un allenatore che continua a farlo entrare a gara in corso, nonostante le probabili
+   lo dessero "titolare", di solito lo sta ancora gestendo (rientro da un problema, minutaggio
+   contato) piu' di quanto un singolo dato settimanale lasci intuire. null con troppo poche
+   presenze per dire qualcosa (serve la stagione avviata, non i primi turni). */
+function tassoSubentro(id){
+  const v = STORICO[id];
+  if(!v || !v.length) return null;
+  const recenti = v.filter(x=> x.fantavoto != null).slice(-5);
+  if(recenti.length < 2) return null;
+  return recenti.filter(x=> x.subentrato).length / recenti.length;
+}
+
 function certezza(id){
   const ov = S.override[id];
   if(ov!=null) return ov;                       // il giudizio dell'utente vince sempre
@@ -525,8 +779,14 @@ function certezza(id){
   }else if(d.prob){
     p = (d.prob.pct==null ? (d.prob.titolare?0.85:0.20) : d.prob.pct/100);
     /* data-status="warn" e' un dubbio dichiarato dalla fonte, ma le riserve ce l'hanno
-       tutte per definizione: vale come segnale solo sui titolari. */
-    if(d.prob.incerto && d.prob.titolare) p *= 0.85;
+       tutte per definizione: vale come segnale solo sui titolari. Lo sconto base e' 0.85;
+       se nelle ultime presenze e' entrato spesso dalla panchina nonostante fosse "titolare"
+       sulla carta, il dubbio pesa di piu' (fino a 0.70 per chi e' sempre subentrato). Senza
+       abbastanza presenze per saperlo, resta lo sconto base di sempre. */
+    if(d.prob.incerto && d.prob.titolare){
+      const tasso = tassoSubentro(id);
+      p *= (tasso==null) ? 0.85 : (0.85 - 0.15*tasso);
+    }
   }else{
     /* La sua squadra gioca ma lui non e' tra i 24 convocabili elencati. Non e' un buco nei
        dati: e' l'informazione che non giochera'. */
@@ -572,7 +832,7 @@ const N_SIM = 1500;
 function contributoAtteso(id){
   const l = LIS[id];
   const fm = fantamediaAttesa(l);
-  return fm == null ? 0 : certezza(id) * fm;
+  return fm == null ? 0 : certezza(id) * (fm + rettificaPartita(l));
 }
 
 function scegliUndici(modulo){
@@ -653,9 +913,10 @@ function simula(titolari, panchina){
   const mvP = [], mvD = [];
   for(const id of inCampo){
     const l = LIS[id];
-    punti += fantamediaAttesa(l);
-    if(l.r==='P'){ const v=mvStimata(l); if(v!=null) mvP.push(v); }
-    if(l.r==='D'){ const v=mvStimata(l); if(v!=null) mvD.push(v); }
+    const rp = rettificaPartita(l);
+    punti += fantamediaAttesa(l) + rp;
+    if(l.r==='P'){ const v=mvStimata(l); if(v!=null) mvP.push(v+rp); }
+    if(l.r==='D'){ const v=mvStimata(l); if(v!=null) mvD.push(v+rp); }
   }
   /* Chi resta senza voto e senza sostituto vale 0: e' il buco che il quarto difensore evita. */
 
@@ -707,6 +968,12 @@ let PROB = null;
    finche non ci sono file di voti, e l'app funziona identica senza. */
 let STORICO = {};
 
+/* Quanto il modello sbaglia SISTEMATICAMENTE per ruolo, calcolato fuori dall'app (vedi
+   tools/ricalibra.mjs) confrontando la stima pura con tutti i voti reali scaricati finora, e
+   scritto in dati/costanti.json. Zero finche' quel file non esiste o non risponde: l'app si
+   comporta esattamente come oggi, non un'ipotesi silenziosa. */
+let RETTIFICA_RUOLO = {P:0, D:0, C:0, A:0};
+
 let S = {
   rosa: [],              // id dei miei giocatori
   prezzi: {},            // id -> crediti pagati all'asta (solo informativo)
@@ -714,14 +981,16 @@ let S = {
   modulo: '4-3-3',
   bloccati: {},          // id -> true: casella fissata a mano
   override: {},          // id -> certezza forzata a mano (0..1)
-  vista: 'campo'
+  vista: 'campo',
+  giornataSchierata: null  // numero di giornata gia segnata come "ho schierato", o null
 };
 
 function salva(){
   try{
     localStorage.setItem(CHIAVE, JSON.stringify({
       rosa:S.rosa, prezzi:S.prezzi, squadraNome:S.squadraNome,
-      modulo:S.modulo, bloccati:S.bloccati, override:S.override
+      modulo:S.modulo, bloccati:S.bloccati, override:S.override,
+      giornataSchierata:S.giornataSchierata
     }));
   }catch(e){ /* private browsing o quota piena: si continua in memoria */ }
 }
@@ -734,6 +1003,7 @@ function carica(){
     S.squadraNome = d.squadraNome||'La mia squadra';
     S.modulo = MODULI[d.modulo] ? d.modulo : '4-3-3';
     S.bloccati = d.bloccati||{}; S.override = d.override||{};
+    S.giornataSchierata = (typeof d.giornataSchierata==='number') ? d.giornataSchierata : null;
   }catch(e){}
 }
 
@@ -743,6 +1013,22 @@ function carica(){
 
 const CACHE_PROB = 'fantaFormazione_probabili';
 const CACHE_STORICO = 'fantaFormazione_storico';
+
+/* La Action scrive su GitHub fino a 7 volte a settimana. Se i dati arrivassero solo dalla
+   copia che Netlify pubblica, ogni scrittura dovrebbe passare da un deploy per raggiungere
+   il telefono - ed e proprio quello che vogliamo evitare (vedi CLAUDE.md, "Aggiornamenti e
+   crediti Netlify"). GitHub offre gia gratis gli stessi file cosi come sono nel repository:
+   si prova prima li, e solo se non risponde si ripiega sulla copia locale pubblicata con
+   l'app (che intanto resta come rete di sicurezza, sempre presente anche se piu vecchia). */
+const REPO_DATI = 'https://raw.githubusercontent.com/Nicolodvt/Formazione-fantacalcio/main/';
+
+async function fetchDati(percorso){
+  try{
+    const r = await fetch(REPO_DATI + percorso, {cache:'no-cache'});
+    if(r.ok) return r;
+  }catch(e){ /* GitHub irraggiungibile: si prova la copia locale sotto */ }
+  return fetch('./' + percorso, {cache:'no-cache'});
+}
 
 /* Un file di giornata mutilato non deve poter entrare in circolo. Il resto del codice
    dereferenzia sempre `squadre`, `giocatori` e `indisponibili`: se ne manca uno l'app va in
@@ -771,7 +1057,7 @@ async function caricaProbabili(forza){
     }catch(e){ try{ localStorage.removeItem(CACHE_PROB); }catch(e2){} }
   }
   try{
-    const r = await fetch('./dati/probabili.json', {cache:'no-cache'});
+    const r = await fetchDati('dati/probabili.json');
     if(!r.ok) throw new Error('HTTP '+r.status);
     const d = await r.json();
     if(probabiliValide(d)){
@@ -786,6 +1072,24 @@ async function caricaProbabili(forza){
   }
 }
 
+/* Nessuna cache locale apposta: e' una piccola correzione, non un dato di giornata — se non
+   risponde RETTIFICA_RUOLO resta a zero, che e' gia' il comportamento sicuro di sempre, non
+   uno stato rotto da segnalare. */
+async function caricaCostanti(){
+  try{
+    const r = await fetchDati('dati/costanti.json');
+    if(!r.ok) return;
+    const d = await r.json();
+    if(!d || d.schema!==1 || !d.rettificaRuolo || typeof d.rettificaRuolo!=='object') return;
+    ROLE_ORDER.forEach(ruolo=>{
+      const v = d.rettificaRuolo[ruolo];
+      // tetto di sicurezza piu' ampio di quello del generatore (0.4): protegge da un file
+      // corrotto o modificato a mano, senza litigare con valori legittimi.
+      if(typeof v === 'number' && isFinite(v)) RETTIFICA_RUOLO[ruolo] = Math.max(-1, Math.min(1, v));
+    });
+  }catch(e){ /* nessuna correzione: fantamediaAttesa resta quella di sempre */ }
+}
+
 /* Oltre questa soglia i dati non sono piu una fotografia della giornata in corso: le
    probabili si rifanno ogni settimana, e una lista vecchia di quattro giorni puo dare
    titolare uno che nel frattempo e squalificato. Va detto forte, non lasciato dedurre
@@ -797,39 +1101,189 @@ function oreDati(){
   return (Date.now() - new Date(PROB.generato).getTime())/3600000;
 }
 
+/* =======================================================================================
+   SCADENZA DELLA GIORNATA — countdown in testata
+   Due momenti diversi contano: la SCADENZA (qualche minuto prima del calcio d'inizio della
+   prima partita del turno, l'ultimo istante utile per schierare) e il CALCIO D'INIZIO vero e
+   proprio. Finche' non hai segnato la formazione come schierata, il countdown punta alla
+   scadenza ("tempo rimasto per schierare"); dopo, contare verso un termine gia rispettato non
+   direbbe piu nulla di utile, quindi punta al fischio d'inizio ("tempo all'inizio della
+   giornata") — la stessa informazione che il promemoria push gia usa, ma qui sempre visibile
+   in testata, non solo quando arriva una notifica.
+   ======================================================================================= */
+
+/* Stessa regex di tools/calendario.mjs (parseData), duplicata apposta: quello gira in Node
+   per gli script, questo nel browser, e il progetto non condivide codice fra i due mondi se
+   non per il motore (vedi tools/estrai-motore.mjs). Se cambia il formato della data scaricata
+   da fantacalcio.it va aggiornata in ENTRAMBI i posti. */
+const MESI_IT = { gennaio:0, febbraio:1, marzo:2, aprile:3, maggio:4, giugno:5,
+  luglio:6, agosto:7, settembre:8, ottobre:9, novembre:10, dicembre:11 };
+function parseDataPartita(s){
+  if(!s) return null;
+  const m = s.match(/(\d{1,2})\s+([a-zàèìòù]+),?\s+(\d{1,2}):(\d{2})/i);
+  if(!m) return null;
+  const mese = MESI_IT[m[2].toLowerCase()];
+  if(mese==null) return null;
+  const oggi = new Date(), anno = oggi.getFullYear();
+  let d = new Date(anno, mese, +m[1], +m[3], +m[4]);
+  if(d.getTime() < oggi.getTime() - 7*24*3600*1000) d = new Date(anno+1, mese, +m[1], +m[3], +m[4]);
+  return d;
+}
+
+/* Quanti minuti prima del calcio d'inizio scade la formazione su Leghe Fantacalcio. Dichiarato
+   a intuito, non verificato sul regolamento della lega — stessa cautela gia usata altrove per
+   le costanti non misurate (vedi CASA_BONUS). */
+const MINUTI_SCADENZA = 5;
+
+/* Il momento piu vicino fra TUTTE le partite del turno, non solo quella della tua squadra: se
+   il turno si apre con un anticipo di venerdi, la scadenza per schierare e quella, anche se la
+   tua prima partita e domenica. */
+function calcioInizioGiornata(){
+  if(!PROB || !PROB.partite || !PROB.partite.length) return null;
+  const tempi = PROB.partite.map(p=> parseDataPartita(p.data)).filter(Boolean);
+  if(!tempi.length) return null;
+  return new Date(Math.min.apply(null, tempi.map(d=> d.getTime())));
+}
+
+/* A cosa punta il countdown adesso, e con quale scritta — secondo se la formazione e gia
+   segnata come schierata per QUESTA giornata. S.giornataSchierata si confronta con
+   PROB.giornata invece di essere un semplice booleano: cosi si "dimentica" da solo appena
+   arriva una giornata nuova, senza bisogno di azzerarlo a mano da nessuna parte. */
+function statoScadenza(){
+  const inizio = calcioInizioGiornata();
+  if(!inizio || PROB.giornata==null) return null;
+  const scadenza = new Date(inizio.getTime() - MINUTI_SCADENZA*60000);
+  const schierato = S.giornataSchierata === PROB.giornata;
+  const ora = Date.now();
+  if(ora >= inizio.getTime()) return { label:'Giornata in corso', target:null, schierato, scaduta:false };
+  if(schierato || ora >= scadenza.getTime()){
+    return {
+      label: schierato ? 'Tempo all\'inizio della giornata' : 'Scaduto — si comincia tra',
+      target: inizio, schierato, scaduta: !schierato
+    };
+  }
+  return { label:'Tempo rimasto per schierare', target:scadenza, schierato:false, scaduta:false };
+}
+
+function formattaCountdown(ms){
+  if(ms==null || ms<=0) return '00:00';
+  const tot = Math.floor(ms/1000);
+  const gg = Math.floor(tot/86400), hh = Math.floor((tot%86400)/3600),
+        mm = Math.floor((tot%3600)/60), ss = tot%60;
+  if(gg>0) return gg+'g '+hh+'h '+mm+'m';
+  if(hh>0) return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+  return String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+}
+
+/* Aggiorna solo il testo della striscia, non l'intera vista: gira ogni secondo (vedi
+   avviaCountdown piu sotto), e un render() completo ogni secondo ridisegnerebbe anche
+   campo/rosa/moduli per nulla — lo stesso principio gia seguito per il resto dell'app. */
+function aggiornaCountdown(){
+  const strip = el('#deadlineStrip');
+  if(!strip) return;
+  const st = statoScadenza();
+  if(!st){ strip.style.display = 'none'; return; }
+  strip.style.display = 'flex';
+  strip.classList.toggle('scaduta', st.scaduta);
+  el('#dlLabel').textContent = st.label;
+  el('#dlTempo').textContent = st.target ? formattaCountdown(st.target.getTime() - Date.now()) : '';
+  const btn = el('#btnSchierato');
+  btn.textContent = st.schierato ? '✓ Schierato' : 'Ho schierato';
+  btn.classList.toggle('on', st.schierato);
+}
+
+/* Il timer gira solo mentre l'app e' davvero in primo piano: un setInterval che continua a
+   girare a schermo spento sprecherebbe batteria per un numero che nessuno sta guardando —
+   stesso principio gia seguito per l'aggiornamento dati (vedi visibilitychange piu sotto). */
+let countdownTimer = null;
+function avviaCountdown(){
+  aggiornaCountdown();
+  if(countdownTimer) return;
+  countdownTimer = setInterval(aggiornaCountdown, 1000);
+}
+function fermaCountdown(){
+  if(countdownTimer){ clearInterval(countdownTimer); countdownTimer = null; }
+}
+
+/* Comunica il tuo "ho schierato" alla funzione Netlify (netlify/functions/schierato.mjs, dati
+   condivisi con la Action che manda i promemoria — vedi tools/promemoria-scadenza.mjs): e il
+   canale che permette alla Action di NON avvisarti per una formazione gia fatta. Se fallisce
+   (offline, o la funzione non e ancora pubblicata) il segno resta comunque valido qui sul
+   telefono: si ritenta da solo al prossimo "Aggiorna" (vedi aggiornaDati), senza bloccare
+   l'interazione nel frattempo — stessa disciplina di "degradare dicendolo" gia vista altrove. */
+async function sincronizzaSchierato(giornata, schierato){
+  try{
+    await fetch('./.netlify/functions/schierato', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({giornata, schierato})
+    });
+  }catch(e){ /* offline o funzione non raggiungibile: si ritenta al prossimo giro */ }
+}
+
 /* Scarica i voti delle giornate gia giocate. Non c'e un indice dei file: si prova a
    scendere dalla giornata corrente e ci si ferma al primo che manca. Le giornate sono al
    massimo 38 e i file stanno nella cache del service worker, quindi il costo e trascurabile
-   e funziona anche senza rete. */
+   e funziona anche senza rete.
+
+   Una giornata gia chiusa non cambia piu: i voti ufficiali non vengono corretti col tempo.
+   Percio si riscaricano solo le giornate ANCORA ASSENTI dallo storico in memoria, non tutte
+   da 1 in su a ogni apertura. Senza questo accorgimento, avanzando la stagione, ogni singola
+   apertura dell'app (e ogni tocco su "Ricarica") rifaceva in sequenza una richiesta per
+   OGNI giornata gia giocata — fino a 37 andando verso la 38esima, una dietro l'altra, non in
+   parallelo — solo per ritrovare dati che aveva gia. Si accumula anche un secondo difetto,
+   piu subdolo: il risultato del giro sostituiva integralmente lo storico salvato. Una singola
+   giornata che quel giro non fosse riuscita a scaricare (rete instabile, un attimo di down)
+   spariva dallo storico e dalla cache anche se una volta era stata scaricata con successo,
+   finche non ritornava a scaricarsi bene — un dato perso in silenzio per un guaio temporaneo.
+   Ora si SOMMA solo cio che manca, non si riparte mai da zero. */
 async function caricaStorico(){
   try{
     const raw = localStorage.getItem(CACHE_STORICO);
     if(raw) STORICO = JSON.parse(raw) || {};
   }catch(e){ STORICO = {}; }
 
+  /* Migrazione: 'subentrato' e poi 'gol' sono campi aggiunti in tempi diversi. Chi aveva gia
+     uno storico salvato prima ce l'ha senza, e "gia in storico" lo terrebbe cosi per sempre - il
+     controllo sotto salta le giornate gia presenti, non le rifà mai. Si azzera una volta
+     sola per ogni campo nuovo: il ridownload che segue e economico (pochi file JSON piccoli). */
+  for(const id in STORICO){
+    if(STORICO[id].some(v=> typeof v.subentrato === 'undefined' || typeof v.gol === 'undefined')){ STORICO = {}; break; }
+  }
+
   const ultima = (PROB && PROB.giornata) ? PROB.giornata - 1 : 0;
   if(ultima < 1) return;
 
-  const nuovo = {};
-  let trovate = 0;
+  const note = new Set();
+  for(const id in STORICO) for(const v of STORICO[id]) note.add(v.giornata);
+
+  let cambiato = false;
   for(let g = 1; g <= ultima; g++){
+    if(note.has(g)) continue;    // gia in storico: giornata chiusa, non si riscarica
     try{
-      const r = await fetch('./dati/voti-' + g + '.json', {cache:'no-cache'});
+      const r = await fetchDati('dati/voti-' + g + '.json');
       if(!r.ok) continue;
       const d = await r.json();
       if(!d || d.schema!==1 || !d.giocatori) continue;
-      trovate++;
       for(const id in d.giocatori){
         const x = d.giocatori[id];
-        (nuovo[id] || (nuovo[id] = [])).push({
-          giornata: g, voto: x.voto, fantavoto: x.fantavoto, senzaVoto: !!x.senzaVoto
+        const b = x.bonus || {};
+        (STORICO[id] || (STORICO[id] = [])).push({
+          giornata: g, voto: x.voto, fantavoto: x.fantavoto, senzaVoto: !!x.senzaVoto,
+          subentrato: !!x.subentrato,   // segnale di condizione: entrato dalla panchina, non partito titolare
+          /* Dettaglio scaricato per ogni giornata ma non ancora usato dal modello: oggi serve
+             solo da riserva dati per quando (dopo diverse giornate vere) avra senso tarare
+             BONUS_PIAZZATI/BONUS_MAX sull'osservato invece che a intuito. Vedi CLAUDE.md. */
+          gol: b.gol||0, assist: b.assist||0,
+          rigoriSegnati: b.rigoriSegnati||0, rigoriSbagliati: b.rigoriSbagliati||0, rigoriParati: b.rigoriParati||0,
+          autogol: b.autogol||0, golSubiti: b.golSubiti||0,
+          ammonito: !!x.ammonito
         });
       }
-    }catch(e){ /* giornata non disponibile: si va avanti */ }
+      cambiato = true;
+    }catch(e){ /* giornata non disponibile: si va avanti, si riprova al prossimo giro */ }
   }
-  if(trovate){
-    STORICO = nuovo;
-    try{ localStorage.setItem(CACHE_STORICO, JSON.stringify(nuovo)); }catch(e){}
+  if(cambiato){
+    try{ localStorage.setItem(CACHE_STORICO, JSON.stringify(STORICO)); }catch(e){}
   }
 }
 
@@ -842,7 +1296,7 @@ function rendimento(id){
   return {
     presenze: conVoto.length,
     senzaVoto: v.length - conVoto.length,
-    media: conVoto.reduce((s,x)=> s+x.fantavoto, 0)/conVoto.length,
+    media: mediaPesataForma(v, 'fantavoto').media,   // le giornate recenti pesano di piu'
     elenco: v
   };
 }
@@ -883,17 +1337,13 @@ function flagHtml(id){
   return h;
 }
 
-const breve3 = (s) => s.slice(0,3).toUpperCase();
-
-/* Squadra propria + avversario, non solo l'avversario: la squadra la sai gia in astratto, ma
-   vederla scritta accanto all'avversario e' quello che permette di leggere "chi contro chi" in
-   un solo sguardo, senza dover ricordare a memoria dove gioca ciascuno dei tuoi 25. Il pallino
-   pieno/vuoto distingue casa e trasferta anche senza leggere il testo. */
+/* Avversario per esteso e stato casa/trasferta. La squadra propria non serve: la conosci gia,
+   e' la tua rosa — mostrarla creava solo ingombro senza aggiungere informazione. */
 function infoPartita(l){
   if(!PROB || !PROB.squadre[l.s]) return null;
   const sq = PROB.squadre[l.s];
   if(!sq.avversario) return null;
-  return { propria: breve3(l.s), avversario: breve3(sq.avversario), inCasa: sq.inCasa };
+  return { avversario: sq.avversario, inCasa: sq.inCasa };
 }
 
 function slotHtml(id, ruolo){
@@ -903,15 +1353,12 @@ function slotHtml(id, ruolo){
   const l = LIS[id], c = certezza(id), fm = fantamediaAttesa(l);
   const cls = 'slot ' + l.r + (c<0.4?' rischio':'') + (S.bloccati[id]?' bloccato':'');
   const partita = infoPartita(l);
-  /* Squadra propria + avversario + pallino casa/trasferta, tutto su una riga sola: e' quello
-     che permette di leggere "chi contro chi" senza aprire la scheda. Se manca il dato di
-     giornata si ripiega sulla sola squadra, come prima. */
+  /* Badge CASA/TRASFERTA + avversario per esteso. Se manca il dato di giornata si ripiega
+     sulla sola squadra, come prima. */
   const rigaPartita = partita
-    ? '<div class="match '+(partita.inCasa?'casa':'trasferta')+'" title="'+
-        (partita.inCasa?'in casa con ':'in trasferta a ')+esc(partita.avversario)+'">' +
-        '<span class="dot"></span>'+esc(partita.propria)+
-        '<span class="vs">'+(partita.inCasa?'vs':'@')+'</span>'+
-        '<b>'+esc(partita.avversario)+'</b></div>'
+    ? '<div class="match" title="'+(partita.inCasa?'in casa con ':'in trasferta a ')+esc(partita.avversario)+'">' +
+        '<span class="badge '+(partita.inCasa?'casa':'trasferta')+'">'+(partita.inCasa?'CASA':'TRASFERTA')+'</span>' +
+        '<span class="opp">'+esc(partita.avversario)+'</span></div>'
     : '<div class="sq">'+esc(l.s)+'</div>';
   return '<div class="'+cls+'" data-slot="'+id+'">' +
     '<div class="nm">'+esc(l.n)+'</div>' +
@@ -1103,25 +1550,59 @@ function render(){
   }
 
   document.querySelectorAll('.tab').forEach(t=> t.classList.toggle('on', t.dataset.vista===S.vista));
+  aggiornaCountdown();
 }
 
 /* =======================================================================================
    SCHEDA GIOCATORE E ALTERNATIVE
    ======================================================================================= */
 
+/* Il tasto/gesto "indietro" del telefono deve chiudere la sheet aperta, non uscire dall'app:
+   di default un browser mobile tratta "indietro" come "torna alla pagina precedente", e qui
+   non ce n'e' una — il risultato sarebbe uscire dall'app installata. Si spinge una voce finta
+   nella cronologia quando si apre una sheet, cosi "indietro" la trova e la consuma prima di
+   arrivare a uscire davvero. */
+let storiaSheetSpinta = false;
+function spingiStoriaSheet(){
+  if(storiaSheetSpinta) return;
+  storiaSheetSpinta = true;
+  history.pushState({sheet:true}, '');
+}
+window.addEventListener('popstate', ()=>{
+  if(el('#sheet').style.display==='block' || el('#settingsSheet').style.display==='block'){
+    chiudiSheet(true);
+  }
+});
+
 function apriSheet(html){
   el('#sheet').innerHTML = '<div class="handle"></div>' + html;
   el('#sheet').style.display = 'block';
   el('#overlay').style.display = 'block';
+  spingiStoriaSheet();
 }
-function chiudiSheet(){
+/* daIndietro deve essere il booleano letterale true, non un valore genericamente "vero": quattro
+   punti del codice passano chiudiSheet direttamente come callback di un click (`addEventListener
+   ('click', chiudiSheet)`), e li il primo argomento che arriva e' l'oggetto Event del click, che
+   e' sempre "vero" — un controllo con !daIndietro li avrebbe scambiati tutti per chiusure "da
+   indietro", saltando history.back() e lasciando in giro voci di cronologia mai consumate.
+   daIndietro=true arriva SOLO dal gestore di popstate qui sopra: li' la voce di cronologia e'
+   gia' stata consumata dal browser stesso, richiamare history.back() spingerebbe l'utente fuori
+   dall'app invece di fermarsi alla chiusura della sheet. */
+function chiudiSheet(daIndietro){
   el('#sheet').style.display='none'; el('#settingsSheet').style.display='none';
   el('#overlay').style.display='none';
+  el('#sheet').style.transform=''; el('#settingsSheet').style.transform='';
+  if(storiaSheetSpinta){
+    storiaSheetSpinta = false;
+    if(daIndietro !== true) history.back();
+  }
 }
 
 function schedaGiocatore(id){
   const l = LIS[id], d = datiGiornata(id);
-  const c = certezza(id), fm = fantamediaAttesa(l);
+  const c = certezza(id), fmBase = fantamediaAttesa(l);
+  const rp = rettificaPartita(l);
+  const fm = fmBase + rp;    // il numero vero che decide la formazione (vedi contributoAtteso)
   const mv = mvStimata(l);
 
   let stato = 'Nessun dato di giornata';
@@ -1134,16 +1615,37 @@ function schedaGiocatore(id){
 
   h += '<div class="info-grid">' +
     '<div class="info-cell"><div class="k">Fantamedia attesa</div><div class="v">'+fm.toFixed(2)+'</div>' +
-      '<div class="n">quando gioca</div></div>' +
+      '<div class="n">quando gioca, con la prossima partita gia considerata</div></div>' +
     '<div class="info-cell"><div class="k">Prende voto</div><div class="v">'+Math.round(c*100)+'%</div>' +
       '<div class="n">'+esc(stato)+'</div></div>';
 
   if(mv!=null){
-    h += '<div class="info-cell"><div class="k">Media voto</div><div class="v">'+mv.toFixed(2)+'</div>' +
+    h += '<div class="info-cell"><div class="k">Media voto</div><div class="v">'+(mv+rp).toFixed(2)+'</div>' +
          '<div class="n">conta per il modificatore</div></div>';
   }
   h += '<div class="info-cell"><div class="k">Quotazione</div><div class="v">'+l.q+'</div>' +
        '<div class="n">'+(l.pz?esc(l.pz):'nessun piazzato')+'</div></div>';
+
+  /* Da dove viene l'aggiustamento qui sopra: mai un numero solo che nasconde come ci si e
+     arrivati. fmBase e' la resa media (stagione + stima); rp e' quanto la sposta la partita
+     specifica di questa settimana. */
+  if(PROB && PROB.squadre[l.s] && PROB.squadre[l.s].avversario){
+    const sq = PROB.squadre[l.s];
+    const cent = (MV_MIN+MV_MAX)/2, soglia = (MV_MAX-MV_MIN)*0.15;
+    const perRuoloP_D = (l.r==='P' || l.r==='D');
+    const rifAvv = perRuoloP_D ? ATT_SQUADRA[sq.avversario] : MV_SQUADRA[sq.avversario];
+    const cosa = perRuoloP_D ? 'attacco' : 'difesa';
+    let giudizio = 'nella media';
+    if(rifAvv!=null){
+      if(rifAvv > cent+soglia) giudizio = 'forte';
+      else if(rifAvv < cent-soglia) giudizio = 'debole';
+    }
+    const segnoRp = rp>=0 ? '+' : '';
+    h += '<div class="info-cell wide"><div class="k">Prossima partita</div>' +
+      '<div class="v">media '+fmBase.toFixed(2)+' &rarr; '+segnoRp+rp.toFixed(2)+'</div>' +
+      '<div class="n">'+(sq.inCasa?'in casa contro ':'in trasferta a ')+esc(sq.avversario)+
+      ' ('+cosa+' '+giudizio+')</div></div>';
+  }
 
   /* Il rendimento vero accanto alla stima. Lo scarto fra i due si mostra solo da quattro
      giornate in su: su due partite un attaccante che ha segnato una doppietta esce con +8 di
@@ -1151,15 +1653,19 @@ function schedaGiocatore(id){
      Meglio mostrare i numeri e dire che non bastano, che far dedurre una conclusione falsa. */
   const rend = rendimento(id);
   if(rend && rend.media != null){
-    const scarto = rend.media - fm;
+    /* Confrontato con la stima PURA (fantamediaStimata), non con fm: fm da qui in poi e' gia'
+       mescolato con questo stesso dato reale, e uno scarto contro se stesso si azzererebbe
+       sempre da solo senza dire nulla. */
+    const scarto = rend.media - fantamediaStimata(l);
     const segno = scarto >= 0 ? '+' : '';
-    h += '<div class="info-cell wide"><div class="k">Rendimento reale</div>' +
+    h += '<div class="info-cell wide"><div class="k">Rendimento reale <span class="note" style="font-weight:400">(pesato sulle giornate recenti)</span></div>' +
       '<div class="v">' + rend.media.toFixed(2) + ' su ' + rend.presenze +
       (rend.presenze===1 ? ' presenza' : ' presenze') + '</div>' +
       '<div class="n">' + rend.elenco.map(x=>
-        'G'+x.giornata+' '+(x.fantavoto==null ? 's.v.' : x.fantavoto.toFixed(1))).join(' · ') +
+        'G'+x.giornata+' '+(x.fantavoto==null ? 's.v.' : x.fantavoto.toFixed(1))+(x.subentrato?' (sub)':'')).join(' · ') +
       (rend.presenze >= 4
-        ? ' — rispetto alla stima ' + segno + scarto.toFixed(2)
+        ? ' — rispetto alla stima iniziale ' + segno + scarto.toFixed(2) +
+          ' (la fantamedia attesa qui sopra ne tiene gia\' conto)'
         : ' — troppe poche giornate per giudicare la stima') + '</div></div>';
   }else if(rend){
     h += '<div class="info-cell wide"><div class="k">Rendimento reale</div>' +
@@ -1265,6 +1771,50 @@ function alternativePerRuolo(ruolo, idAttuale){
 }
 
 /* =======================================================================================
+   NOTIFICHE PUSH: promemoria prima della prima partita della giornata
+   ======================================================================================= */
+
+/* Chiave pubblica VAPID: e' pubblica per definizione, e' cosi' che il servizio push del
+   browser verifica che sia proprio questo sito ad avere il diritto di mandare notifiche a
+   un abbonamento. La chiave PRIVATA (che firma i messaggi in uscita) non sta mai qui: e' un
+   secret di GitHub Actions, usata solo da tools/invia-promemoria.mjs. Vedi CLAUDE.md,
+   "Notifiche push", per come e' stata generata e dove sta la coppia completa. */
+const VAPID_PUBLIC_KEY = 'BHWwgaSHRz5TzxveQbvlZ6Cx__SgARqi_-hEXlD1g6Av-gYH_Y8cq48pY6-Zb2bcLlLNgDWwdFrDGn5M00ICRjM';
+
+function urlBase64ToUint8Array(s){
+  const pad = '='.repeat((4 - s.length % 4) % 4);
+  const raw = atob((s + pad).replace(/-/g,'+').replace(/_/g,'/'));
+  const out = new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+
+async function abbonamentoAttuale(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    return await reg.pushManager.getSubscription();
+  }catch(e){ return null; }
+}
+
+async function attivaNotifiche(){
+  const permesso = await Notification.requestPermission();
+  if(permesso !== 'granted') return null;
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    return await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+    });
+  }catch(e){ toast('Iscrizione non riuscita'); return null; }
+}
+
+async function disattivaNotifiche(){
+  const sub = await abbonamentoAttuale();
+  if(sub){ try{ await sub.unsubscribe(); }catch(e){} }
+}
+
+/* =======================================================================================
    IMPOSTAZIONI: import rosa, composizione a mano, formazione da copiare
    ======================================================================================= */
 
@@ -1296,6 +1846,13 @@ function apriSettings(){
       '<button class="btn btn-sec" id="btnCopia">Copia negli appunti</button>';
   }
 
+  h += '<h4>Notifiche</h4>' +
+    '<p class="note" style="margin:0 0 8px">Promemoria push scaglionati (24, 12, 6, 2, 1 ora e ' +
+    '30 minuti prima della scadenza), cosi non ti scordi di schierare. Si fermano da soli ' +
+    'appena tocchi "Ho schierato" in cima alla schermata Campo.</p>' +
+    '<div id="notifStato" class="note" style="margin:0 0 8px">Controllo lo stato...</div>' +
+    '<div class="btn-row" id="notifBtns"></div>';
+
   h += '<h4>Azzeramenti</h4>' +
     '<button class="btn btn-sec" id="btnResetMano">Togli tutte le correzioni a mano</button>' +
     '<button class="btn btn-danger" id="btnResetTutto">Cancella rosa e ricomincia</button>' +
@@ -1304,6 +1861,7 @@ function apriSettings(){
   el('#settingsSheet').innerHTML = h;
   el('#settingsSheet').style.display='block';
   el('#overlay').style.display='block';
+  spingiStoriaSheet();
 
   el('#btnImporta').addEventListener('click', ()=> importaRosa(el('#boxRosa').value));
   el('#btnComponi').addEventListener('click', componiRosa);
@@ -1335,6 +1893,46 @@ function apriSettings(){
     salva(); chiudiSheet(); render(); toast('Azzerato');
   });
   el('#btnChiudiSet').addEventListener('click', chiudiSheet);
+
+  /* Async e separato dal resto: apriSettings() e sincrona (costruisce l'HTML tutto insieme),
+     ma sapere se un abbonamento push esiste gia' richiede di chiedere al service worker. Si
+     aggiorna la sezione un attimo dopo, invece di far aspettare tutto il resto del foglio. */
+  (async ()=>{
+    if(!('serviceWorker' in navigator) || !('PushManager' in window)){
+      const s = el('#notifStato');
+      if(s) s.textContent = 'Questo browser non supporta le notifiche push.';
+      return;
+    }
+    const sub = await abbonamentoAttuale();
+    const statoEl = el('#notifStato'), btnEl = el('#notifBtns');
+    if(!statoEl || !btnEl) return;   // il foglio potrebbe essere gia stato chiuso nel frattempo
+    if(sub){
+      statoEl.textContent = 'Promemoria attivo su questo dispositivo.';
+      btnEl.innerHTML = '<button class="btn btn-sec" id="btnNotifOff">Disattiva</button>';
+      el('#btnNotifOff').addEventListener('click', async ()=>{
+        await disattivaNotifiche();
+        toast('Promemoria disattivato');
+        apriSettings();
+      });
+    }else{
+      statoEl.textContent = 'Non ancora attivo su questo dispositivo.';
+      btnEl.innerHTML = '<button class="btn btn-primary" id="btnNotifOn">Attiva promemoria</button>';
+      el('#btnNotifOn').addEventListener('click', async ()=>{
+        const nuovaSub = await attivaNotifiche();
+        if(!nuovaSub){ toast('Permesso negato o non riuscito'); return; }
+        const json = JSON.stringify(nuovaSub.toJSON ? nuovaSub.toJSON() : nuovaSub);
+        statoEl.innerHTML = '<b>Attivato.</b> Ultimo passo, una tantum: copia il testo qui ' +
+          'sotto e incollalo come secret <b>PUSH_SUBSCRIPTION</b> su GitHub (repository → ' +
+          'Settings → Secrets and variables → Actions → New repository secret). Serve al ' +
+          'robot che spedisce il promemoria per sapere a chi mandarlo.';
+        btnEl.innerHTML = '<textarea id="boxSub" readonly style="height:100px">'+esc(json)+'</textarea>' +
+          '<button class="btn btn-sec" id="btnCopiaSub">Copia</button>';
+        el('#btnCopiaSub').addEventListener('click', ()=>{
+          navigator.clipboard.writeText(json).then(()=>toast('Copiato')).catch(()=>toast('Copia a mano'));
+        });
+      });
+    }
+  })();
 }
 
 function importaRosa(testo){
@@ -1450,23 +2048,182 @@ document.addEventListener('click', (e)=>{
   if(e.target.id==='btnVuotaImporta'){ apriSettings(); return; }
 });
 
+const VISTE = ['campo','rosa','moduli'];
+function vaiA(vista){ S.vista = vista; render(); }
+
 document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click', ()=>{ S.vista = t.dataset.vista; render(); });
+  t.addEventListener('click', ()=> vaiA(t.dataset.vista));
 });
 el('#btnSettings').addEventListener('click', apriSettings);
-el('#btnRicarica').addEventListener('click', async ()=>{
+
+/* mostraToast=false per i risvegli automatici (pull-to-refresh ha gia' il suo indicatore,
+   il refresh quando l'app torna in primo piano non deve interrompere nessuno con un avviso
+   per un aggiornamento che l'utente non ha chiesto). */
+async function aggiornaDati(mostraToast){
   const ok = await caricaProbabili(true);
   await caricaStorico();
-  render(); toast(ok ? 'Dati aggiornati' : 'Dati non raggiungibili');
-});
+  aggiornaForzaSquadre();
+  render();
+  /* Ritenta in silenzio la sincronizzazione dello "schierato": se il primo tentativo (al tocco
+     del bottone) era fallito perche' offline, un aggiornamento dati riuscito e il momento giusto
+     per riprovare, senza bisogno che l'utente tocchi di nuovo il bottone. */
+  if(PROB && S.giornataSchierata===PROB.giornata) sincronizzaSchierato(PROB.giornata, true);
+  if(mostraToast!==false) toast(ok ? 'Dati aggiornati' : 'Dati non raggiungibili');
+  return ok;
+}
+el('#btnRicarica').addEventListener('click', ()=> aggiornaDati());
 el('#overlay').addEventListener('click', chiudiSheet);
+
+/* "Ho schierato": un tap segna/toglie la giornata corrente come schierata. E' un toggle
+   apposta (si puo' tornare indietro per errore), e la sincronizzazione col resto (countdown,
+   notifiche) e' immediata: aggiornaCountdown() aggiorna la scritta senza un render() completo,
+   sincronizzaSchierato() avvisa la funzione Netlify che decide se mandare ancora i promemoria. */
+el('#btnSchierato').addEventListener('click', ()=>{
+  if(!PROB || PROB.giornata==null) return;
+  const eraSchierato = S.giornataSchierata === PROB.giornata;
+  S.giornataSchierata = eraSchierato ? null : PROB.giornata;
+  salva();
+  aggiornaCountdown();
+  toast(eraSchierato ? 'Segnato come non ancora schierato' : 'Segnato: hai schierato');
+  sincronizzaSchierato(PROB.giornata, !eraSchierato);
+});
+
+/* ---------- Gesti ---------- */
+
+/* Swipe in basso sulla maniglia per chiudere la sheet aperta, come i fogli nativi. Parte SOLO
+   dalla maniglia (vedi touch-action:none li' sopra), non da tutto il foglio: il contenuto sotto
+   (liste, testo, textarea) deve restare scorribile/selezionabile senza che un tocco un po'
+   verticale lo chiuda per sbaglio. Un solo gestore per sheet, agganciato una volta sola: la
+   maniglia dentro viene rifatta da capo a ogni apertura (innerHTML), quindi si delega il click
+   sul contenitore stabile invece di riattaccare l'evento ogni volta. */
+function attivaTrascinamentoSheet(sheetEl){
+  let inizioY = null, altezza = 0, pid = null;
+  sheetEl.addEventListener('pointerdown', (e)=>{
+    if(!e.target.closest('.handle')) return;
+    inizioY = e.clientY; altezza = sheetEl.getBoundingClientRect().height; pid = e.pointerId;
+    sheetEl.classList.add('trascinando');
+    try{ sheetEl.setPointerCapture(pid); }catch(err){}
+  });
+  sheetEl.addEventListener('pointermove', (e)=>{
+    if(inizioY==null || e.pointerId!==pid) return;
+    const dy = Math.max(0, e.clientY - inizioY);
+    sheetEl.style.transform = 'translateY(' + dy + 'px)';
+  });
+  function fine(e){
+    if(inizioY==null || e.pointerId!==pid) return;
+    const dy = Math.max(0, e.clientY - inizioY);
+    sheetEl.classList.remove('trascinando');
+    inizioY = null; pid = null;
+    if(dy > altezza * 0.28){
+      sheetEl.style.transform = 'translateY(100%)';
+      setTimeout(()=>{ chiudiSheet(); }, 200);
+    }else{
+      sheetEl.style.transform = '';
+    }
+  }
+  sheetEl.addEventListener('pointerup', fine);
+  sheetEl.addEventListener('pointercancel', fine);
+}
+attivaTrascinamentoSheet(el('#sheet'));
+attivaTrascinamentoSheet(el('#settingsSheet'));
+
+/* Swipe orizzontale su Campo/Rosa/Moduli per cambiare tab senza tornare su alla testata.
+   Il blocco di direzione e' la parte che conta: nei primi millimetri di movimento si guarda
+   se il gesto e' piu orizzontale o piu verticale, UNA volta sola, e da li' in poi si resta
+   fedeli a quella scelta. Deciso verticale, non si tocca piu nulla: lo scroll della lista
+   funziona esattamente come se questo listener non esistesse. Deciso orizzontale, si
+   preventDefault() cosi la pagina non scorre di lato mentre si segue il dito. */
+(function(){
+  const main = el('#main');
+  let inizioX = null, inizioY = null, direzione = null, pid = null;
+  main.addEventListener('pointerdown', (e)=>{
+    if(e.pointerType==='mouse') return;   // lo swipe e' un gesto touch, non da trascinare col mouse
+    inizioX = e.clientX; inizioY = e.clientY; direzione = null; pid = e.pointerId;
+  });
+  main.addEventListener('pointermove', (e)=>{
+    if(inizioX==null || e.pointerId!==pid) return;
+    const dx = e.clientX - inizioX, dy = e.clientY - inizioY;
+    if(direzione==null && (Math.abs(dx)>10 || Math.abs(dy)>10)){
+      direzione = Math.abs(dx) > Math.abs(dy) ? 'orizzontale' : 'verticale';
+    }
+    if(direzione==='orizzontale') e.preventDefault();
+  }, { passive:false });
+  function fine(e){
+    if(inizioX==null || e.pointerId!==pid) return;
+    const dx = e.clientX - inizioX;
+    if(direzione==='orizzontale' && Math.abs(dx) > 70){
+      const i = VISTE.indexOf(S.vista);
+      const nuovo = dx < 0 ? VISTE[i+1] : VISTE[i-1];   // sinistra -> tab dopo, destra -> tab prima
+      if(nuovo) vaiA(nuovo);
+    }
+    inizioX = null; direzione = null; pid = null;
+  }
+  main.addEventListener('pointerup', fine);
+  main.addEventListener('pointercancel', fine);
+})();
+
+/* Pull-to-refresh: tirare in basso dalla cima del contenuto riaggiorna i dati di giornata, come
+   le app native — in piu' rispetto al tasto "Aggiorna" in testata, che resta comunque il modo
+   principale (piu' visibile, sempre raggiungibile con un pollice). Parte SOLO se main e' gia'
+   scrollato in cima: un trascinamento in basso quando c'e' altro sopra e' scroll normale, non un
+   gesto di refresh, e overscroll-behavior-y:contain su main (vedi CSS) evita che ci si impasti
+   col pull-to-refresh nativo del browser mentre il nostro e' attivo. */
+(function(){
+  const main = el('#main'), tira = el('#pullTira');
+  const SOGLIA = 64;
+  let inizioY = null, pid = null, attivo = false;
+  main.addEventListener('pointerdown', (e)=>{
+    if(e.pointerType==='mouse' || main.scrollTop>0) return;
+    inizioY = e.clientY; pid = e.pointerId; attivo = false;
+  });
+  main.addEventListener('pointermove', (e)=>{
+    if(inizioY==null || e.pointerId!==pid) return;
+    const dy = e.clientY - inizioY;
+    if(dy<=0 || main.scrollTop>0){ inizioY=null; tira.style.height='0'; return; }
+    attivo = true;
+    tira.style.height = Math.min(SOGLIA, dy*0.5) + 'px';
+    tira.textContent = dy*0.5 >= SOGLIA ? 'Rilascia per aggiornare' : 'Tira per aggiornare';
+  });
+  async function fine(e){
+    if(inizioY==null || e.pointerId!==pid) return;
+    const scattato = attivo && (parseFloat(tira.style.height)||0) >= SOGLIA;
+    inizioY = null; pid = null; attivo = false;
+    if(scattato){
+      tira.textContent = 'Aggiornamento...';
+      await aggiornaDati(false);
+    }
+    tira.style.height = '0';
+  }
+  main.addEventListener('pointerup', fine);
+  main.addEventListener('pointercancel', fine);
+})();
+
+/* Aggiornamento dei DATI quando l'app torna in primo piano, non un timer che gira in
+   sottofondo: un controllo periodico continuerebbe a girare (e a consumare batteria) anche
+   quando il telefono e' in tasca con lo schermo spento. Aspettare che l'utente riapra l'app e
+   farlo solo se i dati sono passati di moda costa zero quando l'app resta chiusa, che e' la
+   stragrande maggioranza del tempo per un'app che si apre una volta a settimana.
+   Il COUNTDOWN e' l'unica eccezione dichiarata a questo principio: per restare un vero
+   secondo-per-secondo deve girare mentre l'app e' aperta (avviaCountdown/fermaCountdown), ma si
+   ferma comunque appena l'app va in background, cosi non gira mai a schermo spento. */
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='visible'){
+    avviaCountdown();
+    if(oreDati()!=null && oreDati()>0.75) aggiornaDati(false);
+  }else{
+    fermaCountdown();
+  }
+});
 
 carica();
 calcolaMvSquadre();
+aggiornaForzaSquadre();    // popola subito MV_SQUADRA/ATT_SQUADRA (= le pure finche' STORICO e' vuoto)
 caricaProbabili(false)
   .then(()=> { render(); return caricaStorico(); })
-  .then(()=> render());
+  .then(()=> { aggiornaForzaSquadre(); render(); });
+caricaCostanti().then(()=> render());
 render();
+avviaCountdown();
 
 if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
