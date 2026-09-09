@@ -1,0 +1,8 @@
+{
+  "name": "formazione-fantacalcio",
+  "private": true,
+  "description": "Unica dipendenza vera del progetto: la funzione Netlify che ricorda se hai gia schierato (netlify/functions/schierato.mjs), per lo storage condiviso. L'app resta un index.html senza dipendenze; gli scraper in tools/ non ne hanno nemmeno una (vedi CLAUDE.md).",
+  "dependencies": {
+    "@netlify/blobs": "^11.0.3"
+  }
+}
