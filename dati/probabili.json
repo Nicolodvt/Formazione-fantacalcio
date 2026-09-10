@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-10T15:40:51.902Z",
+ "generato": "2026-09-10T20:19:36.313Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 4,
  "giornateDiscordi": [
@@ -244,7 +244,7 @@
    "nome": "De Roon",
    "squadra": "Roma",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -505,7 +505,7 @@
    "nome": "Deiola",
    "squadra": "Cagliari",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 65,
    "titolare": true,
    "incerto": false
   },
@@ -577,8 +577,8 @@
    "nome": "Kean",
    "squadra": "Como",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "2120": {
@@ -910,7 +910,7 @@
    "nome": "Mina",
    "squadra": "Cagliari",
    "ruolo": "D",
-   "pct": 30,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1576,7 +1576,7 @@
    "nome": "Ciervo",
    "squadra": "Cagliari",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -1679,15 +1679,6 @@
    "titolare": true,
    "incerto": false
   },
-  "5589": {
-   "id": 5589,
-   "nome": "Konè M.",
-   "squadra": "Roma",
-   "ruolo": "C",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
-  },
   "5603": {
    "id": 5603,
    "nome": "Pongracic",
@@ -1720,7 +1711,7 @@
    "nome": "Chalobah T.",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 75,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2224,9 +2215,9 @@
    "nome": "Perrone",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 85,
+   "titolare": true,
+   "incerto": false
   },
   "6164": {
    "id": 6164,
@@ -2251,9 +2242,9 @@
    "nome": "Pisilli",
    "squadra": "Roma",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 90,
+   "titolare": true,
+   "incerto": false
   },
   "6191": {
    "id": 6191,
@@ -2855,7 +2846,7 @@
    "squadra": "Como",
    "ruolo": "D",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6752": {
@@ -2962,16 +2953,16 @@
    "nome": "Valle",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "6869": {
    "id": 6869,
    "nome": "Ramon",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 75,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2980,7 +2971,7 @@
    "nome": "Paz N.",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -3124,7 +3115,7 @@
    "nome": "Rensch",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 35,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3179,7 +3170,7 @@
    "squadra": "Como",
    "ruolo": "D",
    "pct": 55,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "7017": {
@@ -3187,8 +3178,8 @@
    "nome": "Douvikas",
    "squadra": "Como",
    "ruolo": "A",
-   "pct": 55,
-   "titolare": true,
+   "pct": 60,
+   "titolare": false,
    "incerto": true
   },
   "7023": {
@@ -3808,9 +3799,9 @@
    "nome": "Milla",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "7413": {
    "id": 7413,
@@ -3826,9 +3817,9 @@
    "nome": "Kaiki",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 75,
+   "titolare": true,
+   "incerto": false
   },
   "7418": {
    "id": 7418,
@@ -4749,6 +4740,18 @@
   ],
   [
    {
+    "id": 1871,
+    "nome": "Deiola",
+    "pct": 65
+   },
+   {
+    "id": 4210,
+    "nome": "Mina",
+    "pct": 35
+   }
+  ],
+  [
+   {
     "id": 7374,
     "nome": "Mendy P.",
     "pct": 55
@@ -4881,13 +4884,13 @@
   ],
   [
    {
-    "id": 6727,
-    "nome": "Couto",
+    "id": 7014,
+    "nome": "Smolcic I.",
     "pct": 55
    },
    {
-    "id": 7014,
-    "nome": "Smolcic I.",
+    "id": 6727,
+    "nome": "Couto",
     "pct": 45
    }
   ],
@@ -4898,8 +4901,8 @@
     "pct": 60
    },
    {
-    "id": 6151,
-    "nome": "Perrone",
+    "id": 7412,
+    "nome": "Milla",
     "pct": 40
    }
   ],
@@ -4917,13 +4920,13 @@
   ],
   [
    {
-    "id": 7017,
-    "nome": "Douvikas",
+    "id": 2097,
+    "nome": "Kean",
     "pct": 55
    },
    {
-    "id": 2097,
-    "nome": "Kean",
+    "id": 7017,
+    "nome": "Douvikas",
     "pct": 45
    }
   ],
@@ -5098,7 +5101,7 @@
   "572": {
    "id": 572,
    "tipo": "infortunato",
-   "nota": "noie muscolari coscia sinistra, out contro il Bologna"
+   "nota": "lesione di basso grado all'adduttore lungo, rientro da inizio ottobre"
   },
   "827": {
    "id": 827,
@@ -5139,11 +5142,6 @@
    "id": 2832,
    "tipo": "infortunato",
    "nota": "lesione di medio grado del bicipite femorale, tentativo di rientro da metà ottobre"
-  },
-  "4210": {
-   "id": 4210,
-   "tipo": "dubbio",
-   "nota": "noie fisiche, in dubbio convocazione per Bergamo"
   },
   "4349": {
    "id": 4349,
@@ -5204,6 +5202,11 @@
    "id": 5562,
    "tipo": "infortunato",
    "nota": "sindrome femoro-rotulea, ipotesi rientro da gennaio"
+  },
+  "5589": {
+   "id": 5589,
+   "tipo": "infortunato",
+   "nota": "problema muscolare, da valutare"
   },
   "5674": {
    "id": 5674,
@@ -5373,7 +5376,7 @@
   "7351": {
    "id": 7351,
    "tipo": "infortunato",
-   "nota": "noie muscolari, out contro il Bologna"
+   "nota": "lesione di medio grado al bicipite femorale sinistro, rientro dalla metà di ottobre"
   },
   "7453": {
    "id": 7453,
@@ -5384,6 +5387,11 @@
    "id": 7478,
    "tipo": "infortunato",
    "nota": "problema alla spalla, rientro dalla metà di dicembre"
+  },
+  "7481": {
+   "id": 7481,
+   "tipo": "infortunato",
+   "nota": "problema fisico, out contro la Fiorentina"
   },
   "7523": {
    "id": 7523,
