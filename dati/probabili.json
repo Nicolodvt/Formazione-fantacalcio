@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-11T14:53:12.384Z",
+ "generato": "2026-09-11T18:14:34.600Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 4,
  "giornateDiscordi": [
@@ -406,7 +406,7 @@
    "nome": "Zapata D.",
    "squadra": "Torino",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 30,
    "titolare": false,
    "incerto": true
   },
@@ -712,7 +712,7 @@
    "nome": "De Gea",
    "squadra": "Fiorentina",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -982,9 +982,9 @@
    "nome": "Piccoli",
    "squadra": "Bologna",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 85,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4360": {
    "id": 4360,
@@ -1018,7 +1018,7 @@
    "nome": "Ranieri L.",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1054,7 +1054,7 @@
    "nome": "Zortea",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 30,
    "titolare": false,
    "incerto": true
   },
@@ -1081,7 +1081,7 @@
    "nome": "Fagioli",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1189,7 +1189,7 @@
    "nome": "Correia T.",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1495,7 +1495,7 @@
    "nome": "Sohm",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1504,9 +1504,9 @@
    "nome": "Dragusin",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 35,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "5399": {
    "id": 5399,
@@ -1576,7 +1576,7 @@
    "nome": "Mazzocchi",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1612,7 +1612,7 @@
    "nome": "Busio",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1684,9 +1684,9 @@
    "nome": "Pongracic",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 30,
+   "titolare": false,
+   "incerto": true
   },
   "5620": {
    "id": 5620,
@@ -1729,7 +1729,7 @@
    "nome": "Holm",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -1765,16 +1765,16 @@
    "nome": "Beto",
    "squadra": "Fiorentina",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "5695": {
    "id": 5695,
    "nome": "Haps",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2035,8 +2035,8 @@
    "nome": "Dodò",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": true,
+   "pct": 40,
+   "titolare": false,
    "incerto": true
   },
   "5946": {
@@ -2359,7 +2359,7 @@
    "nome": "Stankovic F.",
    "squadra": "Venezia",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2386,7 +2386,7 @@
    "nome": "Ndour",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2557,9 +2557,9 @@
    "nome": "Jimenez A.",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6534": {
    "id": 6534,
@@ -2692,7 +2692,7 @@
    "nome": "Coco",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 35,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2782,7 +2782,7 @@
    "nome": "Dovbyk",
    "squadra": "Bologna",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2818,7 +2818,7 @@
    "nome": "Sagrado",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2890,9 +2890,9 @@
    "nome": "Hainaut",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6826": {
    "id": 6826,
@@ -2908,9 +2908,9 @@
    "nome": "Njie",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6831": {
    "id": 6831,
@@ -2926,7 +2926,7 @@
    "nome": "Mbangula",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -2989,16 +2989,16 @@
    "nome": "Moreno M.",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6892": {
    "id": 6892,
    "nome": "Schingtienne",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3052,7 +3052,7 @@
    "nome": "Yeboah J.",
    "squadra": "Venezia",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3061,7 +3061,7 @@
    "nome": "Atta",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3133,7 +3133,7 @@
    "nome": "Perez K.",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3241,7 +3241,7 @@
    "nome": "Mastantuono",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3358,7 +3358,7 @@
    "nome": "Joao Mario",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3574,9 +3574,9 @@
    "nome": "Valdepenas",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "7301": {
    "id": 7301,
@@ -3709,7 +3709,7 @@
    "nome": "Kulenovic",
    "squadra": "Torino",
    "ruolo": "A",
-   "pct": 35,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -3740,15 +3740,6 @@
    "titolare": true,
    "incerto": false
   },
-  "7390": {
-   "id": 7390,
-   "nome": "Doucouré M.",
-   "squadra": "Genoa",
-   "ruolo": "D",
-   "pct": 15,
-   "titolare": false,
-   "incerto": true
-  },
   "7408": {
    "id": 7408,
    "nome": "Lisman",
@@ -3772,9 +3763,9 @@
    "nome": "Viery",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 30,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7411": {
    "id": 7411,
@@ -3961,7 +3952,7 @@
    "nome": "Alhassane",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3970,7 +3961,7 @@
    "nome": "Adams A.",
    "squadra": "Venezia",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4078,8 +4069,8 @@
    "nome": "Halhal",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": true,
+   "pct": 50,
+   "titolare": false,
    "incerto": true
   },
   "7540": {
@@ -4420,7 +4411,7 @@
    "nome": "Gnonto",
    "squadra": "Fiorentina",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4439,7 +4430,7 @@
    "squadra": "Fiorentina",
    "ruolo": "C",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7626": {
@@ -4474,7 +4465,7 @@
    "nome": "Libra",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 30,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -4534,66 +4525,6 @@
   }
  },
  "ballottaggi": [
-  [
-   {
-    "id": 7538,
-    "nome": "Halhal",
-    "pct": 60
-   },
-   {
-    "id": 6890,
-    "nome": "Moreno M.",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 6821,
-    "nome": "Hainaut",
-    "pct": 55
-   },
-   {
-    "id": 5481,
-    "nome": "Mazzocchi",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 5885,
-    "nome": "Dodò",
-    "pct": 55
-   },
-   {
-    "id": 7175,
-    "nome": "Joao Mario",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 7625,
-    "nome": "Goncalves P.",
-    "pct": 60
-   },
-   {
-    "id": 6827,
-    "nome": "Njie",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 5694,
-    "nome": "Beto",
-    "pct": 60
-   },
-   {
-    "id": 7023,
-    "nome": "Pellegrino M.",
-    "pct": 40
-   }
-  ],
   [
    {
     "id": 6047,
@@ -4844,18 +4775,6 @@
     "id": 6054,
     "nome": "Moro N.",
     "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 4359,
-    "nome": "Piccoli",
-    "pct": 60
-   },
-   {
-    "id": 6675,
-    "nome": "Dovbyk",
-    "pct": 40
    }
   ],
   [
@@ -5139,6 +5058,11 @@
    "tipo": "infortunato",
    "nota": "lesione di basso grado all'adduttore lungo, rientro da inizio ottobre"
   },
+  "608": {
+   "id": 608,
+   "tipo": "dubbio",
+   "nota": "fastidio al ginocchio, in dubbio contro la Roma"
+  },
   "827": {
    "id": 827,
    "tipo": "infortunato",
@@ -5193,6 +5117,11 @@
    "id": 4387,
    "tipo": "infortunato",
    "nota": "problema alla schiena, rientro da ottobre"
+  },
+  "4433": {
+   "id": 4433,
+   "tipo": "dubbio",
+   "nota": "fastido all'anca, in dubbio impiego contro il Napoli"
   },
   "4459": {
    "id": 4459,
@@ -5319,6 +5248,11 @@
    "tipo": "infortunato",
    "nota": "problema all'anca, rientro fine ottobre"
   },
+  "6675": {
+   "id": 6675,
+   "tipo": "dubbio",
+   "nota": "fastidio muscolare ai flessori, in dubbio impiego a Napoli"
+  },
   "6717": {
    "id": 6717,
    "tipo": "infortunato",
@@ -5428,6 +5362,11 @@
    "id": 7536,
    "tipo": "infortunato",
    "nota": "noie fisiche, out contro il Como"
+  },
+  "7550": {
+   "id": 7550,
+   "tipo": "infortunato",
+   "nota": "sindrome retto-adduttoria, out a Genova"
   }
  }
 }
