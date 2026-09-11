@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-11T10:49:39.154Z",
+ "generato": "2026-09-11T14:53:12.384Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 4,
  "giornateDiscordi": [
@@ -307,7 +307,7 @@
    "nome": "Dimarco",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -505,9 +505,9 @@
    "nome": "Deiola",
    "squadra": "Cagliari",
    "ruolo": "C",
-   "pct": 65,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "1926": {
    "id": 1926,
@@ -622,7 +622,7 @@
    "nome": "Cutrone",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 25,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -695,7 +695,7 @@
    "squadra": "Inter",
    "ruolo": "D",
    "pct": 55,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "2517": {
@@ -883,7 +883,7 @@
    "nome": "Pavard",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -911,7 +911,7 @@
    "squadra": "Cagliari",
    "ruolo": "D",
    "pct": 55,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "4220": {
@@ -1009,7 +1009,7 @@
    "nome": "Terzic",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1342,7 +1342,7 @@
    "nome": "McKennie",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 20,
+   "pct": 15,
    "titolare": false,
    "incerto": true
   },
@@ -1498,15 +1498,6 @@
    "pct": 80,
    "titolare": true,
    "incerto": false
-  },
-  "5336": {
-   "id": 5336,
-   "nome": "Nzola",
-   "squadra": "Cagliari",
-   "ruolo": "A",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
   },
   "5365": {
    "id": 5365,
@@ -1747,7 +1738,7 @@
    "nome": "Sarr P.",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1756,7 +1747,7 @@
    "nome": "Koopmeiners",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -1855,7 +1846,7 @@
    "nome": "Zhegrova",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2017,7 +2008,7 @@
    "nome": "Carlos Augusto",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2035,9 +2026,9 @@
    "nome": "Mota",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "5885": {
    "id": 5885,
@@ -2065,15 +2056,6 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
-  },
-  "5982": {
-   "id": 5982,
-   "nome": "Spence",
-   "squadra": "Inter",
-   "ruolo": "D",
-   "pct": 25,
-   "titolare": false,
-   "incerto": true
   },
   "5994": {
    "id": 5994,
@@ -2116,7 +2098,7 @@
    "nome": "Fazzini",
    "squadra": "Cagliari",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -2161,9 +2143,9 @@
    "nome": "Lucumì",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "6047": {
    "id": 6047,
@@ -2206,7 +2188,7 @@
    "nome": "Ngonge",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -2324,7 +2306,7 @@
    "squadra": "Inter",
    "ruolo": "D",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6218": {
@@ -3322,7 +3304,7 @@
    "nome": "Tourè I.",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3547,9 +3529,9 @@
    "nome": "Rodriguez Ju.",
    "squadra": "Cagliari",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "7272": {
    "id": 7272,
@@ -3565,7 +3547,7 @@
    "nome": "Zè Pedro",
    "squadra": "Cagliari",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -3754,9 +3736,9 @@
    "nome": "Mendy P.",
    "squadra": "Cagliari",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7390": {
    "id": 7390,
@@ -4001,6 +3983,15 @@
    "titolare": true,
    "incerto": false
   },
+  "7523": {
+   "id": 7523,
+   "nome": "Varela G.",
+   "squadra": "Monza",
+   "ruolo": "A",
+   "pct": 55,
+   "titolare": true,
+   "incerto": true
+  },
   "7525": {
    "id": 7525,
    "nome": "Diawara S.",
@@ -4042,7 +4033,7 @@
    "nome": "Kofler",
    "squadra": "Cagliari",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4127,15 +4118,6 @@
    "titolare": false,
    "incerto": true
   },
-  "7550": {
-   "id": 7550,
-   "nome": "Grillitsch",
-   "squadra": "Frosinone",
-   "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
-  },
   "7551": {
    "id": 7551,
    "nome": "Schmid",
@@ -4178,6 +4160,15 @@
    "squadra": "Lecce",
    "ruolo": "P",
    "pct": 5,
+   "titolare": false,
+   "incerto": true
+  },
+  "7560": {
+   "id": 7560,
+   "nome": "Pisseri",
+   "squadra": "Frosinone",
+   "ruolo": "P",
+   "pct": 1,
    "titolare": false,
    "incerto": true
   },
@@ -4249,7 +4240,7 @@
    "nome": "Foe Ondoa",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -4749,26 +4740,26 @@
   ],
   [
    {
-    "id": 1871,
-    "nome": "Deiola",
-    "pct": 65
-   },
-   {
     "id": 4210,
     "nome": "Mina",
-    "pct": 35
+    "pct": 55
+   },
+   {
+    "id": 1871,
+    "nome": "Deiola",
+    "pct": 45
    }
   ],
   [
    {
-    "id": 7374,
-    "nome": "Mendy P.",
-    "pct": 55
+    "id": 7268,
+    "nome": "Rodriguez Ju.",
+    "pct": 60
    },
    {
-    "id": 7547,
-    "nome": "Kevin Carlos",
-    "pct": 45
+    "id": 7532,
+    "nome": "Kofler",
+    "pct": 40
    }
   ],
   [
@@ -4780,6 +4771,18 @@
    {
     "id": 6592,
     "nome": "Forson O.",
+    "pct": 45
+   }
+  ],
+  [
+   {
+    "id": 7523,
+    "nome": "Varela G.",
+    "pct": 55
+   },
+   {
+    "id": 2155,
+    "nome": "Cutrone",
     "pct": 45
    }
   ],
@@ -4876,6 +4879,18 @@
    {
     "id": 4463,
     "nome": "Esposito Se.",
+    "pct": 40
+   }
+  ],
+  [
+   {
+    "id": 6042,
+    "nome": "Lucumì",
+    "pct": 60
+   },
+   {
+    "id": 6766,
+    "nome": "Kelly L.",
     "pct": 40
    }
   ],
@@ -5049,13 +5064,13 @@
   ],
   [
    {
-    "id": 6217,
-    "nome": "Bisseck",
+    "id": 2514,
+    "nome": "Stones",
     "pct": 55
    },
    {
-    "id": 2514,
-    "nome": "Stones",
+    "id": 6217,
+    "nome": "Bisseck",
     "pct": 45
    }
   ],
@@ -5112,7 +5127,7 @@
   "254": {
    "id": 254,
    "tipo": "dubbio",
-   "nota": "lieve distorsione al ginocchio, in dubbio convocazione contro l'Udinese"
+   "nota": "lieve distorsione al ginocchio, in dubbio dal 1' contro l'Udinese"
   },
   "333": {
    "id": 333,
@@ -5128,11 +5143,6 @@
    "id": 827,
    "tipo": "infortunato",
    "nota": "rottura del menisco esterno del ginocchio, ipotesi di rientro in campo da gennaio"
-  },
-  "2155": {
-   "id": 2155,
-   "tipo": "dubbio",
-   "nota": "noie muuscolari, in dubbio contro il Lecce"
   },
   "2167": {
    "id": 2167,
@@ -5234,11 +5244,6 @@
    "tipo": "infortunato",
    "nota": "noie fisiche, da valutare convocazione nella 5a giornata di campionato"
   },
-  "5680": {
-   "id": 5680,
-   "tipo": "dubbio",
-   "nota": "noie fisiche, da valutare impiego contro il Sassuolo"
-  },
   "5735": {
    "id": 5735,
    "tipo": "infortunato",
@@ -5248,6 +5253,11 @@
    "id": 5880,
    "tipo": "infortunato",
    "nota": "noie fisiche, out contro Lecce"
+  },
+  "5882": {
+   "id": 5882,
+   "tipo": "dubbio",
+   "nota": "noie fisiche, in dubbio impiego a Lecce"
   },
   "5888": {
    "id": 5888,
@@ -5397,7 +5407,7 @@
   "7351": {
    "id": 7351,
    "tipo": "infortunato",
-   "nota": "lesione di medio grado al bicipite femorale sinistro, rientro dalla metà di ottobre"
+   "nota": "lesione di medio grado al bicipite femorale sinistro, tentativo rientro dalla seconda metà di ottobre"
   },
   "7453": {
    "id": 7453,
@@ -5413,11 +5423,6 @@
    "id": 7481,
    "tipo": "infortunato",
    "nota": "problema fisico, out contro la Fiorentina"
-  },
-  "7523": {
-   "id": 7523,
-   "tipo": "infortunato",
-   "nota": "problema muscolare all'adduttore, out contro il Lecce"
   },
   "7536": {
    "id": 7536,
