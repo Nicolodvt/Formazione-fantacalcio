@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-11T18:14:34.600Z",
+ "generato": "2026-09-12T11:31:11.017Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 4,
  "giornateDiscordi": [
@@ -308,7 +308,7 @@
    "squadra": "Inter",
    "ruolo": "D",
    "pct": 55,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "256": {
@@ -914,15 +914,6 @@
    "titolare": true,
    "incerto": true
   },
-  "4220": {
-   "id": 4220,
-   "nome": "Zambo Anguissa",
-   "squadra": "Napoli",
-   "ruolo": "C",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
-  },
   "4236": {
    "id": 4236,
    "nome": "Muric",
@@ -1048,15 +1039,6 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
-  },
-  "4433": {
-   "id": 4433,
-   "nome": "Zortea",
-   "squadra": "Bologna",
-   "ruolo": "D",
-   "pct": 30,
-   "titolare": false,
-   "incerto": true
   },
   "4436": {
    "id": 4436,
@@ -1288,7 +1270,7 @@
    "nome": "Ghion",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -1432,9 +1414,9 @@
    "nome": "Gilmour",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 80,
+   "titolare": true,
+   "incerto": false
   },
   "5172": {
    "id": 5172,
@@ -1585,7 +1567,7 @@
    "nome": "Casale",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 15,
+   "pct": 25,
    "titolare": false,
    "incerto": true
   },
@@ -2008,9 +1990,9 @@
    "nome": "Carlos Augusto",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "5878": {
    "id": 5878,
@@ -2101,15 +2083,6 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
-  },
-  "6015": {
-   "id": 6015,
-   "nome": "Berisha M.",
-   "squadra": "Lecce",
-   "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
   },
   "6020": {
    "id": 6020,
@@ -2399,15 +2372,6 @@
    "titolare": false,
    "incerto": true
   },
-  "6320": {
-   "id": 6320,
-   "nome": "Doekhi",
-   "squadra": "Lazio",
-   "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
-  },
   "6344": {
    "id": 6344,
    "nome": "Sanchez Ro.",
@@ -2450,6 +2414,15 @@
    "squadra": "Fiorentina",
    "ruolo": "P",
    "pct": 5,
+   "titolare": false,
+   "incerto": true
+  },
+  "6410": {
+   "id": 6410,
+   "nome": "Kaba",
+   "squadra": "Lecce",
+   "ruolo": "C",
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -2776,15 +2749,6 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
-  },
-  "6675": {
-   "id": 6675,
-   "nome": "Dovbyk",
-   "squadra": "Bologna",
-   "ruolo": "A",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
   },
   "6677": {
    "id": 6677,
@@ -3182,6 +3146,15 @@
    "titolare": false,
    "incerto": true
   },
+  "7036": {
+   "id": 7036,
+   "nome": "Bakola",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
+  },
   "7048": {
    "id": 7048,
    "nome": "De Marzi",
@@ -3259,7 +3232,7 @@
    "nome": "Lang",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -3502,7 +3475,7 @@
    "nome": "Gorter",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3605,15 +3578,6 @@
    "titolare": true,
    "incerto": false
   },
-  "7318": {
-   "id": 7318,
-   "nome": "Gandelman",
-   "squadra": "Lecce",
-   "ruolo": "C",
-   "pct": 25,
-   "titolare": false,
-   "incerto": true
-  },
   "7319": {
    "id": 7319,
    "nome": "Fofana Sa.",
@@ -3700,7 +3664,7 @@
    "nome": "Bowie",
    "squadra": "Sassuolo",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 55,
    "titolare": true,
    "incerto": true
   },
@@ -4028,15 +3992,6 @@
    "titolare": false,
    "incerto": true
   },
-  "7533": {
-   "id": 7533,
-   "nome": "Happonen",
-   "squadra": "Bologna",
-   "ruolo": "P",
-   "pct": 1,
-   "titolare": false,
-   "incerto": true
-  },
   "7534": {
    "id": 7534,
    "nome": "Renzetti",
@@ -4177,7 +4132,7 @@
    "nome": "Favasuli",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 30,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4222,9 +4177,9 @@
    "nome": "Cinquegrano",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "7574": {
    "id": 7574,
@@ -4258,9 +4213,9 @@
    "nome": "Sutalo J.",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
+   "pct": 90,
+   "titolare": true,
+   "incerto": false
   },
   "7581": {
    "id": 7581,
@@ -4447,7 +4402,7 @@
    "nome": "Enem",
    "squadra": "Bologna",
    "ruolo": "A",
-   "pct": 15,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4748,6 +4703,18 @@
     "pct": 55
    },
    {
+    "id": 7120,
+    "nome": "Lang",
+    "pct": 45
+   }
+  ],
+  [
+   {
+    "id": 6831,
+    "nome": "Neres",
+    "pct": 55
+   },
+   {
     "id": 2517,
     "nome": "De Bruyne",
     "pct": 45
@@ -4779,6 +4746,18 @@
   ],
   [
    {
+    "id": 7573,
+    "nome": "Cinquegrano",
+    "pct": 60
+   },
+   {
+    "id": 6896,
+    "nome": "Van Der Brempt",
+    "pct": 40
+   }
+  ],
+  [
+   {
     "id": 5844,
     "nome": "Thorstvedt",
     "pct": 60
@@ -4793,12 +4772,12 @@
    {
     "id": 7347,
     "nome": "Bowie",
-    "pct": 60
+    "pct": 55
    },
    {
     "id": 4463,
     "nome": "Esposito Se.",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
@@ -4995,6 +4974,18 @@
   ],
   [
    {
+    "id": 254,
+    "nome": "Dimarco",
+    "pct": 55
+   },
+   {
+    "id": 5877,
+    "nome": "Carlos Augusto",
+    "pct": 45
+   }
+  ],
+  [
+   {
     "id": 1870,
     "nome": "Barella",
     "pct": 60
@@ -5043,11 +5034,6 @@
   ]
  ],
  "indisponibili": {
-  "254": {
-   "id": 254,
-   "tipo": "dubbio",
-   "nota": "lieve distorsione al ginocchio, in dubbio dal 1' contro l'Udinese"
-  },
   "333": {
    "id": 333,
    "tipo": "infortunato",
@@ -5098,6 +5084,11 @@
    "tipo": "infortunato",
    "nota": "lesione di medio grado del bicipite femorale, tentativo di rientro da metà ottobre"
   },
+  "4220": {
+   "id": 4220,
+   "tipo": "infortunato",
+   "nota": "noie fisiche, out contro Bologna"
+  },
   "4349": {
    "id": 4349,
    "tipo": "infortunato",
@@ -5120,8 +5111,8 @@
   },
   "4433": {
    "id": 4433,
-   "tipo": "dubbio",
-   "nota": "fastido all'anca, in dubbio impiego contro il Napoli"
+   "tipo": "infortunato",
+   "nota": "fastido all'anca, out contro il Napoli"
   },
   "4459": {
    "id": 4459,
@@ -5141,7 +5132,7 @@
   "5029": {
    "id": 5029,
    "tipo": "infortunato",
-   "nota": "distorsione alla caviglia, out contro il Monza"
+   "nota": "distorsione alla caviglia, rientro da inizio ottobre"
   },
   "5449": {
    "id": 5449,
@@ -5198,6 +5189,11 @@
    "tipo": "infortunato",
    "nota": "lesione del collaterale mediale di secondo grado del ginocchio sinistro, rientro da inizio ottobre"
   },
+  "6015": {
+   "id": 6015,
+   "tipo": "infortunato",
+   "nota": "sovraccarico muscolare alla gamba, out contro il Monza"
+  },
   "6039": {
    "id": 6039,
    "tipo": "infortunato",
@@ -5217,6 +5213,11 @@
    "id": 6225,
    "tipo": "infortunato",
    "nota": "lesione del bicipite femorale della coscia sinistra, rientro dalla seconda metà di settembre"
+  },
+  "6320": {
+   "id": 6320,
+   "tipo": "infortunato",
+   "nota": "frattura spiroide del secondo metacarpo, rientro inizio ottobre"
   },
   "6434": {
    "id": 6434,
@@ -5250,8 +5251,8 @@
   },
   "6675": {
    "id": 6675,
-   "tipo": "dubbio",
-   "nota": "fastidio muscolare ai flessori, in dubbio impiego a Napoli"
+   "tipo": "infortunato",
+   "nota": "fastidio muscolare ai flessori, out a Napoli"
   },
   "6717": {
    "id": 6717,
@@ -5287,11 +5288,6 @@
    "id": 6985,
    "tipo": "infortunato",
    "nota": "rottura legamento crociato anteriore ginocchio destro, tentativo rientro da metà settembre"
-  },
-  "7036": {
-   "id": 7036,
-   "tipo": "infortunato",
-   "nota": "noie fisiche, da valutare contro la Juventus"
   },
   "7125": {
    "id": 7125,
@@ -5338,6 +5334,11 @@
    "tipo": "infortunato",
    "nota": "noie fisiche, out contro Atalanta"
   },
+  "7318": {
+   "id": 7318,
+   "tipo": "infortunato",
+   "nota": "noie fisiche, out contro il Monza"
+  },
   "7351": {
    "id": 7351,
    "tipo": "infortunato",
@@ -5357,6 +5358,11 @@
    "id": 7481,
    "tipo": "infortunato",
    "nota": "problema fisico, out contro la Fiorentina"
+  },
+  "7533": {
+   "id": 7533,
+   "tipo": "infortunato",
+   "nota": "risentimento all'adduttore destro, out a Napoli"
   },
   "7536": {
    "id": 7536,
