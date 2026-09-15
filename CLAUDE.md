@@ -19,6 +19,24 @@ con una seconda fonte di riserva se la prima fallisce. Traguardo raggiunto: **4�
 Progetto separato dall'app asta, che vive nella cartella superiore. Quella serve a *comprare* ed è
 finita lunedì; questa serve a *schierare* e deve reggere 38 giornate.
 
+## La rosa dell'utente (15/09/2026)
+
+Scritta a mano dall'utente, nomi verificati contro il listone (`index.html`, `listone-data`) per
+usare la grafia esatta — utile per qualunque analisi futura filtrata sulla sua rosa invece che su
+tutto il listone. **Da aggiornare solo al mercato** (svincoli/acquisti), non ad ogni sessione.
+
+- **P (3)**: Falcone (Lecce), Okoye (Udinese), Skorupski (Bologna)
+- **D (8)**: Bisseck (Inter), Comuzzo (Torino), Delprato (Parma), Di Lorenzo (Napoli), Idzes
+  (Sassuolo), Marusic (Lazio), Spence (Inter), Spinazzola (Napoli)
+- **C (8)**: Frattesi (Lazio), Paz N. — Nico Paz (Como), Politano (Napoli), Vergara (Napoli),
+  Vlasic (Torino), Winks (Cagliari), Zambo Anguissa (Napoli), Zaniolo (Udinese)
+- **A (6)**: Berardi (Sassuolo), Davis K. (Udinese), Esposito F.P. — Pio Esposito (Inter), Kean
+  (Como), Laurientè (Sassuolo), Raspadori (Atalanta)
+
+**Perché non un export automatico**: l'app non ha (ancora) un bottone "esporta rosa attuale" —
+solo l'import una tantum dallo schema dell'app asta. Se in futuro serve spesso, vale la pena
+aggiungerlo (proposto il 15/09, non richiesto).
+
 ## ⚠️ Regola di lavoro corrente: si sviluppa su `dev`, non su `main`
 
 **Dal 04/09/2026, dopo l'incidente dei crediti Netlify.** `main` è collegato in continuous
