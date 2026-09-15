@@ -709,16 +709,27 @@ function fantamediaStimata(p){
   return fm;
 }
 
+/* Correzione dei piazzati (RETTIFICA_PIAZZATI) sommata come RETTIFICA_RUOLO, non dentro
+   fantamediaStimata(): quella deve restare pura per tools/taratura.mjs. Un giocatore puo avere
+   piu' di un tag (mai in pratica per i rigori, ma il ciclo regge comunque). */
+function correzionePiazzati(p){
+  const pz = p.pz || '';
+  let r = 0;
+  for(const k in RETTIFICA_PIAZZATI){ if(pz.indexOf(k)!==-1) r += RETTIFICA_PIAZZATI[k]; }
+  return r;
+}
+
 /* Versione che guida davvero le scelte dell'app (contributoAtteso, l'ottimizzatore di
-   modulo, la scheda): la stima, corretta dell'eventuale scarto sistematico del ruolo (vedi
-   RETTIFICA_RUOLO sopra e tools/ricalibra.mjs), poi mescolata con quanto il giocatore ha reso
-   finora quest'anno. La correzione di ruolo entra PRIMA della mescola, non dopo, apposta: e'
-   un prior migliorato, e deve valere pieno per chi ha pochi dati personali e sfumare da solo
-   per chi ne ha molti — esattamente quello che mescola() gia' fa in base a r.presenze. Con
-   zero giornate reali E zero correzione coincide esattamente con fantamediaStimata(). */
+   modulo, la scheda): la stima, corretta dell'eventuale scarto sistematico del ruolo e dei
+   piazzati (vedi RETTIFICA_RUOLO/RETTIFICA_PIAZZATI sopra e tools/ricalibra.mjs), poi mescolata
+   con quanto il giocatore ha reso finora quest'anno. Le correzioni entrano PRIMA della mescola,
+   non dopo, apposta: sono un prior migliorato, e devono valere piene per chi ha pochi dati
+   personali e sfumare da sole per chi ne ha molti — esattamente quello che mescola() gia' fa in
+   base a r.presenze. Con zero giornate reali E zero correzioni coincide esattamente con
+   fantamediaStimata(). */
 function fantamediaAttesa(p){
   if(!p) return fantamediaStimata(p);
-  const stima = fantamediaStimata(p) + (RETTIFICA_RUOLO[p.r] || 0);
+  const stima = fantamediaStimata(p) + (RETTIFICA_RUOLO[p.r] || 0) + correzionePiazzati(p);
   const r = rendimento(p.id);
   return r ? mescola(stima, r.media, r.presenze) : stima;
 }
@@ -996,7 +1007,8 @@ let cacheModuliValore = null;
 function chiaveModuli(){
   return JSON.stringify(S.rosa) + '|' + JSON.stringify(S.bloccati) + '|' + JSON.stringify(S.override) +
     '|' + (PROB ? PROB.generato : '') + '|' + Object.keys(STORICO).length +
-    '|' + JSON.stringify(RETTIFICA_RUOLO) + '|' + JSON.stringify(MV_SQUADRA) + '|' + JSON.stringify(ATT_SQUADRA);
+    '|' + JSON.stringify(RETTIFICA_RUOLO) + '|' + JSON.stringify(RETTIFICA_PIAZZATI) +
+    '|' + JSON.stringify(MV_SQUADRA) + '|' + JSON.stringify(ATT_SQUADRA);
 }
 function classificaModuli(){
   const chiave = chiaveModuli();
@@ -1031,6 +1043,15 @@ let STORICO = {};
    scritto in dati/costanti.json. Zero finche' quel file non esiste o non risponde: l'app si
    comporta esattamente come oggi, non un'ipotesi silenziosa. */
 let RETTIFICA_RUOLO = {P:0, D:0, C:0, A:0};
+
+/* Stesso meccanismo di RETTIFICA_RUOLO ma sul bonus dei piazzati (rigori), non sul ruolo:
+   tools/ricalibra.mjs confronta quanto vale DAVVERO in media il bonus rigori di chi e' segnato
+   R1/R2/R3 sul listone (dai gol/rigori veri in dati/voti-N.json) con BONUS_PIAZZATI, e corregge
+   lo scarto sistematico, smorzato e limitato come sopra. Punizioni (P1/P2/P3) restano a intuito:
+   un gol su punizione non e' un campo distinto nei dati scaricati, non c'e segnale pulito da
+   isolare. Vuoto finche' costanti.json non risponde o non ha abbastanza campione per un tag:
+   comportamento identico a oggi. */
+let RETTIFICA_PIAZZATI = {};
 
 let S = {
   rosa: [],              // id dei miei giocatori
@@ -1140,13 +1161,21 @@ async function caricaCostanti(){
     const r = await fetchDati('dati/costanti.json');
     if(!r.ok) return;
     const d = await r.json();
-    if(!d || d.schema!==1 || !d.rettificaRuolo || typeof d.rettificaRuolo!=='object') return;
-    ROLE_ORDER.forEach(ruolo=>{
-      const v = d.rettificaRuolo[ruolo];
-      // tetto di sicurezza piu' ampio di quello del generatore (0.4): protegge da un file
-      // corrotto o modificato a mano, senza litigare con valori legittimi.
-      if(typeof v === 'number' && isFinite(v)) RETTIFICA_RUOLO[ruolo] = Math.max(-1, Math.min(1, v));
-    });
+    if(!d || d.schema!==1) return;
+    if(d.rettificaRuolo && typeof d.rettificaRuolo==='object'){
+      ROLE_ORDER.forEach(ruolo=>{
+        const v = d.rettificaRuolo[ruolo];
+        // tetto di sicurezza piu' ampio di quello del generatore (0.4): protegge da un file
+        // corrotto o modificato a mano, senza litigare con valori legittimi.
+        if(typeof v === 'number' && isFinite(v)) RETTIFICA_RUOLO[ruolo] = Math.max(-1, Math.min(1, v));
+      });
+    }
+    if(d.rettificaPiazzati && typeof d.rettificaPiazzati==='object'){
+      for(const k in d.rettificaPiazzati){
+        const v = d.rettificaPiazzati[k];
+        if(typeof v === 'number' && isFinite(v)) RETTIFICA_PIAZZATI[k] = Math.max(-1, Math.min(1, v));
+      }
+    }
   }catch(e){ /* nessuna correzione: fantamediaAttesa resta quella di sempre */ }
 }
 
