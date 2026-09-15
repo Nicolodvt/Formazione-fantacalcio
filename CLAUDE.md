@@ -1,29 +1,49 @@
 # App Formazione — Diario di bordo
 
-**Stato: v0.5 (15/09/2026) — ONLINE E IN USO, 5ª giornata.** Pubblicata su Netlify (build vera via
-GitHub, non drag&drop: serve per `@netlify/blobs` in `netlify/functions/schierato.mjs`), rosa vera
-importata, app installata sul telefono, notifiche push attive (secret e variable impostati su
-GitHub). L'app schiera, sceglie il modulo, funziona offline, e la stima si mescola da sola con i
-voti veri (singolo giocatore, ruolo, piazzati, squadra intera). Countdown e promemoria scaglionati
-su una scadenza vera. La GitHub Action scarica probabili e voti da sola, con una fonte di riserva
-se la prima fallisce.
-
-**`dev` è avanti a `main`, di proposito — non ancora mergiato/pushato tutto (15/09/2026):**
-`main` ha solo il fix dell'Action (`!cancelled()`, vedi *Da fare*). Su `dev` ci sono anche,
-non ancora su GitHub né su `main`: l'indicatore "in forma"/"in calo", il fix di concorrenza in
-`caricaStorico()`, il diario snellito, e `RETTIFICA_PIAZZATI` (committato solo in locale, non
-ancora pushato — vedi `git log origin/dev..dev`). Nessun rischio Netlify nel frattempo: solo un
-merge su `main` fa scattare un deploy, e solo se il diff tocca qualcosa oltre `dati/**`/`*.md`
-(vedi *Regola di lavoro* sotto). **Prossima sessione**: chiedere all'utente se procedere con
-push su `dev` e/o merge su `main`, non dare per scontato che sia già stato fatto.
-
 Progetto separato dall'app asta (cartella superiore): quella serve a *comprare* ed è finita;
 questa serve a *schierare* e deve reggere 38 giornate.
 
 **Per il perché dietro ogni scelta, la cronologia completa e gli incidenti già risolti**: vedi
-[DIARIO-STORICO.md](DIARIO-STORICO.md). Questo file tiene solo lo stato attivo, per non doverlo
-rileggere per intero a ogni sessione — se serve capire *perché* qualcosa è fatto in un certo modo
-(non solo *come funziona ora*), quel file ha il ragionamento e le verifiche fatte sul campo.
+[DIARIO-STORICO.md](DIARIO-STORICO.md). Le quattro sezioni sotto invece **si riscrivono**, non si
+accodano: fotografano il punto in cui siamo adesso, non l'elenco di tutto quello che è successo.
+
+## Stato attuale
+
+**v0.5 — ONLINE E IN USO, 5ª giornata.** Pubblicata su Netlify (build vera via GitHub, non
+drag&drop: serve per `@netlify/blobs` in `netlify/functions/schierato.mjs`), rosa vera importata,
+app installata sul telefono, notifiche push attive. L'app schiera, sceglie il modulo, funziona
+offline, e la stima si mescola da sola con i voti veri (singolo giocatore, ruolo, piazzati,
+squadra intera). Countdown e promemoria scaglionati su una scadenza vera. La GitHub Action
+scarica probabili e voti da sola, con una fonte di riserva se la prima fallisce.
+
+**Rami**: `main` ha solo il fix dell'Action del 15/09 (`!cancelled()`, vedi *Prossimi passi*).
+`dev` è avanti — indicatore "in forma"/"in calo", fix di concorrenza in `caricaStorico()`, diario
+snellito, `RETTIFICA_PIAZZATI` — e **non è ancora né pushato del tutto né mergiato su `main`**
+(l'ultimo commit locale è solo su disco, vedi `git log origin/dev..dev`). Nessun rischio Netlify
+nel frattempo: solo un merge su `main` fa scattare un deploy, e solo se il diff tocca qualcosa
+oltre `dati/**`/`*.md` (vedi *Regola di lavoro* sotto). **Non dare per scontato che sia stato
+fatto nel frattempo — chiedere.**
+
+## Cosa abbiamo deciso il 15/09/2026
+
+- L'utente ha segnalato una formazione "scandalosamente sbagliata" in una giornata passata.
+  Diagnosi fatta **filtrando sulla sua rosa vera**, non su tutto il listone (prima ipotesi,
+  sbagliata: Malen, che l'utente non possiede). Trovato il caso vero: Frattesi, sottostimato per
+  una striscia di forma che nessuna stima da quotazioni può prevedere.
+- **`PESO_PRIOR_STAGIONE` resta intoccato**, richiesta esplicita dell'utente — non è quella la
+  leva da usare per casi come Frattesi.
+- Costruito invece: l'indicatore **"in forma"/"in calo"** (trasparenza pura, non cambia la stima)
+  e **`RETTIFICA_PIAZZATI`** (calibra il bonus dei rigoristi sui gol/rigori VERI, non a intuito —
+  l'unica parte isolabile del dettaglio gol/assist/rigori già salvato).
+- Trovato e risolto, costruendo l'indicatore: un bug di concorrenza in `caricaStorico()`
+  (chiamate sovrapposte duplicavano le giornate nello storico).
+- Indagata e risolta l'email "All jobs have failed": un fallimento delle probabili faceva saltare
+  a cascata anche voti/ricalibrazione/promemoria per un gate implicito di GitHub Actions — fix
+  già su `main`.
+- Snellito il diario (87KB → 11KB), cronologia spostata in DIARIO-STORICO.md.
+- **Principio dato dall'utente**: il campionato è iniziato, non si può aspettare fine stagione
+  per un vantaggio reale — un miglioramento isolabile e sicuro (soglia di campione, correzione
+  limitata e smorzata) va implementato subito, non rimandato per principio.
 
 ## La rosa dell'utente (15/09/2026)
 
@@ -130,40 +150,38 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
   `package.json`/`package-lock.json`): ricorda se la giornata è già schierata.
 - `tools/serve.mjs` — server statico locale su :8099. `tools/rosa-esempio.json` — rosa finta di prova.
 
-## Da fare
+## Prossimi passi
 
-**Nota per chi riprende questo lavoro**: l'utente ha detto esplicitamente (15/09) di non poter
-aspettare fine stagione per avere un vantaggio reale dal modello — quindi quando un miglioramento
-è isolabile e sicuro (soglia di campione, correzione limitata e smorzata, come `RETTIFICA_RUOLO`/
-`RETTIFICA_PIAZZATI`) va proposto e implementato **subito**, non rimandato a "quando ci saranno
-più giornate" per principio. Rimandare resta giusto solo quando il segnale non è isolabile in
-sicurezza con i dati di oggi (vedi punto 3 e 4 sotto).
-
-1. **Ritarare le costanti a intuito** (`PESO_AVVERSARIO`, `CASA_BONUS`, `DECADIMENTO_FORMA` — non
+1. **Chiedere all'utente se pushare `dev` e/o mergiare su `main`** — è la cosa più immediata,
+   niente di sotto dipende da farlo prima o poi.
+2. **Ritarare le costanti a intuito** (`PESO_AVVERSARIO`, `CASA_BONUS`, `DECADIMENTO_FORMA` — non
    `PESO_PRIOR_STAGIONE`, l'utente ha chiesto di lasciarla) quando ci saranno abbastanza giornate.
    Con `taratura.mjs`.
-2. **`BONUS_MAX` (il tetto di bonus a percentile 100 per ruolo) resta a intuito.** Fatta solo la
-   metà isolabile del dettaglio gol/rigori (15/09): `RETTIFICA_PIAZZATI` sui rigoristi (vedi
-   *Come funziona il motore*). Calibrare anche `BONUS_MAX` sull'osservato richiederebbe isolare
-   il bonus "da percentile puro" (gol/assist normali, non rigori) e confrontarlo con la curva —
-   con 5 giornate e pochi giocatori davvero al vertice del ruolo, rischia di inseguire il rumore
-   più che il segnale. Da riprovare con più giornate, o se viene in mente un modo di isolarlo
-   meglio.
-3. **Calendario storico** (chi ha giocato contro chi, dove): serve per tarare `CASA_BONUS`/
-   `PESO_AVVERSARIO` sui risultati veri. Non deciso se costruirlo — è infrastruttura nuova, non
-   una riga in più a uno script esistente.
-4. **xG/Understat per l'"oracolo"**: fonte buona ma bloccata da `robots.txt` (Understat
-   `Disallow: /`) o da anti-bot Cloudflare (FBref) — richiederebbe ignorare un robots.txt
-   dichiarato o un browser vero. **Deciso di rimandare** (05/09), non urgente.
-5. Fase 4 — mercato di riparazione e svincoli.
-6. **Provare sul telefono vero** i gesti (swipe fra tab, pull-to-refresh) aggiunti il 05/09:
-   verificati solo con eventi sintetici in emulazione.
-7. **Proposto ma non richiesto**: un bottone "esporta rosa attuale" in Impostazioni, utile per
+3. **Calendario storico** (chi ha giocato contro chi, dove) per tarare `CASA_BONUS`/
+   `PESO_AVVERSARIO` sui risultati veri — non deciso se costruirlo, è infrastruttura nuova.
+4. Fase 4 — mercato di riparazione e svincoli.
+5. **Provare sul telefono vero** i gesti (swipe fra tab, pull-to-refresh, aggiunti il 05/09) e le
+   notifiche push: verificati finora solo in emulazione/da terminale, mai il tatto/l'uso reale.
+6. **Proposto ma non richiesto**: un bottone "esporta rosa attuale" in Impostazioni, utile per
    analisi come quella della *rosa dell'utente* sopra senza doverla riscrivere a mano.
 
-**Aperto, non bloccante**: regolamento della lega non del tutto noto (moduli ammessi, numero di
-cambi, soglie del modificatore, se il cambio portiere consuma un cambio di movimento). Si è
-partiti con i default in testa al file, sotto *COSTANTI DI LEGA*.
+## Problemi aperti
+
+- **`BONUS_MAX` (tetto di bonus a percentile 100 per ruolo) resta a intuito.** Fatta solo la metà
+  isolabile del dettaglio gol/rigori: `RETTIFICA_PIAZZATI` sui rigoristi. Calibrare anche
+  `BONUS_MAX` richiederebbe isolare il bonus "da percentile puro" (gol/assist normali, non
+  rigori) — con 5 giornate e pochi giocatori al vertice del ruolo, rischia di inseguire il
+  rumore. Da riprovare con più giornate o un modo migliore di isolarlo.
+- **xG/Understat per l'"oracolo"**: fonte buona ma bloccata da `robots.txt` (Understat
+  `Disallow: /`) o da anti-bot Cloudflare (FBref) — richiederebbe ignorare un robots.txt
+  dichiarato o un browser vero. L'utente ha deciso di rimandare (05/09), non è urgente.
+- **Attrito sui permessi Bash** (segnalato dall'utente il 15/09): la mia proposta di allow-list
+  (`.claude/settings.local.json`) non è ancora in vigore — file salvato dall'utente nel posto
+  sbagliato (`settingslocaljson.txt` invece che dentro `.claude/`). L'utente ha anche lanciato
+  `/auto-mode-setup`: esito non verificato da questa sessione. Da controllare alla prossima.
+- **Regolamento di lega non del tutto noto** (moduli ammessi, numero di cambi, soglie del
+  modificatore, se il cambio portiere consuma un cambio di movimento) — non bloccante, si è
+  partiti con i default in testa al file, sotto *COSTANTI DI LEGA*.
 
 ## Regole di lavoro (ereditate dall'app asta, imparate sbagliando)
 
@@ -179,5 +197,7 @@ partiti con i default in testa al file, sotto *COSTANTI DI LEGA*.
   shell. Per le patch, scrivere lo script su file ed eseguirlo.
 
 **Aggiornamento di questo file**: lo tengo aggiornato io a fine di ogni blocco di lavoro
-sostanziale — dettagli/cronologia completa vanno in DIARIO-STORICO.md, qui resta solo stato e
-lavoro attivo.
+sostanziale. Le quattro sezioni in testa (*Stato attuale*, *Cosa abbiamo deciso*, *Prossimi
+passi*, *Problemi aperti*) si **riscrivono** ogni volta, non si accodano — sono una fotografia,
+non un registro. Il registro (cronologia completa, perché di ogni scelta) va in
+DIARIO-STORICO.md, che invece cresce.
