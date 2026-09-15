@@ -4,6 +4,7 @@ node_modules/
 Thumbs.db
 *.bak
 .claude/memory/
+.claude/settings.local.json
 
 # Chiave privata VAPID in chiaro (notifiche push) — mai in un repo pubblico.
 notifichepushsetup.txt
