@@ -590,3 +590,44 @@ funzione richiamata da `fantamediaAttesa()` va aggiunta anche lì.
 
 Verificato: `controlla.mjs`, `prova-motore.mjs` (tutte le invarianti, incluso il fix per i pezzi
 mancanti), `taratura.mjs` (invariato, non tocca la stima pura — come deve essere).
+
+## Bug: i promemoria scaglionati non partivano mai (15/09/2026)
+
+**Segnalato dall'utente**: "la settimana scorsa non mi ricordo di averne ricevute". Controllo
+richiesto esplicitamente, non un sospetto mio.
+
+**Diagnosi**: `dati/scadenza-promemoria.json` (stato della giornata 4, sei commit fra il 10/09 e
+il 12/09) mostrava tutte e sei le soglie — 24h/12h/6h/2h/1h/30m — marcate `"saltata"`. Nessuna
+spedita. Controllate le esecuzioni reali del workflow via API pubblica GitHub
+(`api.github.com/.../actions/workflows/.../runs`, il repo è pubblico quindi niente `gh auth`
+serviva): il cron dichiara `*/15 * * * *` ma i gap reali fra un'esecuzione e la successiva erano
+di **2-6 ore**, non 15 minuti — coerente su decine di run consecutivi, non un'anomalia isolata.
+È un limite noto (non documentato in modo ovvio) degli scheduled workflow GitHub su repository
+non enterprise: il cron è un tentativo, non una garanzia, e per cron ad alta frequenza lo scarto
+può essere enorme.
+
+**La causa del silenzio totale**: `promemoria-scadenza.mjs` scartava come `"saltata"` qualunque
+soglia trovata scaduta da più di `FINESTRA_MIN=20` minuti rispetto al suo momento nominale —
+pensato per un cron reale da 15 minuti, dove un ritardo oltre i 20 minuti sarebbe stata
+un'anomalia. Con gap reali di ore, **ogni singola soglia** arrivava sempre oltre quella finestra:
+la funzione scartava tutto, sempre, per costruzione — non un bug che si manifesta a volte, un
+meccanismo che non poteva mai funzionare nelle condizioni vere del cron GitHub.
+
+**Fix**: tolta la finestra fissa di 20 minuti. L'unico motivo per rinunciare ora è che la
+scadenza vera e propria (non la soglia nominale) sia già passata — in quel caso il promemoria
+non serve più comunque. Il messaggio inviato non usa più l'etichetta nominale della soglia
+scattata (`"mancano 24 ore"`, `"mancano 12 ore"`, ecc.), che con ritardi di ore sarebbe stata
+falsa, ma calcola il tempo VERO rimasto alla scadenza al momento dell'invio
+(`formattaTempoRimanente`). Una soglia in ritardo di 5 ore che dichiarava "24h" ora dichiara
+correttamente le ore vere rimaste.
+
+**Non verificato**: se l'abbonamento push (`PUSH_SUBSCRIPTION`) sia ancora valido — nessuna delle
+sei soglie della giornata 4 era arrivata al punto di provare a spedire, quindi non c'è
+un'evidenza diretta né di un abbonamento scaduto né di uno funzionante. Il primo test vero sarà
+la scadenza della giornata 5 (prima partita venerdì 18/09 20:45): se anche con il fix non arriva
+nulla, il sospetto successivo è l'abbonamento (va ri-registrato dall'app, non è un problema di
+codice).
+
+**Occasione, non ancora fatta**: la stessa inaffidabilità del cron probabilmente riguarda anche
+`dati.yml` (probabili/voti/ricalibrazione) — non misurata in dettaglio in questa sessione, solo
+segnalata come sospetto in *Problemi aperti* di CLAUDE.md.

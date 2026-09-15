@@ -16,13 +16,14 @@ offline, e la stima si mescola da sola con i voti veri (singolo giocatore, ruolo
 squadra intera). Countdown e promemoria scaglionati su una scadenza vera. La GitHub Action
 scarica probabili e voti da sola, con una fonte di riserva se la prima fallisce.
 
-**Rami**: `main` ha solo il fix dell'Action del 15/09 (`!cancelled()`, vedi *Prossimi passi*).
-`dev` è avanti — indicatore "in forma"/"in calo", fix di concorrenza in `caricaStorico()`, diario
-snellito, `RETTIFICA_PIAZZATI` — e **non è ancora né pushato del tutto né mergiato su `main`**
-(l'ultimo commit locale è solo su disco, vedi `git log origin/dev..dev`). Nessun rischio Netlify
-nel frattempo: solo un merge su `main` fa scattare un deploy, e solo se il diff tocca qualcosa
-oltre `dati/**`/`*.md` (vedi *Regola di lavoro* sotto). **Non dare per scontato che sia stato
-fatto nel frattempo — chiedere.**
+**Rami**: `main` ha solo il fix dell'Action del 15/09 (`!cancelled()`). `dev` è avanti —
+indicatore "in forma"/"in calo", fix di concorrenza in `caricaStorico()`, `RETTIFICA_PIAZZATI`, e
+da questa sessione anche il fix ai promemoria scaglionati e una ricalibrazione aggiornata — **tutto
+pronto in locale, non ancora pushato né mergiato su `main`**, fermato apposta un passo prima del
+push su richiesta esplicita dell'utente. Nessun rischio Netlify nel frattempo: solo un merge su
+`main` fa scattare un deploy, e solo se il diff tocca qualcosa oltre `dati/**`/`*.md` (vedi
+*Regola di lavoro* sotto). **Il passo che resta è solo dell'utente**: dire quando pushare `dev` e
+se/quando mergiare su `main` — nessun push o merge parte da solo.
 
 ## Cosa abbiamo deciso il 15/09/2026
 
@@ -44,6 +45,26 @@ fatto nel frattempo — chiedere.**
 - **Principio dato dall'utente**: il campionato è iniziato, non si può aspettare fine stagione
   per un vantaggio reale — un miglioramento isolabile e sicuro (soglia di campione, correzione
   limitata e smorzata) va implementato subito, non rimandato per principio.
+- **Notifiche push scaglionate: trovato e risolto un bug che le azzerava tutte.** Il cron
+  dell'Action (`*/15 * * * *` dichiarato) arriva in pratica con gap reali di 2-6 ore (verificato
+  sulle esecuzioni vere via API pubblica GitHub). La soglia di tolleranza di 20 minuti nel codice
+  scartava quindi ogni promemoria come "troppo in ritardo": per la giornata 4 tutti e sei i
+  promemoria scaglionati risultano `"saltata"` in `dati/scadenza-promemoria.json`, nessuno
+  spedito. **Fix** in `tools/promemoria-scadenza.mjs`: ora si rinuncia solo se la scadenza vera è
+  già passata, e il testo del promemoria riporta il tempo REALE rimasto invece dell'etichetta
+  nominale della soglia. Dettagli in DIARIO-STORICO.md. Da verificare sul campo alla scadenza
+  della giornata 5 (18/09).
+- **Ricalibrazione (`RETTIFICA_RUOLO`/`RETTIFICA_PIAZZATI`) rilanciata a mano** su richiesta,
+  pur girando già da sola in CI dopo ogni giornata conclusa. Nota di trasparenza: essendo un
+  aggiornamento smorzato che parte dal valore precedente, rilanciarla senza nuovi voti nel mezzo
+  la fa convergere un po' più vicino all'obiettivo di quanto avrebbe fatto un solo giro
+  automatico — resta comunque dentro i limiti di sicurezza (`MIN_CAMPIONE`/`LIMITE` in
+  `tools/ricalibra.mjs`). Non serve più rilanciarla a mano: la prossima ricalibrazione vera
+  arriva da sola con i voti della giornata 5.
+- **Attrito permessi Bash risolto**: `settingslocaljson.txt` spostato in
+  `.claude/settings.local.json` (già in `.gitignore`, locale non versionato).
+- **Bottone "esporta rosa attuale" tolto dai piani**: proposto il 15/09, l'utente ha detto di non
+  volerlo. Non è più nei *Prossimi passi*.
 
 ## La rosa dell'utente (15/09/2026)
 
@@ -152,18 +173,24 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 
 ## Prossimi passi
 
-1. **Chiedere all'utente se pushare `dev` e/o mergiare su `main`** — è la cosa più immediata,
-   niente di sotto dipende da farlo prima o poi.
-2. **Ritarare le costanti a intuito** (`PESO_AVVERSARIO`, `CASA_BONUS`, `DECADIMENTO_FORMA` — non
-   `PESO_PRIOR_STAGIONE`, l'utente ha chiesto di lasciarla) quando ci saranno abbastanza giornate.
-   Con `taratura.mjs`.
-3. **Calendario storico** (chi ha giocato contro chi, dove) per tarare `CASA_BONUS`/
-   `PESO_AVVERSARIO` sui risultati veri — non deciso se costruirlo, è infrastruttura nuova.
-4. Fase 4 — mercato di riparazione e svincoli.
-5. **Provare sul telefono vero** i gesti (swipe fra tab, pull-to-refresh, aggiunti il 05/09) e le
-   notifiche push: verificati finora solo in emulazione/da terminale, mai il tatto/l'uso reale.
-6. **Proposto ma non richiesto**: un bottone "esporta rosa attuale" in Impostazioni, utile per
-   analisi come quella della *rosa dell'utente* sopra senza doverla riscrivere a mano.
+1. **Push/merge di `dev`**: tutto pronto in locale (fix promemoria, ricalibrazione, diario
+   aggiornato) ma fermato apposta un passo prima del push su richiesta esplicita. Aspetta un via
+   libera esplicito per `git push`, e separatamente per un eventuale merge su `main` (vedi
+   *Regola di lavoro*).
+2. **Verificare che il fix dei promemoria funzioni davvero**: prossima occasione vera è la
+   scadenza della giornata 5 (prima partita venerdì 18/09 20:45) — controllare che almeno un
+   promemoria scaglionato arrivi sul telefono, invece di ritrovarsi di nuovo
+   `dati/scadenza-promemoria.json` pieno di `"saltata"`. Se non arriva nulla nemmeno stavolta, il
+   sospetto successivo è l'abbonamento push scaduto (va ri-registrato dall'app), non il codice.
+3. **Ritarare `PESO_AVVERSARIO`, `CASA_BONUS`, `DECADIMENTO_FORMA`** (non `PESO_PRIOR_STAGIONE`,
+   l'utente ha chiesto di lasciarla) quando ci saranno abbastanza giornate. Con `taratura.mjs`.
+   Diverso da `RETTIFICA_RUOLO`/`RETTIFICA_PIAZZATI`, che ormai si aggiornano da sole in CI a ogni
+   giornata conclusa.
+4. **Calendario storico** (chi ha giocato contro chi, dove) per tarare `CASA_BONUS`/
+   `PESO_AVVERSARIO` sui risultati veri — rimandato (15/09), non deciso se costruirlo.
+5. **Mercato di riparazione e svincoli** — a gennaio (15/09), non prima.
+6. **Provare sul telefono vero** i gesti (swipe fra tab, pull-to-refresh, aggiunti il 05/09):
+   verificati finora solo in emulazione/da terminale, mai il tatto/l'uso reale.
 
 ## Problemi aperti
 
@@ -175,13 +202,13 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 - **xG/Understat per l'"oracolo"**: fonte buona ma bloccata da `robots.txt` (Understat
   `Disallow: /`) o da anti-bot Cloudflare (FBref) — richiederebbe ignorare un robots.txt
   dichiarato o un browser vero. L'utente ha deciso di rimandare (05/09), non è urgente.
-- **Attrito sui permessi Bash** (segnalato dall'utente il 15/09): la mia proposta di allow-list
-  (`.claude/settings.local.json`) non è ancora in vigore — file salvato dall'utente nel posto
-  sbagliato (`settingslocaljson.txt` invece che dentro `.claude/`). L'utente ha anche lanciato
-  `/auto-mode-setup`: esito non verificato da questa sessione. Da controllare alla prossima.
 - **Regolamento di lega non del tutto noto** (moduli ammessi, numero di cambi, soglie del
   modificatore, se il cambio portiere consuma un cambio di movimento) — non bloccante, si è
   partiti con i default in testa al file, sotto *COSTANTI DI LEGA*.
+- **Cadenza reale del cron GitHub Actions**: i gap di 2-6 ore osservati il 15/09 sul workflow
+  promemoria probabilmente riguardano anche `dati.yml` (probabili/voti/ricalibrazione) — non
+  verificato in dettaglio, da tenere presente se in futuro dati o promemoria sembrano arrivare
+  "in ritardo" rispetto al cron dichiarato.
 
 ## Regole di lavoro (ereditate dall'app asta, imparate sbagliando)
 
