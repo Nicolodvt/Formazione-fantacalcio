@@ -41,7 +41,7 @@ export function motorePuro(radice) {
     p('golSubitiAttesi'),
     p('fantamediaStimata'),
     'calcolaMvSquadre();',
-    'return { fantamediaStimata, mvPura, MV_SQUADRA: MV_SQUADRA_PURA };'
+    'return { fantamediaStimata, mvPura, MV_SQUADRA: MV_SQUADRA_PURA, BONUS_PIAZZATI };'
   ].join('\n\n');
 
   const motore = new Function('LISTONE', sorgente)(LISTONE);
