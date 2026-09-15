@@ -303,6 +303,12 @@
   .info-cell .pos{ color:var(--pos); }
   .info-cell .neg{ color:var(--neg); }
   .info-cell .v.accento{ color:var(--accent); }
+
+  /* Segnale "in forma"/"in calo" (15/09): stesso linguaggio verde/rosso di sopra, non un
+     colore nuovo. Vicino alla fantamedia in Rosa/Campo, cosi' si vede senza aprire la scheda. */
+  .forma-flag{ font-size:11px; margin-left:3px; cursor:default; }
+  .forma-flag.su{ color:var(--pos); }
+  .forma-flag.giu{ color:var(--neg); }
   .sheet h4{ margin:18px 0 8px; font-size:11px; color:var(--muted); text-transform:uppercase;
     letter-spacing:.6px; }
 
@@ -1290,11 +1296,37 @@ async function sincronizzaSchierato(giornata, schierato){
    spariva dallo storico e dalla cache anche se una volta era stata scaricata con successo,
    finche non ritornava a scaricarsi bene — un dato perso in silenzio per un guaio temporaneo.
    Ora si SOMMA solo cio che manca, non si riparte mai da zero. */
+/* Impedisce due caricaStorico() sovrapposte: 'note' (sotto) si calcola una volta sola
+   all'inizio della funzione, quindi due chiamate partite quasi insieme (visibilitychange che
+   scatta piu' volte di fila, "Aggiorna" premuto mentre l'avvio sta ancora caricando) si
+   vedevano entrambe uno STORICO senza le giornate che l'altra stava scaricando in quel
+   momento, e finivano per scaricare e appendere le STESSE giornate due volte — trovato il
+   15/09 mentre si provava il segnale "in forma" sotto, con G2/G3/G4 duplicate nello storico di
+   prova. Ora una seconda chiamata aspetta semplicemente quella gia' in corso invece di
+   partirne una per conto suo. */
+let storicoInCorso = null;
 async function caricaStorico(){
+  if(storicoInCorso) return storicoInCorso;
+  storicoInCorso = caricaStoricoOra();
+  try{ return await storicoInCorso; } finally{ storicoInCorso = null; }
+}
+
+async function caricaStoricoOra(){
   try{
     const raw = localStorage.getItem(CACHE_STORICO);
     if(raw) STORICO = JSON.parse(raw) || {};
   }catch(e){ STORICO = {}; }
+
+  /* Rete di sicurezza indipendente dal punto sopra: se uno storico duplicato fosse gia' salvato
+     (da prima di questo fix, o da una causa non ancora vista), lo ripulisce comunque invece di
+     lasciarlo falsare mediaPesataForma() per sempre. Tiene una sola voce per giornata. */
+  for(const id in STORICO){
+    const viste = new Set();
+    STORICO[id] = STORICO[id].filter(v=>{
+      if(viste.has(v.giornata)) return false;
+      viste.add(v.giornata); return true;
+    });
+  }
 
   /* Migrazione: 'subentrato' e poi 'gol' sono campi aggiunti in tempi diversi. Chi aveva gia
      uno storico salvato prima ce l'ha senza, e "gia in storico" lo terrebbe cosi per sempre - il
@@ -1353,6 +1385,24 @@ function rendimento(id){
     media: mediaPesataForma(v, 'fantavoto').media,   // le giornate recenti pesano di piu'
     elenco: v
   };
+}
+
+/* Segnale "in forma"/"in calo" (15/09), chiesto dall'utente dopo un caso vero (un centrocampista
+   in striscia di gol che la stima, pur corretta sui suoi dati di partenza, non poteva vedere
+   arrivare): non cambia NESSUN numero usato per scegliere la formazione, mostra solo che il
+   giocatore sta rendendo parecchio piu'/meno di quanto la fantamedia mostrata dice, cosi' si
+   nota in Rosa/Campo senza aprire la scheda di ognuno. Stessa soglia di 4 giornate di
+   "Rendimento reale" nella scheda (Fase 3): sotto e' varianza, non un segnale. */
+const SOGLIA_DIVERGENZA_FORMA = 1.0;
+function formaFlag(id, fmMostrata){
+  const r = rendimento(id);
+  if(!r || r.presenze < 4 || r.media==null) return '';
+  const scarto = r.media - fmMostrata;      // positivo = sta rendendo piu' della stima
+  if(Math.abs(scarto) < SOGLIA_DIVERGENZA_FORMA) return '';
+  const su = scarto > 0;
+  return '<span class="forma-flag '+(su?'su':'giu')+'" title="' +
+    (su ? 'Sta rendendo piu\' della stima: media reale ' : 'Sta rendendo meno della stima: media reale ') +
+    r.media.toFixed(2) + ' nelle ultime ' + r.presenze + ' giornate">' + (su?'▲':'▼') + '</span>';
 }
 
 /* =======================================================================================
@@ -1566,7 +1616,7 @@ function slotHtml(id, ruolo){
   return '<div class="'+cls+'" data-slot="'+id+'">' +
     '<div class="nm">'+esc(l.n)+'</div>' +
     rigaPartita +
-    '<div class="fm">'+fm.toFixed(2)+'</div>' +
+    '<div class="fm">'+fm.toFixed(2)+formaFlag(id, fm)+'</div>' +
     '<div class="cz-bar '+classeCz(c)+'"><i style="width:'+Math.round(c*100)+'%"></i></div>' +
     '<div class="cz">'+Math.round(c*100)+'%</div>' +
   '</div>';
@@ -1634,7 +1684,7 @@ function vistaCampo(){
         '<div class="main"><div class="nm">'+(i+1)+'. '+esc(l.n)+flagHtml(id)+'</div>' +
         '<div class="sub">'+esc(l.s)+' · '+ROLE_NOME[l.r]+'</div></div>' +
         '<span class="pct-badge '+classePct(c)+'">'+Math.round(c*100)+'%</span>' +
-        '<div class="nums"><div class="fm">'+fm.toFixed(2)+'</div></div>' +
+        '<div class="nums"><div class="fm">'+fm.toFixed(2)+formaFlag(id, fm)+'</div></div>' +
       '</div>';
     });
   }
@@ -1679,7 +1729,7 @@ function vistaRosa(){
         '<div class="main"><div class="nm">'+esc(l.n)+flagHtml(id)+'</div>' +
         '<div class="sub">'+esc(l.s)+(dove?' · '+esc(dove):'')+'</div></div>' +
         '<span class="pct-badge '+classePct(c)+'">'+Math.round(c*100)+'%</span>' +
-        '<div class="nums"><div class="fm">'+fm.toFixed(2)+'</div><div class="cz">fantamedia</div></div>' +
+        '<div class="nums"><div class="fm">'+fm.toFixed(2)+formaFlag(id, fm)+'</div><div class="cz">fantamedia</div></div>' +
       '</div>';
     });
   });
