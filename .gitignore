@@ -3,6 +3,7 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.bak
+.claude/memory/
 
 # Chiave privata VAPID in chiaro (notifiche push) — mai in un repo pubblico.
 notifichepushsetup.txt
