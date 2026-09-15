@@ -3,10 +3,19 @@
 **Stato: v0.5 (15/09/2026) — ONLINE E IN USO, 5ª giornata.** Pubblicata su Netlify (build vera via
 GitHub, non drag&drop: serve per `@netlify/blobs` in `netlify/functions/schierato.mjs`), rosa vera
 importata, app installata sul telefono, notifiche push attive (secret e variable impostati su
-GitHub). `main` e `dev` sono allineati. L'app schiera, sceglie il modulo, funziona offline, e la
-stima si mescola da sola con i voti veri (singolo giocatore, ruolo, squadra intera). Countdown e
-promemoria scaglionati su una scadenza vera. La GitHub Action scarica probabili e voti da sola, con
-una fonte di riserva se la prima fallisce.
+GitHub). L'app schiera, sceglie il modulo, funziona offline, e la stima si mescola da sola con i
+voti veri (singolo giocatore, ruolo, piazzati, squadra intera). Countdown e promemoria scaglionati
+su una scadenza vera. La GitHub Action scarica probabili e voti da sola, con una fonte di riserva
+se la prima fallisce.
+
+**`dev` è avanti a `main`, di proposito — non ancora mergiato/pushato tutto (15/09/2026):**
+`main` ha solo il fix dell'Action (`!cancelled()`, vedi *Da fare*). Su `dev` ci sono anche,
+non ancora su GitHub né su `main`: l'indicatore "in forma"/"in calo", il fix di concorrenza in
+`caricaStorico()`, il diario snellito, e `RETTIFICA_PIAZZATI` (committato solo in locale, non
+ancora pushato — vedi `git log origin/dev..dev`). Nessun rischio Netlify nel frattempo: solo un
+merge su `main` fa scattare un deploy, e solo se il diff tocca qualcosa oltre `dati/**`/`*.md`
+(vedi *Regola di lavoro* sotto). **Prossima sessione**: chiedere all'utente se procedere con
+push su `dev` e/o merge su `main`, non dare per scontato che sia già stato fatto.
 
 Progetto separato dall'app asta (cartella superiore): quella serve a *comprare* ed è finita;
 questa serve a *schierare* e deve reggere 38 giornate.
@@ -75,9 +84,12 @@ domenica): `contributoAtteso = certezza × (resa + prossima_partita)`.
   (`fantamediaStimata()`, mai contaminata da dati reali — serve da prior e da termine di
   paragone onesto), mescolata (`mescola()`, prior→dati con `PESO_PRIOR_STAGIONE=10`) con
   l'andamento reale pesato per recenza (`DECADIMENTO_FORMA=0.85`, giornate vecchie contano
-  meno). Sopra c'è anche `RETTIFICA_RUOLO` (`tools/ricalibra.mjs`, gira in CI dopo i voti):
-  corregge uno scarto sistematico *di ruolo* — non del singolo giocatore — smorzato e limitato,
-  scritto in `dati/costanti.json` e letto senza bisogno di deploy.
+  meno). Sopra ci sono due correzioni gemelle, stesso schema (soglia di campione, limite,
+  smorzamento — `tools/ricalibra.mjs`, gira in CI dopo i voti, scritte in `dati/costanti.json`,
+  lette senza deploy): `RETTIFICA_RUOLO` per uno scarto sistematico *di ruolo*, e
+  `RETTIFICA_PIAZZATI` (15/09) per il bonus dei rigoristi (`R1`/`R2`/`R3`), tarata sui gol/rigori
+  VERI del giocatore invece che a intuito — le punizioni (`P1`/`P2`/`P3`) restano a intuito,
+  nei dati scaricati un gol su punizione non si distingue da uno normale.
 - **prossima partita** (`rettificaPartita()`) — fattore campo (`CASA_BONUS=0.08`) + forza
   dell'avversario nel reparto che conta (`MV_SQUADRA`/`ATT_SQUADRA`, anche queste mescolate con
   il rendimento reale delle squadre, non ferme alle quotazioni di agosto). Sommata, non
@@ -120,14 +132,26 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 
 ## Da fare
 
+**Nota per chi riprende questo lavoro**: l'utente ha detto esplicitamente (15/09) di non poter
+aspettare fine stagione per avere un vantaggio reale dal modello — quindi quando un miglioramento
+è isolabile e sicuro (soglia di campione, correzione limitata e smorzata, come `RETTIFICA_RUOLO`/
+`RETTIFICA_PIAZZATI`) va proposto e implementato **subito**, non rimandato a "quando ci saranno
+più giornate" per principio. Rimandare resta giusto solo quando il segnale non è isolabile in
+sicurezza con i dati di oggi (vedi punto 3 e 4 sotto).
+
 1. **Ritarare le costanti a intuito** (`PESO_AVVERSARIO`, `CASA_BONUS`, `DECADIMENTO_FORMA` — non
    `PESO_PRIOR_STAGIONE`, l'utente ha chiesto di lasciarla) quando ci saranno abbastanza giornate.
    Con `taratura.mjs`.
-2. **Usare il dettaglio gol/assist/rigori/cartellini** già salvato in `STORICO` (dal 05/09, non
-   ancora usato da nessun calcolo) per tarare `BONUS_PIAZZATI`/`BONUS_MAX` sull'osservato invece
-   che a intuito, quando ci saranno abbastanza giornate.
+2. **`BONUS_MAX` (il tetto di bonus a percentile 100 per ruolo) resta a intuito.** Fatta solo la
+   metà isolabile del dettaglio gol/rigori (15/09): `RETTIFICA_PIAZZATI` sui rigoristi (vedi
+   *Come funziona il motore*). Calibrare anche `BONUS_MAX` sull'osservato richiederebbe isolare
+   il bonus "da percentile puro" (gol/assist normali, non rigori) e confrontarlo con la curva —
+   con 5 giornate e pochi giocatori davvero al vertice del ruolo, rischia di inseguire il rumore
+   più che il segnale. Da riprovare con più giornate, o se viene in mente un modo di isolarlo
+   meglio.
 3. **Calendario storico** (chi ha giocato contro chi, dove): serve per tarare `CASA_BONUS`/
-   `PESO_AVVERSARIO` sui risultati veri. Non deciso se costruirlo.
+   `PESO_AVVERSARIO` sui risultati veri. Non deciso se costruirlo — è infrastruttura nuova, non
+   una riga in più a uno script esistente.
 4. **xG/Understat per l'"oracolo"**: fonte buona ma bloccata da `robots.txt` (Understat
    `Disallow: /`) o da anti-bot Cloudflare (FBref) — richiederebbe ignorare un robots.txt
    dichiarato o un browser vero. **Deciso di rimandare** (05/09), non urgente.

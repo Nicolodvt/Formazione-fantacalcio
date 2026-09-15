@@ -527,3 +527,66 @@ l'indicatore doveva segnalare.
 Corretto con un lucchetto (`storicoInCorso`): una seconda chiamata aspetta quella già in corso
 invece di partirne una per conto suo. Aggiunta anche una pulizia difensiva (una sola voce per
 giornata) per chi avesse già duplicati salvati da prima di questo fix.
+
+## Diagnosi mirata sulla rosa dell'utente, non su tutto il listone (15/09)
+
+L'utente aveva segnalato una formazione "scandalosamente sbagliata" in una giornata, senza dire
+quale giocatore. Prima ipotesi (sbagliata): Malen, lo scarto più grande di `taratura.mjs` su
+tutto il listone — l'utente non lo ha mai posseduto, quindi non era lui il caso lamentato.
+Corretto il metodo: filtrare la stessa diagnostica solo sui 25 giocatori della rosa vera (salvata
+in CLAUDE.md → *La rosa dell'utente*), non sui 530 del listone intero.
+
+**Trovato**: Frattesi (C, Lazio) lo scarto peggiore *della sua rosa* — stima pura 6.61, reale
+9.13 su 4 giornate (tre gol in tre presenze, un vero exploit). Controllato a mano il perché: il
+listone lo classificava già al 92° percentile dei centrocampisti (quasi il massimo bonus
+possibile per la curva), quindi non è un dato scadente o un tag mancante — è che nessuna stima
+percentile-based, calibrata su una stagione tipica, può prevedere una striscia di forma così
+estrema. Altri scarti reali nella sua rosa: Esposito F.P., Vergara, Bisseck sottostimati;
+Vlasic, Zambo Anguissa sovrastimati (quest'ultimo un rigorista/piazzati che non ha ancora reso).
+
+Con `PESO_PRIOR_STAGIONE` lasciato intoccato su richiesta esplicita dell'utente ("non ho Malen,
+di certo non era lui il problema... lasciamo così il peso prior iniziale, vediamo di intervenire
+su altro"), la strada scelta è stata duplice: l'indicatore "in forma"/"in calo" (sopra) per la
+trasparenza immediata, e `RETTIFICA_PIAZZATI` (sotto) per la parte strutturale isolabile.
+
+## RETTIFICA_PIAZZATI — il bonus dei rigoristi tarato sui dati veri (15/09)
+
+Estensione di `tools/ricalibra.mjs`, stesso schema di sicurezza di `RETTIFICA_RUOLO` (soglia
+minima di campione `MIN_CAMPIONE=30`, correzione limitata `LIMITE=0.4`, aggiornamento smorzato
+`TASSO_APPRENDIMENTO=0.3`), ma sul bonus dei piazzati invece che sulla fantamedia di ruolo.
+
+**Il segnale**: per ogni giocatore con tag `R1`/`R2`/`R3` sul listone (rigorista di 1ª/2ª/3ª
+scelta), si calcola il bonus rigori REALMENTE ottenuto in ogni giornata —
+`rigoriSegnati*3 - rigoriSbagliati*3`, gli stessi pesi di `tools/fetch-voti.mjs` (non importabile
+da lì: farebbe partire lo scraper vero al solo caricamento del modulo, essendo scritto per girare
+da riga di comando — duplicazione accettata, stesso compromesso già fatto per
+`parseDataPartita`/`tools/calendario.mjs`). La media reale (che include tutte le giornate senza
+rigori, non solo quelle con un tentativo — è così che si arriva a un numero come "0.2 rigori a
+partita" invece di sovrastimare) si confronta con `BONUS_PIAZZATI[tag]`, e lo scarto sistematico
+si corregge come per `RETTIFICA_RUOLO`.
+
+**Punizioni (`P1`/`P2`/`P3`) escluse deliberatamente**: un gol su punizione finisce dentro il
+campo generico `gol` nei dati scaricati, non c'è modo di isolarlo dai gol normali. Calibrarle
+richiederebbe una fonte diversa (non decisa, non urgente).
+
+**Dove si applica**: come `RETTIFICA_RUOLO`, dentro `fantamediaAttesa()` — mai dentro
+`fantamediaStimata()` (deve restare pura per `taratura.mjs`) — tramite una nuova funzione
+`correzionePiazzati(p)` che somma le correzioni di tutti i tag presenti in `p.pz`. Aggiunta anche
+al fingerprint di `classificaModuli()` (`chiaveModuli()`): cambia la scelta della formazione
+quanto `RETTIFICA_RUOLO`, quindi deve invalidare la cache allo stesso modo.
+
+**Primo giro reale, su G1-5**: `R1` passa da 0.400 a **-0.120** (65 osservazioni: il bonus rigori
+osservato finora fra i rigoristi titolari è quasi nullo, non i 0.40 attesi a intuito). `R2`/`R3`
+restano a zero: zero rigori tentati finora dai rigoristi di riserva, e comunque sotto la soglia
+minima di campione. Non è detto che regga a lungo — è esattamente il tipo di correzione pensata
+per aggiustarsi da sola giornata dopo giornata, non un numero definitivo.
+
+**Estensioni tecniche minori per farlo funzionare**: `tools/estrai-motore.mjs` ora espone anche
+`BONUS_PIAZZATI` (serviva a `ricalibra.mjs` per calcolare lo scarto, prima non era nel `return`);
+`tools/prova-motore.mjs` aggiornato con i pezzi mancanti (`RETTIFICA_PIAZZATI`,
+`correzionePiazzati`) per continuare a costruire un ambiente di prova completo — si è rotto una
+volta con un `ReferenceError` finché non sono stati aggiunti, buon promemoria che ogni nuova
+funzione richiamata da `fantamediaAttesa()` va aggiunta anche lì.
+
+Verificato: `controlla.mjs`, `prova-motore.mjs` (tutte le invarianti, incluso il fix per i pezzi
+mancanti), `taratura.mjs` (invariato, non tocca la stima pura — come deve essere).
