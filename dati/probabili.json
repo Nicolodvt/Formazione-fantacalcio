@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-15T12:24:41.976Z",
+ "generato": "2026-09-15T21:53:16.285Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 5,
  "giornateDiscordi": [
@@ -253,9 +253,9 @@
    "nome": "Skorupski",
    "squadra": "Bologna",
    "ruolo": "P",
-   "pct": 70,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "152": {
    "id": 152,
@@ -847,9 +847,9 @@
    "nome": "Caleta-Car",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 35,
-   "titolare": false,
-   "incerto": true
+   "pct": 90,
+   "titolare": true,
+   "incerto": false
   },
   "4159": {
    "id": 4159,
@@ -1135,9 +1135,9 @@
    "nome": "Miranda J.",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 70,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4751": {
    "id": 4751,
@@ -2759,15 +2759,6 @@
    "titolare": false,
    "incerto": true
   },
-  "6672": {
-   "id": 6672,
-   "nome": "Idzes",
-   "squadra": "Sassuolo",
-   "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
-  },
   "6677": {
    "id": 6677,
    "nome": "Adzic",
@@ -3340,7 +3331,7 @@
    "nome": "Pessina Mas.",
    "squadra": "Bologna",
    "ruolo": "P",
-   "pct": 30,
+   "pct": 45,
    "titolare": false,
    "incerto": true
   },
@@ -4530,14 +4521,14 @@
   ],
   [
    {
-    "id": 4734,
-    "nome": "Miranda J.",
-    "pct": 60
+    "id": 133,
+    "nome": "Skorupski",
+    "pct": 55
    },
    {
-    "id": 7483,
-    "nome": "Alhassane",
-    "pct": 40
+    "id": 7172,
+    "nome": "Pessina Mas.",
+    "pct": 45
    }
   ],
   [
@@ -5084,7 +5075,7 @@
   "5507": {
    "id": 5507,
    "tipo": "infortunato",
-   "nota": "problema muscolare alla gamba, out contro la Lazio"
+   "nota": "distrazione intratendinea del bicipite femorale destro, out contro la Lazio"
   },
   "5514": {
    "id": 5514,
@@ -5179,7 +5170,12 @@
   "6646": {
    "id": 6646,
    "tipo": "infortunato",
-   "nota": "problema all'adduttore, tentativo rientro dalla prima metà di ottobre"
+   "nota": "lesione distrattiva di basso grado all'adduttore, tentativo rientro dalla prima metà di ottobre"
+  },
+  "6672": {
+   "id": 6672,
+   "tipo": "infortunato",
+   "nota": "lesione di grado moderato al quadricipite della gamba sinistra, tentativo rientro dalla seconda metà di ottobre"
   },
   "6673": {
    "id": 6673,
