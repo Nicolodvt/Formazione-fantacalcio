@@ -52,6 +52,8 @@ const sorgente = [
   /* Zero correzione, come l'app all'avvio prima che caricaCostanti() risponda: le prove
      verificano che il motore resti valido a RETTIFICA_RUOLO tutto a zero, senza modificarle. */
   'let RETTIFICA_RUOLO = {P:0, D:0, C:0, A:0};',
+  /* Stessa storia di RETTIFICA_RUOLO sopra, per il bonus dei piazzati (15/09). */
+  'let RETTIFICA_PIAZZATI = {};',
   'const LIS = {}; LISTONE.forEach(p=> LIS[p.id]=p);',
   pezzo('MV_ZONA', 'const'), pezzo('BONUS_MAX', 'const'), pezzo('BONUS_CURVA', 'const'),
   pezzo('BONUS_PIAZZATI', 'const'), pezzo('MALUS_FISSO', 'const'), pezzo('SUBENTRO', 'const'),
@@ -62,7 +64,7 @@ const sorgente = [
   pezzo('normalizzaSquadre'), pezzo('calcolaMvSquadre'), pezzo('misuraGruppo'),
   pezzo('aggiornaForzaSquadre'), pezzo('mvPura'), pezzo('mescola'),
   pezzo('votoMisurato'), pezzo('mvStimata'), pezzo('golSubitiAttesi'), pezzo('fantamediaStimata'),
-  pezzo('rendimento'), pezzo('fantamediaAttesa'),
+  pezzo('rendimento'), pezzo('correzionePiazzati'), pezzo('fantamediaAttesa'),
   pezzo('CASA_BONUS', 'const'), pezzo('PESO_AVVERSARIO', 'const'), pezzo('rettificaPartita'),
   pezzo('datiGiornata'), pezzo('tassoSubentro'), pezzo('certezza'), pezzo('contributoAtteso'),
   pezzo('scegliUndici'), pezzo('simula'), pezzo('valuta'), pezzo('classificaModuli'),
