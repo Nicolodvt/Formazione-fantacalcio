@@ -2,11 +2,18 @@
 /* Promemoria scaglionati verso la scadenza per schierare (24h, 12h, 6h, 2h, 1h, 30 minuti
    prima), che si fermano da soli appena segni "Ho schierato" nell'app.
 
-   Gira spesso (vedi .github/workflows/promemoria.yml, ogni 15 minuti tutto il giorno, tutti i
-   giorni) ma NON tocca mai fantacalcio.it: legge solo dati/probabili.json gia sul disco, quindi
-   non ha senso di cortesia da rispettare (a differenza degli scraper in dati.yml). E' un
-   controllo economico — un file JSON e al massimo una chiamata alla funzione Netlify — non una
-   nuova raccolta dati.
+   Il workflow (.github/workflows/promemoria.yml) dichiara un cron ogni 15 minuti, ma quello e'
+   solo cio' che GitHub PROMETTE di provare a rispettare: sugli scheduled workflow reali il giro
+   arriva con gap di ore, non minuti (verificato 15/09 sulle esecuzioni vere — vedi
+   DIARIO-STORICO.md). Lo script quindi non assume mai di essere chiamato puntuale: ogni volta
+   che scatta una soglia calcola e dichiara il tempo VERO rimasto alla scadenza, invece
+   dell'etichetta nominale della soglia (formattaTempoRimanente sotto) — l'unico caso in cui
+   rinuncia e' se la scadenza stessa e' gia' passata quando il giro arriva.
+
+   NON tocca mai fantacalcio.it: legge solo dati/probabili.json gia sul disco, quindi non ha
+   senso di cortesia da rispettare (a differenza degli scraper in dati.yml). E' un controllo
+   economico — un file JSON e al massimo una chiamata alla funzione Netlify — non una nuova
+   raccolta dati.
 
    Diverso da invia-promemoria.mjs: quello avvisa una volta sola che una giornata nuova si e
    aperta ("Giornata N: schiera la formazione"); questo insiste, scaglionato, SOLO se non hai
@@ -39,14 +46,6 @@ const SOGLIE = [
   { chiave: '30m', ore: 0.5 }
 ];
 
-/* Il giro e' ogni 15 minuti: una tolleranza di 20 offre un margine contro un giro saltato o in
-   ritardo, senza rischiare di scavalcare la soglia successiva (che dista almeno 30 minuti,
-   fra 1h e 30m). Se una soglia viene trovata gia scaduta OLTRE questa finestra — tipicamente
-   al primissimo giro dopo aver attivato questa funzione, a meta settimana — si segna come
-   "saltata" invece di spedirla in ritardo: un promemoria per un'ora ormai passata confonde
-   piu di quanto aiuti. */
-const FINESTRA_MIN = 20;
-
 function leggiJson(percorso, fallback) {
   try { return JSON.parse(readFileSync(percorso, 'utf8')); }
   catch (e) { return fallback; }
@@ -74,9 +73,19 @@ async function eGiaSchierato(sitoUrl, giornata) {
   }
 }
 
-function formattaOre(ore) {
-  if (ore === 0.5) return 'mezz\'ora';
-  if (ore === 1) return 'un\'ora';
+/* Il testo del promemoria riporta il tempo REALE rimasto alla scadenza, non l'etichetta
+   nominale della soglia scattata (24h/12h/...): il cron gira ogni 15 minuti solo sulla carta —
+   verificato il 15/09 confrontando le esecuzioni reali (gh api .../runs): gap tipici di 2-6 ore,
+   non minuti, comuni a tutti gli scheduled workflow GitHub su repository non enterprise. Dire
+   "mancano 24 ore" quando il giro e' arrivato con 5 ore di ritardo (quindi ne mancano 19) sarebbe
+   fuorviante quanto non dire nulla — l'unico modo onesto e' calcolare lo scarto vero al momento
+   dell'invio, qualunque soglia lo abbia fatto scattare. */
+function formattaTempoRimanente(ms) {
+  const minuti = Math.round(ms / 60000);
+  if (minuti <= 1) return 'un minuto';
+  if (minuti < 60) return minuti + ' minuti';
+  const ore = Math.round(minuti / 60);
+  if (ore <= 1) return 'un\'ora';
   return ore + ' ore';
 }
 
@@ -120,11 +129,14 @@ async function main() {
     return;
   }
 
-  const momento = new Date(scadenza.getTime() - daInviare.ore * 3600000);
-  const minutiDiRitardo = (ora.getTime() - momento.getTime()) / 60000;
-
-  if (minutiDiRitardo > FINESTRA_MIN) {
-    console.log(`Soglia ${daInviare.chiave} scaduta da ${Math.round(minutiDiRitardo)} minuti (oltre la finestra di ${FINESTRA_MIN}): la segno saltata, non la spedisco in ritardo.`);
+  /* L'unico caso in cui vale davvero la pena rinunciare: la scadenza stessa e' gia' passata (il
+     giro e' arrivato dopo il calcio d'inizio, non solo dopo la soglia nominale). Prima di questo
+     fix qualunque ritardo oltre 20 minuti — la norma con un cron reale da ore, non minuti —
+     faceva scartare la soglia senza mai spedire nulla: e' il motivo per cui la giornata 4 non ha
+     mandato NESSUNO dei sei promemoria (verificato in dati/scadenza-promemoria.json: tutti
+     "saltata"). */
+  if (ora >= scadenza) {
+    console.log(`Soglia ${daInviare.chiave}: la scadenza e' gia' passata, la segno saltata senza mandare nulla.`);
     stato.inviate[daInviare.chiave] = 'saltata';
     writeFileSync(FILE_STATO, JSON.stringify(stato, null, 1) + '\n');
     return;
@@ -166,7 +178,7 @@ async function main() {
   });
 
   const payload = JSON.stringify({
-    titolo: `Mancano ${formattaOre(daInviare.ore)}: schiera la formazione`,
+    titolo: `Mancano ${formattaTempoRimanente(scadenza.getTime() - ora.getTime())}: schiera la formazione`,
     corpo: (infra ? 'Turno infrasettimanale — ' : '') +
       `Giornata ${prob.giornata}, si comincia ${oraItaliana} (${prima.casa}-${prima.trasferta}). Non hai ancora segnato la formazione.`
   });
