@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-16T12:32:41.804Z",
+ "generato": "2026-09-16T17:35:17.572Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 5,
  "giornateDiscordi": [
@@ -964,7 +964,7 @@
    "nome": "N'Dicka",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1048,6 +1048,15 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
+  },
+  "4433": {
+   "id": 4433,
+   "nome": "Zortea",
+   "squadra": "Bologna",
+   "ruolo": "D",
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "4436": {
    "id": 4436,
@@ -1162,7 +1171,7 @@
    "nome": "Hermoso",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1666,7 +1675,7 @@
    "nome": "Konè M.",
    "squadra": "Roma",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -2306,6 +2315,15 @@
    "squadra": "Torino",
    "ruolo": "C",
    "pct": 35,
+   "titolare": false,
+   "incerto": true
+  },
+  "6225": {
+   "id": 6225,
+   "nome": "El Azzouzi O.",
+   "squadra": "Bologna",
+   "ruolo": "C",
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -3934,7 +3952,7 @@
    "nome": "Alhassane",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -5053,8 +5071,8 @@
   },
   "4433": {
    "id": 4433,
-   "tipo": "infortunato",
-   "nota": "fastido all'anca, da valutare contro il Torino"
+   "tipo": "dubbio",
+   "nota": "fastido all'anca, in dubbio impiego contro il Torino"
   },
   "4459": {
    "id": 4459,
@@ -5079,7 +5097,7 @@
   "5507": {
    "id": 5507,
    "tipo": "infortunato",
-   "nota": "distrazione intratendinea del bicipite femorale destro, out contro la Lazio"
+   "nota": "distrazione intratendinea del bicipite femorale destro, tentativo rientro da inizio novembre"
   },
   "5514": {
    "id": 5514,
@@ -5148,8 +5166,8 @@
   },
   "6225": {
    "id": 6225,
-   "tipo": "infortunato",
-   "nota": "lesione del bicipite femorale della coscia sinistra, rientro dalla seconda metà di settembre"
+   "tipo": "dubbio",
+   "nota": "lesione del bicipite femorale della coscia sinistra, in dubbio convocazione contro il Torino"
   },
   "6320": {
    "id": 6320,
