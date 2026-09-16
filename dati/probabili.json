@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-15T21:53:16.285Z",
+ "generato": "2026-09-16T12:32:41.804Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 5,
  "giornateDiscordi": [
@@ -253,9 +253,9 @@
    "nome": "Skorupski",
    "squadra": "Bologna",
    "ruolo": "P",
-   "pct": 55,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "152": {
    "id": 152,
@@ -280,7 +280,7 @@
    "nome": "Bernardeschi",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -748,7 +748,16 @@
    "nome": "Odgaard",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
+   "titolare": true,
+   "incerto": true
+  },
+  "2766": {
+   "id": 2766,
+   "nome": "Zaniolo",
+   "squadra": "Udinese",
+   "ruolo": "C",
+   "pct": 55,
    "titolare": true,
    "incerto": true
   },
@@ -1135,7 +1144,7 @@
    "nome": "Miranda J.",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -2836,9 +2845,9 @@
    "nome": "Unai Gomez",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "6813": {
    "id": 6813,
@@ -3313,7 +3322,7 @@
    "nome": "Bayo V.",
    "squadra": "Udinese",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -3331,7 +3340,7 @@
    "nome": "Pessina Mas.",
    "squadra": "Bologna",
    "ruolo": "P",
-   "pct": 45,
+   "pct": 5,
    "titolare": false,
    "incerto": true
   },
@@ -4521,18 +4530,6 @@
   ],
   [
    {
-    "id": 133,
-    "nome": "Skorupski",
-    "pct": 55
-   },
-   {
-    "id": 7172,
-    "nome": "Pessina Mas.",
-    "pct": 45
-   }
-  ],
-  [
-   {
     "id": 5298,
     "nome": "Pobega",
     "pct": 60
@@ -4547,12 +4544,12 @@
    {
     "id": 2765,
     "nome": "Odgaard",
-    "pct": 60
+    "pct": 55
    },
    {
-    "id": 7528,
-    "nome": "Amondarain",
-    "pct": 40
+    "id": 7068,
+    "nome": "Vitik",
+    "pct": 45
    }
   ],
   [
@@ -4577,6 +4574,18 @@
     "id": 7069,
     "nome": "Fortini",
     "pct": 40
+   }
+  ],
+  [
+   {
+    "id": 2766,
+    "nome": "Zaniolo",
+    "pct": 55
+   },
+   {
+    "id": 6783,
+    "nome": "Unai Gomez",
+    "pct": 45
    }
   ],
   [
@@ -5016,11 +5025,6 @@
    "id": 2741,
    "tipo": "infortunato",
    "nota": "lussazione della rotula del ginocchio destro, tentativo rientro da inizio novembre"
-  },
-  "2766": {
-   "id": 2766,
-   "tipo": "infortunato",
-   "nota": "lesione muscolare al bicipite femorale della coscia destra, da valutare convocazione contro il Cagliari"
   },
   "2832": {
    "id": 2832,
