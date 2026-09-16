@@ -16,14 +16,14 @@ offline, e la stima si mescola da sola con i voti veri (singolo giocatore, ruolo
 squadra intera). Countdown e promemoria scaglionati su una scadenza vera. La GitHub Action
 scarica probabili e voti da sola, con una fonte di riserva se la prima fallisce.
 
-**Rami**: `main` ha solo il fix dell'Action del 15/09 (`!cancelled()`). `dev` è avanti —
-indicatore "in forma"/"in calo", fix di concorrenza in `caricaStorico()`, `RETTIFICA_PIAZZATI`, e
-da questa sessione anche il fix ai promemoria scaglionati e una ricalibrazione aggiornata — **tutto
-pronto in locale, non ancora pushato né mergiato su `main`**, fermato apposta un passo prima del
-push su richiesta esplicita dell'utente. Nessun rischio Netlify nel frattempo: solo un merge su
-`main` fa scattare un deploy, e solo se il diff tocca qualcosa oltre `dati/**`/`*.md` (vedi
-*Regola di lavoro* sotto). **Il passo che resta è solo dell'utente**: dire quando pushare `dev` e
-se/quando mergiare su `main` — nessun push o merge parte da solo.
+**Rami**: `dev` e `main` allineati dalla notte 15-16/09 — push di `dev` e merge su `main`
+autorizzati esplicitamente dall'utente per quella sessione (lavoro notturno non supervisionato,
+un solo push/merge alla fine, non prima). Dentro: indicatore "in forma"/"in calo", fix di
+concorrenza in `caricaStorico()`, `RETTIFICA_PIAZZATI`, il fix ai promemoria scaglionati
+(`promemoria-scadenza.mjs`), una ricalibrazione aggiornata, e la scoperta sulla cadenza reale di
+`dati.yml` (vedi *Problemi aperti*). Il merge fa scattare un deploy Netlify vero (il diff tocca
+codice, non solo `dati/**`/`*.md`) — **autorizzazione valida solo per quella sessione**, non
+generalizzare a push futuri senza chiederlo di nuovo (vedi *Regola di lavoro* sotto).
 
 ## Cosa abbiamo deciso il 15/09/2026
 
@@ -65,6 +65,23 @@ se/quando mergiare su `main` — nessun push o merge parte da solo.
   `.claude/settings.local.json` (già in `.gitignore`, locale non versionato).
 - **Bottone "esporta rosa attuale" tolto dai piani**: proposto il 15/09, l'utente ha detto di non
   volerlo. Non è più nei *Prossimi passi*.
+- **Sessione notturna 15-16/09, autorizzata in anticipo** ("ti autorizzo a fare tutti i comandi
+  necessari", un solo push/merge alla fine): misurata con l'API pubblica GitHub la stessa
+  inaffidabilità del cron trovata su `promemoria.yml`, stavolta su `dati.yml` — 44% degli slot
+  dichiarati senza nessuna esecuzione entro 6 ore, un giorno intero (lunedì 07/09) saltato del
+  tutto. Non è perdita di dati (il retry "ogni giornata mancante" recupera da solo), solo ritardo
+  di freschezza. Dettagli e metodo in DIARIO-STORICO.md.
+- **Revisione avversaria del motore** (`index.html`, stesso metodo dell'11-bug del 03-04/09):
+  nessun bug nuovo confermato. Un candidato in `certezza()` (il boost `SUBENTRO` che in teoria
+  poteva superare il tetto 0.75 del ramo "nessun dato di giornata") inseguito e scartato:
+  verificato contro `tools/fetch-probabili.mjs` che lo scenario non è raggiungibile — `squadre`
+  e `giocatori` si scrivono sempre insieme, nello stesso ciclo. Verificato anche dal vivo nel
+  browser a 375px con dati reali: nessun errore, tutto renderizza correttamente.
+- **Repository pubblico: questione aperta, non decisa.** L'utente ha chiesto di non avere "file
+  personali" su GitHub pubblico; chiarito che il diario è già pubblico da mesi (non una novità di
+  stanotte) e che la memoria privata di Claude non può fisicamente finirci (vive fuori da
+  qualunque repository Git). L'opzione reale è rendere il repository **privato** — rimandata
+  esplicitamente ("ci penserò poi"), non toccata stanotte. Vedi *Problemi aperti*.
 
 ## La rosa dell'utente (15/09/2026)
 
@@ -173,23 +190,30 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 
 ## Prossimi passi
 
-1. **Push/merge di `dev`**: tutto pronto in locale (fix promemoria, ricalibrazione, diario
-   aggiornato) ma fermato apposta un passo prima del push su richiesta esplicita. Aspetta un via
-   libera esplicito per `git push`, e separatamente per un eventuale merge su `main` (vedi
-   *Regola di lavoro*).
-2. **Verificare che il fix dei promemoria funzioni davvero**: prossima occasione vera è la
+1. **Verificare che il fix dei promemoria funzioni davvero**: prossima occasione vera è la
    scadenza della giornata 5 (prima partita venerdì 18/09 20:45) — controllare che almeno un
    promemoria scaglionato arrivi sul telefono, invece di ritrovarsi di nuovo
    `dati/scadenza-promemoria.json` pieno di `"saltata"`. Se non arriva nulla nemmeno stavolta, il
    sospetto successivo è l'abbonamento push scaduto (va ri-registrato dall'app), non il codice.
-3. **Ritarare `PESO_AVVERSARIO`, `CASA_BONUS`, `DECADIMENTO_FORMA`** (non `PESO_PRIOR_STAGIONE`,
+2. **Decidere se vale la pena un innesco più affidabile del cron GitHub** per `dati.yml`/
+   `promemoria.yml` (44% degli slot dichiarati saltati su `dati.yml`, un giorno intero perso il
+   07/09 — vedi *Problemi aperti* e DIARIO-STORICO.md). L'opzione concreta è un cron esterno
+   (es. cron-job.org) che chiama `workflow_dispatch` via API GitHub: bypassa il throttling di
+   GitHub sugli scheduled workflow, ma serve un token con permessi di scrittura da conservare da
+   qualche parte — non deciso, è una scelta di infrastruttura da discutere, non presa da sola.
+3. **Decidere sulla visibilità del repository** (pubblico oggi) — questione sollevata
+   dall'utente il 15/09, rimandata ("ci penserò poi"). Se si passa a privato: verificare il tetto
+   di 2000 minuti/mese di GitHub Actions (oggi illimitato perché pubblico) contro la frequenza
+   reale del cron, e che gli strumenti di diagnosi che oggi usano l'API pubblica senza token
+   continuino a funzionare (servirebbe un token).
+4. **Ritarare `PESO_AVVERSARIO`, `CASA_BONUS`, `DECADIMENTO_FORMA`** (non `PESO_PRIOR_STAGIONE`,
    l'utente ha chiesto di lasciarla) quando ci saranno abbastanza giornate. Con `taratura.mjs`.
    Diverso da `RETTIFICA_RUOLO`/`RETTIFICA_PIAZZATI`, che ormai si aggiornano da sole in CI a ogni
    giornata conclusa.
-4. **Calendario storico** (chi ha giocato contro chi, dove) per tarare `CASA_BONUS`/
+5. **Calendario storico** (chi ha giocato contro chi, dove) per tarare `CASA_BONUS`/
    `PESO_AVVERSARIO` sui risultati veri — rimandato (15/09), non deciso se costruirlo.
-5. **Mercato di riparazione e svincoli** — a gennaio (15/09), non prima.
-6. **Provare sul telefono vero** i gesti (swipe fra tab, pull-to-refresh, aggiunti il 05/09):
+6. **Mercato di riparazione e svincoli** — a gennaio (15/09), non prima.
+7. **Provare sul telefono vero** i gesti (swipe fra tab, pull-to-refresh, aggiunti il 05/09):
    verificati finora solo in emulazione/da terminale, mai il tatto/l'uso reale.
 
 ## Problemi aperti
@@ -205,10 +229,13 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 - **Regolamento di lega non del tutto noto** (moduli ammessi, numero di cambi, soglie del
   modificatore, se il cambio portiere consuma un cambio di movimento) — non bloccante, si è
   partiti con i default in testa al file, sotto *COSTANTI DI LEGA*.
-- **Cadenza reale del cron GitHub Actions**: i gap di 2-6 ore osservati il 15/09 sul workflow
-  promemoria probabilmente riguardano anche `dati.yml` (probabili/voti/ricalibrazione) — non
-  verificato in dettaglio, da tenere presente se in futuro dati o promemoria sembrano arrivare
-  "in ritardo" rispetto al cron dichiarato.
+- **Cadenza reale del cron GitHub Actions — confermata, non solo sospettata.** Misurato il
+  15-16/09 su entrambi i workflow: `promemoria.yml` (già corretto, vedi sopra) e `dati.yml`
+  (44% degli slot dichiarati senza esecuzione entro 6 ore, un giorno intero perso il 07/09 —
+  vedi DIARIO-STORICO.md per il metodo). Non causa perdita di dati (il retry in `dati.yml`
+  recupera da solo), solo ritardo. Decisione su un innesco alternativo rimandata, vedi
+  *Prossimi passi*.
+- **Visibilità del repository (pubblico) non decisa** — vedi *Prossimi passi*.
 
 ## Regole di lavoro (ereditate dall'app asta, imparate sbagliando)
 

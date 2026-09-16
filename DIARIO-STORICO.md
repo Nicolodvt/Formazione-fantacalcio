@@ -631,3 +631,68 @@ codice).
 **Occasione, non ancora fatta**: la stessa inaffidabilità del cron probabilmente riguarda anche
 `dati.yml` (probabili/voti/ricalibrazione) — non misurata in dettaglio in questa sessione, solo
 segnalata come sospetto in *Problemi aperti* di CLAUDE.md.
+
+## Sessione notturna: cadenza di dati.yml, revisione del motore (15-16/09/2026)
+
+Lavoro autonomo, autorizzato esplicitamente dall'utente per una notte intera ("ti autorizzo a
+fare tutti i comandi necessari"), con un solo `git push`/merge alla fine, non prima.
+
+**`dati.yml`: misurata la stessa inaffidabilità del cron, con un metodo più rigoroso di quello
+usato su `promemoria.yml`.** Il cron di `dati.yml` è dichiarato *sparso apposta* (rispetto verso
+fantacalcio.it, mai più di una lettura all'ora, mai di notte — vedi il commento in testa al
+file), quindi il confronto naïf "gap fra un run e il successivo" fatto su `promemoria.yml` non
+si applica tale e quale: un gap di 12 ore fra le 21:00 di lunedì e le 09:00 di martedì è voluto,
+non un guasto. Il confronto giusto è contro gli **slot esattamente dichiarati** nelle sette
+righe di cron (giorno per giorno, ora per ora), non contro il run precedente.
+
+Fatto con l'API pubblica GitHub (`actions/workflows/349698350/runs`, 100 run più recenti,
+nessun token — repo pubblico): generati tutti gli slot attesi dal 04/09 a oggi (71 slot),
+cercato per ciascuno il run reale più vicino entro 6 ore. Risultato:
+- **31 slot su 71 (44%) senza nessun run entro 6 ore** — non semplicemente "in ritardo", proprio
+  assenti.
+- Fra gli slot coperti, **ritardo mediano 165 minuti**, l'80% oltre 60 minuti, il 43% oltre le 3
+  ore rispetto all'orario dichiarato.
+- **Un giorno intero saltato del tutto**: lunedì 07/09, zero run né alle 07:00 né alle 19:00 UTC
+  — proprio i due giri dedicati a scaricare i VOTI del turno appena concluso.
+- Un run con `conclusion=failure` (14/09 22:14 UTC): verificato che precede il commit
+  `67503df` (15/09 14:51 CEST, il fix `!cancelled()` già raccontato sopra) — stessa causa già
+  diagnosticata, non un problema nuovo.
+
+**Non è una perdita di dati, solo un ritardo.** Il passo "Voti delle giornate concluse" in
+`dati.yml` non scarica solo l'ultima giornata: scorre tutte le giornate da 1 in su e riprova
+quelle il cui file `dati/voti-N.json` manca ancora sul disco (`SI RIPROVA OGNI GIORNATA
+MANCANTE`, vedi il commento nel file). Quindi un lunedì saltato del tutto non perde la giornata:
+la recupera in automatico al primo run riuscito successivo, solo più tardi del previsto.
+
+**Non toccato stanotte**: il limite è della piattaforma (GitHub throttla i cron degli scheduled
+workflow, soprattutto quelli ad alta frequenza, su base "best effort" — non documentato in modo
+esplicito ma osservato qui su due workflow diversi, con pattern diverso ma stessa causa). Una
+correzione vera richiederebbe un innesco esterno più affidabile (es. un cron su un servizio
+terzo che chiama `workflow_dispatch` via API) — infrastruttura nuova, un token con permessi di
+scrittura da conservare da qualche parte: una decisione da discutere con l'utente, non presa a
+cuor leggero durante una notte non supervisionata.
+
+**Revisione avversaria del motore in `index.html`** (stesso metodo che il 03-04/09 aveva trovato
+11 bug reali: "sabotare l'input e vedere cosa intercetta"). Letto per intero il blocco
+`<script>` (righe 442-2570): `certezza()`, `fantamediaStimata()`/`fantamediaAttesa()`,
+`rettificaPartita()`, `scegliUndici()`/`simula()`/`classificaModuli()`, import/export rosa,
+notifiche push, gesti touch, countdown. Un solo candidato inseguito a fondo — in `certezza()`,
+il boost `SUBENTRO` (riga 849) si applica con un controllo (`d.prob && !d.prob.titolare`) non
+esplicitamente legato al ramo che ha calcolato `p`, quindi in teoria potrebbe superare il tetto
+0.75 del ramo "nessun dato di giornata" se `d.prob` fosse presente mentre `d.squadraInCampo` è
+falso. **Verificato e scartato**: in `tools/fetch-probabili.mjs` (righe 129-154) `squadre[...]`
+e `giocatori[...]` si scrivono nello STESSO ciclo, carta-squadra per carta-squadra — non possono
+divergere all'interno di un file scaricato con successo, e l'oggetto `PROB` viene sempre
+sostituito per intero, mai unito con quello vecchio. Lo scenario non è raggiungibile dalla
+pipeline reale: nessuna modifica.
+
+**Esito onesto: nessun bug nuovo confermato nel motore.** Il codice regge bene a un giro di
+lettura avversaria mirata — probabilmente perché la revisione precedente (03-04/09) e il fix di
+v0.3 (il bug del "certezza * (fantamedia - 6)") avevano già ripulito i casi più gravi. Controllati
+anche `sw.js` e `netlify/functions/schierato.mjs`: nessun problema. Verificato dal vivo (server
+locale `tools/serve.mjs`, browser a 375px, dati reali già in `localStorage` da una sessione di
+prova precedente): l'app renderizza tutto correttamente, countdown giusto, indicatori "in
+forma"/"in calo" attivi, nessun errore in console.
+
+**Aggiunto `.claude/launch.json`** (non esisteva): configura `tools/serve.mjs` come server di
+sviluppo per il pannello di anteprima, per non doverlo riscoprire ogni sessione.
