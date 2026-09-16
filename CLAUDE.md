@@ -251,6 +251,12 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 - Commit piccoli e frequenti (qui c'è git, a differenza dell'app asta).
 - Attenzione a `node -e` dentro bash: i backtick nei template literal vengono interpretati dalla
   shell. Per le patch, scrivere lo script su file ed eseguirlo.
+- **`tools/ricalibra.mjs` non è idempotente**: essendo un aggiornamento smorzato che parte dal
+  valore precedente scritto in `dati/costanti.json`, rilanciarlo a mano più volte sugli stessi
+  dati (senza nuovi voti nel mezzo) fa convergere due volte invece di una, sballando lo
+  smorzamento voluto. Scoperto la notte 15-16/09 con un conflitto di merge contro un run
+  automatico di CI. Se serve controllare cosa farebbe, usare `tools/taratura.mjs` (sola
+  diagnostica, non scrive nulla) invece di rilanciare `ricalibra.mjs` per curiosità.
 
 **Aggiornamento di questo file**: lo tengo aggiornato io a fine di ogni blocco di lavoro
 sostanziale. Le quattro sezioni in testa (*Stato attuale*, *Cosa abbiamo deciso*, *Prossimi
