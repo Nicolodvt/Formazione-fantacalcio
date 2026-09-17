@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-17T16:03:17.694Z",
+ "generato": "2026-09-17T20:51:01.588Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 5,
  "giornateDiscordi": [
@@ -316,9 +316,9 @@
    "nome": "Juan Jesus",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
+   "pct": 80,
+   "titolare": true,
+   "incerto": false
   },
   "294": {
    "id": 294,
@@ -775,7 +775,7 @@
    "nome": "Bremer",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -892,7 +892,7 @@
    "nome": "Gonzalez N.",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 65,
    "titolare": true,
    "incerto": false
   },
@@ -1013,15 +1013,6 @@
    "titolare": false,
    "incerto": true
   },
-  "4375": {
-   "id": 4375,
-   "nome": "Terzic",
-   "squadra": "Frosinone",
-   "ruolo": "D",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
-  },
   "4378": {
    "id": 4378,
    "nome": "Ranieri L.",
@@ -1135,7 +1126,7 @@
    "nome": "Celik",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1198,7 +1189,7 @@
    "nome": "Correia T.",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1270,9 +1261,9 @@
    "nome": "Douglas Luiz",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "4923": {
    "id": 4923,
@@ -1360,7 +1351,7 @@
    "nome": "Kalulu",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1774,9 +1765,9 @@
    "nome": "Koopmeiners",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "5687": {
    "id": 5687,
@@ -1801,9 +1792,9 @@
    "nome": "Haps",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "5701": {
    "id": 5701,
@@ -2089,7 +2080,7 @@
    "nome": "Kolo Muani",
    "squadra": "Juventus",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -2179,7 +2170,7 @@
    "nome": "Lucumì",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 55,
    "titolare": true,
    "incerto": true
   },
@@ -2855,7 +2846,7 @@
    "squadra": "Venezia",
    "ruolo": "D",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6684": {
@@ -3016,7 +3007,7 @@
    "nome": "Conceicao",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -4782,13 +4773,13 @@
   ],
   [
    {
-    "id": 6681,
-    "nome": "Sagrado",
+    "id": 5695,
+    "nome": "Haps",
     "pct": 55
    },
    {
-    "id": 256,
-    "nome": "Juan Jesus",
+    "id": 4845,
+    "nome": "Correia T.",
     "pct": 45
    }
   ],
@@ -4964,24 +4955,36 @@
    {
     "id": 6042,
     "nome": "Lucumì",
-    "pct": 60
+    "pct": 55
    },
    {
     "id": 6766,
     "nome": "Kelly L.",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
    {
-    "id": 5685,
-    "nome": "Koopmeiners",
+    "id": 4911,
+    "nome": "Douglas Luiz",
     "pct": 60
    },
    {
     "id": 5680,
     "nome": "Sarr P.",
     "pct": 40
+   }
+  ],
+  [
+   {
+    "id": 4179,
+    "nome": "Gonzalez N.",
+    "pct": 65
+   },
+   {
+    "id": 4973,
+    "nome": "McKennie",
+    "pct": 35
    }
   ],
   [
@@ -5160,6 +5163,11 @@
    "id": 4374,
    "tipo": "infortunato",
    "nota": "trauma contusivo alla gamba destra, da valutare convocazione dalla fine di settembre"
+  },
+  "4375": {
+   "id": 4375,
+   "tipo": "infortunato",
+   "nota": "lesione di basso grado del bicipite femorale della coscia sinistra, recuperabile dall'inizio di ottobre"
   },
   "4387": {
    "id": 4387,
