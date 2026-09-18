@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-18T14:49:04.184Z",
+ "generato": "2026-09-18T18:07:49.372Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 5,
  "giornateDiscordi": [
@@ -379,7 +379,7 @@
    "nome": "Berardi",
    "squadra": "Sassuolo",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -489,15 +489,6 @@
    "ruolo": "C",
    "pct": 55,
    "titolare": true,
-   "incerto": true
-  },
-  "1852": {
-   "id": 1852,
-   "nome": "Spinazzola",
-   "squadra": "Napoli",
-   "ruolo": "D",
-   "pct": 20,
-   "titolare": false,
    "incerto": true
   },
   "1870": {
@@ -622,9 +613,9 @@
    "nome": "Cutrone",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "2167": {
    "id": 2167,
@@ -712,7 +703,7 @@
    "nome": "Matic",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -865,7 +856,7 @@
    "nome": "Caleta-Car",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -928,7 +919,7 @@
    "nome": "Muric",
    "squadra": "Sassuolo",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1072,7 +1063,7 @@
    "nome": "Esposito Se.",
    "squadra": "Sassuolo",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1190,7 +1181,7 @@
    "squadra": "Venezia",
    "ruolo": "D",
    "pct": 60,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "4856": {
@@ -1252,7 +1243,7 @@
    "nome": "Maldini",
    "squadra": "Cagliari",
    "ruolo": "A",
-   "pct": 65,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -1279,7 +1270,7 @@
    "nome": "Carboni A.",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1612,7 +1603,7 @@
    "nome": "Cambiaso",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1769,15 +1760,6 @@
    "titolare": true,
    "incerto": true
   },
-  "5695": {
-   "id": 5695,
-   "nome": "Haps",
-   "squadra": "Venezia",
-   "ruolo": "D",
-   "pct": 55,
-   "titolare": true,
-   "incerto": true
-  },
   "5701": {
    "id": 5701,
    "nome": "Obert",
@@ -1927,7 +1909,7 @@
    "nome": "Birindelli",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1954,7 +1936,7 @@
    "nome": "Thorstvedt",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1972,7 +1954,7 @@
    "nome": "Doig",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2188,7 +2170,7 @@
    "nome": "Laurientè",
    "squadra": "Sassuolo",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2386,7 +2368,7 @@
    "nome": "Folorunsho",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2656,7 +2638,7 @@
    "nome": "Akinsanmiro",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2737,7 +2719,7 @@
    "nome": "Lucchesi",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2801,7 +2783,7 @@
    "squadra": "Sassuolo",
    "ruolo": "C",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6678": {
@@ -3196,9 +3178,9 @@
    "nome": "Bakola",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7048": {
    "id": 7048,
@@ -3502,7 +3484,7 @@
    "nome": "Kouadio",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3601,7 +3583,7 @@
    "nome": "Tornqvist",
    "squadra": "Monza",
    "ruolo": "P",
-   "pct": 95,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3970,7 +3952,7 @@
    "nome": "Mangas",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3979,7 +3961,7 @@
    "nome": "Varela G.",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4096,9 +4078,9 @@
    "nome": "Robinson J.",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7547": {
    "id": 7547,
@@ -4195,7 +4177,7 @@
    "nome": "Leysen F.",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4213,7 +4195,7 @@
    "nome": "Cinquegrano",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4518,42 +4500,6 @@
  "ballottaggi": [
   [
    {
-    "id": 7546,
-    "nome": "Robinson J.",
-    "pct": 60
-   },
-   {
-    "id": 5882,
-    "nome": "Mota",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 2155,
-    "nome": "Cutrone",
-    "pct": 55
-   },
-   {
-    "id": 5878,
-    "nome": "Colpani",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 6677,
-    "nome": "Adzic",
-    "pct": 60
-   },
-   {
-    "id": 7036,
-    "nome": "Bakola",
-    "pct": 40
-   }
-  ],
-  [
-   {
     "id": 5678,
     "nome": "Holm",
     "pct": 60
@@ -4622,18 +4568,6 @@
     "id": 6783,
     "nome": "Unai Gomez",
     "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 4896,
-    "nome": "Maldini",
-    "pct": 65
-   },
-   {
-    "id": 7579,
-    "nome": "Massolin",
-    "pct": 35
    }
   ],
   [
@@ -4746,14 +4680,14 @@
   ],
   [
    {
-    "id": 5695,
-    "nome": "Haps",
-    "pct": 55
-   },
-   {
     "id": 4845,
     "nome": "Correia T.",
-    "pct": 45
+    "pct": 60
+   },
+   {
+    "id": 6681,
+    "nome": "Sagrado",
+    "pct": 40
    }
   ],
   [
@@ -5094,8 +5028,8 @@
   },
   "1852": {
    "id": 1852,
-   "tipo": "dubbio",
-   "nota": "lieve contrattura al bicipite femorale della coscia destra, in dubbio convocazione a Firenze"
+   "tipo": "infortunato",
+   "nota": "lieve contrattura al bicipite femorale della coscia destra, da valutare convocazione a Firenze"
   },
   "2188": {
    "id": 2188,
