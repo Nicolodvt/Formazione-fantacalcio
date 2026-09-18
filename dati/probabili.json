@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-17T20:51:01.588Z",
+ "generato": "2026-09-18T10:46:27.404Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 5,
  "giornateDiscordi": [
@@ -94,14 +94,14 @@
    "stadio": "U-Power Stadium"
   },
   "Bologna": {
-   "modulo": "4-3-3",
+   "modulo": "3-4-2-1",
    "inCasa": true,
    "avversario": "Torino",
    "data": "sabato 19 settembre, 15:00",
    "stadio": "Renato Dall'Ara"
   },
   "Torino": {
-   "modulo": "3-4-2-1",
+   "modulo": "3-5-1-1",
    "inCasa": false,
    "avversario": "Bologna",
    "data": "sabato 19 settembre, 15:00",
@@ -622,8 +622,8 @@
    "nome": "Cutrone",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "2167": {
@@ -758,7 +758,7 @@
    "squadra": "Bologna",
    "ruolo": "C",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "2766": {
@@ -1072,7 +1072,7 @@
    "nome": "Esposito Se.",
    "squadra": "Sassuolo",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 55,
    "titolare": true,
    "incerto": true
   },
@@ -1603,7 +1603,7 @@
    "nome": "Cancellieri",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": true,
    "incerto": true
   },
@@ -2036,7 +2036,7 @@
    "squadra": "Monza",
    "ruolo": "C",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "5882": {
@@ -2044,7 +2044,7 @@
    "nome": "Mota",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2062,8 +2062,8 @@
    "nome": "Casadei",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": true,
+   "pct": 25,
+   "titolare": false,
    "incerto": true
   },
   "5946": {
@@ -2125,7 +2125,7 @@
    "nome": "Ilkhan",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -2251,8 +2251,8 @@
    "nome": "Gineitis",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "6190": {
@@ -3335,15 +3335,6 @@
    "titolare": false,
    "incerto": true
   },
-  "7146": {
-   "id": 7146,
-   "nome": "Tourè I.",
-   "squadra": "Monza",
-   "ruolo": "C",
-   "pct": 30,
-   "titolare": false,
-   "incerto": true
-  },
   "7154": {
    "id": 7154,
    "nome": "Odenthal",
@@ -3664,9 +3655,9 @@
    "nome": "Helland",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 35,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "7329": {
    "id": 7329,
@@ -3997,9 +3988,9 @@
    "nome": "Mangas",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 70,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7523": {
    "id": 7523,
@@ -4033,7 +4024,7 @@
    "nome": "Amondarain",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -4123,9 +4114,9 @@
    "nome": "Robinson J.",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "7547": {
    "id": 7547,
@@ -4438,7 +4429,7 @@
    "nome": "Braganca",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -4545,26 +4536,26 @@
  "ballottaggi": [
   [
    {
-    "id": 7485,
-    "nome": "Mangas",
+    "id": 7546,
+    "nome": "Robinson J.",
     "pct": 60
    },
    {
-    "id": 7476,
-    "nome": "Bakoune",
+    "id": 5882,
+    "nome": "Mota",
     "pct": 40
    }
   ],
   [
    {
-    "id": 5878,
-    "nome": "Colpani",
-    "pct": 60
+    "id": 2155,
+    "nome": "Cutrone",
+    "pct": 55
    },
    {
-    "id": 6592,
-    "nome": "Forson O.",
-    "pct": 40
+    "id": 5878,
+    "nome": "Colpani",
+    "pct": 45
    }
   ],
   [
@@ -4583,12 +4574,12 @@
    {
     "id": 4463,
     "nome": "Esposito Se.",
-    "pct": 60
+    "pct": 55
    },
    {
     "id": 7347,
     "nome": "Bowie",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
@@ -4629,25 +4620,13 @@
   ],
   [
    {
-    "id": 2765,
-    "nome": "Odgaard",
-    "pct": 55
-   },
-   {
-    "id": 7068,
-    "nome": "Vitik",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 5888,
-    "nome": "Casadei",
-    "pct": 55
-   },
-   {
     "id": 6170,
     "nome": "Gineitis",
+    "pct": 55
+   },
+   {
+    "id": 7624,
+    "nome": "Braganca",
     "pct": 45
    }
   ],
@@ -4799,12 +4778,12 @@
    {
     "id": 5500,
     "nome": "Cancellieri",
-    "pct": 55
+    "pct": 60
    },
    {
     "id": 6398,
     "nome": "Isaksen",
-    "pct": 45
+    "pct": 40
    }
   ],
   [
@@ -5228,11 +5207,6 @@
    "id": 5880,
    "tipo": "infortunato",
    "nota": "noie fisiche, out contro Sassuolo"
-  },
-  "5882": {
-   "id": 5882,
-   "tipo": "dubbio",
-   "nota": "noie fisiche, in dubbio impiego contro il Sassuolo"
   },
   "5918": {
    "id": 5918,
