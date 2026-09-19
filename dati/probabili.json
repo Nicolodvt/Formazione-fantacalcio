@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-18T18:07:49.372Z",
+ "generato": "2026-09-19T11:49:59.172Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 5,
  "giornateDiscordi": [
@@ -178,7 +178,7 @@
    "stadio": "Benito Stirpe"
   },
   "Parma": {
-   "modulo": "3-5-2",
+   "modulo": "3-4-3",
    "inCasa": true,
    "avversario": "Genoa",
    "data": "domenica 20 settembre, 15:00",
@@ -1472,15 +1472,6 @@
    "titolare": false,
    "incerto": true
   },
-  "5307": {
-   "id": 5307,
-   "nome": "Valenti",
-   "squadra": "Parma",
-   "ruolo": "D",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
-  },
   "5319": {
    "id": 5319,
    "nome": "Sohm",
@@ -1640,15 +1631,6 @@
    "squadra": "Como",
    "ruolo": "C",
    "pct": 80,
-   "titolare": true,
-   "incerto": false
-  },
-  "5578": {
-   "id": 5578,
-   "nome": "Kossounou",
-   "squadra": "Atalanta",
-   "ruolo": "D",
-   "pct": 75,
    "titolare": true,
    "incerto": false
   },
@@ -2021,15 +2003,6 @@
    "titolare": false,
    "incerto": true
   },
-  "5888": {
-   "id": 5888,
-   "nome": "Casadei",
-   "squadra": "Torino",
-   "ruolo": "C",
-   "pct": 25,
-   "titolare": false,
-   "incerto": true
-  },
   "5946": {
    "id": 5946,
    "nome": "Sow",
@@ -2269,7 +2242,7 @@
    "nome": "Almqvist",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2323,9 +2296,9 @@
    "nome": "Tourè E.",
    "squadra": "Parma",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6230": {
    "id": 6230,
@@ -2503,9 +2476,9 @@
    "nome": "Kristensen T.",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 35,
-   "titolare": false,
-   "incerto": true
+   "pct": 90,
+   "titolare": true,
+   "incerto": false
   },
   "6495": {
    "id": 6495,
@@ -2747,15 +2720,6 @@
    "squadra": "Parma",
    "ruolo": "D",
    "pct": 90,
-   "titolare": true,
-   "incerto": false
-  },
-  "6666": {
-   "id": 6666,
-   "nome": "Bernabè",
-   "squadra": "Parma",
-   "ruolo": "C",
-   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -3016,7 +2980,7 @@
    "nome": "Van Der Brempt",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -3322,7 +3286,7 @@
    "nome": "Skjellerup",
    "squadra": "Sassuolo",
    "ruolo": "A",
-   "pct": 15,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3557,15 +3521,6 @@
    "squadra": "Parma",
    "ruolo": "C",
    "pct": 35,
-   "titolare": false,
-   "incerto": true
-  },
-  "7277": {
-   "id": 7277,
-   "nome": "Arena A.",
-   "squadra": "Roma",
-   "ruolo": "A",
-   "pct": 10,
    "titolare": false,
    "incerto": true
   },
@@ -4160,7 +4115,7 @@
    "squadra": "Parma",
    "ruolo": "A",
    "pct": 60,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "7563": {
@@ -4448,15 +4403,6 @@
    "squadra": "Cagliari",
    "ruolo": "A",
    "pct": 30,
-   "titolare": false,
-   "incerto": true
-  },
-  "7631": {
-   "id": 7631,
-   "nome": "Luongo",
-   "squadra": "Torino",
-   "ruolo": "C",
-   "pct": 15,
    "titolare": false,
    "incerto": true
   },
@@ -4824,6 +4770,18 @@
   ],
   [
    {
+    "id": 7561,
+    "nome": "Lontani",
+    "pct": 60
+   },
+   {
+    "id": 7213,
+    "nome": "Frigan",
+    "pct": 40
+   }
+  ],
+  [
+   {
     "id": 7554,
     "nome": "Romero D.",
     "pct": 55
@@ -4832,18 +4790,6 @@
     "id": 7342,
     "nome": "Elphege",
     "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 6229,
-    "nome": "Tourè E.",
-    "pct": 60
-   },
-   {
-    "id": 7561,
-    "nome": "Lontani",
-    "pct": 40
    }
   ],
   [
@@ -5126,6 +5072,11 @@
    "tipo": "infortunato",
    "nota": "sindrome femoro-rotulea, ipotesi rientro da gennaio"
   },
+  "5578": {
+   "id": 5578,
+   "tipo": "infortunato",
+   "nota": "risentimento muscolare ai flessori della coscia, out contro la Juventus"
+  },
   "5674": {
    "id": 5674,
    "tipo": "infortunato",
@@ -5149,7 +5100,7 @@
   "6015": {
    "id": 6015,
    "tipo": "infortunato",
-   "nota": "sovraccarico muscolare alla gamba, da valutare contro il Milan"
+   "nota": "sovraccarico muscolare alla gamba, rientro da inizio ottobre"
   },
   "6039": {
    "id": 6039,
@@ -5190,6 +5141,11 @@
    "id": 6646,
    "tipo": "infortunato",
    "nota": "lesione distrattiva di basso grado all'adduttore, tentativo rientro dalla prima metà di ottobre"
+  },
+  "6666": {
+   "id": 6666,
+   "tipo": "infortunato",
+   "nota": "problema fisico, out contro il Genoa"
   },
   "6672": {
    "id": 6672,
@@ -5284,7 +5240,7 @@
   "7318": {
    "id": 7318,
    "tipo": "infortunato",
-   "nota": "noie fisiche, da valutare per Milano"
+   "nota": "noie fisiche, rientro da inizio ottobre"
   },
   "7351": {
    "id": 7351,
