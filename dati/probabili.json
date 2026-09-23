@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-22T21:44:57.052Z",
+ "generato": "2026-09-23T12:42:01.398Z",
  "giornata": 6,
  "fonte": "https://www.fantacalcio-online.com/it/serie-a/2026-2027/probabili-formazioni/ultima-giornata",
  "fonteDiRiserva": true,
@@ -133,7 +133,7 @@
    "incerto": false
   },
   "152": {
-   "pct": 82,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -408,7 +408,7 @@
    "incerto": false
   },
   "4871": {
-   "pct": 79,
+   "pct": 75,
    "titolare": true,
    "incerto": false
   },
@@ -488,7 +488,7 @@
    "incerto": false
   },
   "5172": {
-   "pct": 67,
+   "pct": 66,
    "titolare": true,
    "incerto": false
   },
@@ -544,6 +544,11 @@
   },
   "5559": {
    "pct": 77,
+   "titolare": true,
+   "incerto": false
+  },
+  "5585": {
+   "pct": 83,
    "titolare": true,
    "incerto": false
   },
@@ -658,7 +663,7 @@
    "incerto": false
   },
   "5877": {
-   "pct": 59,
+   "pct": 68,
    "titolare": true,
    "incerto": false
   },
@@ -668,7 +673,7 @@
    "incerto": false
   },
   "5994": {
-   "pct": 79,
+   "pct": 61,
    "titolare": true,
    "incerto": false
   },
@@ -683,7 +688,7 @@
    "incerto": false
   },
   "6021": {
-   "pct": 85,
+   "pct": 79,
    "titolare": true,
    "incerto": false
   },
@@ -718,7 +723,7 @@
    "incerto": false
   },
   "6217": {
-   "pct": 71,
+   "pct": 74,
    "titolare": true,
    "incerto": false
   },
@@ -743,7 +748,7 @@
    "incerto": false
   },
   "6274": {
-   "pct": 73,
+   "pct": 83,
    "titolare": true,
    "incerto": false
   },
@@ -809,11 +814,6 @@
   },
   "6549": {
    "pct": 85,
-   "titolare": true,
-   "incerto": false
-  },
-  "6572": {
-   "pct": 56,
    "titolare": true,
    "incerto": false
   },
@@ -1260,6 +1260,10 @@
    "tipo": "infortunato",
    "dettaglio": "Infortunato"
   },
+  "2765": {
+   "tipo": "infortunato",
+   "dettaglio": "Infortunato"
+  },
   "2832": {
    "tipo": "infortunato",
    "dettaglio": "Infortunato"
@@ -1321,10 +1325,6 @@
    "dettaglio": "Infortunato"
   },
   "5578": {
-   "tipo": "infortunato",
-   "dettaglio": "Infortunato"
-  },
-  "5585": {
    "tipo": "infortunato",
    "dettaglio": "Infortunato"
   },
