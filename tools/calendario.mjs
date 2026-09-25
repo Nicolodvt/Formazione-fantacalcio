@@ -10,9 +10,37 @@ const MESI = {
   luglio: 6, agosto: 7, settembre: 8, ottobre: 9, novembre: 10, dicembre: 11
 };
 
+/* Quanto l'ora di Roma e' avanti rispetto a UTC nell'istante t (ms): +1h d'inverno, +2h
+   d'estate. Letto dal database dei fusi di Node, non calcolato a mano: il cambio d'ora non
+   cade sempre lo stesso giorno. */
+function scartoRoma(t) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Europe/Rome', hourCycle: 'h23',
+    year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+  }).formatToParts(new Date(t)).map(x => [x.type, x.value]));
+  return Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute) - t;
+}
+
+/* Ora scritta sul sito (ora italiana) -> istante vero, QUALUNQUE sia il fuso del processo.
+   Prima si usava new Date(anno, mese, ...), che legge l'ora nel fuso della macchina: giusto sul
+   PC di casa, sbagliato di 2 ore sui runner GitHub (che girano in UTC). Scoperto il 26/09 dai
+   promemoria della giornata 5: il "2h" e' partito alle 19:52 UTC dicendo "mancano 48 minuti",
+   un'ora DOPO il calcio d'inizio vero (20:45 italiane = 18:45 UTC). Il secondo giro di
+   scartoRoma serve solo a ridosso del cambio d'ora, quando lo scarto cambia fra la stima e il
+   risultato. */
+function daOraRoma(anno, mese, giorno, ore, minuti) {
+  const comeSeFosseUtc = Date.UTC(anno, mese, giorno, ore, minuti);
+  let t = comeSeFosseUtc - scartoRoma(comeSeFosseUtc);
+  t = comeSeFosseUtc - scartoRoma(t);
+  return new Date(t);
+}
+
 /* "venerdi 04 settembre, 20:45" -> Date. Niente anno nella stringa scaricata: si assume
    l'anno corrente, e se il risultato cade piu' di una settimana nel passato si prova l'anno
-   successivo (giornate di campionato a cavallo di capodanno). */
+   successivo (giornate di campionato a cavallo di capodanno).
+   La gemella parseDataPartita() in index.html legge invece l'ora nel fuso del telefono: li'
+   va bene cosi', il telefono e' in Italia. Se cambia il formato della data va aggiornata anche
+   quella. */
 export function parseData(s) {
   if (!s) return null;
   const m = s.match(/(\d{1,2})\s+([a-zàèìòù]+),?\s+(\d{1,2}):(\d{2})/i);
@@ -22,9 +50,9 @@ export function parseData(s) {
   if (mese == null) return null;
   const oggi = new Date();
   const anno = oggi.getFullYear();
-  let d = new Date(anno, mese, +giorno, +ore, +minuti);
+  let d = daOraRoma(anno, mese, +giorno, +ore, +minuti);
   if (d.getTime() < oggi.getTime() - 7 * 24 * 3600 * 1000) {
-    d = new Date(anno + 1, mese, +giorno, +ore, +minuti);
+    d = daOraRoma(anno + 1, mese, +giorno, +ore, +minuti);
   }
   return d;
 }
