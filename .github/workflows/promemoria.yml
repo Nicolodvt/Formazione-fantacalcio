@@ -4,9 +4,15 @@ name: Promemoria scadenza formazione
 # fantacalcio.it e per rispetto verso il sito non gira piu' spesso di una volta all'ora (vedi
 # dati.yml). Questo NON tocca fantacalcio.it per niente - legge solo dati/probabili.json gia'
 # sul disco - quindi puo' girare molto piu' spesso senza alcun costo di cortesia. Serve
-# davvero questa frequenza: le soglie piu' vicine alla scadenza (1 ora, 30 minuti) hanno una
-# finestra di 20 minuti (vedi tools/promemoria-scadenza.mjs) da centrare, ogni giorno della
-# settimana - i turni si giocano anche il weekend, quando dati.yml non gira quasi mai.
+# questa frequenza (sulla carta): le soglie piu' vicine alla scadenza sono a 1 ora e 30 minuti,
+# ogni giorno della settimana - i turni si giocano anche il weekend, quando dati.yml non gira
+# quasi mai. In pratica GitHub fa partire questo cron con gap di ore, non 15 minuti (misurato
+# il 15/09): per questo lo script non assume mai di essere puntuale (vedi il commento in testa
+# a tools/promemoria-scadenza.mjs).
+#
+# Orari: i runner GitHub girano in UTC, le date scaricate da fantacalcio.it sono in ora
+# italiana. La conversione sta in tools/calendario.mjs (parseData) — fino al 26/09 mancava, e
+# ogni promemoria partiva 2 ore in ritardo.
 
 on:
   schedule:
@@ -24,9 +30,9 @@ jobs:
   controlla:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '22'
 
