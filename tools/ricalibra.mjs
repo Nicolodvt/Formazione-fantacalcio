@@ -34,8 +34,9 @@
    USO
      node tools/ricalibra.mjs
    Gira dentro .github/workflows/dati.yml, subito dopo lo scraper dei voti (solo quando ha
-   senso: giornata conclusa). Manuale, va bene lanciarlo anche a mano per controllare cosa
-   farebbe senza aspettare il prossimo martedi.
+   senso: giornata conclusa). Fa un passo solo se in dati/ c'e' una giornata di voti che
+   l'ultimo giro non aveva: altrimenti esce senza scrivere nulla, quindi rilanciarlo (in CI o
+   a mano) e' innocuo. Per vedere come va il modello senza toccare nulla c'e' tools/taratura.mjs.
 */
 
 import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
@@ -59,7 +60,30 @@ const byId = Object.fromEntries(LISTONE.map(p => [p.id, p]));
 const giornate = readdirSync(resolve(RADICE, 'dati'))
   .map(f => /^voti-(\d+)\.json$/.exec(f))
   .filter(Boolean)
-  .map(m => Number(m[1]));
+  .map(m => Number(m[1]))
+  .sort((a, b) => a - b);
+
+/* ---------- un passo per ogni giornata nuova, non uno per ogni lancio ----------
+   L'aggiornamento e' smorzato e parte dal valore precedente: rilanciato sugli stessi voti fa un
+   passo in piu' ogni volta, come se fosse arrivata un'altra giornata. Succedeva a mano (notte
+   15-16/09) ma anche in CI, e ogni settimana: dati.yml lo lancia a TUTTI i giri di lunedi e
+   martedi (fino a 4), anche quando i voti nuovi sono gia' arrivati al primo. Sui voti G1-G5 la
+   correzione degli attaccanti e' andata 0.236 -> 0.261 -> 0.278 -> 0.290 -> 0.299 in due giorni,
+   quattro passi invece di uno (scoperto il 26/09). Ora, se le giornate sono le stesse
+   dell'ultimo giro scritto in dati/costanti.json, non si tocca nulla: lanciarlo quante volte si
+   vuole e' innocuo. */
+let costantiPrecedenti = null;
+if (existsSync(FILE_COSTANTI)) {
+  try { costantiPrecedenti = JSON.parse(readFileSync(FILE_COSTANTI, 'utf8')); }
+  catch (e) { /* file corrotto: si riparte da zero, non e' un errore fatale */ }
+}
+const giaUsate = costantiPrecedenti && Array.isArray(costantiPrecedenti.giornateUsate)
+  ? [...costantiPrecedenti.giornateUsate].sort((a, b) => a - b) : null;
+if (giaUsate && giaUsate.join(',') === giornate.join(',')) {
+  console.log(`Nessuna giornata nuova (voti ${giornate.join(', ')} gia' usati): ricalibrazione non necessaria, ` +
+    'dati/costanti.json non toccato.');
+  process.exit(0);
+}
 
 const perRuolo = { P: [], D: [], C: [], A: [] };
 for (const g of giornate) {
@@ -77,11 +101,8 @@ for (const g of giornate) {
 /* ---------- correzione attuale, per partire da li' e non da zero ---------- */
 
 let precedente = { P: 0, D: 0, C: 0, A: 0 };
-if (existsSync(FILE_COSTANTI)) {
-  try {
-    const d = JSON.parse(readFileSync(FILE_COSTANTI, 'utf8'));
-    if (d && d.rettificaRuolo) precedente = Object.assign(precedente, d.rettificaRuolo);
-  } catch (e) { /* file corrotto o assente: si riparte da zero, non e' un errore fatale */ }
+if (costantiPrecedenti && costantiPrecedenti.rettificaRuolo) {
+  precedente = Object.assign(precedente, costantiPrecedenti.rettificaRuolo);
 }
 
 /* ---------- calcolo, ruolo per ruolo ---------- */
@@ -128,13 +149,7 @@ for (const g of giornate) {
   }
 }
 
-let precedentePiazzati = {};
-if (existsSync(FILE_COSTANTI)) {
-  try {
-    const d = JSON.parse(readFileSync(FILE_COSTANTI, 'utf8'));
-    if (d && d.rettificaPiazzati) precedentePiazzati = d.rettificaPiazzati;
-  } catch (e) { /* file corrotto o assente: si riparte da zero */ }
-}
+const precedentePiazzati = (costantiPrecedenti && costantiPrecedenti.rettificaPiazzati) || {};
 
 const nuovaPiazzati = {};
 const dettaglioPiazzati = {};
@@ -151,6 +166,13 @@ for (const tag of TAG_RIGORI) {
     continue;
   }
   const mediaOsservata = campione.reduce((s, v) => s + v, 0) / n;
+  /* ATTENZIONE (26/09, non ancora deciso): lo scarto qui si misura contro base+correzione
+     precedente, non contro la base come fa RETTIFICA_RUOLO con la stima pura. Cosi' l'obiettivo
+     si sposta insieme alla correzione e il punto d'arrivo e' META' dello scarto vero (con G1-G5:
+     -0.20 invece di -0.40 per R1). Non corretto di proposito: MIN_CAMPIONE conta presenze (79 per
+     R1), ma gli eventi che muovono questa correzione sono i rigori tirati — 2 in tutto per R1
+     su G1-G5 — quindi la meta' per errore oggi fa da freno contro il rumore. Vedi CLAUDE.md,
+     Prossimi passi. */
   const scartoGrezzo = mediaOsservata - ((motore.BONUS_PIAZZATI[tag] || 0) + prec);
   const obiettivo = Math.max(-LIMITE, Math.min(LIMITE, scartoGrezzo));
   const smorzato = prec + TASSO_APPRENDIMENTO * (obiettivo - prec);
