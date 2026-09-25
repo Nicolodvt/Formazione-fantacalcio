@@ -9,81 +9,67 @@ accodano: fotografano il punto in cui siamo adesso, non l'elenco di tutto quello
 
 ## Stato attuale
 
-**v0.5 — ONLINE E IN USO, 5ª giornata.** Pubblicata su Netlify (build vera via GitHub, non
-drag&drop: serve per `@netlify/blobs` in `netlify/functions/schierato.mjs`), rosa vera importata,
-app installata sul telefono, notifiche push attive. L'app schiera, sceglie il modulo, funziona
-offline, e la stima si mescola da sola con i voti veri (singolo giocatore, ruolo, piazzati,
-squadra intera). Countdown e promemoria scaglionati su una scadenza vera. La GitHub Action
-scarica probabili e voti da sola, con una fonte di riserva se la prima fallisce.
+**v0.5 — ONLINE E IN USO.** Pubblicata su Netlify (build vera via GitHub, non drag&drop: serve per
+`@netlify/blobs` in `netlify/functions/schierato.mjs`), rosa vera importata, app installata sul
+telefono, notifiche push attive. L'app schiera, sceglie il modulo, funziona offline, e la stima si
+mescola da sola con i voti veri (singolo giocatore, ruolo, piazzati, squadra intera). Countdown e
+promemoria scaglionati su una scadenza vera. La GitHub Action scarica probabili e voti da sola,
+con una fonte di riserva se la prima fallisce.
 
-**Rami**: `dev` e `main` allineati dalla notte 15-16/09 — push di `dev` e merge su `main`
-autorizzati esplicitamente dall'utente per quella sessione (lavoro notturno non supervisionato,
-un solo push/merge alla fine, non prima). Dentro: indicatore "in forma"/"in calo", fix di
-concorrenza in `caricaStorico()`, `RETTIFICA_PIAZZATI`, il fix ai promemoria scaglionati
-(`promemoria-scadenza.mjs`), una ricalibrazione aggiornata, e la scoperta sulla cadenza reale di
-`dati.yml` (vedi *Problemi aperti*). Il merge fa scattare un deploy Netlify vero (il diff tocca
-codice, non solo `dati/**`/`*.md`) — **autorizzazione valida solo per quella sessione**, non
-generalizzare a push futuri senza chiederlo di nuovo (vedi *Regola di lavoro* sotto).
+**Calendario**: giocate G1-G5 (voti tutti scaricati, ricalibrazione fatta), poi sosta per le
+nazionali. **G6 il 10-12/10**, prima partita Genoa-Fiorentina sabato 10/10 alle 15:00.
 
-## Cosa abbiamo deciso il 15/09/2026
+**Rami (26/09)**: `dev` è avanti di 7 commit su `main`, **non ancora pushati**: i fix della
+sessione del 26/09 (sotto) più un commit di diario rimasto solo in locale dal 16/09. Il merge su
+`main` **fa scattare un deploy Netlify** (tocca `tools/`, `.github/` e, se tenuto, `netlify.toml`,
+non solo `dati/**`/`*.md`) — serve l'autorizzazione esplicita dell'utente in sessione (vedi
+*Regola di lavoro*). Finché non arriva su `main` la Action gira col codice vecchio: workflow
+rosso a ogni giro, ricalibrazione ripetuta a ogni giro di lunedì/martedì, promemoria G6 in
+ritardo di 2 ore.
 
-- L'utente ha segnalato una formazione "scandalosamente sbagliata" in una giornata passata.
-  Diagnosi fatta **filtrando sulla sua rosa vera**, non su tutto il listone (prima ipotesi,
-  sbagliata: Malen, che l'utente non possiede). Trovato il caso vero: Frattesi, sottostimato per
-  una striscia di forma che nessuna stima da quotazioni può prevedere.
-- **`PESO_PRIOR_STAGIONE` resta intoccato**, richiesta esplicita dell'utente — non è quella la
-  leva da usare per casi come Frattesi.
-- Costruito invece: l'indicatore **"in forma"/"in calo"** (trasparenza pura, non cambia la stima)
-  e **`RETTIFICA_PIAZZATI`** (calibra il bonus dei rigoristi sui gol/rigori VERI, non a intuito —
-  l'unica parte isolabile del dettaglio gol/assist/rigori già salvato).
-- Trovato e risolto, costruendo l'indicatore: un bug di concorrenza in `caricaStorico()`
-  (chiamate sovrapposte duplicavano le giornate nello storico).
-- Indagata e risolta l'email "All jobs have failed": un fallimento delle probabili faceva saltare
-  a cascata anche voti/ricalibrazione/promemoria per un gate implicito di GitHub Actions — fix
-  già su `main`.
-- Snellito il diario (87KB → 11KB), cronologia spostata in DIARIO-STORICO.md.
-- **Principio dato dall'utente**: il campionato è iniziato, non si può aspettare fine stagione
-  per un vantaggio reale — un miglioramento isolabile e sicuro (soglia di campione, correzione
-  limitata e smorzata) va implementato subito, non rimandato per principio.
-- **Notifiche push scaglionate: trovato e risolto un bug che le azzerava tutte.** Il cron
-  dell'Action (`*/15 * * * *` dichiarato) arriva in pratica con gap reali di 2-6 ore (verificato
-  sulle esecuzioni vere via API pubblica GitHub). La soglia di tolleranza di 20 minuti nel codice
-  scartava quindi ogni promemoria come "troppo in ritardo": per la giornata 4 tutti e sei i
-  promemoria scaglionati risultano `"saltata"` in `dati/scadenza-promemoria.json`, nessuno
-  spedito. **Fix** in `tools/promemoria-scadenza.mjs`: ora si rinuncia solo se la scadenza vera è
-  già passata, e il testo del promemoria riporta il tempo REALE rimasto invece dell'etichetta
-  nominale della soglia. Dettagli in DIARIO-STORICO.md. Da verificare sul campo alla scadenza
-  della giornata 5 (18/09).
-- **Ricalibrazione (`RETTIFICA_RUOLO`/`RETTIFICA_PIAZZATI`) rilanciata a mano** su richiesta, pur
-  girando già da sola in CI dopo ogni giornata conclusa. **Corretto un doppio conteggio**:
-  rilanciarla a mano senza nuovi voti nel mezzo l'aveva fatta convergere due volte sugli stessi
-  dati invece di una, sballando lo smorzamento voluto da `tools/ricalibra.mjs`. Scoperto durante
-  il merge notturno (conflitto su `dati/costanti.json` contro un run automatico di CI nel
-  frattempo): risolto tenendo il valore del **primo** giro pulito, non del secondo — identico a
-  quello ricalcolato in autonomo dalla CI stessa sugli stessi dati, prova che è quello giusto.
-  Non serve più rilanciarla a mano: la prossima ricalibrazione vera arriva da sola con i voti
-  della giornata 5.
-- **Attrito permessi Bash risolto**: `settingslocaljson.txt` spostato in
-  `.claude/settings.local.json` (già in `.gitignore`, locale non versionato).
-- **Bottone "esporta rosa attuale" tolto dai piani**: proposto il 15/09, l'utente ha detto di non
-  volerlo. Non è più nei *Prossimi passi*.
-- **Sessione notturna 15-16/09, autorizzata in anticipo** ("ti autorizzo a fare tutti i comandi
-  necessari", un solo push/merge alla fine): misurata con l'API pubblica GitHub la stessa
-  inaffidabilità del cron trovata su `promemoria.yml`, stavolta su `dati.yml` — 44% degli slot
-  dichiarati senza nessuna esecuzione entro 6 ore, un giorno intero (lunedì 07/09) saltato del
-  tutto. Non è perdita di dati (il retry "ogni giornata mancante" recupera da solo), solo ritardo
-  di freschezza. Dettagli e metodo in DIARIO-STORICO.md.
-- **Revisione avversaria del motore** (`index.html`, stesso metodo dell'11-bug del 03-04/09):
-  nessun bug nuovo confermato. Un candidato in `certezza()` (il boost `SUBENTRO` che in teoria
-  poteva superare il tetto 0.75 del ramo "nessun dato di giornata") inseguito e scartato:
-  verificato contro `tools/fetch-probabili.mjs` che lo scenario non è raggiungibile — `squadre`
-  e `giocatori` si scrivono sempre insieme, nello stesso ciclo. Verificato anche dal vivo nel
-  browser a 375px con dati reali: nessun errore, tutto renderizza correttamente.
-- **Repository pubblico: questione aperta, non decisa.** L'utente ha chiesto di non avere "file
-  personali" su GitHub pubblico; chiarito che il diario è già pubblico da mesi (non una novità di
-  stanotte) e che la memoria privata di Claude non può fisicamente finirci (vive fuori da
-  qualunque repository Git). L'opzione reale è rendere il repository **privato** — rimandata
-  esplicitamente ("ci penserò poi"), non toccata stanotte. Vedi *Problemi aperti*.
+## Cosa abbiamo trovato e deciso il 26/09/2026
+
+Richiesta dell'utente: "ricevo mail che le Actions su GitHub sono fallite, risolvi e controlla
+tutto il resto". Dettagli, numeri e metodo in DIARIO-STORICO.md → *Sessione del 26/09*.
+
+- **Le email "failed"**: dal 21/09 `tools/fetch-probabili.mjs` bocciava ogni giro per "nessun
+  ballottaggio trovato". Falso allarme: con la G6 a tre settimane (sosta) la redazione scrive
+  "Nessun ballottaggio" per tutte e 20 le squadre. La fonte di riserva rimpiazzava i dati (per
+  questo l'app funzionava), ma il workflow restava rosso e l'app è rimasta una settimana sui dati
+  più poveri (215 giocatori invece di 484, niente moduli né panchine). **Fix**: lo zero passa
+  solo se la sezione c'è in ogni partita e tutte le squadre dichiarano di non averne — provato
+  con 5 sabotaggi, tutti bloccati.
+- **Promemoria in ritardo di 2 ore, da sempre in CI**: `parseData()` (`tools/calendario.mjs`)
+  leggeva l'orario nel fuso della macchina — giusto in locale, UTC sui runner GitHub. Alla G5 il
+  "2h" è partito un'ora *dopo* il calcio d'inizio dicendo "mancano 48 minuti"; sbagliato di 2
+  ore anche l'orario scritto dentro entrambe le notifiche. La simulazione col codice vecchio
+  riproduce esattamente `dati/scadenza-promemoria.json` della G5. **Fix**: conversione esplicita
+  da Europe/Rome, provata in 4 fusi e sui cambi d'ora. `index.html` non toccato (gira sul
+  telefono, in Italia: lì è giusto).
+- **Ricalibrazione ripetuta**: `dati.yml` lancia `ricalibra.mjs` a ogni giro di lunedì/martedì
+  (fino a 4), e ogni lancio faceva un passo in più sugli stessi voti — correzione A 0.236 → 0.299
+  in due giorni. **Fix**: esce senza scrivere se le giornate di voti sono le stesse dell'ultimo
+  giro. `dati/costanti.json` rigenerato con un passo per giornata (A 0.225): il replay
+  riproduce cifra per cifra i valori della CI del 04/09, 14/09 e 15/09.
+- **Correzione di una nota del 16/09**: il valore tenuto allora come "primo giro pulito" su G1-G4
+  (A 0.236) era già il *secondo* passo; il primo era A 0.185 (CI del 15/09 12:24). Superato: le
+  costanti sono state rigenerate da zero.
+- **Formula di `RETTIFICA_PIAZZATI`: trovato un difetto, NON corretto** — decisione lasciata
+  all'utente (vedi *Prossimi passi*).
+- **Actions su Node 24** (`checkout`/`setup-node` v6): ogni run avvisava della deprecazione di
+  Node 20.
+- **Facoltativo, in un commit a parte**: `netlify.toml` esclude anche `tools/**` e `.github/**`
+  dal deploy (il sito non li usa). Il merge che lo porta fa comunque un deploy; da lì in poi un
+  fix a script/workflow non costa più crediti.
+
+**Decisioni precedenti ancora in vigore** (contesto in DIARIO-STORICO.md):
+- `PESO_PRIOR_STAGIONE` non si tocca — richiesta esplicita dell'utente, 15/09. Per le strisce di
+  forma c'è l'indicatore "in forma"/"in calo".
+- **Principio dell'utente (15/09)**: il campionato è iniziato, un miglioramento isolabile e
+  sicuro (soglia di campione, correzione limitata e smorzata) si implementa subito, non a fine
+  stagione.
+- Niente bottone "esporta rosa attuale": proposto e rifiutato il 15/09.
+- Visibilità del repository: rimandata dall'utente ("ci penserò poi"), vedi *Prossimi passi*.
 
 ## La rosa dell'utente (15/09/2026)
 
@@ -181,6 +167,9 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
   li salta più a cascata (fix 15/09, vedi DIARIO-STORICO.md).
 - `.github/workflows/promemoria.yml` + `tools/promemoria-scadenza.mjs` — promemoria scaglionati
   verso la scadenza (24h→30min), ogni 15 minuti, non tocca fantacalcio.it.
+- `tools/calendario.mjs` — date delle partite (ora italiana → istante vero, in qualunque fuso
+  giri: i runner sono in UTC), prima partita, turno infrasettimanale. Usato da entrambi i
+  promemoria e da `tools/turno-infrasettimanale.mjs`.
 - `tools/estrai-motore.mjs` — estrae il motore PURO da `index.html` per `taratura.mjs`/`ricalibra.mjs`,
   così le due copie non divergono mai.
 - `tools/taratura.mjs` — diagnostica (stime vs voti reali), non scrive nulla.
@@ -192,52 +181,60 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 
 ## Prossimi passi
 
-1. **Verificare che il fix dei promemoria funzioni davvero**: prossima occasione vera è la
-   scadenza della giornata 5 (prima partita venerdì 18/09 20:45) — controllare che almeno un
-   promemoria scaglionato arrivi sul telefono, invece di ritrovarsi di nuovo
-   `dati/scadenza-promemoria.json` pieno di `"saltata"`. Se non arriva nulla nemmeno stavolta, il
-   sospetto successivo è l'abbonamento push scaduto (va ri-registrato dall'app), non il codice.
-2. **Decidere se vale la pena un innesco più affidabile del cron GitHub** per `dati.yml`/
-   `promemoria.yml` (44% degli slot dichiarati saltati su `dati.yml`, un giorno intero perso il
-   07/09 — vedi *Problemi aperti* e DIARIO-STORICO.md). L'opzione concreta è un cron esterno
-   (es. cron-job.org) che chiama `workflow_dispatch` via API GitHub: bypassa il throttling di
-   GitHub sugli scheduled workflow, ma serve un token con permessi di scrittura da conservare da
-   qualche parte — non deciso, è una scelta di infrastruttura da discutere, non presa da sola.
-3. **Decidere sulla visibilità del repository** (pubblico oggi) — questione sollevata
-   dall'utente il 15/09, rimandata ("ci penserò poi"). Se si passa a privato: verificare il tetto
-   di 2000 minuti/mese di GitHub Actions (oggi illimitato perché pubblico) contro la frequenza
-   reale del cron, e che gli strumenti di diagnosi che oggi usano l'API pubblica senza token
-   continuino a funzionare (servirebbe un token).
-4. **Ritarare `PESO_AVVERSARIO`, `CASA_BONUS`, `DECADIMENTO_FORMA`** (non `PESO_PRIOR_STAGIONE`,
-   l'utente ha chiesto di lasciarla) quando ci saranno abbastanza giornate. Con `taratura.mjs`.
-   Diverso da `RETTIFICA_RUOLO`/`RETTIFICA_PIAZZATI`, che ormai si aggiornano da sole in CI a ogni
-   giornata conclusa.
-5. **Calendario storico** (chi ha giocato contro chi, dove) per tarare `CASA_BONUS`/
-   `PESO_AVVERSARIO` sui risultati veri — rimandato (15/09), non deciso se costruirlo.
-6. **Mercato di riparazione e svincoli** — a gennaio (15/09), non prima.
-7. **Provare sul telefono vero** i gesti (swipe fra tab, pull-to-refresh, aggiunti il 05/09):
-   verificati finora solo in emulazione/da terminale, mai il tatto/l'uso reale.
+1. **Push di `dev` e merge su `main`, il prima possibile** — serve il via libera dell'utente (un
+   deploy Netlify). Ogni giro di lunedì/martedì su `main` col codice vecchio fa un altro passo di
+   ricalibrazione sugli stessi voti (28-29/09, 05-06/10), e i promemoria G6 partirebbero in
+   ritardo. Se il merge arriva dopo lunedì 28/09 ~07:00 UTC, conflitto quasi certo su
+   `dati/costanti.json` (la CI vecchia l'avrà riscritto): **tenere la versione di `dev`**.
+2. **Decidere sulla formula di `RETTIFICA_PIAZZATI`** (`tools/ricalibra.mjs`): lo scarto si
+   misura contro base+correzione precedente, quindi converge a *metà* dello scarto vero (R1 verso
+   -0.20 invece di -0.40). Correggerla sola spingerebbe R1 a -0.30 sulla base di **2 rigori**
+   (Colombo sbagliato, Zaccagni segnato: su G1-G5 in tutta la A solo 5 rigori tirati): la soglia
+   `MIN_CAMPIONE=30` conta le presenze (79), non i rigori. Proposta: correggere la formula E
+   aggiungere una soglia sui rigori tirati (es. almeno 10 per tag) prima di muovere la correzione.
+3. **Verificare sul campo i promemoria della G6** (dopo il merge): scadenza sabato 10/10 alle
+   14:55 italiane (12:55 UTC). In `dati/scadenza-promemoria.json` ogni orario "inviato" deve
+   cadere prima di `2026-10-10T12:55Z`, e il testo deve dire le ore vere rimaste. 1h/30m possono
+   ancora saltare per i ritardi del cron (punto 5).
+4. **Verificare che torni la fonte principale** (dopo il merge): `dati/probabili.json` con
+   `fonte` fantacalcio.it (circa 480 giocatori, moduli, panchine), workflow verde, niente più
+   email.
+5. **Decidere se vale la pena un innesco più affidabile del cron GitHub** per `dati.yml`/
+   `promemoria.yml` (44% degli slot di `dati.yml` saltati, gap di ore su `promemoria.yml`).
+   Opzione concreta: un cron esterno (es. cron-job.org) che chiama `workflow_dispatch` via API
+   GitHub — serve un token con permessi di scrittura da conservare da qualche parte. Non deciso.
+6. **Decidere sulla visibilità del repository** (pubblico oggi) — rimandata dall'utente. Se si
+   passa a privato: tetto di 2000 minuti/mese di Actions (oggi illimitato) contro la frequenza
+   del cron, e gli strumenti di diagnosi via API pubblica senza token smetterebbero di funzionare.
+7. **Ritarare `PESO_AVVERSARIO`, `CASA_BONUS`, `DECADIMENTO_FORMA`** (non `PESO_PRIOR_STAGIONE`)
+   quando ci saranno abbastanza giornate, con `taratura.mjs`.
+8. **Calendario storico** (chi ha giocato contro chi, dove) per tarare `CASA_BONUS`/
+   `PESO_AVVERSARIO` sui risultati veri — rimandato, non deciso.
+9. **Mercato di riparazione e svincoli** — a gennaio, non prima.
+10. **Provare sul telefono vero** i gesti (swipe fra tab, pull-to-refresh): verificati finora
+    solo in emulazione.
+11. **Da guardare quando capita, nessuna azione prevista**: dal 19/10 `ubuntu-latest` passa a
+    Ubuntu 26 (gli script usano solo bash, git e node: controllare il primo run dopo); dal 25/10
+    (ora solare) i cron in UTC scattano un'ora prima in ora italiana (venerdì 07-19 invece di
+    08-20). I promemoria non ne risentono: ora calcolano sulle date vere.
 
 ## Problemi aperti
 
-- **`BONUS_MAX` (tetto di bonus a percentile 100 per ruolo) resta a intuito.** Fatta solo la metà
-  isolabile del dettaglio gol/rigori: `RETTIFICA_PIAZZATI` sui rigoristi. Calibrare anche
-  `BONUS_MAX` richiederebbe isolare il bonus "da percentile puro" (gol/assist normali, non
-  rigori) — con 5 giornate e pochi giocatori al vertice del ruolo, rischia di inseguire il
-  rumore. Da riprovare con più giornate o un modo migliore di isolarlo.
-- **xG/Understat per l'"oracolo"**: fonte buona ma bloccata da `robots.txt` (Understat
-  `Disallow: /`) o da anti-bot Cloudflare (FBref) — richiederebbe ignorare un robots.txt
-  dichiarato o un browser vero. L'utente ha deciso di rimandare (05/09), non è urgente.
-- **Regolamento di lega non del tutto noto** (moduli ammessi, numero di cambi, soglie del
-  modificatore, se il cambio portiere consuma un cambio di movimento) — non bloccante, si è
-  partiti con i default in testa al file, sotto *COSTANTI DI LEGA*.
-- **Cadenza reale del cron GitHub Actions — confermata, non solo sospettata.** Misurato il
-  15-16/09 su entrambi i workflow: `promemoria.yml` (già corretto, vedi sopra) e `dati.yml`
-  (44% degli slot dichiarati senza esecuzione entro 6 ore, un giorno intero perso il 07/09 —
-  vedi DIARIO-STORICO.md per il metodo). Non causa perdita di dati (il retry in `dati.yml`
-  recupera da solo), solo ritardo. Decisione su un innesco alternativo rimandata, vedi
-  *Prossimi passi*.
-- **Visibilità del repository (pubblico) non decisa** — vedi *Prossimi passi*.
+- **`RETTIFICA_PIAZZATI` si muove su pochissimi eventi** — vedi *Prossimi passi* 2.
+- **`BONUS_MAX` (tetto di bonus a percentile 100 per ruolo) resta a intuito.** Calibrarlo
+  richiederebbe isolare il bonus "da percentile puro" (gol/assist normali, non rigori): con poche
+  giornate e pochi giocatori al vertice del ruolo rischia di inseguire il rumore.
+- **Cadenza reale del cron GitHub Actions**: confermata su entrambi i workflow (15-16/09). Niente
+  perdita di dati (il retry in `dati.yml` recupera le giornate mancanti), solo ritardo; i
+  promemoria più vicini alla scadenza (1h/30m) saltano spesso. Vedi *Prossimi passi* 5.
+- **La fonte di riserva oscilla**: `fantacalcio-online.com` restituisce percentuali diverse da
+  un giro all'altro (82 → 73 → 82 per lo stesso giocatore), quindi quando è in uso committa a
+  ogni giro. Innocuo, e con la fonte principale di nuovo funzionante gira solo se quella fallisce.
+- **xG/Understat per l'"oracolo"**: bloccata da `robots.txt` (Understat) o anti-bot (FBref).
+  Rimandata dall'utente (05/09).
+- **Regolamento di lega non del tutto noto** (moduli ammessi, cambi, soglie del modificatore,
+  cambio portiere) — non bloccante, default sotto *COSTANTI DI LEGA* in `index.html`.
+- **Visibilità del repository (pubblico) non decisa** — vedi *Prossimi passi* 6.
 
 ## Regole di lavoro (ereditate dall'app asta, imparate sbagliando)
 
@@ -251,12 +248,19 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 - Commit piccoli e frequenti (qui c'è git, a differenza dell'app asta).
 - Attenzione a `node -e` dentro bash: i backtick nei template literal vengono interpretati dalla
   shell. Per le patch, scrivere lo script su file ed eseguirlo.
-- **`tools/ricalibra.mjs` non è idempotente**: essendo un aggiornamento smorzato che parte dal
-  valore precedente scritto in `dati/costanti.json`, rilanciarlo a mano più volte sugli stessi
-  dati (senza nuovi voti nel mezzo) fa convergere due volte invece di una, sballando lo
-  smorzamento voluto. Scoperto la notte 15-16/09 con un conflitto di merge contro un run
-  automatico di CI. Se serve controllare cosa farebbe, usare `tools/taratura.mjs` (sola
-  diagnostica, non scrive nulla) invece di rilanciare `ricalibra.mjs` per curiosità.
+- **`tools/ricalibra.mjs` fa un passo per giornata nuova, non per lancio** (dal 26/09). Prima
+  ogni lancio sugli stessi voti era un passo di apprendimento in più (scoperto a mano la notte
+  15-16/09, poi in CI il 26/09: 4 passi a settimana). Ora rilanciarlo è innocuo. Per vedere come
+  va il modello senza scrivere nulla: `tools/taratura.mjs`. Per ricostruire le costanti da zero:
+  replay su una copia temporanea, un passo per ogni arrivo di voti (metodo in DIARIO-STORICO.md
+  → *Sessione del 26/09*).
+- **Script che girano in CI: i runner GitHub sono in UTC.** Mai `new Date(anno, mese, giorno,
+  ore, minuti)` per un orario italiano: in locale torna giusto, sul runner è sbagliato di 1-2
+  ore (bug dei promemoria scoperto il 26/09). Provare sempre con `process.env.TZ = 'UTC'`
+  impostato *dentro* il processo — su Windows Node ignora `TZ=...` passato da Git Bash per fusi
+  diversi da UTC.
+- **Un controllo "zero = sezione non letta" deve distinguere il vuoto vero**: se la pagina dice
+  esplicitamente che la lista è vuota, contarlo e accettarlo (ballottaggi, 26/09).
 
 **Aggiornamento di questo file**: lo tengo aggiornato io a fine di ogni blocco di lavoro
 sostanziale. Le quattro sezioni in testa (*Stato attuale*, *Cosa abbiamo deciso*, *Prossimi

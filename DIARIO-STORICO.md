@@ -714,3 +714,126 @@ stesso commit pulito. **Lezione**: rilanciare uno script di calibrazione smorzat
 una volta sugli stessi dati, non è innocuo — ogni giro in più è un passo di apprendimento vero,
 non un semplice ricalcolo idempotente. Da qui in poi lasciarlo girare solo in CI, come già
 previsto.
+
+## Sessione del 26/09/2026: email "failed", promemoria in ritardo di 2 ore, ricalibrazione ripetuta
+
+**Richiesta dell'utente**: "in questa settimana ho continuato a ricevere mail che le actions su
+github erano fallite, puoi risolvere il problema e controllare anche tutto il resto?". Sessione
+sul secondo clone (`C:\Code\fantacalcio`), senza `gh`: tutto via API pubblica GitHub con `curl`.
+Utile e nuovo: `check-runs/<job_id>/annotations` risponde senza token (gli avvisi e l'errore
+finale di ogni job); lo zip dei log invece vuole autenticazione anche su repo pubblico.
+
+**Stato trovato**: `main` locale con un commit di diario mai pushato (16/09, rimesso sopra
+`origin/main` con un rebase, poi `dev` portato allo stesso punto). Su `origin/main` 26 commit
+nuovi della Action. `promemoria.yml` sempre verde; `dati.yml` rosso a ogni giro dal 21/09
+13:32 UTC, tranne i giri extra del martedì (che non scaricano nulla).
+
+### 1. Le email: un vuoto vero scambiato per un guasto
+
+Dai passi del job (API `runs/<id>/jobs`): fallisce sempre "Probabili formazioni", "fonte di
+riserva" riesce, tutto il resto gira e committa. Riprodotto in locale con
+`fetch-probabili.mjs --prova`: 20 squadre, 484 giocatori, 59 indisponibili, **0 ballottaggi** →
+"nessun ballottaggio trovato: la sezione non e stata letta". La pagina vera invece ha tutte e 10
+le `<section class="ballots">`, con `<span class="empty-list-message">Nessun ballottaggio</span>`
+per ognuna delle 20 squadre: la G6 si gioca il 10-12/10 (sosta per le nazionali) e a tre
+settimane dalla partita la redazione non ne ha nessuno. Storico del file: fino al 20/09 la fonte
+principale trovava sempre 16-49 ballottaggi, quindi il controllo non era mai scattato prima.
+
+Effetto collaterale, più importante delle email: per tutta la settimana l'app ha girato sui dati
+della fonte di riserva — 215 giocatori (solo titolari) invece di 484, nessun modulo, nessuna
+panchina, nessun ballottaggio. L'app li regge (`PROB.ballottaggi||[]`), e con la G6 lontana non
+ha fatto danni, ma è esattamente il degrado silenzioso che la validazione doveva evitare. Notato
+anche: la riserva restituisce percentuali che oscillano da un giro all'altro (82 → 73 → 82 per lo
+stesso giocatore), quindi quando è in uso committa a ogni giro.
+
+**Fix** (`85e071e`): `estrai()` conta anche le sezioni ballottaggi trovate e le squadre che
+dichiarano "Nessun ballottaggio" (in un oggetto `controlli`, non nel file scritto). Lo zero passa
+solo se la sezione c'è in ogni partita e tutte le squadre dichiarano di non averne. Sabotaggi sulla
+pagina vera salvata (con un harness che toglie `main()` dallo script e ne esporta le funzioni):
+sezione rinominata ovunque, in una sola partita, scritta "vuota" rinominata, un ballottaggio vero
+con `ballot-list` rinominato, con `<li class="dot` rinominato → **5 su 5 bloccati**; pagina vera e
+un ballottaggio vero con il markup atteso → passano. Poi `--prova` contro il sito vero: passa.
+
+### 2. I promemoria partivano 2 ore in ritardo (in CI, da sempre)
+
+Guardando `dati/scadenza-promemoria.json` della G5 (primo test sul campo del fix del 15/09): 24h,
+12h, 6h, 2h spediti, 1h e 30m "saltata". Ma il "2h" risultava spedito alle 19:52 UTC, e la prima
+partita (Monza-Sassuolo, venerdì 18/09 alle 20:45 italiane) cominciava alle 18:45 UTC.
+
+Causa: `parseData()` in `tools/calendario.mjs` usava `new Date(anno, mese, giorno, ore, minuti)`,
+cioè il fuso del processo. Sul PC di casa è l'ora italiana e tutti i test del 04-09/09 tornavano;
+sui runner GitHub è UTC, quindi ogni orario risultava 2 ore più tardi. **Prova**: rigiocata la
+logica di `promemoria-scadenza.mjs` sugli orari veri dei run di `promemoria.yml` (API) col parser
+vecchio e il processo in UTC → riproduce *esattamente* il file della G5: "2h" alle 19:52 con
+"mancano 48 minuti" quando la formazione era scaduta da 72 minuti, e un "6h" alle 17:26 che diceva
+"mancano 3 ore" quando ne mancava una. Sbagliato di 2 ore anche l'orario scritto dentro le
+notifiche (sia qui sia in `invia-promemoria.mjs`: "si comincia ... alle 17:00" per una partita
+delle 15:00). Stessi orari veri col parser nuovo: 24h/12h/6h/2h tutti prima della scadenza, con i
+minuti giusti.
+
+**Fix** (`bf0ab6d`): l'ora del sito si converte da Europe/Rome esplicitamente (`daOraRoma()`,
+scarto letto con `Intl.DateTimeFormat`, secondo giro per i giorni del cambio d'ora). Provato con il
+processo in UTC, Europe/Rome, America/New_York e Asia/Tokyo, su ora legale, solare, 25/10, 28/03 e
+capodanno: stesso istante giusto ovunque (il vecchio era giusto solo in Europe/Rome). Trappola nel
+provarlo: su Windows Node ignora `TZ=America/New_York` passato da Git Bash (UTC invece funziona) —
+il fuso va impostato con `process.env.TZ` dentro il processo. `parseDataPartita()` in `index.html`
+non toccata: gira sul telefono, che è in Italia.
+
+### 3. La ricalibrazione faceva quattro passi a settimana
+
+`dati/costanti.json` riscritto 4 volte fra il 21 e il 22/09 sugli stessi voti G1-G5 (correzione A
+0.236 → 0.261 → 0.278 → 0.290 → 0.299): `dati.yml` lancia `ricalibra.mjs` a ogni giro di lunedì e
+martedì, e ogni lancio è un passo smorzato in più. Lo stesso doppio conteggio già visto la notte
+15-16/09, ma sistematico.
+
+**Fix** (`971eba2`): se le giornate di voti in `dati/` sono le stesse di `giornateUsate`
+nell'ultimo `costanti.json`, esce senza scrivere. Lanciato due volte sugli stessi voti: file
+identico (hash).
+
+**Costanti rigenerate** (`390a59d`) con un replay: copia temporanea di `index.html` + `tools/` +
+`dati/probabili.json`, poi `voti-1..2`, `+3`, `+4`, `+5` aggiunti uno alla volta, lanciando il
+`ricalibra.mjs` corretto dopo ciascuno — il codice vero, nessuna logica ricopiata. I primi tre
+passi riproducono **cifra per cifra** i valori scritti dalla CI il 04/09 (G1-2), 14/09 (G1-3) e
+15/09 12:24 (G1-4): conferma che finché funzionava faceva proprio un passo per arrivo. Risultato
+su G1-G5: `rettificaRuolo` P 0.071, D 0.044, C 0.018, A 0.225 (erano 0.098/0.051/0.046/0.299);
+`rettificaPiazzati` R1 -0.200, R2 -0.058, R3 -0.017.
+
+**Corretta una nota del 16/09**: il valore tenuto allora come "primo giro pulito" su G1-G4 (A
+0.236, commit `67b47d5`/`640d5eb`) era già il *secondo* passo — tutti e due partivano da A 0.185,
+scritto dalla CI il 15/09 alle 12:24. Senza conseguenze ora: le costanti sono ricostruite da zero.
+
+### 4. Trovato e NON corretto: la formula dei piazzati converge a metà
+
+In `ricalibra.mjs` lo scarto dei piazzati è `osservato - (BONUS_PIAZZATI + correzione precedente)`,
+e la correzione si avvicina a quello. Il punto fisso è `(osservato - base)/2`: metà dello scarto
+vero (per `RETTIFICA_RUOLO` no, perché lì lo scarto si misura contro la stima pura). Provata la
+versione corretta nel replay: R1 -0.304 invece di -0.200. Però andando a vedere chi ha tirato i
+rigori: in tutta la A, su G1-G5, **5 rigori** (0 in G1-G3); fra i rigoristi R1, Colombo ne ha
+sbagliato uno e Zaccagni segnato uno (+3 -3 = bonus osservato esattamente 0.000 su 79 presenze).
+La soglia `MIN_CAMPIONE=30` conta presenze, non rigori: la correzione si muove su due eventi.
+Correggere solo la formula renderebbe più aggressiva una correzione guidata dal rumore; oggi la
+"metà per errore" fa da freno. **Lasciato com'è, con un commento nel codice, decisione
+all'utente** — proposta: formula corretta + soglia minima sui rigori tirati.
+
+### 5. Il resto
+
+- **Avvisi su ogni run**: `actions/checkout@v4` e `setup-node@v4` su Node 20 (deprecato, già
+  forzato a Node 24). Passati a v6 (`3fd7d24`): Node 24, nessuna cache automatica (niente
+  `packageManager` in `package.json`), `git push` invariato. Esistono le v7 (luglio 2026), scelte
+  le v6, più collaudate: nessuna differenza che conti qui. Parse YAML vero (PyYAML) di entrambi i
+  workflow dopo la modifica. Altro avviso, solo informativo: `ubuntu-latest` passa a Ubuntu 26
+  dal 19/10.
+- **Commento vecchio** in `promemoria.yml` (parlava ancora della finestra di 20 minuti tolta il
+  15/09): aggiornato, più la nota sul fuso.
+- **Facoltativo** (`1409c1f`, commit a parte apposta): `netlify.toml` esclude anche `tools/**` e
+  `.github/**` dal deploy. Provato con `git diff --quiet` sui commit veri: i fix di questa
+  sessione senza quel file → deploy saltato; il commit dell'indicatore "in forma" (`index.html`)
+  → deploy.
+- **Controlli**: `controlla.mjs origin/main` pulito (`index.html` non toccato), `prova-motore.mjs`
+  tutte le invarianti, `taratura.mjs` (A sottostimati di 0.30, coerente con la correzione A),
+  `turno-infrasettimanale.mjs` e i due promemoria senza secret → escono puliti.
+- **Non verificabile da qui**: il sito Netlify e la funzione `schierato` (l'URL sta solo nella
+  variabile GitHub `NETLIFY_SITE_URL`, non nel repository).
+
+**Tutto su `dev`, non pushato**: regola della memoria "fermarsi prima del push nei batch". Il
+merge su `main` fa un deploy Netlify (tocca `tools/`, `.github/`, `netlify.toml`).
