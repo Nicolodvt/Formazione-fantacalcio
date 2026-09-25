@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-24T10:56:33.939Z",
+ "generato": "2026-09-25T11:24:35.864Z",
  "giornata": 6,
  "fonte": "https://www.fantacalcio-online.com/it/serie-a/2026-2027/probabili-formazioni/ultima-giornata",
  "fonteDiRiserva": true,
@@ -313,7 +313,7 @@
    "incerto": false
   },
   "4263": {
-   "pct": 91,
+   "pct": 83,
    "titolare": true,
    "incerto": false
   },
@@ -673,7 +673,7 @@
    "incerto": false
   },
   "5994": {
-   "pct": 61,
+   "pct": 55,
    "titolare": true,
    "incerto": false
   },
@@ -688,7 +688,7 @@
    "incerto": false
   },
   "6021": {
-   "pct": 79,
+   "pct": 63,
    "titolare": true,
    "incerto": false
   },
@@ -1348,10 +1348,6 @@
    "tipo": "infortunato",
    "dettaglio": "Infortunato"
   },
-  "5888": {
-   "tipo": "infortunato",
-   "dettaglio": "Infortunato"
-  },
   "5918": {
    "tipo": "infortunato",
    "dettaglio": "Infortunato"
@@ -1421,10 +1417,6 @@
    "dettaglio": "Infortunato"
   },
   "6822": {
-   "tipo": "infortunato",
-   "dettaglio": "Infortunato"
-  },
-  "6925": {
    "tipo": "infortunato",
    "dettaglio": "Infortunato"
   },
