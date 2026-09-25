@@ -110,6 +110,9 @@ function estrai(html) {
   const indisponibili = {};
   const ballottaggi = [];
   const partite = [];
+  /* Non finiscono nel file: servono solo a validare() per distinguere "zero ballottaggi
+     perche la redazione non ne ha" da "zero ballottaggi perche la sezione non e stata letta". */
+  const controlli = { sezioniBallottaggi: 0, ballottaggiVuotiDichiarati: 0 };
 
   for (const m of blocchi(html, '<li class="match match-item')) {
     const hash = /data-match-hash="([^"]*)"/.exec(m);
@@ -171,8 +174,12 @@ function estrai(html) {
     }
 
     /* Ballottaggi: due o piu' nomi che si giocano lo stesso posto, con le percentuali. */
-    const sezB = /<section class="ballots">([\s\S]*?)<\/section>/.exec(m);
+    const sezB = /<section class="ballots"[^>]*>([\s\S]*?)<\/section>/.exec(m);
     if (sezB) {
+      controlli.sezioniBallottaggi++;
+      /* Una squadra senza ballottaggi non ha una lista vuota: ha la scritta "Nessun
+         ballottaggio" in questo span. Si contano per validare(), vedi li' il perche. */
+      controlli.ballottaggiVuotiDichiarati += (sezB[1].match(/class="empty-list-message"/g) || []).length;
       for (const b of blocchi(sezB[1], '<ul class="ballot-list">')) {
         const inGara = [];
         for (const li of blocchi(b.split('</ul>')[0], '<li class="dot')) {
@@ -187,19 +194,22 @@ function estrai(html) {
   }
 
   return {
-    schema: SCHEMA,
-    generato: new Date().toISOString(),
-    fonte: URL_PAGINA,
-    giornata: giornata ? giornata[0] : null,
-    giornateDiscordi,
-    partite, squadre, giocatori, ballottaggi, indisponibili
+    dati: {
+      schema: SCHEMA,
+      generato: new Date().toISOString(),
+      fonte: URL_PAGINA,
+      giornata: giornata ? giornata[0] : null,
+      giornateDiscordi,
+      partite, squadre, giocatori, ballottaggi, indisponibili
+    },
+    controlli
   };
 }
 
 /* ---------- validazione ----------
    Meglio un workflow rosso che un JSON plausibile ma sbagliato: l'app si fida di questo
    file, e un dato mancante qui diventa una formazione sbagliata la domenica. */
-function validare(d) {
+function validare(d, controlli) {
   const problemi = [];
   const gioc = Object.values(d.giocatori);
   const nSquadre = Object.keys(d.squadre).length;
@@ -235,7 +245,21 @@ function validare(d) {
      tre liste non e stata letta, non che il campionato e in salute. */
   const nInd = Object.keys(d.indisponibili).length;
   if (nInd < 10) problemi.push(`solo ${nInd} indisponibili trovati: una delle liste (infortunati, squalificati, dubbi) non e stata letta`);
-  if (d.ballottaggi.length === 0) problemi.push('nessun ballottaggio trovato: la sezione non e stata letta');
+  /* Zero ballottaggi invece puo essere vero. Dal 21/09/2026 (sosta per le nazionali, giornata 6
+     a tre settimane) la redazione non ne aveva nessuno e lo scriveva squadra per squadra con
+     "Nessun ballottaggio": il vecchio controllo "zero = sezione non letta" ha bocciato ogni
+     giro per una settimana, e l'app e rimasta sulla fonte di riserva (meno della meta dei
+     giocatori, niente moduli ne panchine). Lo zero si accetta solo se la sezione c'e in ogni
+     partita E tutte le squadre dichiarano di non averne: se cambiasse il marcatore delle
+     liste, le squadre con un ballottaggio vero non avrebbero quella scritta e il controllo
+     scatterebbe lo stesso. */
+  if (controlli.sezioniBallottaggi < d.partite.length) {
+    problemi.push(`sezione ballottaggi trovata in ${controlli.sezioniBallottaggi} partite su ${d.partite.length}: la sezione non e stata letta`);
+  }
+  if (d.ballottaggi.length === 0 && controlli.ballottaggiVuotiDichiarati < nSquadre) {
+    problemi.push(`nessun ballottaggio trovato, ma solo ${controlli.ballottaggiVuotiDichiarati} squadre su ${nSquadre} ` +
+      'dichiarano "Nessun ballottaggio": la sezione non e stata letta');
+  }
 
   /* La percentuale di titolarita e l'input principale del motore: se sparisce, l'app ripiega
      su un dato peggiore senza dirlo. */
@@ -275,8 +299,8 @@ async function main() {
      giusto nessuna delle validazioni successive se ne accorge. */
   if (!/<\/html>\s*$/i.test(html)) throw new Error('la pagina scaricata e troncata (manca la chiusura </html>)');
 
-  const dati = estrai(html);
-  const problemi = validare(dati);
+  const { dati, controlli } = estrai(html);
+  const problemi = validare(dati, controlli);
 
   console.log(`Giornata ${dati.giornata} — ${Object.keys(dati.squadre).length} squadre, ` +
     `${Object.keys(dati.giocatori).length} giocatori, ${dati.ballottaggi.length} ballottaggi, ` +
