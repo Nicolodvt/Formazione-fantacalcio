@@ -12,7 +12,10 @@
   # differenza" e Netlify salta il deploy. Vedi anche il piano per far si
   # che il telefono legga dati/ direttamente da GitHub, cosi' la questione
   # non si pone nemmeno: promemoria in CLAUDE.md.
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)dati/**' ':(exclude)*.md'"
+  # Esclusi anche tools/ e .github/ (26/09): script e workflow girano solo
+  # nella GitHub Action, il sito non li usa mai — un fix li' non deve costare
+  # una pubblicazione.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)dati/**' ':(exclude)*.md' ':(exclude)tools/**' ':(exclude).github/**'"
 
 [functions]
   # netlify/functions/schierato.mjs: l'unica funzione del progetto, ricorda se hai gia
