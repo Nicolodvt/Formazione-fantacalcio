@@ -2011,10 +2011,13 @@ function schedaGiocatore(id){
     }
     const segnoRp = rp>=0 ? '+' : '';
     const clsRp = rp>0.005 ? 'pos' : (rp<-0.005 ? 'neg' : '');
+    /* Data e modulo della squadra stanno qui dal 27/09: prima erano in una cella "Partita" piu'
+       sotto che ripeteva "in casa con ..." una seconda volta e spingeva le azioni fuori schermo. */
     h += '<div class="info-cell wide"><div class="k">Prossima partita</div>' +
       '<div class="v">media '+fmBase.toFixed(2)+' &rarr; <span class="'+clsRp+'">'+segnoRp+rp.toFixed(2)+'</span></div>' +
       '<div class="n">'+(sq.inCasa?'in casa contro ':'in trasferta a ')+esc(sq.avversario)+
-      ' ('+cosa+' '+giudizio+')</div></div>';
+      ' ('+cosa+' '+giudizio+')' +
+      (sq.data ? '<br>'+esc(sq.data)+(sq.modulo ? ' · modulo '+esc(sq.modulo) : '') : '') + '</div></div>';
   }
 
   /* Il rendimento vero accanto alla stima. Lo scarto fra i due si mostra solo da quattro
@@ -2047,7 +2050,8 @@ function schedaGiocatore(id){
   if(d.ind && d.ind.nota){
     h += '<div class="info-cell wide"><div class="k">Dalla fonte</div><div class="n">'+esc(d.ind.nota)+'</div></div>';
   }
-  if(PROB && d.squadraInCampo){
+  /* Solo se la cella "Prossima partita" qui sopra non c'e' (squadra senza avversario nei dati). */
+  if(PROB && d.squadraInCampo && !(PROB.squadre[l.s] && PROB.squadre[l.s].avversario)){
     const sq = PROB.squadre[l.s];
     h += '<div class="info-cell wide"><div class="k">Partita</div>' +
          '<div class="v">'+(sq.inCasa?'in casa con ':'in trasferta a ')+esc(sq.avversario)+'</div>' +
@@ -2194,14 +2198,18 @@ function apriSettings(){
   let h = '<div class="handle"></div><h3>Impostazioni</h3>' +
     '<div class="sub">'+esc(S.squadraNome)+' · '+n+' giocatori in rosa</div>';
 
-  h += '<h4>Rosa</h4>' +
+  /* Ordine delle sezioni (27/09): con la rosa gia' caricata in cima va quello che serve ogni
+     settimana (formazione da copiare, resoconto, notifiche); import della rosa e incolla-dati
+     d'emergenza, che si usano una volta o mai, scendono sotto. Senza rosa resta l'ordine di
+     prima: la prima cosa da fare e' importarla. */
+  const secRosa = '<h4>Rosa</h4>' +
     '<p class="note" style="margin:0 0 8px">Incolla qui il file esportato dall app asta ' +
     '(Impostazioni → Esporta rosa). Riconosce lo schema 1.</p>' +
     '<textarea id="boxRosa" placeholder="Incolla il JSON della rosa..."></textarea>' +
     '<div class="btn-row"><button class="btn btn-primary" id="btnImporta">Importa</button>' +
     '<button class="btn btn-sec" id="btnComponi">Componi a mano</button></div>';
 
-  h += '<h4>Dati di giornata</h4>' +
+  const secDati = '<h4>Dati di giornata</h4>' +
     '<p class="note" style="margin:0 0 8px">' +
     (PROB ? ('Giornata '+PROB.giornata+', '+esc(etaDati()||'')+'. Fonte: probabili formazioni di fantacalcio.it.')
           : 'Nessun dato caricato. Se apri l app da file locale il caricamento automatico non funziona: incolla qui il contenuto di dati/probabili.json.') +
@@ -2210,21 +2218,22 @@ function apriSettings(){
     '<div class="btn-row"><button class="btn btn-sec" id="btnProbIncolla">Carica incollato</button>' +
     '<button class="btn btn-sec" id="btnProbRete">Riprova dalla rete</button></div>';
 
-  if(n){
-    h += '<h4>Formazione da copiare</h4>' +
+  const secCopia = !n ? '' : '<h4>Formazione da copiare</h4>' +
       '<p class="note" style="margin:0 0 8px">Testo pronto da riportare su Leghe Fantacalcio.</p>' +
       '<textarea id="boxOut" readonly>'+esc(testoFormazione())+'</textarea>' +
       '<button class="btn btn-sec" id="btnCopia">Copia negli appunti</button>';
-  }
 
-  h += sezioneResoconto();
+  const secResoconto = sezioneResoconto();
 
-  h += '<h4>Notifiche</h4>' +
+  const secNotifiche = '<h4>Notifiche</h4>' +
     '<p class="note" style="margin:0 0 8px">Promemoria push scaglionati (24, 12, 6, 2, 1 ora e ' +
     '30 minuti prima della scadenza), cosi non ti scordi di schierare. Si fermano da soli ' +
     'appena tocchi "Ho schierato" in cima alla schermata Campo.</p>' +
     '<div id="notifStato" class="note" style="margin:0 0 8px">Controllo lo stato...</div>' +
     '<div class="btn-row" id="notifBtns"></div>';
+
+  h += n ? secCopia + secResoconto + secNotifiche + secRosa + secDati
+         : secRosa + secDati + secResoconto + secNotifiche;
 
   h += '<h4>Azzeramenti</h4>' +
     '<button class="btn btn-sec" id="btnResetMano">Togli tutte le correzioni a mano</button>' +
