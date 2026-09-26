@@ -483,12 +483,20 @@ const ROLE_ORDER = ['P','D','C','A'];
 const ROLE_NOME = {P:'Portiere', D:'Difensore', C:'Centrocampista', A:'Attaccante'};
 const MAX_CAMBI = 3;              // cambi che entrano dalla panchina, da regolamento
 
-/* Il modificatore di difesa e' una MEDIA su portiere + 3 migliori difensori. Le soglie di
-   conversione in punti cambiano da lega a lega e per la nostra NON sono state verificate.
-   Qui si usa una conversione lineare prudente solo per poter CONFRONTARE i moduli tra loro;
-   il valore assoluto non viene mai mostrato come se fosse un punteggio certo. */
-const MOD_RIF = 6.00;             // media attorno a cui il modificatore non da' ne toglie
-const MOD_PESO = 4.0;             // fantapunti per ogni punto pieno di media sopra il riferimento
+/* Il modificatore di difesa e' una MEDIA su portiere + 3 migliori difensori, e (27/09,
+   dall'utente) si applica SOLO con almeno 4 difensori: con la difesa a 3 non entra in gioco.
+   Fino al 26/09 l'app lo applicava da 3 difensori in su e con una conversione lineare che
+   toglieva punti sotto il 6: una difesa a 3 finiva per "schivare" un malus che nel regolamento
+   standard non esiste, e i moduli a 3 venivano premiati due volte.
+   Conversione: la tabella standard di Fantacalcio.it (solo bonus, niente malus). Se il
+   regolamento della lega e' diverso, si cambia MOD_FASCE e nient'altro. */
+const MOD_MIN_DIFENSORI = 4;
+const MOD_FASCE = [[6.0, 1], [6.5, 3], [7.0, 6]];   // [media minima, bonus]: vale l'ultima raggiunta
+/* La simulazione conosce solo la media STIMATA; quella vera oscilla attorno di circa 0.37
+   (misurato su G1-G5: media portiere + 3 migliori difensori, squadra per squadra, 95 casi).
+   Con una tabella a scalini conta il valore ATTESO, non quello della stima secca: una media
+   stimata di 5.95 prende il +1 quasi una volta su due. */
+const MOD_INCERTEZZA = 0.37;
 
 /* =======================================================================================
    MODELLO 1 — MEDIA VOTO DI SQUADRA
@@ -576,14 +584,40 @@ function misuraGruppo(giocatori, campo){
    altrimenti MV_SQUADRA/ATT_SQUADRA resterebbero ferme alla fotografia di inizio stagione per
    tutta la stagione, lo stesso difetto che aveva il singolo giocatore prima della Fase 3.
    Con STORICO vuoto (avvio, o prima che i dati rispondano) coincide esattamente con le pure. */
+/* Due correzioni del 27/09, trovate da una verifica della catena voti -> modello:
+   - SCALA: le forze pure stanno fra MV_MIN e MV_MAX (5.75-6.15, centro 5.95) e rettificaPartita()
+     le confronta con quel centro. L'attacco misurato invece era il fantavoto medio grezzo di
+     centrocampisti e attaccanti, circa 6.5: mescolato cosi', ogni attacco risultava "forte" e
+     portieri e difensori perdevano in media ~0.66 di stima a partita, qualunque avversario
+     avessero (Di Lorenzo da +0.28 a -1.27), spingendo la scelta verso la difesa a 3. Ora le
+     medie misurate passano da normalizzaSquadre(), la stessa funzione che ha costruito le pure:
+     conta come una squadra si piazza RISPETTO ALLE ALTRE, sulla stessa scala.
+   - PESO: mescola() riceveva il numero di VOCI (circa 40 giocatori-partita per squadra dopo 5
+     giornate: 80% di peso ai dati). PESO_PRIOR_STAGIONE e' pensato in giornate, come per il
+     singolo giocatore: ora n conta le giornate giocate dalla squadra (5 giornate: 33%). */
+function giornateDelGruppo(giocatori){
+  const g = new Set();
+  giocatori.forEach(p=>{ (STORICO[p.id]||[]).forEach(x=> g.add(x.giornata)); });
+  return g.size;
+}
 function aggiornaForzaSquadre(){
-  Object.keys(MV_SQUADRA_PURA).forEach(sq=>{
+  const squadre = Object.keys(MV_SQUADRA_PURA);
+  const misDif = {}, misAtt = {}, giornate = {};
+  squadre.forEach(sq=>{
     const membriDif = LISTONE.filter(p=> p.s===sq && (p.r==='P' || p.r==='D'));
     const membriAtt = LISTONE.filter(p=> p.s===sq && (p.r==='C' || p.r==='A'));
-    const misDif = misuraGruppo(membriDif, 'voto');
-    const misAtt = misuraGruppo(membriAtt, 'fantavoto');
-    MV_SQUADRA[sq] = mescola(MV_SQUADRA_PURA[sq], misDif.media, misDif.n);
-    ATT_SQUADRA[sq] = mescola(ATT_SQUADRA_PURA[sq], misAtt.media, misAtt.n);
+    const d = misuraGruppo(membriDif, 'voto'), a = misuraGruppo(membriAtt, 'fantavoto');
+    if(d.media!=null) misDif[sq] = d.media;
+    if(a.media!=null) misAtt[sq] = a.media;
+    giornate[sq] = giornateDelGruppo(membriDif.concat(membriAtt));
+  });
+  /* Servono almeno due squadre misurate per avere una scala; prima (STORICO vuoto) si resta
+     esattamente sulle pure. */
+  const scalaDif = Object.keys(misDif).length > 1 ? normalizzaSquadre(misDif) : {};
+  const scalaAtt = Object.keys(misAtt).length > 1 ? normalizzaSquadre(misAtt) : {};
+  squadre.forEach(sq=>{
+    MV_SQUADRA[sq] = mescola(MV_SQUADRA_PURA[sq], scalaDif[sq], giornate[sq]);
+    ATT_SQUADRA[sq] = mescola(ATT_SQUADRA_PURA[sq], scalaAtt[sq], giornate[sq]);
   });
 }
 
@@ -995,11 +1029,32 @@ function simula(titolari, panchina){
 
   mvD.sort((a,b)=> b-a);
   let mod = null;
-  if(mvP.length && mvD.length >= 3){
+  if(mvP.length && mvD.length >= MOD_MIN_DIFENSORI){
     mod = (mvP[0] + mvD[0] + mvD[1] + mvD[2]) / 4;
-    punti += (mod - MOD_RIF) * MOD_PESO;
+    punti += modificatoreAtteso(mod);
   }
   return {punti, mod, buchi: 11 - inCampo.length};
+}
+
+/* Bonus della tabella per una media vera. */
+function bonusModificatore(media){
+  let b = 0;
+  for(const [soglia, valore] of MOD_FASCE) if(media >= soglia) b = valore;
+  return b;
+}
+/* Bonus atteso per una media STIMATA: media della tabella su una normale di scarto
+   MOD_INCERTEZZA (41 punti fra -3 e +3 scarti). Precalcolato al centesimo, perche' simula()
+   lo chiama decine di migliaia di volte a ogni ricalcolo dei moduli. */
+const modificatoreAttesoCache = {};
+function modificatoreAtteso(media){
+  const k = Math.round(media*100);
+  if(modificatoreAttesoCache[k] != null) return modificatoreAttesoCache[k];
+  let s = 0, sw = 0;
+  for(let i=-20;i<=20;i++){
+    const z = i*0.15, w = Math.exp(-z*z/2);
+    s += w * bonusModificatore(k/100 + z*MOD_INCERTEZZA); sw += w;
+  }
+  return (modificatoreAttesoCache[k] = s/sw);
 }
 
 function valuta(titolari, panchina){
@@ -1194,6 +1249,10 @@ async function caricaCostanti(){
         if(typeof v === 'number' && isFinite(v)) RETTIFICA_RUOLO[ruolo] = Math.max(-1, Math.min(1, v));
       });
     }
+    /* Si riparte da vuoto (27/09): caricaCostanti() ora si richiama anche da aggiornaDati(), e
+       un tag tolto da costanti.json (es. sotto la soglia di rigori) deve sparire anche qui,
+       non restare appeso al valore letto all'avvio. */
+    for(const k in RETTIFICA_PIAZZATI) delete RETTIFICA_PIAZZATI[k];
     if(d.rettificaPiazzati && typeof d.rettificaPiazzati==='object'){
       for(const k in d.rettificaPiazzati){
         const v = d.rettificaPiazzati[k];
@@ -1529,9 +1588,9 @@ function puntiRealiXI(ids, giornata){
   });
   mvP.sort((a,b)=>b-a); mvD.sort((a,b)=>b-a);
   let mod = null;
-  if(mvP.length && mvD.length>=3){
+  if(mvP.length && mvD.length>=MOD_MIN_DIFENSORI){
     mod = (mvP[0]+mvD[0]+mvD[1]+mvD[2])/4;
-    punti += (mod-MOD_RIF)*MOD_PESO;
+    punti += bonusModificatore(mod);     // voti veri: la tabella secca, niente incertezza
   }
   return {punti, mod};
 }
@@ -1712,14 +1771,20 @@ function vistaCampo(){
      in quel caso sarebbe rassicurare sul numero sbagliato. */
   const fragile = v.probModificatore < 0.80;
   let giudizio, modCls;
-  if(mod==null){ giudizio = '—'; modCls = ''; }
+  if(mod==null){
+    giudizio = need.D < MOD_MIN_DIFENSORI ? 'non si applica con ' + need.D + ' difensori' : '—';
+    modCls = '';
+  }
   else if(fragile){
     giudizio = 'salta ' + Math.round((1-v.probModificatore)*100) + '% delle volte';
     modCls = 'debole';
   }else{
-    giudizio = (mod>=6.10?'forte':(mod>=5.98?'discreto':(mod>=5.88?'nella media':'debole')))
+    /* Il giudizio dice quanto vale in punti, dalla tabella (27/09): prima era una scala
+       "forte/debole" su soglie inventate, scollegata da quello che il modificatore paga. */
+    const atteso = modificatoreAtteso(mod);
+    giudizio = 'vale +' + atteso.toFixed(1) + ' pt attesi'
       + (v.probModificatore<0.97 ? ' · si applica '+Math.round(v.probModificatore*100)+'%' : '');
-    modCls = mod>=6.10?'forte':(mod>=5.98?'ok':'debole');
+    modCls = atteso>=1.5?'forte':(atteso>=0.6?'ok':'debole');
   }
   const dubbi = u.titolari.filter(id=> certezza(id) < 0.6).length;
 
@@ -1823,12 +1888,13 @@ function vistaModuli(){
 
   h += '<p class="note" style="margin:14px 12px 0">' +
     'Il numero e la differenza in fantapunti attesi rispetto al modulo che stai usando, su ' + N_SIM +
-    ' giornate simulate. La simulazione serve al modificatore di difesa: si calcola sui 3 migliori ' +
-    'difensori, quindi il quarto e il quinto non alzano la media ma coprono il buco quando un ' +
-    'titolare resta fuori. Un conto fatto a tavolino non lo vedrebbe.</p>' +
-    '<p class="note" style="margin:8px 12px 0">Le soglie del modificatore della nostra lega non sono ' +
-    'ancora verificate: la conversione in punti e prudente e serve a confrontare i moduli tra loro, ' +
-    'non a promettere un punteggio.</p>';
+    ' giornate simulate. La simulazione serve al modificatore di difesa: vale solo con almeno ' +
+    MOD_MIN_DIFENSORI + ' difensori in campo (con la difesa a 3 non c\'e) e si calcola sul portiere e ' +
+    'sui 3 migliori, quindi il quarto e il quinto non alzano la media ma tengono vivo il ' +
+    'modificatore quando un titolare resta fuori. Un conto fatto a tavolino non lo vedrebbe.</p>' +
+    '<p class="note" style="margin:8px 12px 0">Tabella del modificatore: quella standard di ' +
+    'Fantacalcio.it (media da 6 +1, da 6,5 +3, da 7 +6). Se la nostra lega ne usa un\'altra, ' +
+    'i confronti fra moduli cambiano.</p>';
   return h;
 }
 
@@ -2070,7 +2136,7 @@ function schedaGiocatore(id){
   if(PROB && d.squadraInCampo && !(PROB.squadre[l.s] && PROB.squadre[l.s].avversario)){
     const sq = PROB.squadre[l.s];
     h += '<div class="info-cell wide"><div class="k">Partita</div>' +
-         '<div class="v">'+(sq.inCasa?'in casa con ':'in trasferta a ')+esc(sq.avversario)+'</div>' +
+         '<div class="v">'+(sq.inCasa?'in casa':'in trasferta')+'</div>' +
          '<div class="n">'+esc(sq.data||'')+' · modulo '+esc(sq.modulo||'—')+'</div></div>';
   }
   h += '</div>';
@@ -2514,6 +2580,9 @@ el('#btnSettings').addEventListener('click', apriSettings);
 async function aggiornaDati(mostraToast){
   const ok = await caricaProbabili(true);
   await caricaStorico();
+  /* Anche le correzioni apprese (27/09): prima si leggevano solo all'avvio, e un'app ripresa
+     dallo sfondo teneva quelle vecchie fino a un riavvio completo. */
+  await caricaCostanti();
   aggiornaForzaSquadre();
   render();
   /* Ritenta in silenzio la sincronizzazione dello "schierato": se il primo tentativo (al tocco
@@ -2609,6 +2678,8 @@ function attivaTrascinamentoSheet(sheetEl){
      campi di testo (li' trascinare serve a selezionare). */
   let g = null;
   sheetEl.addEventListener('touchstart', (e)=>{
+    /* Secondo dito a trascinamento iniziato: la sheet torna su invece di restare abbassata. */
+    if(g && g.modo==='trascina') rilasciaSheet(sheetEl, 0, g.altezza, false);
     g = null;
     if(e.touches.length!==1 || e.target.closest('.handle, .sheet-head, textarea, input')) return;
     const t = e.touches[0];
@@ -2619,7 +2690,7 @@ function attivaTrascinamentoSheet(sheetEl){
     if(!g) return;
     const t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
     if(g.modo==null){
-      if(g.inCima && dy>0 && dy>=Math.abs(dx)){
+      if(g.inCima && dy>=3 && dy>=Math.abs(dx)){   // 3px: un tremolio del dito non blocca lo scorrimento
         if(e.cancelable) e.preventDefault();   // subito: dopo che il browser ha iniziato a scorrere non si ferma piu'
         if(dy>6){ g.modo='trascina'; sheetEl.classList.add('trascinando'); }
       }else if(Math.abs(dx)>10 || Math.abs(dy)>10){ g = null; return; }
@@ -2678,7 +2749,9 @@ attivaTrascinamentoSheet(el('#settingsSheet'));
   }
 
   main.addEventListener('touchstart', (e)=>{
-    g = null;
+    /* annulla() e non g = null: se arriva un secondo dito (palmo, presa a due mani) a gesto
+       iniziato, il contenuto spostato o l'indicatore aperto vanno rimessi a posto (27/09). */
+    annulla();
     if(e.touches.length!==1) return;
     const t = e.touches[0];
     g = { x0:t.clientX, y0:t.clientY, x:t.clientX, y:t.clientY, t0:Date.now(), modo:null,
@@ -2692,7 +2765,7 @@ attivaTrascinamentoSheet(el('#settingsSheet'));
     g.x = t.clientX; g.y = t.clientY;
     const dx = g.x - g.x0, dy = g.y - g.y0, ax = Math.abs(dx), ay = Math.abs(dy);
     if(g.modo==null){
-      if(g.inCima && dy>0 && ay>=ax){
+      if(g.inCima && dy>=3 && ay>=ax){   // 3px: un tremolio del dito non blocca lo scorrimento (iOS)
         /* Tiro verso il basso con la lista gia' in cima: va fermato SUBITO, al primo
            movimento, altrimenti il browser inizia il suo scorrimento/rimbalzo e non lo si
            ferma piu'. Innocuo: dalla cima verso il basso non c'e' niente da scorrere. */
@@ -2745,7 +2818,13 @@ attivaTrascinamentoSheet(el('#settingsSheet'));
       if(dy*0.5 >= SOGLIA_TIRA){
         tira.style.height = Math.round(SOGLIA_TIRA*0.7) + 'px';
         tira.textContent = 'Aggiornamento…';
-        await aggiornaDati(false);
+        /* Stesso freno del tasto Aggiorna: niente secondo aggiornamento sopra uno in corso. */
+        const b = el('#btnRicarica');
+        if(!b.disabled){
+          b.disabled = true;
+          try{ if(!(await aggiornaDati(false))) toast('Dati non raggiungibili'); }
+          finally{ b.disabled = false; }
+        }
       }
       tira.style.height = '0';
     }
@@ -2771,6 +2850,11 @@ document.addEventListener('visibilitychange', ()=>{
   }
 });
 
+/* Se Android ha chiuso e riaperto l'app, la cronologia puo' contenere ancora le voci finte di
+   una sheet o di una scheda di prima, mentre i contatori qui ripartono da zero: "indietro" le
+   consumerebbe a vuoto. Si riparte da una voce pulita (27/09). */
+if(history.state && (history.state.sheet || history.state.tab)) history.replaceState(null, '');
+
 carica();
 caricaResoconto();
 calcolaMvSquadre();
@@ -2784,6 +2868,12 @@ avviaCountdown();
 
 if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+/* La rosa vive solo in questo telefono: si chiede al browser di non cancellare i dati del sito
+   quando cerca spazio (27/09). Chrome lo concede da solo alle app installate o con le
+   notifiche attive, senza chiedere niente all'utente. */
+if(navigator.storage && navigator.storage.persist){
+  navigator.storage.persisted().then(p=> p || navigator.storage.persist()).catch(()=>{});
 }
 
 })();
