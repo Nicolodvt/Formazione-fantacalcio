@@ -430,15 +430,15 @@
       </div>
       <button class="dl-btn" id="btnSchierato">Ho schierato</button>
     </div>
-    <div class="tabs">
-      <button class="tab on" data-vista="campo">Campo</button>
-      <button class="tab" data-vista="rosa">Rosa</button>
-      <button class="tab" data-vista="moduli">Moduli</button>
+    <div class="tabs" role="tablist" aria-label="Schermate">
+      <button class="tab on" data-vista="campo" role="tab" aria-selected="true" aria-controls="main">Campo</button>
+      <button class="tab" data-vista="rosa" role="tab" aria-selected="false" aria-controls="main">Rosa</button>
+      <button class="tab" data-vista="moduli" role="tab" aria-selected="false" aria-controls="main">Moduli</button>
     </div>
     <div class="warnbar" id="warnbar" style="display:none"></div>
   </header>
   <div class="pull-indicator" id="pullTira"></div>
-  <main id="main"></main>
+  <main id="main" role="tabpanel"></main>
 </div>
 
 <div id="toast"></div>
@@ -1891,7 +1891,11 @@ function render(){
     }else{ w.style.display='none'; }
   }
 
-  document.querySelectorAll('.tab').forEach(t=> t.classList.toggle('on', t.dataset.vista===S.vista));
+  document.querySelectorAll('.tab').forEach(t=>{
+    const on = t.dataset.vista===S.vista;
+    t.classList.toggle('on', on);
+    t.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
   aggiornaCountdown();
 }
 
