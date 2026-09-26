@@ -2670,14 +2670,13 @@ attivaTrascinamentoSheet(el('#settingsSheet'));
     main.style.transform = '';
     setTimeout(()=>{ main.style.transition = ''; }, 200);
   }
-  function vibra(){ try{ if(navigator.vibrate) navigator.vibrate(8); }catch(err){} }
 
   main.addEventListener('touchstart', (e)=>{
     g = null;
     if(e.touches.length!==1) return;
     const t = e.touches[0];
     g = { x0:t.clientX, y0:t.clientY, x:t.clientX, y:t.clientY, t0:Date.now(), modo:null,
-          inCima: main.scrollTop <= 0, pronto:false };
+          inCima: main.scrollTop <= 0 };
   }, {passive:true});
 
   main.addEventListener('touchmove', (e)=>{
@@ -2703,8 +2702,8 @@ attivaTrascinamentoSheet(el('#settingsSheet'));
       tira.style.transition = 'none';
       tira.style.height = h + 'px';
       const pronto = dy*0.5 >= SOGLIA_TIRA;
-      if(pronto && !g.pronto) vibra();   // un tocco leggero nel momento in cui "rilascia" diventa vero
-      g.pronto = pronto;
+      /* Niente vibrazione alla soglia: provata e tolta su richiesta dell'utente il 05/09. Il
+         cambio di colore e di testo dell'indicatore fa lo stesso lavoro. */
       tira.classList.toggle('pronto', pronto);
       tira.textContent = pronto ? '↻ Rilascia per aggiornare' : '↓ Tira per aggiornare';
     }else if(g.modo==='lato'){
