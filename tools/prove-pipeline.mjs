@@ -281,7 +281,9 @@ function proveVoti() {
         return h.slice(0, j) + '<tbody>' + h.slice(k);
       })(), 1],
       ['pagina troncata', h.slice(0, Math.floor(h.length * 0.7)), 1],
-      ['giornata dichiarata diversa', h.replace(/(class="matchweek"[^>]*>\s*)\d+/, '$199'), 1]
+      ['giornata dichiarata diversa', h.replace(/(class="matchweek"[^>]*>\s*)\d+/, '$199'), 1],
+      ['intestazioni delle tabelle cambiate (calendario illeggibile)',
+        h.replace(/(\d{2}\/\d{2}\/\d{4})\s*-\s*(\d{2}:\d{2})/g, '$1 alle $2'), 1]
     ];
     for (const [nome, html, atteso] of sabotaggi) {
       const f = join(dir, 'pagina.html');

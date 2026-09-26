@@ -1,0 +1,417 @@
+{
+ "schema": 1,
+ "stagione": "2026-27",
+ "fonte": "fantacalcio.it/voti-fantacalcio-serie-a — intestazioni delle tabelle dei voti",
+ "giornate": {
+  "1": [
+   {
+    "casa": "Atalanta",
+    "trasferta": "Sassuolo",
+    "golCasa": 2,
+    "golTrasferta": 1,
+    "data": "2026-08-23",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Bologna",
+    "trasferta": "Lazio",
+    "golCasa": 0,
+    "golTrasferta": 1,
+    "data": "2026-08-24",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Parma",
+    "trasferta": "Cagliari",
+    "golCasa": 0,
+    "golTrasferta": 1,
+    "data": "2026-08-22",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Udinese",
+    "trasferta": "Como",
+    "golCasa": 1,
+    "golTrasferta": 1,
+    "data": "2026-08-22",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Roma",
+    "trasferta": "Fiorentina",
+    "golCasa": 4,
+    "golTrasferta": 0,
+    "data": "2026-08-24",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Frosinone",
+    "trasferta": "Juventus",
+    "golCasa": 0,
+    "golTrasferta": 1,
+    "data": "2026-08-23",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Genoa",
+    "trasferta": "Napoli",
+    "golCasa": 0,
+    "golTrasferta": 2,
+    "data": "2026-08-22",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Inter",
+    "trasferta": "Monza",
+    "golCasa": 4,
+    "golTrasferta": 1,
+    "data": "2026-08-22",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Venezia",
+    "trasferta": "Lecce",
+    "golCasa": 0,
+    "golTrasferta": 2,
+    "data": "2026-08-23",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Torino",
+    "trasferta": "Milan",
+    "golCasa": 1,
+    "golTrasferta": 2,
+    "data": "2026-08-23",
+    "ora": "20:45"
+   }
+  ],
+  "2": [
+   {
+    "casa": "Atalanta",
+    "trasferta": "Bologna",
+    "golCasa": 1,
+    "golTrasferta": 0,
+    "data": "2026-08-31",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Cagliari",
+    "trasferta": "Inter",
+    "golCasa": 0,
+    "golTrasferta": 1,
+    "data": "2026-08-30",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Napoli",
+    "trasferta": "Como",
+    "golCasa": 1,
+    "golTrasferta": 2,
+    "data": "2026-08-30",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Fiorentina",
+    "trasferta": "Frosinone",
+    "golCasa": 0,
+    "golTrasferta": 3,
+    "data": "2026-08-29",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Lazio",
+    "trasferta": "Genoa",
+    "golCasa": 1,
+    "golTrasferta": 0,
+    "data": "2026-08-30",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Juventus",
+    "trasferta": "Parma",
+    "golCasa": 2,
+    "golTrasferta": 0,
+    "data": "2026-08-29",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Lecce",
+    "trasferta": "Roma",
+    "golCasa": 0,
+    "golTrasferta": 4,
+    "data": "2026-08-31",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Milan",
+    "trasferta": "Venezia",
+    "golCasa": 2,
+    "golTrasferta": 0,
+    "data": "2026-08-28",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Monza",
+    "trasferta": "Udinese",
+    "golCasa": 2,
+    "golTrasferta": 3,
+    "data": "2026-08-29",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Sassuolo",
+    "trasferta": "Torino",
+    "golCasa": 2,
+    "golTrasferta": 1,
+    "data": "2026-08-29",
+    "ora": "18:30"
+   }
+  ],
+  "3": [
+   {
+    "casa": "Roma",
+    "trasferta": "Atalanta",
+    "golCasa": 2,
+    "golTrasferta": 1,
+    "data": "2026-09-05",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Bologna",
+    "trasferta": "Sassuolo",
+    "golCasa": 2,
+    "golTrasferta": 2,
+    "data": "2026-09-06",
+    "ora": "18:00"
+   },
+   {
+    "casa": "Cagliari",
+    "trasferta": "Lecce",
+    "golCasa": 1,
+    "golTrasferta": 0,
+    "data": "2026-09-07",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Genoa",
+    "trasferta": "Como",
+    "golCasa": 1,
+    "golTrasferta": 4,
+    "data": "2026-09-04",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Fiorentina",
+    "trasferta": "Torino",
+    "golCasa": 1,
+    "golTrasferta": 2,
+    "data": "2026-09-05",
+    "ora": "15:00"
+   },
+   {
+    "casa": "Frosinone",
+    "trasferta": "Venezia",
+    "golCasa": 3,
+    "golTrasferta": 2,
+    "data": "2026-09-06",
+    "ora": "15:00"
+   },
+   {
+    "casa": "Inter",
+    "trasferta": "Napoli",
+    "golCasa": 3,
+    "golTrasferta": 2,
+    "data": "2026-09-05",
+    "ora": "18:00"
+   },
+   {
+    "casa": "Juventus",
+    "trasferta": "Milan",
+    "golCasa": 1,
+    "golTrasferta": 1,
+    "data": "2026-09-06",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Udinese",
+    "trasferta": "Lazio",
+    "golCasa": 1,
+    "golTrasferta": 2,
+    "data": "2026-09-07",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Parma",
+    "trasferta": "Monza",
+    "golCasa": 1,
+    "golTrasferta": 1,
+    "data": "2026-09-06",
+    "ora": "15:00"
+   }
+  ],
+  "4": [
+   {
+    "casa": "Atalanta",
+    "trasferta": "Cagliari",
+    "golCasa": 1,
+    "golTrasferta": 2,
+    "data": "2026-09-12",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Napoli",
+    "trasferta": "Bologna",
+    "golCasa": 1,
+    "golTrasferta": 0,
+    "data": "2026-09-13",
+    "ora": "18:00"
+   },
+   {
+    "casa": "Como",
+    "trasferta": "Parma",
+    "golCasa": 2,
+    "golTrasferta": 1,
+    "data": "2026-09-14",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Venezia",
+    "trasferta": "Fiorentina",
+    "golCasa": 2,
+    "golTrasferta": 4,
+    "data": "2026-09-11",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Genoa",
+    "trasferta": "Frosinone",
+    "golCasa": 1,
+    "golTrasferta": 1,
+    "data": "2026-09-12",
+    "ora": "15:00"
+   },
+   {
+    "casa": "Inter",
+    "trasferta": "Udinese",
+    "golCasa": 5,
+    "golTrasferta": 3,
+    "data": "2026-09-14",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Sassuolo",
+    "trasferta": "Juventus",
+    "golCasa": 3,
+    "golTrasferta": 2,
+    "data": "2026-09-13",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Lazio",
+    "trasferta": "Milan",
+    "golCasa": 2,
+    "golTrasferta": 2,
+    "data": "2026-09-12",
+    "ora": "18:00"
+   },
+   {
+    "casa": "Lecce",
+    "trasferta": "Monza",
+    "golCasa": 3,
+    "golTrasferta": 2,
+    "data": "2026-09-13",
+    "ora": "15:00"
+   },
+   {
+    "casa": "Torino",
+    "trasferta": "Roma",
+    "golCasa": 0,
+    "golTrasferta": 2,
+    "data": "2026-09-14",
+    "ora": "18:30"
+   }
+  ],
+  "5": [
+   {
+    "casa": "Juventus",
+    "trasferta": "Atalanta",
+    "golCasa": 2,
+    "golTrasferta": 0,
+    "data": "2026-09-20",
+    "ora": "18:00"
+   },
+   {
+    "casa": "Bologna",
+    "trasferta": "Torino",
+    "golCasa": 1,
+    "golTrasferta": 1,
+    "data": "2026-09-19",
+    "ora": "15:00"
+   },
+   {
+    "casa": "Udinese",
+    "trasferta": "Cagliari",
+    "golCasa": 0,
+    "golTrasferta": 1,
+    "data": "2026-09-19",
+    "ora": "15:00"
+   },
+   {
+    "casa": "Frosinone",
+    "trasferta": "Como",
+    "golCasa": 2,
+    "golTrasferta": 0,
+    "data": "2026-09-20",
+    "ora": "15:00"
+   },
+   {
+    "casa": "Fiorentina",
+    "trasferta": "Napoli",
+    "golCasa": 1,
+    "golTrasferta": 1,
+    "data": "2026-09-20",
+    "ora": "12:30"
+   },
+   {
+    "casa": "Parma",
+    "trasferta": "Genoa",
+    "golCasa": 2,
+    "golTrasferta": 1,
+    "data": "2026-09-20",
+    "ora": "15:00"
+   },
+   {
+    "casa": "Roma",
+    "trasferta": "Inter",
+    "golCasa": 2,
+    "golTrasferta": 2,
+    "data": "2026-09-19",
+    "ora": "18:00"
+   },
+   {
+    "casa": "Venezia",
+    "trasferta": "Lazio",
+    "golCasa": 0,
+    "golTrasferta": 2,
+    "data": "2026-09-19",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Milan",
+    "trasferta": "Lecce",
+    "golCasa": 3,
+    "golTrasferta": 0,
+    "data": "2026-09-20",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Monza",
+    "trasferta": "Sassuolo",
+    "golCasa": 2,
+    "golTrasferta": 1,
+    "data": "2026-09-18",
+    "ora": "20:45"
+   }
+  ]
+ }
+}
