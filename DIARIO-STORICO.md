@@ -837,3 +837,56 @@ all'utente** — proposta: formula corretta + soglia minima sui rigori tirati.
 
 **Tutto su `dev`, non pushato**: regola della memoria "fermarsi prima del push nei batch". Il
 merge su `main` fa un deploy Netlify (tocca `tools/`, `.github/`, `netlify.toml`).
+
+## 26/09/2026, mattina: permessi di Claude, voti silenziosi, abbonamento push, Netlify
+
+**Permessi.** L'utente riceveva ancora richieste di approvazione dopo la correzione della notte.
+Cause trovate leggendo la documentazione ufficiale (code.claude.com/docs, pagine *permission-modes*
+e *auto-mode-config*) invece di andare a tentativi: (1) in auto mode le regole generiche come
+`Bash` intero vengono scartate; (2) le istruzioni per il classificatore (`autoMode`) si leggono
+solo da `~/.claude/settings.json`, non dai file del progetto; (3) oltre 3 blocchi di fila o 20 in
+totale l'auto mode torna a chiedere tutto all'utente; (4) con "blocca letture fuori dalla cartella
+di lavoro" attivo, ogni `cat`/`grep` sulla cartella temporanea di Claude (fuori da
+`C:\Code\fantacalcio`) chiedeva conferma. Sistemato restando in auto mode (l'utente ha scartato il
+bypass per sicurezza): regole `autoMode` nel file utente (verificate con `claude auto-mode config`),
+regole specifiche nel progetto, cartella temporanea aggiunta alle cartelle di lavoro e una
+`.tmp-claude/` dentro `C:\Code\fantacalcio` (fuori dal repo), e un registro dei rifiuti (hook
+`PermissionDenied`) per vedere cosa viene bloccato. Le regole "ask" sui push verso `main` e sui
+comandi `netlify` restano: chiedono sempre, anche in auto mode.
+
+**Voti silenziosi** (`c289f37`). Il passo dei voti in `dati.yml` aveva `continue-on-error` e
+`|| true`: se fantacalcio.it avesse cambiato la pagina, i voti avrebbero smesso di arrivare senza
+email. La pagina di una giornata non ancora giocata ha 0 tabelle (verificato sulla G6); una in corso
+ne ha meno di 20. `fetch-voti.mjs` ora esce con 0/2/3/1 (scritto / non ancora completa / rete /
+rotto) e controlla ≥11 giocatori per squadra (su G1-G5 ce ne sono sempre 15-16). Il passo del
+workflow va in rosso per un 1, o per una giornata più vecchia dell'ultima conclusa ancora senza
+voti. Provato con un modulo che sostituisce `fetch` (10 casi su pagine vere e manomesse, tra cui
+una squadra svuotata: "1 squadre con meno di 11 giocatori: Cagliari") e con la logica bash del passo
+eseguita con `bash -e` e uno scraper finto (9 casi). Trappola evitata: GitHub esegue i passi con
+`bash -e`, quindi il codice d'uscita va catturato con `|| ESITO=$?`. Il numero di giornata chiesto
+a mano ora passa da variabile d'ambiente, non incollato nello script.
+
+**Abbonamento push scaduto** (`5ca6d6c`). Con 404/410 entrambi gli script di promemoria
+scrivevano solo nel log e segnavano la soglia con l'orario, come se fosse partita: impossibile
+accorgersene. Ora 401/403/404/410 mandano il workflow in rosso una volta per giornata (flag
+`abbonamentoScadutoSegnalato` nello stato, che riparte con la giornata nuova) e la soglia resta
+`"abbonamento-scaduto"`. `promemoria.yml` committa lo stato anche dopo un passo rosso, altrimenti
+l'avviso ripartirebbe a ogni giro. Provato con un finto `web-push` (7 casi). Nota: finora non c'è
+modo di sapere se le notifiche della G5 siano arrivate davvero, perché un 410 sarebbe risultato
+identico a un invio riuscito — dalla G6 lo si vedrà nel file di stato.
+
+**Netlify** (`610b616`). Elenco di inclusione al posto dell'elenco di esclusione (vedi CLAUDE.md
+e il commento in `netlify.toml`). Provato eseguendo il comando letto dal TOML con le variabili di
+Netlify su commit veri. Trovato e corretto nel farlo: con `$CACHED_COMMIT_REF` vuoto o uguale al
+commit (secondo la documentazione Netlify succede pubblicando senza cache), `git diff` confrontava
+il commit con se stesso e annullava il deploy, anche uno chiesto a mano. Tentato di trovare
+l'indirizzo del sito per controllarlo dal vivo: Netlify non scrive stati né deployment su GitHub, e
+l'URL è solo nella variabile `NETLIFY_SITE_URL` delle Actions (non leggibile senza token). Provare
+nomi `*.netlify.app` a caso l'utente l'ha fermato: non ripeterlo.
+
+**App dal vivo** (server locale, browser integrato, 375px, rosa vera importata). Nessun errore in
+console, nessuno scroll orizzontale, countdown giusto (14 giorni e 5 ore alla scadenza del 10/10).
+Coi dati della fonte di riserva (quelli in produzione dal 21/09): "3 giocatori non sono tra i
+convocati", percentuali quasi tutte al 91%, modulo 3-5-2. Coi dati della fonte principale corretta
+(scaricati in locale, GitHub escluso via `fetch` sostituito nella pagina, file poi ripristinato con
+git): avviso sparito, Esposito F.P. titolare al 67%, modulo 3-4-3, panchina con percentuali vere.

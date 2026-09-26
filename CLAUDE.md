@@ -19,13 +19,15 @@ con una fonte di riserva se la prima fallisce.
 **Calendario**: giocate G1-G5 (voti tutti scaricati, ricalibrazione fatta), poi sosta per le
 nazionali. **G6 il 10-12/10**, prima partita Genoa-Fiorentina sabato 10/10 alle 15:00.
 
-**Rami (26/09)**: `dev` è avanti di 7 commit su `main`, **non ancora pushati**: i fix della
-sessione del 26/09 (sotto) più un commit di diario rimasto solo in locale dal 16/09. Il merge su
-`main` **fa scattare un deploy Netlify** (tocca `tools/`, `.github/` e, se tenuto, `netlify.toml`,
-non solo `dati/**`/`*.md`) — serve l'autorizzazione esplicita dell'utente in sessione (vedi
-*Regola di lavoro*). Finché non arriva su `main` la Action gira col codice vecchio: workflow
-rosso a ogni giro, ricalibrazione ripetuta a ogni giro di lunedì/martedì, promemoria G6 in
-ritardo di 2 ore.
+**Rami (26/09)**: tutto il lavoro del 26/09 è su `dev`. Il merge su `main` tocca solo file che il
+sito non usa (`tools/`, `.github/`, `dati/`, `netlify.toml`, diario): con la regola nuova di
+`netlify.toml` (elenco di inclusione, sotto) **non dovrebbe far partire nessun deploy**. Resta
+un'incertezza: che Netlify applichi già la regola nuova contenuta nel commit stesso (così dice il
+suo funzionamento, ma non è verificabile da qui). Nel caso peggiore parte UN deploy, quello che
+l'utente ha già messo in conto "alla fine". Il push su `main` chiede comunque conferma
+all'utente (regola "ask"). Finché non arriva su `main` la Action gira col codice vecchio:
+workflow rosso a ogni giro, ricalibrazione ripetuta a ogni giro di lunedì/martedì, promemoria G6
+in ritardo di 2 ore.
 
 ## Cosa abbiamo trovato e deciso il 26/09/2026
 
@@ -58,9 +60,30 @@ tutto il resto". Dettagli, numeri e metodo in DIARIO-STORICO.md → *Sessione de
   all'utente (vedi *Prossimi passi*).
 - **Actions su Node 24** (`checkout`/`setup-node` v6): ogni run avvisava della deprecazione di
   Node 20.
-- **Facoltativo, in un commit a parte**: `netlify.toml` esclude anche `tools/**` e `.github/**`
-  dal deploy (il sito non li usa). Il merge che lo porta fa comunque un deploy; da lì in poi un
-  fix a script/workflow non costa più crediti.
+- **Netlify pubblica solo se cambia un file del sito**: `netlify.toml` passa da un elenco di
+  esclusioni (dati, `*.md`) a un elenco di inclusioni (`index.html`, `sw.js`,
+  `manifest.webmanifest`, `netlify/`, `package.json`, `package-lock.json`). Corretto anche un
+  difetto della regola vecchia: con cache vuota o stesso commit rilanciato a mano git confrontava
+  il commit con se stesso e annullava anche il deploy chiesto a mano. Una modifica *solo* a
+  `netlify.toml` ora non pubblica da sola (va online col primo deploy dell'app, o con "Trigger
+  deploy" da Netlify).
+- **Voti: niente più errori ingoiati** (26/09 mattina). Il passo dei voti aveva
+  `continue-on-error` e `|| true`: una pagina dei voti cambiata avrebbe fermato i voti in silenzio.
+  `fetch-voti.mjs` ora esce con 2 (non giocata / in corso: meno di 20 tabelle, es. lunedì mattina
+  con le partite serali della G6 da giocare), 3 (rete), 1 (rotto); controlla anche ≥11 giocatori
+  per squadra. `dati.yml` va in rosso per un 1, o per una giornata più vecchia dell'ultima conclusa
+  ancora senza voti.
+- **Abbonamento push scaduto: ora è un avviso**. Con 401/403/404/410 dal servizio push gli script
+  segnavano la soglia come spedita e basta; ora il workflow va in rosso una volta per giornata
+  con le istruzioni, e la soglia resta scritta come `"abbonamento-scaduto"`.
+- **Provata l'app dal vivo** (browser integrato, 375px, rosa vera): nessun errore. Coi dati della
+  riserva (quelli in produzione questa settimana) diceva "3 giocatori non sono tra i convocati" e
+  metteva tutti al 91%; coi dati della fonte principale corretta (come sarà dopo il merge) avviso
+  sparito, Esposito F.P. titolare, modulo 3-4-3, panchina con percentuali vere.
+- **Permessi di Claude sistemati**: la sessione resta in auto mode (l'utente non vuole bypass).
+  Dettagli nella memoria di Claude, non qui: in sintesi regole `autoMode` in `~/.claude/settings.json`,
+  regole specifiche in `.claude/settings.local.json`, cartella temporanea dentro il progetto
+  (`C:\Code\fantacalcio\.tmp-claude`, fuori dal repo) per non leggere fuori dalla cartella di lavoro.
 
 **Decisioni precedenti ancora in vigore** (contesto in DIARIO-STORICO.md):
 - `PESO_PRIOR_STAGIONE` non si tocca — richiesta esplicita dell'utente, 15/09. Per le strisce di
@@ -97,6 +120,14 @@ bruciato 150 crediti Netlify con push ripetuti su `main`). Finché non viene tol
 - Push su `dev` liberamente; **mai** mergiare `dev` → `main`, **mai** riattivare i build Netlify,
   **mai** `netlify deploy`/login/config, **mai** push su `main` — senza che l'utente lo chieda
   esplicitamente *in quella sessione*. Un'autorizzazione data prima non vale più dopo questa nota.
+- **Tutto il resto senza chiedere** (regola dell'utente, 26/09: "se devi far scattare qualche
+  deploy devo avertelo indicato esplicitamente, altrimenti aspetti; per tutte le altre cose agisci
+  pure senza il mio permesso"): modifiche, commit, `git push origin dev`, script, dati, diario,
+  scelte tecniche con un default ragionevole — dichiarate nel resoconto, non chieste prima. Le
+  domande restano solo per scelte davvero dell'utente (es. il modello di calcolo). Pushare sempre
+  con destinazione esplicita, mai `git push` nudo. Rete di sicurezza: `.claude/settings.local.json`
+  (non versionato) chiede conferma per `git push` nudo, ogni push che nomina `main` e i comandi
+  `netlify`.
 - Eccezione già in vigore: i commit **solo-dati** della GitHub Action (`dati/*.json`) vanno
   direttamente su `main` come sempre hanno fatto — `netlify.toml` li esclude dal trigger di build
   (`ignore` su `dati/**` e `*.md`), quindi non consumano crediti. La regola riguarda il codice.
@@ -181,17 +212,20 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 
 ## Prossimi passi
 
-1. **Push di `dev` e merge su `main`, il prima possibile** — serve il via libera dell'utente (un
-   deploy Netlify). Ogni giro di lunedì/martedì su `main` col codice vecchio fa un altro passo di
-   ricalibrazione sugli stessi voti (28-29/09, 05-06/10), e i promemoria G6 partirebbero in
-   ritardo. Se il merge arriva dopo lunedì 28/09 ~07:00 UTC, conflitto quasi certo su
-   `dati/costanti.json` (la CI vecchia l'avrà riscritto): **tenere la versione di `dev`**.
-2. **Decidere sulla formula di `RETTIFICA_PIAZZATI`** (`tools/ricalibra.mjs`): lo scarto si
-   misura contro base+correzione precedente, quindi converge a *metà* dello scarto vero (R1 verso
-   -0.20 invece di -0.40). Correggerla sola spingerebbe R1 a -0.30 sulla base di **2 rigori**
-   (Colombo sbagliato, Zaccagni segnato: su G1-G5 in tutta la A solo 5 rigori tirati): la soglia
-   `MIN_CAMPIONE=30` conta le presenze (79), non i rigori. Proposta: correggere la formula E
-   aggiungere una soglia sui rigori tirati (es. almeno 10 per tag) prima di muovere la correzione.
+1. **Merge `dev` → `main`** — deciso dall'utente per il weekend 26-27/09 ("il push lo facciamo
+   questo weekend", "tutte le modifiche e poi un deploy alla fine"). Con la regola nuova di
+   `netlify.toml` non dovrebbe pubblicare nulla (vedi *Stato attuale*). Prima del merge ricontrollare
+   `git log dev..origin/main`: se nel frattempo la CI vecchia ha riscritto `dati/costanti.json`
+   (giri di lunedì/martedì, dal 28/09 ~07:00 UTC), conflitto su quel file: **tenere la versione
+   di `dev`**. Dopo il merge verificare il primo run di `dati.yml` (verde, fonte fantacalcio.it) e
+   che su Netlify il deploy risulti *annullato/saltato*, non pubblicato.
+2. **`RETTIFICA_PIAZZATI`, rimandato dall'utente il 26/09** ("per la sezione rigori procediamo
+   più avanti, per ora va bene così"): lo scarto si misura contro base+correzione precedente,
+   quindi converge a *metà* dello scarto vero (R1 verso -0.20 invece di -0.40). Correggerla sola
+   spingerebbe R1 a -0.30 sulla base di **2 rigori** (Colombo sbagliato, Zaccagni segnato: su
+   G1-G5 in tutta la A solo 5 rigori tirati): la soglia `MIN_CAMPIONE=30` conta le presenze (79),
+   non i rigori. Proposta per quando se ne riparla: correggere la formula E aggiungere una soglia
+   sui rigori tirati (es. almeno 10 per tag).
 3. **Verificare sul campo i promemoria della G6** (dopo il merge): scadenza sabato 10/10 alle
    14:55 italiane (12:55 UTC). In `dati/scadenza-promemoria.json` ogni orario "inviato" deve
    cadere prima di `2026-10-10T12:55Z`, e il testo deve dire le ore vere rimaste. 1h/30m possono
@@ -221,6 +255,15 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 ## Problemi aperti
 
 - **`RETTIFICA_PIAZZATI` si muove su pochissimi eventi** — vedi *Prossimi passi* 2.
+- **Una pagina dei voti rinominata si scopre con circa una settimana di ritardo**: sembra una
+  giornata non ancora giocata (0 tabelle, uscita 2), e il passo va in rosso solo quando quella
+  giornata diventa più vecchia dell'ultima conclusa, cioè quando le probabili passano al turno
+  dopo. Accettato: i voti non servono per schierare la giornata successiva, e l'alternativa
+  (sapere quando è finita una giornata passata) richiederebbe di archiviare il calendario.
+- **Fine stagione (giugno 2027)**: GitHub disattiva da solo i workflow programmati di un
+  repository pubblico dopo 60 giorni senza attività. D'estate la Action non avrà dati nuovi da
+  committare, quindi ad agosto i workflow potrebbero risultare disattivati: vanno riattivati a
+  mano da GitHub (Actions → workflow → "Enable workflow") prima della nuova stagione.
 - **`BONUS_MAX` (tetto di bonus a percentile 100 per ruolo) resta a intuito.** Calibrarlo
   richiederebbe isolare il bonus "da percentile puro" (gol/assist normali, non rigori): con poche
   giornate e pochi giocatori al vertice del ruolo rischia di inseguire il rumore.
