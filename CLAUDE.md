@@ -19,15 +19,12 @@ con una fonte di riserva se la prima fallisce.
 **Calendario**: giocate G1-G5 (voti tutti scaricati, ricalibrazione fatta), poi sosta per le
 nazionali. **G6 il 10-12/10**, prima partita Genoa-Fiorentina sabato 10/10 alle 15:00.
 
-**Rami (26/09)**: tutto il lavoro del 26/09 è su `dev`. Il merge su `main` tocca solo file che il
-sito non usa (`tools/`, `.github/`, `dati/`, `netlify.toml`, diario): con la regola nuova di
-`netlify.toml` (elenco di inclusione, sotto) **non dovrebbe far partire nessun deploy**. Resta
-un'incertezza: che Netlify applichi già la regola nuova contenuta nel commit stesso (così dice il
-suo funzionamento, ma non è verificabile da qui). Nel caso peggiore parte UN deploy, quello che
-l'utente ha già messo in conto "alla fine". Il push su `main` chiede comunque conferma
-all'utente (regola "ask"). Finché non arriva su `main` la Action gira col codice vecchio:
-workflow rosso a ogni giro, ricalibrazione ripetuta a ogni giro di lunedì/martedì, promemoria G6
-in ritardo di 2 ore.
+**Rami (26/09)**: `dev` mergiato su `main` il 26/09 (`9626bf3`, push confermato dall'utente).
+Il merge toccava solo file che il sito non usa: con la regola nuova di `netlify.toml` non doveva
+pubblicare — non verificabile da qui (nessun accesso a Netlify), da controllare sul pannello
+Netlify che risulti saltato. **Verificato il primo giro dopo il merge** (26/09 12:06 UTC): verde,
+Probabili dalla fonte principale (fantacalcio.it, 484 giocatori, 20 moduli), riserva saltata,
+action su Node 24; anche `promemoria.yml` verde.
 
 ## Cosa abbiamo trovato e deciso il 26/09/2026
 
