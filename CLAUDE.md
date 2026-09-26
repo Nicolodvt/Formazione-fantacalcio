@@ -9,44 +9,28 @@ accodano: fotografano il punto in cui siamo adesso, non l'elenco di tutto quello
 
 ## Stato attuale
 
-**v0.5 ONLINE E IN USO; su `dev` c'è già la v0.6, NON ANCORA PUBBLICATA.** Pubblicata su Netlify
-(build vera via GitHub, non drag&drop: serve per `@netlify/blobs` in
-`netlify/functions/schierato.mjs`), rosa vera importata, app installata sul telefono, notifiche
-push attive. L'app schiera, sceglie il modulo, funziona offline, e la stima si mescola da sola con
-i voti veri. Countdown e promemoria scaglionati su una scadenza vera. La GitHub Action scarica
-probabili e voti da sola, con una fonte di riserva se la prima fallisce.
+**v0.6 PUBBLICATA il 27/09** (merge `dev` → `main`, commit `180c97b`, chiesto dall'utente): gesti
+touch rifatti, modificatore con la regola dei 4 difensori, forza delle squadre sulla scala giusta,
+promemoria 72h/48h/24h/8h/3h con silenzio notturno, voti solo a partite concluse, calendario
+storico, rigoristi corretti, `sw.js` v0-6. App installata sul telefono, rosa vera, notifiche push
+attive (consegna mai confermata: vedi *Prossimi passi*). La Action scarica probabili e voti da
+sola, con fonte di riserva.
 
-**⚠️ DEPLOY IN SOSPESO — ricordarlo all'utente a ogni sessione finché non è fatto.** L'utente
-(26/09) è disposto a spendere un deploy per le modifiche grosse di `dev` e lo chiederà LUI, in una
-richiesta dedicata solo a quello: mai farlo in automatico. Il merge `dev` → `main` tocca
-`index.html`, quindi pubblica. Conviene farlo **prima di sabato 10/10** (G6): porta la correzione
-dei gesti sul telefono, il controllo "partite concluse" dei voti del lunedì 12/10, i promemoria
-nuovi (24h/8h/3h, silenzio notturno), il modificatore con la regola dei 4 difensori, la forza
-delle squadre sulla scala giusta, i rigoristi corretti, il calendario e `sw.js` v0-6. Revisione
-pre-deploy del 26/09 sera: nessun blocco, merge in avanti veloce (fast-forward). Prima del merge
-rilanciare le prove (`prove-pipeline.mjs --pagine C:/Code/fantacalcio/.tmp-claude/pagine-voti`,
-`prova-motore.mjs`, `controlla.mjs`). Al merge: se nel frattempo la Action ha scritto
-`dati/costanti.json` su `main`, rifarlo col replay (`node tools/prove-pipeline.mjs ricalibra`
-dice se torna); se ha scritto `dati/voti-6.json` con lo script vecchio, recuperare il calendario
-con `node tools/fetch-voti.mjs 6 --solo-calendario`.
+**Calendario**: giocate G1-G5, sosta. **G6 il 10-12/10**, prima partita Genoa-Fiorentina sabato
+10/10 alle 15:00 (scadenza 14:55 = 12:55 UTC); Torino-Udinese lunedì 12/10 alle 20:45.
 
-**Calendario**: giocate G1-G5 (voti scaricati, ricalibrazione fatta), sosta per le nazionali.
-**G6 il 10-12/10**, prima partita Genoa-Fiorentina sabato 10/10 alle 15:00 (scadenza per schierare
-14:55 italiane = 12:55 UTC). Due partite il lunedì 12/10 sera (Torino-Udinese alle 20:45).
+**Rami**: `dev` = `main` al 27/09. Su `main` scrive anche la Action (commit solo-dati).
 
-**Rami**: `dev` = `main` + tutto il lavoro del 26/09 pomeriggio (app, script, prove, costanti,
-calendario, diario); `main` è stato fuso dentro `dev` il 26/09 (commit solo-dati della Action),
-quindi `dev` non è indietro su nulla. Su `main` scrive anche la Action (commit solo-dati). **Actions
-verdi** al 26/09 12:06 UTC, probabili dalla fonte principale (fantacalcio.it, 484 giocatori).
+**Netlify**: pubblica solo se cambia un file del sito (vedi *Regola di lavoro*). L'indirizzo del
+sito non è in nessun file del progetto (sta nella variabile `NETLIFY_SITE_URL` delle Actions):
+la riuscita della build del 27/09 la conferma l'utente sul pannello.
 
-**Netlify**: pubblica solo se cambia un file del sito (vedi *Regola di lavoro*). Il merge del 26/09
-mattina (`9626bf3`) non doveva pubblicare: da confermare dall'utente sul pannello.
 
-## Ultima sessione (26/09/2026 sera) in sintesi
+## Ultima sessione (26-27/09/2026) in sintesi
 
 Sei verifiche con subagenti in sola lettura (revisione pre-deploy, analisi della squadra,
 permessi, cache, notifiche, catena voti → modello), poi le correzioni approvate dall'utente, tutte
-su `dev` (`b762a57`, `e8e3c4c`), niente deploy. Dettagli in DIARIO-STORICO.md (*26/09 sera*):
+poi pubblicate il 27/09 su richiesta (`180c97b`), con in più i promemoria 72h e 48h prima. Dettagli in DIARIO-STORICO.md (*26/09 sera*):
 - **Modificatore**: regola dei 4 difensori (dall'utente) e tabella standard al posto della
   conversione lineare con malus, come valore atteso (incertezza 0,37 misurata).
 - **Forza delle squadre sulla scala giusta**: l'attacco misurato era il fantavoto grezzo (~6,5)
@@ -59,36 +43,7 @@ su `dev` (`b762a57`, `e8e3c4c`), niente deploy. Dettagli in DIARIO-STORICO.md (*
   errori in cache, ripiego solo per le navigazioni, `renotify`).
 - **Permessi**: le richieste inutili erano 6 (hook troppo rigido su `push -q`, parola "netlify"
   nei testi, `gh` in sola lettura) e c'era un buco (`git -C … push main` approvato). Hook corretto
-  pronto in `C:\Code\fantacalcio\.tmp-claude\permessi\proposta.mjs`: **lo installa l'utente**.
-
-## Sessione precedente (26/09/2026 pomeriggio) in sintesi
-
-Richiesta: prove generali della G6, casi limite, script di prove, rigoristi e calendario storico
-"da fare ora", e i gesti sul telefono ("lo scorrimento indietro dal modulo non funziona") con un
-controllo generale dell'usabilità. Nessun deploy. Dettagli e numeri in DIARIO-STORICO.md (*Sessione
-del 26/09/2026, pomeriggio*). Tutto su `dev`:
-
-- **Swipe fra le schede rotto sul telefono vero, da sempre**: il browser mandava `pointercancel`
-  dopo pochi millimetri e la direzione si leggeva da coordinate fasulle (da Moduli niente, da
-  Campo verso destra si finiva su Rosa). Rifatti swipe e pull-to-refresh con eventi touch e
-  `touch-action: pan-y`. Provati con eventi sintetici; col dito vero li prova l'utente.
-- **Usabilità**: "indietro" di Android torna a Campo invece di uscire; sheet chiudibili tirando
-  giù da ovunque quando sono in cima; la lista non salta più in cima a ogni ridisegno; tasto
-  Aggiorna con stato; ricerca in "componi rosa" senza ridisegnare il campo; scheda giocatore senza
-  doppioni; impostazioni con le cose settimanali in cima; aree sicure iPhone; ARIA sulle schede.
-- **Voti**: si scrive una giornata solo se tutte le partite hanno `data-match-status="4"` (una
-  partita in corso il lunedì sera poteva finire nel file per sempre).
-- **`tools/prove-pipeline.mjs`**: 47 prove ripetibili (calendario, promemoria con orologio finto,
-  ricalibrazione, voti sabotati). Hanno trovato due difetti veri, corretti: **l'anno a Capodanno**
-  (una partita del 30/12 letta il 2/01 finiva nell'anno dopo, anche nell'app) e i **promemoria in
-  coda** quando il cron è in ritardo (ora parte solo la soglia più vicina).
-- **Rigoristi**: formula che converge allo scarto vero (non a metà) e soglia di 10 rigori tirati per
-  tag. Con G1-G5 (2 rigori di R1) nessuna correzione: `rettificaPiazzati` vuota, ruoli invariati.
-- **Calendario storico**: `dati/calendario.json` (G1-G5, poi scritto da `fetch-voti.mjs` a ogni
-  giornata) e diagnostica `tools/taratura-partita.mjs`: fattore campo -0.01 ± 0.16 contro +0.16 del
-  modello (al limite), avversario 1.39 ± 0.71 contro 1.4 (confermato).
-- **Errore mio corretto**: avevo rimesso la vibrazione nel pull-to-refresh, tolta dall'utente il
-  05/09.
+  installato dall'utente il 27/09 (26/26 e 28/28 casi giusti).
 
 **Decisioni in vigore** (contesto in DIARIO-STORICO.md):
 - `PESO_PRIOR_STAGIONE` non si tocca (utente, 15/09). Per le strisce di forma c'è l'indicatore
@@ -104,7 +59,7 @@ del 26/09/2026, pomeriggio*). Tutto su `dev`:
   Fantacalcio.it `MOD_FASCE` (6 → +1, 6,5 → +3, 7 → +6, niente malus) — **la tabella è una mia
   ipotesi**, da confermare col regolamento della lega.
 - **Promemoria** (utente, 26/09 sera: "correggi tu gli intervalli"): avviso di giornata nuova,
-  poi 24h, 8h, 3h prima della scadenza, silenzio 23-08 italiane. Scelti sul cron reale (un giro
+  poi 72h e 48h (formazione di sicurezza a metà settimana, 27/09), 24h, 8h, 3h prima della scadenza, silenzio 23-08 italiane. Scelti sul cron reale (un giro
   ogni ~3,8 ore): non rimettere soglie a 1h/30m senza un innesco più affidabile.
 - Niente bottone "esporta rosa attuale" (rifiutato il 15/09). Visibilità del repository: rimandata.
 - Niente modalità "bypass permissions" per Claude: l'utente la ritiene poco sicura (26/09).
@@ -243,9 +198,7 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
 
 ## Prossimi passi
 
-1. **Deploy di `dev`, quando l'utente lo chiede** (vedi *Stato attuale*): meglio prima di sabato
-   10/10. Prima del merge: `node tools/controlla.mjs`, `node tools/prove-pipeline.mjs`,
-   `node tools/prova-motore.mjs`; dopo, controllare che le Actions restino verdi.
+1. **Confermare su Netlify** (l'utente) che la build del 27/09 (`180c97b`) sia riuscita.
 2. **L'utente prova i gesti col dito vero** dopo il deploy: swipe avanti e indietro fra Campo,
    Rosa e Moduli (anche un colpo veloce), tiro in basso dalla cima per aggiornare, "indietro" di
    Android da Rosa/Moduli (deve tornare a Campo), tirare giù una scheda giocatore dal contenuto.
@@ -259,9 +212,6 @@ modificatore salta del tutto (difesa fragile → "salta X% delle volte", non "fo
    `dati/scadenza-promemoria.json` gli orari "inviato" devono stare prima della scadenza.
    **L'avviso di apertura G6, partito il 21/09, diceva "alle 17:00": si comincia alle 15:00**
    (bug del fuso già corretto, l'avviso non si rimanda).
-3b. **Permessi (l'utente)**: installare l'hook corretto e le regole `git -C * push*` come da
-   istruzioni date il 26/09 sera (copia di `.tmp-claude\permessi\proposta.mjs` su
-   `.claude\decidi-permessi.mjs`, prove `prova-permessi.mjs` 26/26 e `prova-sessione.mjs` 28/28).
 3c. **Tabella del modificatore**: confermare col regolamento della lega (`MOD_FASCE`).
 4. **Verificare i voti della G6**: lunedì 12/10 (Torino-Udinese alle 20:45) deve uscire "giornata
    ancora in corso", senza email; martedì deve scrivere `dati/voti-6.json` completo (20 squadre),

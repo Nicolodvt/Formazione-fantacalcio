@@ -1083,3 +1083,5 @@ pagine-voti\`, fuori dal repository), `prova-motore.mjs` tutte le invarianti, `c
 contro `origin/main` senza perdite (salvo i 4 gestori pointer sostituiti apposta), app nel
 browser senza errori. Commit fatti senza nessuna richiesta di permesso: messaggi da file,
 `git push origin dev` scritto così.
+
+**27/09**: aggiunti i promemoria 72h e 48h prima (utente: formazione di sicurezza mercoledi/giovedi se il venerdi non guarda il telefono); utente installa l hook corretto (26/26, 28/28); deploy v0.6 chiesto dall utente: merge dev -> main `180c97b`, push riuscito, conferma della build sul pannello Netlify a carico dell utente.
