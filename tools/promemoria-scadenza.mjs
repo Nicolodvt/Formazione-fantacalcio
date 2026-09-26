@@ -52,7 +52,11 @@ const ABBONAMENTO_DA_RIFARE = [401, 403, 404, 410];
    - 3h  ultima chiamata: con giri ogni ~4 ore arriva prima della scadenza circa 3 volte su 4,
          una soglia a 1h ci riusciva circa 1 volta su 4.
    Prima ancora c'e' l'avviso "giornata nuova" di invia-promemoria.mjs, giorni prima. */
+/* 72h e 48h (27/09, utente): per una giornata del weekend cadono mercoledi/giovedi, cosi' si
+   schiera una formazione di sicurezza in anticipo anche se il venerdi non si guarda il telefono. */
 const SOGLIE = [
+  { chiave: '72h', ore: 72 },
+  { chiave: '48h', ore: 48 },
   { chiave: '24h', ore: 24 },
   { chiave: '8h', ore: 8 },
   { chiave: '3h', ore: 3 }

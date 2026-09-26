@@ -170,12 +170,12 @@ async function provePromemoria() {
     /* 1. Cron puntuale ogni 15 minuti. Soglie 24h, 8h, 3h (27/09). La 8h cade alle 06:55
        italiane, di notte: parte al primo giro dopo le 08:00 italiane (06:00 UTC). */
     azzera(dir, G6);
-    for (let t = Date.parse('2026-10-09T12:00Z'); t <= Date.parse('2026-10-10T13:15Z'); t += 15 * 60000) {
+    for (let t = Date.parse('2026-10-07T12:00Z'); t <= Date.parse('2026-10-10T13:15Z'); t += 15 * 60000) {
       giroPromemoria(dir, new Date(t).toISOString());
     }
     const s1 = spediti(dir);
     verifica('cron puntuale: 3 promemoria (24h, 8h rimandata al mattino, 3h), tutti prima della scadenza',
-      JSON.stringify(titoli(s1)) === JSON.stringify(['13:00 Mancano 24 ore', '06:00 Mancano 7 ore', '10:00 Mancano 3 ore']) &&
+      JSON.stringify(titoli(s1)) === JSON.stringify(['13:00 Mancano 72 ore', '13:00 Mancano 48 ore', '13:00 Mancano 24 ore', '06:00 Mancano 7 ore', '10:00 Mancano 3 ore']) &&
       s1.every(x => Date.parse(x.ora) < SCADENZA_G6), JSON.stringify(titoli(s1)));
     verifica('il testo nomina la partita e l\'ora italiana giuste',
       s1[0] && /Giornata 6, si comincia sabato 10 ottobre alle ore 15:00 \(Genoa-Fiorentina\)/.test(s1[0].corpo), s1[0] && s1[0].corpo);
@@ -233,7 +233,7 @@ async function provePromemoria() {
     giroPromemoria(dir, '2026-10-16T13:30Z');
     const st7 = statoPromemoria(dir);
     verifica('giornata nuova: stato ripartito da zero e 24h della G7 spedita',
-      st7.giornata === 7 && Object.keys(st7.inviate).length === 1 && spediti(dir).length === 2, JSON.stringify(st7));
+      st7.giornata === 7 && Object.keys(st7.inviate).length === 3 && spediti(dir).length === 2, JSON.stringify(st7));
 
     /* 8. Cambio d'ora: scadenza di una giornata che comincia domenica 25/10 (gia' ora solare). */
     azzera(dir, { giornata: 8, partite: [{ data: 'domenica 25 ottobre, 12:30', casa: 'Como', trasferta: 'Inter' }] });
@@ -241,7 +241,7 @@ async function provePromemoria() {
     giroPromemoria(dir, '2026-10-24T11:26Z');
     const s8 = spediti(dir);
     verifica('cambio d\'ora (25/10): la soglia 24h scatta alle 11:25 UTC, non un\'ora prima o dopo',
-      s8.length === 1 && s8[0].ora.startsWith('2026-10-24T11:26') && s8[0].titolo.startsWith('Mancano 24 ore'),
+      s8.length === 2 && s8[1].ora.startsWith('2026-10-24T11:26') && s8[1].titolo.startsWith('Mancano 24 ore'),
       JSON.stringify(s8) + ' ' + prima.uscita.trim());
 
     /* 9. Notifica di prova (workflow lanciato a mano con "prova"): parte subito, non tocca lo stato. */
