@@ -19,6 +19,8 @@
    USO
      node tools/fetch-voti.mjs 2          scarica la giornata 2 e scrive dati/voti-2.json
      node tools/fetch-voti.mjs 2 --prova  valida soltanto, senza scrivere
+     node tools/fetch-voti.mjs 2 --prova --da-file pagina.html
+                                          stessa cosa su una pagina salvata (per le prove)
 
    CODICI D'USCITA (26/09) — servono a .github/workflows/dati.yml per non confondere "ancora
    presto" con "rotto". Prima uscivano tutti con 1 e il workflow li ingoiava tutti: se il sito
@@ -26,13 +28,14 @@
      0  scritto (o, con --prova, validazione superata)
      2  non ancora completa: nessuna tabella (giornata non giocata o voti non pubblicati) oppure
         meno di 20 squadre (giornata in corso, es. lunedi mattina con le partite della sera
-        ancora da giocare). Normale, si riprova al giro dopo.
+        ancora da giocare), oppure 20 tabelle ma almeno una partita non ancora conclusa
+        (data-match-status diverso da 4, dal 27/09). Normale, si riprova al giro dopo.
      3  problema di rete temporaneo (timeout, errore 5xx): si riprova al giro dopo.
      1  tutto il resto: pagina completa ma letta male, 4xx, giornata dichiarata diversa. E' il
         caso che deve arrivare per email.
 */
 
-import { writeFile, mkdir } from 'node:fs/promises';
+import { writeFile, mkdir, readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -317,24 +320,35 @@ async function main() {
     process.exit(1);
   }
 
+  /* --da-file <percorso>: legge una pagina gia' salvata invece di scaricarla. Serve alle prove
+     (tools/prove-pipeline.mjs) per rovinare apposta una pagina vera e vedere cosa succede,
+     senza toccare il sito. */
+  const iFile = args.indexOf('--da-file');
+  const daFile = iFile !== -1 ? args[iFile + 1] : null;
+
   const url = `https://www.fantacalcio.it/voti-fantacalcio-serie-a/${STAGIONE}/${giornata}`;
-  /* Senza timeout una connessione appesa blocca il job della Action fino al limite di GitHub. */
-  let r;
-  try {
-    r = await fetch(url, {
-      headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it;q=0.9' },
-      signal: AbortSignal.timeout(30000)
-    });
-  } catch (e) {
-    console.error(`Rete: ${e.message} — riprovo al prossimo giro.`);
-    process.exit(3);
+  let html;
+  if (daFile) {
+    html = await readFile(daFile, 'utf8');
+  } else {
+    /* Senza timeout una connessione appesa blocca il job della Action fino al limite di GitHub. */
+    let r;
+    try {
+      r = await fetch(url, {
+        headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it;q=0.9' },
+        signal: AbortSignal.timeout(30000)
+      });
+    } catch (e) {
+      console.error(`Rete: ${e.message} — riprovo al prossimo giro.`);
+      process.exit(3);
+    }
+    if (r.status >= 500) {
+      console.error(`HTTP ${r.status} da ${url} — errore del sito, riprovo al prossimo giro.`);
+      process.exit(3);
+    }
+    if (!r.ok) throw new Error(`HTTP ${r.status} da ${url}`);
+    html = await r.text();
   }
-  if (r.status >= 500) {
-    console.error(`HTTP ${r.status} da ${url} — errore del sito, riprovo al prossimo giro.`);
-    process.exit(3);
-  }
-  if (!r.ok) throw new Error(`HTTP ${r.status} da ${url}`);
-  const html = await r.text();
 
   /* Una risposta troncata a meta produce un file valido ma incompleto, e nessuna delle
      validazioni successive se ne accorge se il taglio cade nel punto giusto. */
@@ -358,6 +372,27 @@ async function main() {
       (nTabelle === 0 ? 'non ancora giocata o voti non ancora pubblicati.' : 'giornata ancora in corso.') +
       ' Niente scritto, si riprova al prossimo giro.');
     process.exit(2);
+  }
+
+  /* 20 tabelle non bastano a dire "giornata finita" (27/09). Il lunedi della G6 Torino-Udinese
+     comincia alle 20:45 italiane e il giro del cron delle 19:00 UTC arriva spesso con ore di
+     ritardo: se in quel momento la pagina mostra gia' la tabella della partita in corso (con
+     voti provvisori o mancanti), nessun controllo sotto se ne accorgerebbe per forza, e un
+     file scritto non viene mai piu' riscaricato. Ogni partita della pagina ha uno stato
+     (data-match-status): su G1-G5, 50 partite su 50 concluse valgono "4". Si scrive solo se
+     sono tutte a 4; altrimenti e' una giornata in corso, uscita 2 come sopra. */
+  const stati = [...html.matchAll(/data-match-status="(\d+)"/g)].map(m => m[1]);
+  const nonFinite = stati.filter(s => s !== '4').length;
+  if (nonFinite) {
+    console.log(`Giornata ${giornata}: ${nonFinite} partite su ${stati.length} non ancora concluse ` +
+      `(stati visti: ${[...new Set(stati)].join(', ')}). Niente scritto, si riprova al prossimo giro.`);
+    process.exit(2);
+  }
+  if (stati.length !== 10) {
+    /* Il segnale di sopra e' sparito o e' cambiato: non si blocca (le altre validazioni restano),
+       ma lo si dice, perche' senza quel segnale una giornata in corso potrebbe passare. */
+    console.log(`::warning::Giornata ${giornata}: trovati ${stati.length} stati di partita invece di 10 — ` +
+      'il controllo "partite concluse" non e piu affidabile, va aggiornato tools/fetch-voti.mjs.');
   }
 
   const ordineFonti = verificaOrdineFonti(html);
