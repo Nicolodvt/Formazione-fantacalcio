@@ -163,84 +163,97 @@ const spediti = (dir) => existsSync(join(dir, 'spediti.jsonl'))
 const statoPromemoria = (dir) => JSON.parse(readFileSync(join(dir, 'dati', 'scadenza-promemoria.json'), 'utf8'));
 
 async function provePromemoria() {
-  console.log('\nPROMEMORIA (tools/promemoria-scadenza.mjs, G6: scadenza sabato 10/10 12:55 UTC)');
+  console.log('\nPROMEMORIA (tools/promemoria-scadenza.mjs, G6: scadenza sabato 10/10 12:55 UTC = 14:55 italiane)');
   const dir = preparaBancoPromemoria();
+  const titoli = (lista) => lista.map(x => x.ora.slice(11, 16) + ' ' + x.titolo.replace(': schiera la formazione', ''));
   try {
-    /* 1. Cron puntuale ogni 15 minuti: sei promemoria, uno per soglia, tutti prima della scadenza. */
+    /* 1. Cron puntuale ogni 15 minuti. Soglie 24h, 8h, 3h (27/09). La 8h cade alle 06:55
+       italiane, di notte: parte al primo giro dopo le 08:00 italiane (06:00 UTC). */
     azzera(dir, G6);
     for (let t = Date.parse('2026-10-09T12:00Z'); t <= Date.parse('2026-10-10T13:15Z'); t += 15 * 60000) {
       giroPromemoria(dir, new Date(t).toISOString());
     }
     const s1 = spediti(dir);
-    /* I giri cadono ai quarti d'ora e la scadenza alle :55, quindi il primo giro utile dopo la
-       soglia "1h" arriva a 55 minuti dalla scadenza: il testo deve dire 55, non "un'ora". */
-    const attesi = [['24 ore', 24], ['12 ore', 12], ['6 ore', 6], ['2 ore', 2], ['55 minuti', 1], ['25 minuti', 0.5]];
-    verifica('cron puntuale: 6 promemoria spediti', s1.length === 6, s1.map(x => x.ora + ' ' + x.titolo).join(' | '));
-    attesi.forEach(([testo, ore], i) => {
-      const x = s1[i];
-      const momento = SCADENZA_G6 - ore * 3600000;
-      const ok = x && Date.parse(x.ora) >= momento && Date.parse(x.ora) < momento + 15 * 60000 &&
-        Date.parse(x.ora) < SCADENZA_G6 && x.titolo === `Mancano ${testo}: schiera la formazione`;
-      verifica(`  soglia ${ore}h: spedita al primo giro utile, testo "Mancano ${testo}"`, ok, x ? x.ora + ' ' + x.titolo : 'non spedita');
-    });
+    verifica('cron puntuale: 3 promemoria (24h, 8h rimandata al mattino, 3h), tutti prima della scadenza',
+      JSON.stringify(titoli(s1)) === JSON.stringify(['13:00 Mancano 24 ore', '06:00 Mancano 7 ore', '10:00 Mancano 3 ore']) &&
+      s1.every(x => Date.parse(x.ora) < SCADENZA_G6), JSON.stringify(titoli(s1)));
     verifica('il testo nomina la partita e l\'ora italiana giuste',
       s1[0] && /Giornata 6, si comincia sabato 10 ottobre alle ore 15:00 \(Genoa-Fiorentina\)/.test(s1[0].corpo), s1[0] && s1[0].corpo);
 
-    /* 2. Cron in ritardo di ore (il caso normale su GitHub): a ogni giro al massimo UN promemoria,
-       quello della soglia piu' vicina, non una coda di soglie vecchie una dopo l'altra. */
+    /* 2. Cron in ritardo (il caso normale su GitHub): se piu' soglie scattano nello stesso giro
+       ne parte una sola, la piu' vicina, e le altre restano "superata". */
     azzera(dir, G6);
-    const giri = ['2026-10-09T20:10Z', '2026-10-10T08:40Z', '2026-10-10T09:30Z', '2026-10-10T11:05Z', '2026-10-10T12:40Z'];
-    giri.forEach(g => giroPromemoria(dir, g));
+    ['2026-10-09T20:10Z', '2026-10-10T10:30Z', '2026-10-10T12:40Z'].forEach(g => giroPromemoria(dir, g));
     const s2 = spediti(dir);
-    const titoli = s2.map(x => x.ora.slice(11, 16) + ' ' + x.titolo.replace(': schiera la formazione', ''));
     verifica('cron in ritardo: un promemoria per giro, niente code di soglie scadute',
-      JSON.stringify(titoli) === JSON.stringify(['20:10 Mancano 17 ore', '08:40 Mancano 4 ore', '11:05 Mancano 2 ore', '12:40 Mancano 15 minuti']),
-      JSON.stringify(titoli));
+      JSON.stringify(titoli(s2)) === JSON.stringify(['20:10 Mancano 17 ore', '10:30 Mancano 2 ore']), JSON.stringify(titoli(s2)));
     const st2 = statoPromemoria(dir).inviate;
-    verifica('  le soglie assorbite da una piu\' vicina restano segnate come "superata"',
-      st2['12h'] === 'superata' && st2['1h'] === 'superata' && typeof st2['6h'] === 'string' && st2['6h'].startsWith('2026'),
-      JSON.stringify(st2));
+    verifica('  la soglia assorbita da una piu\' vicina resta "superata"',
+      st2['8h'] === 'superata' && String(st2['3h']).startsWith('2026'), JSON.stringify(st2));
 
-    /* 3. Gia' schierato: nessun promemoria. */
+    /* 3. Silenzio notturno: alle 07:00 italiane sono dovute 24h e 8h, ma non parte nulla e non
+       si segna nulla; al primo giro dopo le 8 ne parte una sola. */
     azzera(dir, G6);
-    ['2026-10-09T13:00Z', '2026-10-10T01:00Z', '2026-10-10T12:30Z'].forEach(g => giroPromemoria(dir, g, { FINTO_SCHIERATO: '1' }));
+    const notte = giroPromemoria(dir, '2026-10-10T05:00Z');
+    verifica('di notte (07:00 italiane) nessun promemoria e nessuna soglia consumata',
+      spediti(dir).length === 0 && !existsSync(join(dir, 'dati', 'scadenza-promemoria.json')) && /notte/.test(notte.uscita),
+      notte.uscita.trim());
+    giroPromemoria(dir, '2026-10-10T06:10Z');
+    const st3 = statoPromemoria(dir).inviate;
+    verifica('  al mattino ne parte uno solo, la 24h resta "superata"',
+      spediti(dir).length === 1 && st3['24h'] === 'superata' && String(st3['8h']).startsWith('2026'), JSON.stringify(st3));
+
+    /* 4. Gia' schierato: nessun promemoria. */
+    azzera(dir, G6);
+    ['2026-10-09T13:00Z', '2026-10-10T06:30Z', '2026-10-10T12:30Z'].forEach(g => giroPromemoria(dir, g, { FINTO_SCHIERATO: '1' }));
     verifica('gia\' schierato: nessun promemoria', spediti(dir).length === 0, JSON.stringify(spediti(dir)));
     verifica('  ...e le soglie restano "saltata-schierato"',
       Object.values(statoPromemoria(dir).inviate).every(v => v === 'saltata-schierato'), JSON.stringify(statoPromemoria(dir).inviate));
 
-    /* 4. Abbonamento scaduto (410): errore UNA volta sola per giornata. */
+    /* 5. Abbonamento scaduto (410): errore UNA volta sola per giornata. */
     azzera(dir, G6);
     const a = giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_PUSH_ESITO: '410' });
-    const b = giroPromemoria(dir, '2026-10-10T01:00Z', { FINTO_PUSH_ESITO: '410' });
+    const b = giroPromemoria(dir, '2026-10-10T06:30Z', { FINTO_PUSH_ESITO: '410' });
     verifica('abbonamento scaduto: il primo giro fallisce (email), il secondo no',
       a.codice === 1 && /::error::/.test(a.uscita) && b.codice === 0, `codici ${a.codice}, ${b.codice}`);
     verifica('  ...e nel file di stato resta "abbonamento-scaduto"',
       statoPromemoria(dir).inviate['24h'] === 'abbonamento-scaduto', JSON.stringify(statoPromemoria(dir).inviate));
 
-    /* 5. Giro arrivato dopo la scadenza: niente promemoria. */
+    /* 6. Giro arrivato dopo la scadenza: niente promemoria. */
     azzera(dir, G6);
     const c = giroPromemoria(dir, '2026-10-10T13:10Z');
     verifica('giro dopo la scadenza: niente spedito, soglie "saltata"',
-      spediti(dir).length === 0 && c.codice === 0 && statoPromemoria(dir).inviate['30m'] === 'saltata', c.uscita.trim());
+      spediti(dir).length === 0 && c.codice === 0 && statoPromemoria(dir).inviate['3h'] === 'saltata', c.uscita.trim());
 
-    /* 6. Giornata nuova: lo stato riparte da zero. */
+    /* 7. Giornata nuova: lo stato riparte da zero. */
     azzera(dir, G6);
     giroPromemoria(dir, '2026-10-09T13:00Z');
     const G7 = { giornata: 7, partite: [{ data: 'sabato 17 ottobre, 15:00', casa: 'Roma', trasferta: 'Lazio' }] };
     writeFileSync(join(dir, 'dati', 'probabili.json'), JSON.stringify(G7));
     giroPromemoria(dir, '2026-10-16T13:30Z');
-    const st6 = statoPromemoria(dir);
+    const st7 = statoPromemoria(dir);
     verifica('giornata nuova: stato ripartito da zero e 24h della G7 spedita',
-      st6.giornata === 7 && Object.keys(st6.inviate).length === 1 && spediti(dir).length === 2, JSON.stringify(st6));
+      st7.giornata === 7 && Object.keys(st7.inviate).length === 1 && spediti(dir).length === 2, JSON.stringify(st7));
 
-    /* 7. Cambio d'ora: scadenza di una giornata che comincia domenica 25/10 (gia' ora solare). */
+    /* 8. Cambio d'ora: scadenza di una giornata che comincia domenica 25/10 (gia' ora solare). */
     azzera(dir, { giornata: 8, partite: [{ data: 'domenica 25 ottobre, 12:30', casa: 'Como', trasferta: 'Inter' }] });
     const prima = giroPromemoria(dir, '2026-10-24T11:20Z');   // 24h prima della scadenza 11:25Z, meno 5 minuti
-    const dopo = giroPromemoria(dir, '2026-10-24T11:26Z');
-    const s7 = spediti(dir);
+    giroPromemoria(dir, '2026-10-24T11:26Z');
+    const s8 = spediti(dir);
     verifica('cambio d\'ora (25/10): la soglia 24h scatta alle 11:25 UTC, non un\'ora prima o dopo',
-      s7.length === 1 && s7[0].ora.startsWith('2026-10-24T11:26') && s7[0].titolo.startsWith('Mancano 24 ore'),
-      JSON.stringify(s7) + ' ' + prima.uscita.trim());
+      s8.length === 1 && s8[0].ora.startsWith('2026-10-24T11:26') && s8[0].titolo.startsWith('Mancano 24 ore'),
+      JSON.stringify(s8) + ' ' + prima.uscita.trim());
+
+    /* 9. Notifica di prova (workflow lanciato a mano con "prova"): parte subito, non tocca lo stato. */
+    azzera(dir, G6);
+    const p = giroPromemoria(dir, '2026-09-27T10:00Z', { PROVA: 'true' });
+    verifica('prova: una notifica "Prova notifica", nessuno stato scritto',
+      p.codice === 0 && spediti(dir).length === 1 && spediti(dir)[0].titolo === 'Prova notifica' &&
+      !existsSync(join(dir, 'dati', 'scadenza-promemoria.json')), p.uscita.trim());
+    azzera(dir, G6);
+    const p2 = giroPromemoria(dir, '2026-09-27T10:00Z', { PROVA: 'true', FINTO_PUSH_ESITO: '410' });
+    verifica('  prova con abbonamento scaduto: giro rosso e spiegazione nel log',
+      p2.codice === 1 && /::error::.*Abbonamento scaduto/.test(p2.uscita), p2.uscita.trim());
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

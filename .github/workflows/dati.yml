@@ -33,8 +33,11 @@ name: Aggiorna dati di giornata
 #   sabato            09:00 e 12:00 CEST   -> aggiornamenti prima delle partite del pomeriggio
 #   domenica          09:00 CEST           -> ultimo giro prima del grosso della giornata
 #
-# VOTI — hanno senso solo a giornata conclusa. Si prova lunedi e martedi: se la giornata non e
-# ancora chiusa lo scraper se ne accorge da solo e non scrive nulla.
+# VOTI — hanno senso solo a giornata conclusa. Si prova lunedi e martedi, e dal 27/09 anche nei
+# giri di mercoledi e giovedi: il cron salta spesso dei giri, e se saltano i due del martedi
+# (successo nella settimana della G3) i voti slitterebbero di una settimana. Costa poco: si
+# scaricano solo le giornate che mancano, e la ricalibrazione fa un passo solo per giornata nuova.
+# Se la giornata non e' ancora chiusa lo scraper se ne accorge da solo e non scrive nulla.
 #
 # PERCHE' COSI' TANTE LETTURE, E PERCHE' NON COSTA NIENTE: il repository e' pubblico, quindi
 # GitHub Actions e' gratis e senza limite di minuti (la quota mensile vale solo per repository
@@ -163,7 +166,7 @@ jobs:
       # Il numero chiesto a mano passa da una variabile d'ambiente, non incollato nello script:
       # cosi' un valore strano nel campo non puo' diventare un comando.
       - name: Voti delle giornate concluse
-        if: ${{ !cancelled() && (github.event.schedule == '0 7,19 * * 1,2' || github.event.inputs.giornata_voti != '') }}
+        if: ${{ !cancelled() && (github.event.schedule == '0 7,19 * * 1,2' || github.event.schedule == '0 7,13 * * 3' || github.event.schedule == '0 6,9,12,15,18 * * 4' || github.event.inputs.giornata_voti != '') }}
         env:
           GIORNATA_A_MANO: ${{ github.event.inputs.giornata_voti }}
         run: |
@@ -202,7 +205,7 @@ jobs:
       # !cancelled(): stesso motivo dei due passi sopra — ricalibrare non dipende dalle
       # Probabili di questo giro, solo dai voti appena scaricati (passo precedente).
       - name: Ricalibrazione del modello
-        if: ${{ !cancelled() && (github.event.schedule == '0 7,19 * * 1,2' || github.event.inputs.giornata_voti != '') }}
+        if: ${{ !cancelled() && (github.event.schedule == '0 7,19 * * 1,2' || github.event.schedule == '0 7,13 * * 3' || github.event.schedule == '0 6,9,12,15,18 * * 4' || github.event.inputs.giornata_voti != '') }}
         run: node "tools/ricalibra.mjs"
 
       # Gli scraper riscrivono sempre il campo "generato", quindi senza questo passo la Action
@@ -241,4 +244,8 @@ jobs:
           GIORNATA=$(node -e "console.log(require('./dati/probabili.json').giornata)")
           git add dati/
           git commit -m "Dati giornata ${GIORNATA} — $(date -u '+%d/%m %H:%M UTC')"
+          # Un altro workflow puo' aver scritto su main nel frattempo (dati.yml e promemoria.yml
+          # girano indipendenti): si riallinea prima di spingere, altrimenti il push viene rifiutato
+          # e il file di stato di questo giro va perso (27/09).
+          git pull --rebase origin main
           git push
