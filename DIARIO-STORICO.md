@@ -1005,3 +1005,81 @@ stima pura, 1419 presenze. **Fattore campo: -0.01 ± 0.16** contro il +0.16 del 
 praticamente identico. Il margine scende a circa ±0.08 per il campo a metà stagione. Nessuna
 costante toccata: cinque giornate sono poche, e la decisione se correggere `CASA_BONUS` in
 automatico spetta all'utente (vedi Prossimi passi).
+
+## 26/09/2026, sera: sei verifiche con subagenti, modificatore, forza squadre, promemoria
+
+**Richiesta dell'utente**: in modalità piano, sei domande (cosa fare prima del deploy, due parole
+sulla partenza negativa della squadra, perché ancora 4 richieste di permesso, se la cache
+dell'app si pulisce, se le notifiche funzionano, se i voti aggiornano davvero il modello), da
+fare con subagenti. Poi: "ok a tutte le correzioni, applica e testa, aspetta il deploy"; "con un
+modulo a 3 dietro il modificatore non entra in gioco"; "correggi tu gli intervalli di notifica".
+
+Sei subagenti in sola lettura, file temporanei in `C:\Code\fantacalcio\.tmp-claude\<nome>\`
+(analisi, script e copie restano lì). Sintesi dei risultati:
+
+- **Pre-deploy**: niente di bloccante; merge in avanti veloce; il telefono prende il nuovo
+  `index.html` anche senza cambiare la cache (rete per prima: i deploy del 05, 09 e 15/09 sono
+  arrivati con la cache ferma a v0-4). Trovato: secondo dito che lascia lo schermo spostato.
+- **Squadra** (G4 e G5 sono le prime due della lega: l'app è stata usata con la rosa vera dal
+  09/09): a priori ~72 punti, fatti 63,5 e 55,5; 15° e 5° percentile contro 4000 rose "gemelle"
+  (stessi ruoli, quotazioni vicine). Soprattutto sfortuna: 1 gol della rosa contro ~5 attesi
+  (probabilità ~4%), in G5 anche l'undici perfetto a posteriori faceva 65. Crepe vere: portieri
+  di squadre che subiscono molto (~-1 a giornata), difesa corta (Spence 0 presenze, Marusic e
+  Idzes infortunati), Vlasic 5 partite su 5 senza superare 5,5. Script in `.tmp-claude\disfatta\`.
+- **Permessi**: 6 richieste (non 4), tutte da regole dell'hook: `git push -q origin dev` non
+  riconosciuto (3 volte), la parola "Netlify" dentro l'heredoc del diario, `gh run list`. In più
+  un buco: `git -C … push origin main` e `git -C … reset --hard` approvati senza chiedere.
+  Hook corretto in `.tmp-claude\permessi\proposta.mjs` (26/26 casi della prova esistente, 28/28
+  di quella nuova; l'installato ne sbaglia 12). Lo installa l'utente (istruzioni date in chat).
+- **Cache**: ~1,5 MB oggi, a fine stagione ~7 MB di copia offline più ~5 MB di localStorage (lo
+  storico cresce di ~60 KB a giornata). Non si accumula (una voce per indirizzo), ma nemmeno si
+  svuota finché non cambia il nome della cache. Rischio: senza `storage.persist()` Android può
+  sfrattare tutto il sito, rosa compresa.
+- **Notifiche**: 112 giri su 112 verdi, chiave e gestori coerenti, ma **nessuna consegna mai
+  confermata** (fino al 26/09 un abbonamento scaduto risultava "spedito"). Cadenza reale di
+  `promemoria.yml`: ~6,6 giri al giorno, mediana 228 minuti fra un giro e l'altro. L'avviso di
+  apertura G6 (21/09) diceva "alle 17:00" invece delle 15:00 (bug del fuso, già corretto).
+- **Voti → modello**: la catena funziona e l'app prende `voti-6` da sola senza deploy. Ma trovato
+  un **difetto serio già in produzione** nella forza delle squadre (sotto).
+
+**Correzioni fatte** (`b762a57`, `e8e3c4c`, su `dev`):
+
+1. **Modificatore di difesa**. L'app lo applicava da 3 difensori in su, con conversione lineare
+   `(media − 6) × 4`, malus compreso. Regola della lega (dall'utente): con la difesa a 3 non c'è.
+   Ora `MOD_MIN_DIFENSORI = 4` in campo con voto e la tabella standard di Fantacalcio.it
+   (`MOD_FASCE`: 6 → +1, 6,5 → +3, 7 → +6), usata in simulazione come valore atteso su una normale
+   di scarto `MOD_INCERTEZZA = 0.37`. Lo scarto è misurato sui voti veri: la media portiere + 3
+   migliori di una squadra oscilla di 0,37 da una giornata all'altra (95 casi; ≥6 nel 68%, ≥6,5
+   nel 16%, ≥7 nell'1%). Nel resoconto sui voti veri si usa la tabella secca. KPI del Campo: "non
+   si applica con 3 difensori" oppure "vale +X pt attesi". **La tabella è un'ipotesi**: da
+   confermare col regolamento.
+2. **Forza delle squadre** (`aggiornaForzaSquadre`). Le forze pure stanno su 5,75-6,15 (centro
+   5,95, con cui `rettificaPartita` confronta), ma l'attacco misurato era il fantavoto medio
+   grezzo di C/A (~6,5), e `mescola` riceveva il numero di voci (~40 per squadra: 80% di peso ai
+   dati). Effetto: ogni attacco "forte", portieri e difensori a ~-0,66 a partita qualunque fosse
+   l'avversario (Di Lorenzo -1,27), scelta spinta verso la difesa a 3. Ora le medie misurate
+   passano da `normalizzaSquadre` (stessa scala delle pure) e il peso conta le giornate della
+   squadra. Con la rosa vera: Di Lorenzo +0,15 contro il Frosinone, la media difensiva con 4
+   dietro da 5,34 a 6,22; il 3-4-3 resta primo, il 4-3-3 a -0,75 (4 difensori sicuri su 8).
+   Nota: `taratura-partita.mjs` ha confermato `PESO_AVVERSARIO` sulle forze pure; quelle usate
+   dall'app ora ne sono una mescola al 33%.
+3. **Promemoria**: 24h, 8h, 3h (prima 24/12/6/2/1h/30m) e silenzio notturno 23-08 (la soglia
+   aspetta il mattino, non si perde). Workflow a mano con "prova": notifica subito, giro rosso
+   con 404/410. `::warning::` se manca `NETLIFY_SITE_URL` o la funzione risponde male.
+   `invia-promemoria.mjs` con `setVapidDetails` protetto.
+4. **Workflow**: voti e ricalibrazione anche nei giri di mercoledì e giovedì; `git pull --rebase
+   origin main` prima di ogni push della Action.
+5. **App**: secondo dito rimette a posto swipe/tiro/sheet; `preventDefault` solo da 3px;
+   pull-to-refresh con lo stesso freno del tasto Aggiorna e toast se fallisce; `caricaCostanti`
+   anche in `aggiornaDati` (piazzati azzerati prima di rileggerli); `history.replaceState` all'avvio
+   se la cronologia ha voci vecchie; `navigator.storage.persist()`; cella "Partita" di riserva
+   senza "in trasferta a" seguito dal nulla.
+6. **`sw.js` v0-6**: in cache solo risposte buone; `index.html` come ripiego solo per le
+   navigazioni (`Response.error()` per i dati mancanti, così `fetchDati` prova la copia di
+   riserva); `renotify: true`.
+
+Prove: `prove-pipeline.mjs` 45/45 (pagine dei voti ora in `C:\Code\fantacalcio\.tmp-claude\
+pagine-voti\`, fuori dal repository), `prova-motore.mjs` tutte le invarianti, `controlla.mjs`
+contro `origin/main` senza perdite (salvo i 4 gestori pointer sostituiti apposta), app nel
+browser senza errori. Commit fatti senza nessuna richiesta di permesso: messaggi da file,
+`git push origin dev` scritto così.
