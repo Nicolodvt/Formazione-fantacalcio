@@ -104,8 +104,15 @@ async function main() {
     /* 404/410 vuol dire che l'abbonamento non e' piu' valido (disiscritto, endpoint
        cambiato): non e' un guasto dello script, serve solo ri-attivare dall'app e
        aggiornare il secret. Qualsiasi altro errore invece e' un guasto vero. */
-    if (err.statusCode === 404 || err.statusCode === 410) {
-      console.log('Abbonamento scaduto o non valido: va ri-attivato dall app.');
+    /* 401/403 (chiavi che non corrispondono piu') hanno la stessa cura di 404/410. Prima finiva
+       solo nel log: nessuna email, e il telefono smetteva di ricevere senza che si sapesse
+       perche'. Ora il passo va in rosso — una volta per giornata, perche' sotto la giornata
+       viene comunque segnata come avvisata e non si riprova. */
+    if ([401, 403, 404, 410].includes(err.statusCode)) {
+      console.log(`::error::Avviso di giornata non consegnato: il servizio push risponde ${err.statusCode} ` +
+        '(abbonamento scaduto o chiavi cambiate). Riattiva le notifiche dall app (Impostazioni -> Notifiche) ' +
+        'e aggiorna il secret PUSH_SUBSCRIPTION.');
+      process.exitCode = 1;
     } else {
       console.error('Invio fallito:', err.statusCode, err.body || err.message);
       process.exitCode = 1;

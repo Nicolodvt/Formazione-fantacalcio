@@ -35,6 +35,12 @@ const VAPID_PUBLIC_KEY = 'BHWwgaSHRz5TzxveQbvlZ6Cx__SgARqi_-hEXlD1g6Av-gYH_Y8cq4
    Action smette di considerarti in ritardo. */
 const MINUTI_SCADENZA = 5;
 
+/* Risposte del servizio push che vogliono dire "questo abbonamento non funziona piu', riprovare
+   non serve": 404/410 abbonamento scaduto o revocato, 401/403 chiavi VAPID che non
+   corrispondono piu' a quelle con cui e' stato creato. In tutti e quattro i casi la cura e' la
+   stessa: riattivare le notifiche dall'app e aggiornare il secret PUSH_SUBSCRIPTION. */
+const ABBONAMENTO_DA_RIFARE = [401, 403, 404, 410];
+
 /* Le sei soglie chieste, in ore prima della scadenza (non del calcio d'inizio). L'ordine qui
    e' solo espositivo: ogni soglia si valuta per conto suo, non in sequenza. */
 const SOGLIE = [
@@ -186,9 +192,23 @@ async function main() {
   try {
     await webpush.sendNotification(subscription, payload);
     console.log(`Promemoria ${daInviare.chiave} spedito.`);
+    stato.inviate[daInviare.chiave] = ora.toISOString();
   } catch (err) {
-    if (err.statusCode === 404 || err.statusCode === 410) {
-      console.log('Abbonamento scaduto o non valido: va ri-attivato dall app.');
+    if (ABBONAMENTO_DA_RIFARE.includes(err.statusCode)) {
+      /* Prima questo caso finiva solo nel log e la soglia veniva segnata con l'orario, come se
+         fosse partita: il telefono non riceveva nulla e da fuori non lo si poteva capire. Ora
+         resta scritto nel file di stato e il workflow va in rosso UNA volta per giornata (il
+         flag riparte da zero con la giornata nuova): un'email sola, non una per soglia. */
+      stato.inviate[daInviare.chiave] = 'abbonamento-scaduto';
+      if (!stato.abbonamentoScadutoSegnalato) {
+        stato.abbonamentoScadutoSegnalato = true;
+        console.log(`::error::Promemoria non consegnato: il servizio push risponde ${err.statusCode} ` +
+          '(abbonamento scaduto o chiavi cambiate). Riattiva le notifiche dall app (Impostazioni -> Notifiche) ' +
+          'e aggiorna il secret PUSH_SUBSCRIPTION.');
+        process.exitCode = 1;
+      } else {
+        console.log(`Abbonamento ancora non valido (${err.statusCode}), gia segnalato per questa giornata.`);
+      }
     } else {
       console.error('Invio fallito:', err.statusCode, err.body || err.message);
       process.exitCode = 1;
@@ -196,7 +216,6 @@ async function main() {
     }
   }
 
-  stato.inviate[daInviare.chiave] = ora.toISOString();
   writeFileSync(FILE_STATO, JSON.stringify(stato, null, 1) + '\n');
 }
 
