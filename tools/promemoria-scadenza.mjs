@@ -124,15 +124,27 @@ async function main() {
      giornata passata non hanno piu senso per quella nuova. */
   if (stato.giornata !== prob.giornata) stato = { giornata: prob.giornata, inviate: {} };
 
-  const daInviare = SOGLIE.find(s => {
+  /* Tutte le soglie gia' raggiunte e non ancora trattate; se sono piu' d'una (il giro e' arrivato
+     con ore di ritardo) si manda SOLO la piu' vicina alla scadenza e le altre si segnano
+     "superata" (27/09). Prima si mandava la piu' vecchia, e le altre ai giri successivi: con il
+     cron in ritardo una coda di promemoria uno dopo l'altro ("mancano 4 ore", poi "mancano 3
+     ore"...) invece di uno solo. SOGLIE e' in ordine di ore decrescenti: l'ultima e' la piu' vicina. */
+  const dovute = SOGLIE.filter(s => {
     if (stato.inviate[s.chiave]) return false;
     const momento = new Date(scadenza.getTime() - s.ore * 3600000);
     return ora >= momento;
   });
+  const daInviare = dovute[dovute.length - 1];
+  const segnaDovute = (valore) => {
+    for (const s of dovute) stato.inviate[s.chiave] = s === daInviare ? valore : 'superata';
+  };
 
   if (!daInviare) {
     console.log('Nessuna soglia da valutare in questo momento.');
     return;
+  }
+  if (dovute.length > 1) {
+    console.log(`Soglie raggiunte insieme: ${dovute.map(s => s.chiave).join(', ')} — vale solo ${daInviare.chiave}.`);
   }
 
   /* L'unico caso in cui vale davvero la pena rinunciare: la scadenza stessa e' gia' passata (il
@@ -143,14 +155,14 @@ async function main() {
      "saltata"). */
   if (ora >= scadenza) {
     console.log(`Soglia ${daInviare.chiave}: la scadenza e' gia' passata, la segno saltata senza mandare nulla.`);
-    stato.inviate[daInviare.chiave] = 'saltata';
+    for (const s of dovute) stato.inviate[s.chiave] = 'saltata';
     writeFileSync(FILE_STATO, JSON.stringify(stato, null, 1) + '\n');
     return;
   }
 
   if (await eGiaSchierato(SITO_URL, prob.giornata)) {
     console.log(`Soglia ${daInviare.chiave}: gia schierato, salto senza mandare nulla.`);
-    stato.inviate[daInviare.chiave] = 'saltata-schierato';
+    for (const s of dovute) stato.inviate[s.chiave] = 'saltata-schierato';
     writeFileSync(FILE_STATO, JSON.stringify(stato, null, 1) + '\n');
     return;
   }
@@ -192,14 +204,14 @@ async function main() {
   try {
     await webpush.sendNotification(subscription, payload);
     console.log(`Promemoria ${daInviare.chiave} spedito.`);
-    stato.inviate[daInviare.chiave] = ora.toISOString();
+    segnaDovute(ora.toISOString());
   } catch (err) {
     if (ABBONAMENTO_DA_RIFARE.includes(err.statusCode)) {
       /* Prima questo caso finiva solo nel log e la soglia veniva segnata con l'orario, come se
          fosse partita: il telefono non riceveva nulla e da fuori non lo si poteva capire. Ora
          resta scritto nel file di stato e il workflow va in rosso UNA volta per giornata (il
          flag riparte da zero con la giornata nuova): un'email sola, non una per soglia. */
-      stato.inviate[daInviare.chiave] = 'abbonamento-scaduto';
+      segnaDovute('abbonamento-scaduto');
       if (!stato.abbonamentoScadutoSegnalato) {
         stato.abbonamentoScadutoSegnalato = true;
         console.log(`::error::Promemoria non consegnato: il servizio push risponde ${err.statusCode} ` +

@@ -1231,9 +1231,15 @@ function parseDataPartita(s){
   if(!m) return null;
   const mese = MESI_IT[m[2].toLowerCase()];
   if(mese==null) return null;
+  /* L'anno piu' vicino a oggi fra quello prima, quello corrente e quello dopo (27/09, stesso
+     difetto corretto in tools/calendario.mjs): prima, a inizio gennaio, una partita del 30
+     dicembre finiva nel dicembre dell'anno dopo. */
   const oggi = new Date(), anno = oggi.getFullYear();
-  let d = new Date(anno, mese, +m[1], +m[3], +m[4]);
-  if(d.getTime() < oggi.getTime() - 7*24*3600*1000) d = new Date(anno+1, mese, +m[1], +m[3], +m[4]);
+  let d = null;
+  [anno-1, anno, anno+1].forEach(a=>{
+    const c = new Date(a, mese, +m[1], +m[3], +m[4]);
+    if(!d || Math.abs(c-oggi) < Math.abs(d-oggi)) d = c;
+  });
   return d;
 }
 
