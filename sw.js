@@ -15,7 +15,7 @@
 /* Il nome della cache va cambiato a ogni versione: e la chiave con cui activate() cancella
    le vecchie. Con la strategia rete-per-prima l'app si aggiorna comunque da sola, ma senza
    cambiarlo la copia vecchia resta occupata sul telefono per sempre. */
-const CACHE = 'formazione-v0-4';
+const CACHE = 'formazione-v0-6';
 
 /* Stessa icona 192x192 del manifest, incollata qui: showNotification() vuole un URL
    diretto a un'immagine, non puo' pescarla dal manifest. Un data URI evita un file a parte. */
@@ -55,11 +55,20 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(
     fetch(e.request)
       .then(r => {
-        const copia = r.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copia)).catch(() => {});
+        /* Solo le risposte buone diventano "l'ultima copia buona" (27/09): prima anche un 404
+           o un 500 momentaneo di Netlify/GitHub sovrascriveva la copia, e alla volta dopo
+           senza rete si apriva una pagina d'errore al posto dell'app. */
+        if (r.ok && (r.type === 'basic' || r.type === 'cors')) {
+          const copia = r.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copia)).catch(() => {});
+        }
         return r;
       })
-      .catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
+      /* La pagina dell'app come ripiego solo per l'apertura dell'app, non per un dato che
+         manca: servire index.html al posto di un JSON lo faceva sembrare una risposta "ok",
+         e l'app non provava la copia di riserva. */
+      .catch(() => caches.match(e.request).then(r => r ||
+        (e.request.mode === 'navigate' ? caches.match('./index.html') : Response.error())))
   );
 });
 
@@ -75,6 +84,7 @@ self.addEventListener('push', (e) => {
       icon: ICONA,
       badge: ICONA,
       tag: 'promemoria-formazione',     // una sola notifica alla volta: la successiva sostituisce, non si accumula
+      renotify: true,                   // ...ma suona e vibra lo stesso: senza, sostituiva in silenzio (27/09)
       data: { url: './' }
     })
   );
