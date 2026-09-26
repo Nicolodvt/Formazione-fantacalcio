@@ -3,19 +3,33 @@
 
 [build]
   publish = "."
-  # Rete di sicurezza sui crediti di build: la Action che scarica i dati di
-  # giornata scrive SOLO dentro dati/ (fino a 7 volte a settimana) e i suoi
-  # commit non devono mai contare come una pubblicazione nuova del sito -
-  # per quello serve una modifica vera a un file dell'app. Se l'unica cosa
-  # cambiata rispetto all'ultima pubblicazione e' dentro dati/ (o e' un file
-  # .md, cioe' solo diario), il comando sotto restituisce "nessuna
-  # differenza" e Netlify salta il deploy. Vedi anche il piano per far si
-  # che il telefono legga dati/ direttamente da GitHub, cosi' la questione
-  # non si pone nemmeno: promemoria in CLAUDE.md.
-  # Esclusi anche tools/ e .github/ (26/09): script e workflow girano solo
-  # nella GitHub Action, il sito non li usa mai — un fix li' non deve costare
-  # una pubblicazione.
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)dati/**' ':(exclude)*.md' ':(exclude)tools/**' ':(exclude).github/**'"
+  # Rete di sicurezza sui crediti di build: ogni pubblicazione costa crediti
+  # (incidente del 04/09: 150 bruciati con push ripetuti su main).
+  #
+  # Si pubblica SOLO se, rispetto all'ultima pubblicazione, e' cambiato uno
+  # dei file che il sito usa davvero: l'app (index.html, sw.js,
+  # manifest.webmanifest — le icone sono dentro il manifest) e la funzione
+  # "schierato" con le sue dipendenze (netlify/, package.json,
+  # package-lock.json). Tutto il resto non entra nel sito o non serve che ci
+  # entri: dati/ (il telefono li legge direttamente da GitHub), tools/ e
+  # .github/ (girano solo nella GitHub Action), diario e file di servizio.
+  #
+  # Prima (fino al 26/09) era un elenco di ESCLUSIONI (dati/, *.md), quindi
+  # ogni correzione a uno script o a un workflow — che col sito non c'entra —
+  # costava una pubblicazione. Un elenco di inclusioni sbaglia nell'altro
+  # verso solo se si aggiunge un file nuovo che il sito usa: in quel caso va
+  # aggiunto qui sotto, insieme.
+  #
+  # Nota: una modifica SOLO a questo file (es. le intestazioni di cache sotto)
+  # non pubblica da sola. Va online col primo deploy dell'app, oppure a mano
+  # da Netlify (Deploys -> Trigger deploy, che costa crediti come gli altri).
+  # Nel dubbio si pubblica, non si salta: se $CACHED_COMMIT_REF manca o e'
+  # uguale a $COMMIT_REF (pubblicazione senza cache, o lo stesso commit
+  # rilanciato a mano) si pubblica sempre. Senza questa guardia git
+  # confrontava il commit con se stesso, non trovava differenze e annullava
+  # anche un deploy chiesto a mano (difetto anche della regola precedente,
+  # trovato provando il comando il 26/09).
+  ignore = "[ -n \"$CACHED_COMMIT_REF\" ] && [ \"$CACHED_COMMIT_REF\" != \"$COMMIT_REF\" ] && git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- index.html sw.js manifest.webmanifest netlify/ package.json package-lock.json"
 
 [functions]
   # netlify/functions/schierato.mjs: l'unica funzione del progetto, ricorda se hai gia
