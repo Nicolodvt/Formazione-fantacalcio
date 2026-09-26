@@ -89,10 +89,21 @@
   :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
 
   /* ---------- Shell ---------- */
-  #app{ display:flex; flex-direction:column; height:100%; height:100dvh; }
-  header{ position:sticky; top:0; z-index:20; background:var(--bg-2); border-bottom:1px solid var(--line); }
-  main{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:10px 0 40px;
-    overscroll-behavior-y:contain; }
+  /* overflow-x:clip: mentre il contenuto segue il dito nello swipe fra le schede esce di lato,
+     e non deve far nascere uno scorrimento orizzontale della pagina. clip e non hidden: hidden
+     renderebbe #app un contenitore di scorrimento. */
+  #app{ display:flex; flex-direction:column; height:100%; height:100dvh; overflow-x:clip; }
+  /* padding-top per la tacca/isola degli iPhone: con viewport-fit=cover e la barra di stato
+     "black-translucent" la pagina parte da sotto l'orologio. Su Android vale 0, non cambia nulla. */
+  header{ position:sticky; top:0; z-index:20; background:var(--bg-2); border-bottom:1px solid var(--line);
+    padding-top:env(safe-area-inset-top); }
+  /* touch-action:pan-y (27/09): il browser gestisce da solo SOLO lo scorrimento verticale; i
+     movimenti orizzontali restano all'app (swipe fra le schede). Senza, sul telefono vero il
+     browser si prendeva ogni gesto dopo pochi millimetri e lo swipe non arrivava mai a fine —
+     vedi "Gesti" nello script. pinch-zoom resta permesso. */
+  main{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    padding:10px 0 calc(40px + env(safe-area-inset-bottom));
+    overscroll-behavior-y:contain; touch-action:pan-y pinch-zoom; }
   /* Cresce da 0 quando si tira in basso dalla cima del contenuto (vedi il pull-to-refresh piu
      sotto nello script). E' un fratello di <main>, non un figlio: main.innerHTML viene
      riscritto in continuo da render(), un indicatore messo li dentro sparirebbe a ogni
@@ -100,6 +111,8 @@
   .pull-indicator{ height:0; overflow:hidden; display:flex; align-items:center;
     justify-content:center; font-size:12px; color:var(--muted); background:var(--bg-2);
     flex-shrink:0; transition:height .18s var(--ease); }
+  /* Soglia superata: il colore dice "adesso puoi lasciare" prima ancora di leggere. */
+  .pull-indicator.pronto{ color:var(--accent); }
 
   .status-strip{ display:flex; align-items:center; gap:10px; padding:8px 12px 6px;
     font-size:12px; color:var(--text-dim); }
@@ -110,6 +123,7 @@
     border-radius:var(--radius-xs); padding:5px 9px; font-size:12px;
     position:relative; min-width:40px; min-height:36px; }
   .icon-btn:active{ background:var(--surface3); }
+  .icon-btn:disabled{ opacity:.55; }
   /* Bersagli da dito. I comandi in testata restano visivamente piccoli per non rubare spazio
      verticale, ma l area toccabile viene estesa oltre il bordo visibile con uno pseudo-elemento:
      il dito trova i suoi ~44px, la testata non cresce di un pixel. L estensione orizzontale e
@@ -262,6 +276,10 @@
     column-gap:11px; padding:12px 13px; margin:0 10px 6px; border-radius:var(--radius);
     background:var(--surface); border:1px solid var(--line); }
   .modulo-row.on{ border-color:var(--accent-dark); background:var(--accent-soft); }
+  /* Riscontro al tocco come le righe della rosa: prima toccare un modulo non cambiava nulla
+     finche' non arrivava il ridisegno. */
+  .modulo-row{ cursor:pointer; transition:background .13s var(--ease), border-color .13s var(--ease); }
+  .modulo-row:active{ background:var(--surface2); border-color:var(--line-2); }
   .modulo-row .mn{ font-size:15px; font-weight:700; font-variant-numeric:tabular-nums; }
   .modulo-row .diff{ font-size:11px; color:var(--muted); margin-top:2px; line-height:1.4; }
   .modulo-row .pts{ font-size:16px; font-weight:700; text-align:right; }
@@ -281,7 +299,7 @@
     max-height:88vh; max-height:88dvh; overflow-y:auto;
     padding:6px 16px calc(24px + env(safe-area-inset-bottom));
     overscroll-behavior:contain; box-shadow:0 -18px 50px rgba(0,0,0,.6);
-    animation:sheetUp .24s var(--ease); transition:transform .2s var(--ease); }
+    animation:sheetUp .24s var(--ease); transition:transform .2s var(--ease), translate .2s var(--ease); }
   /* Mentre si trascina la maniglia il movimento deve seguire il dito senza ritardo: la
      transizione normale (usata per lo scatto indietro o per lo scivolamento via alla chiusura)
      andrebbe in conflitto con l'aggiornamento continuo della posizione. */
@@ -364,7 +382,7 @@
 
   .note{ font-size:11.5px; color:var(--muted); line-height:1.55; margin:8px 0 0; }
 
-  #toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(70px);
+  #toast{ position:fixed; left:50%; bottom:calc(26px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(70px);
     background:var(--surface3); color:var(--text); border:1px solid var(--line-2);
     padding:11px 17px; border-radius:99px; font-size:13px; z-index:60; opacity:0;
     transition:all .24s var(--ease); pointer-events:none; box-shadow:var(--lift-2); }
@@ -1824,11 +1842,20 @@ function applicaModuloAutomatico(){
   if(migliore && MODULI[migliore.modulo]) S.modulo = migliore.modulo;
 }
 
+/* Posizione di scorrimento di ogni scheda (27/09). Prima render() riportava sempre in cima:
+   correggere a mano un giocatore in fondo alla Rosa, o l'aggiornamento automatico quando si
+   riapre l'app, facevano perdere il punto in cui si era. Ora un ridisegno resta dov'era, e
+   tornando su una scheda si ritrova la posizione lasciata. */
+const scrollViste = {};
+let vistaDisegnata = null;
 function render(){
   applicaModuloAutomatico();
   const m = el('#main');
+  if(vistaDisegnata && vistaDisegnata!==S.vista) scrollViste[vistaDisegnata] = m.scrollTop;
+  const scroll = vistaDisegnata===S.vista ? m.scrollTop : (scrollViste[S.vista]||0);
   m.innerHTML = S.vista==='campo' ? vistaCampo() : (S.vista==='rosa' ? vistaRosa() : vistaModuli());
-  m.scrollTop = 0;
+  m.scrollTop = scroll;
+  vistaDisegnata = S.vista;
 
   el('#stGiornata').textContent = PROB && PROB.giornata ? ('Giornata '+PROB.giornata) : 'Nessun dato';
   el('#stEta').textContent = etaDati() || '';
@@ -1877,14 +1904,40 @@ function spingiStoriaSheet(){
   storiaSheetSpinta = true;
   history.pushState({sheet:true}, '');
 }
+/* Stesso trucco per le schede (27/09): da Rosa o Moduli "indietro" riporta a Campo, come nelle
+   app native a schede, invece di chiudere l'app. Conta doppio con lo swipe fra le schede: su
+   Android con la navigazione a gesti uno swipe partito troppo vicino al bordo e' un "indietro"
+   di sistema, e prima faceva uscire dall'app. Una sola voce in piu' al massimo, non una per
+   ogni cambio di scheda: da Rosa a Moduli a Rosa, "indietro" porta comunque a Campo.
+   popDaIgnorare conta i history.back() fatti DAL CODICE (chiusura di una sheet col bottone,
+   ritorno a Campo toccando la scheda): il loro popstate arriva dopo, e non va scambiato per
+   un "indietro" dell'utente. */
+let storiaTabSpinta = false, popDaIgnorare = 0;
+function allineaStoriaTab(){
+  if(S.vista!=='campo' && !storiaTabSpinta){
+    storiaTabSpinta = true;
+    history.pushState({tab:true}, '');
+  }else if(S.vista==='campo' && storiaTabSpinta){
+    storiaTabSpinta = false;
+    popDaIgnorare++;
+    history.back();
+  }
+}
 window.addEventListener('popstate', ()=>{
+  if(popDaIgnorare > 0){ popDaIgnorare--; return; }
   if(el('#sheet').style.display==='block' || el('#settingsSheet').style.display==='block'){
     chiudiSheet(true);
+    return;
+  }
+  if(storiaTabSpinta && S.vista!=='campo'){
+    storiaTabSpinta = false;
+    vaiA('campo', {daIndietro:true});
   }
 });
 
 function apriSheet(html){
   el('#sheet').innerHTML = '<div class="handle"></div>' + html;
+  el('#sheet').scrollTop = 0;   // la sheet e' sempre la stessa: senza, si apriva dove era rimasta la scheda di prima
   el('#sheet').style.display = 'block';
   el('#overlay').style.display = 'block';
   spingiStoriaSheet();
@@ -1899,11 +1952,11 @@ function apriSheet(html){
    dall'app invece di fermarsi alla chiusura della sheet. */
 function chiudiSheet(daIndietro){
   el('#sheet').style.display='none'; el('#settingsSheet').style.display='none';
-  el('#overlay').style.display='none';
-  el('#sheet').style.transform=''; el('#settingsSheet').style.transform='';
+  el('#overlay').style.display='none'; el('#overlay').style.opacity='';
+  el('#sheet').style.translate=''; el('#settingsSheet').style.translate='';
   if(storiaSheetSpinta){
     storiaSheetSpinta = false;
-    if(daIndietro !== true) history.back();
+    if(daIndietro !== true){ popDaIgnorare++; history.back(); }
   }
 }
 
@@ -2178,7 +2231,11 @@ function apriSettings(){
     '<button class="btn btn-danger" id="btnResetTutto">Cancella rosa e ricomincia</button>' +
     '<button class="btn btn-sec" id="btnChiudiSet">Chiudi</button>';
 
+  /* In cima solo se si apre adesso: apriSettings() si richiama anche a foglio aperto (dopo
+     aver disattivato le notifiche), e li' saltare in cima farebbe perdere il punto. */
+  const giaAperto = el('#settingsSheet').style.display==='block';
   el('#settingsSheet').innerHTML = h;
+  if(!giaAperto) el('#settingsSheet').scrollTop = 0;
   el('#settingsSheet').style.display='block';
   el('#overlay').style.display='block';
   spingiStoriaSheet();
@@ -2287,11 +2344,20 @@ function importaRosa(testo){
 /* Composizione a mano: serve prima dell'asta per provare l'app, e dopo per il mercato. */
 function componiRosa(){
   let filtro = '';
+  /* Testata e campo di ricerca si scrivono UNA volta; a ogni lettera si ridisegnano solo il
+     conteggio e le liste (27/09). Prima si rifaceva tutto il foglio, campo compreso, e lo si
+     rimetteva a fuoco: su Android togliere dal documento il campo che ha il fuoco puo' far
+     chiudere e riaprire la tastiera a ogni lettera. */
+  el('#settingsSheet').innerHTML = '<div class="handle"></div><h3>Componi la rosa</h3>' +
+    '<div class="sub" id="componiConta"></div>' +
+    '<input type="text" id="cerca" placeholder="Cerca un giocatore..." autocomplete="off" enterkeyhint="search">' +
+    '<div id="componiLista"></div>' +
+    '<button class="btn btn-primary" id="btnFineComponi">Fatto</button>';
+  el('#settingsSheet').scrollTop = 0;
   function disegna(){
     const q = filtro.toLowerCase();
-    let h = '<div class="handle"></div><h3>Componi la rosa</h3>' +
-      '<div class="sub">'+S.rosa.length+' scelti · P '+cnt('P')+'/3 · D '+cnt('D')+'/8 · C '+cnt('C')+'/8 · A '+cnt('A')+'/6</div>' +
-      '<input type="text" id="cerca" placeholder="Cerca un giocatore..." value="'+esc(filtro)+'">';
+    el('#componiConta').textContent = S.rosa.length+' scelti · P '+cnt('P')+'/3 · D '+cnt('D')+'/8 · C '+cnt('C')+'/8 · A '+cnt('A')+'/6';
+    let h = '';
 
     const scelti = S.rosa.map(id=>LIS[id]).filter(Boolean);
     if(scelti.length){
@@ -2318,25 +2384,25 @@ function componiRosa(){
     }else{
       h += '<p class="note" style="margin-top:14px">Scrivi almeno due lettere per cercare.</p>';
     }
-    h += '<button class="btn btn-primary" id="btnFineComponi">Fatto</button>';
-
-    el('#settingsSheet').innerHTML = h;
-    const c = el('#cerca');
-    c.addEventListener('input', ()=>{ filtro = c.value; const p=c.selectionStart; disegna();
-      const c2=el('#cerca'); c2.focus(); c2.setSelectionRange(p,p); });
-    document.querySelectorAll('[data-aggiungi]').forEach(n=> n.addEventListener('click', ()=>{
-      const id = +n.dataset.aggiungi, l = LIS[id];
-      if(cnt(l.r) >= SLOT_MAX[l.r]){ toast('Reparto pieno'); return; }
-      S.rosa.push(id); salva(); disegna();
-    }));
-    document.querySelectorAll('[data-togli]').forEach(n=> n.addEventListener('click', ()=>{
-      const id = +n.dataset.togli;
-      S.rosa = S.rosa.filter(x=> x!==id); delete S.bloccati[id]; delete S.override[id];
-      salva(); disegna();
-    }));
-    el('#btnFineComponi').addEventListener('click', ()=>{ chiudiSheet(); render(); });
+    el('#componiLista').innerHTML = h;
   }
   function cnt(r){ return S.rosa.filter(id=> LIS[id] && LIS[id].r===r).length; }
+  const c = el('#cerca');
+  c.addEventListener('input', ()=>{ filtro = c.value; disegna(); });
+  /* Un solo gestore sul contenitore invece di uno per riga: le righe si rifanno a ogni lettera. */
+  el('#componiLista').addEventListener('click', (e)=>{
+    const a = e.target.closest('[data-aggiungi]'), t = e.target.closest('[data-togli]');
+    if(a){
+      const id = +a.dataset.aggiungi, l = LIS[id];
+      if(cnt(l.r) >= SLOT_MAX[l.r]){ toast('Reparto pieno'); return; }
+      S.rosa.push(id); salva(); disegna();
+    }else if(t){
+      const id = +t.dataset.togli;
+      S.rosa = S.rosa.filter(x=> x!==id); delete S.bloccati[id]; delete S.override[id];
+      salva(); disegna();
+    }
+  });
+  el('#btnFineComponi').addEventListener('click', ()=>{ chiudiSheet(); render(); });
   disegna();
   el('#settingsSheet').style.display='block';
   el('#overlay').style.display='block';
@@ -2379,7 +2445,38 @@ document.addEventListener('click', (e)=>{
 });
 
 const VISTE = ['campo','rosa','moduli'];
-function vaiA(vista){ S.vista = vista; render(); }
+const riduciMovimento = ()=> window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Il contenuto nuovo entra dal lato da cui arriva (da destra andando avanti, da sinistra
+   tornando indietro): e' lo stesso verso dello swipe, cosi' il gesto e il risultato si leggono
+   come una cosa sola. Breve apposta, e niente del tutto con "riduci animazioni". */
+function entrataVista(verso){
+  const m = el('#main');
+  if(riduciMovimento()){ m.style.transform=''; m.style.opacity=''; return; }
+  m.style.transition = 'none';
+  m.style.transform = 'translateX(' + (verso*42) + 'px)';
+  m.style.opacity = '0.3';
+  void m.offsetWidth;   // fissa il punto di partenza prima di far partire la transizione
+  m.style.transition = 'transform .2s var(--ease), opacity .2s var(--ease)';
+  m.style.transform = '';
+  m.style.opacity = '';
+  clearTimeout(entrataVista._t);
+  entrataVista._t = setTimeout(()=>{ m.style.transition = ''; }, 240);
+}
+
+function vaiA(vista, opz){
+  opz = opz || {};
+  if(vista===S.vista){
+    /* Toccare la scheda gia' aperta riporta in cima, come nelle app native. */
+    if(!opz.daSwipe) el('#main').scrollTo({top:0, behavior: riduciMovimento() ? 'auto' : 'smooth'});
+    return;
+  }
+  const verso = VISTE.indexOf(vista) > VISTE.indexOf(S.vista) ? 1 : -1;
+  S.vista = vista;
+  if(!opz.daIndietro) allineaStoriaTab();
+  render();
+  entrataVista(verso);
+}
 
 document.querySelectorAll('.tab').forEach(t=>{
   t.addEventListener('click', ()=> vaiA(t.dataset.vista));
@@ -2401,7 +2498,15 @@ async function aggiornaDati(mostraToast){
   if(mostraToast!==false) toast(ok ? 'Dati aggiornati' : 'Dati non raggiungibili');
   return ok;
 }
-el('#btnRicarica').addEventListener('click', ()=> aggiornaDati());
+/* Mentre scarica il bottone lo dice e non si ritocca: prima non cambiava nulla fino al toast
+   finale, e con la rete lenta sembrava un tocco a vuoto (e ogni nuovo tocco rifaceva tutto). */
+el('#btnRicarica').addEventListener('click', async ()=>{
+  const b = el('#btnRicarica');
+  if(b.disabled) return;
+  b.disabled = true; b.textContent = 'Aggiorno…';
+  try{ await aggiornaDati(); }
+  finally{ b.disabled = false; b.textContent = 'Aggiorna'; }
+});
 el('#overlay').addEventListener('click', chiudiSheet);
 
 /* "Ho schierato": un tap segna/toglie la giornata corrente come schierata. E' un toggle
@@ -2429,109 +2534,200 @@ el('#btnSchierato').addEventListener('click', ()=>{
    verticale lo chiuda per sbaglio. Un solo gestore per sheet, agganciato una volta sola: la
    maniglia dentro viene rifatta da capo a ogni apertura (innerHTML), quindi si delega il click
    sul contenitore stabile invece di riattaccare l'evento ogni volta. */
+/* Spostamento della sheet mentre la si trascina, e decisione al rilascio: in comune fra la
+   maniglia (eventi pointer) e il resto del foglio (eventi touch, piu' sotto). Si usa la
+   proprieta' `translate`, non `transform`: su tablet la sheet e' centrata con
+   transform:translateX(-50%), e scriverci sopra la faceva saltare di lato appena la si toccava. */
+function spostaSheet(sheetEl, dy, altezza){
+  sheetEl.style.translate = '0 ' + dy + 'px';
+  el('#overlay').style.opacity = String(Math.max(0.25, 1 - dy / Math.max(altezza, 1)));
+}
+function rilasciaSheet(sheetEl, dy, altezza, veloce){
+  sheetEl.classList.remove('trascinando');
+  if(dy > altezza * 0.28 || (veloce && dy > 40)){
+    sheetEl.style.translate = '0 100%';
+    setTimeout(()=>{ chiudiSheet(); }, 200);
+  }else{
+    sheetEl.style.translate = '';
+    el('#overlay').style.opacity = '';
+  }
+}
+
 function attivaTrascinamentoSheet(sheetEl){
-  let inizioY = null, altezza = 0, pid = null;
+  let inizioY = null, altezza = 0, pid = null, t0 = 0;
   sheetEl.addEventListener('pointerdown', (e)=>{
     /* .sheet-head (solo nella scheda giocatore, vedi schedaGiocatore): niente da scorrere li
        sopra, quindi il gesto puo' partire anche da li, non solo dalla maniglia sottile —
        chiesto esplicitamente il 09/09 per rendere piu' facile chiudere col pollice. */
     if(!e.target.closest('.handle, .sheet-head')) return;
-    inizioY = e.clientY; altezza = sheetEl.getBoundingClientRect().height; pid = e.pointerId;
+    inizioY = e.clientY; altezza = sheetEl.getBoundingClientRect().height; pid = e.pointerId; t0 = Date.now();
     sheetEl.classList.add('trascinando');
     try{ sheetEl.setPointerCapture(pid); }catch(err){}
   });
   sheetEl.addEventListener('pointermove', (e)=>{
     if(inizioY==null || e.pointerId!==pid) return;
-    const dy = Math.max(0, e.clientY - inizioY);
-    sheetEl.style.transform = 'translateY(' + dy + 'px)';
+    spostaSheet(sheetEl, Math.max(0, e.clientY - inizioY), altezza);
   });
   function fine(e){
     if(inizioY==null || e.pointerId!==pid) return;
     const dy = Math.max(0, e.clientY - inizioY);
-    sheetEl.classList.remove('trascinando');
     inizioY = null; pid = null;
-    if(dy > altezza * 0.28){
-      sheetEl.style.transform = 'translateY(100%)';
-      setTimeout(()=>{ chiudiSheet(); }, 200);
-    }else{
-      sheetEl.style.transform = '';
-    }
+    rilasciaSheet(sheetEl, dy, altezza, Date.now()-t0 < 250);
   }
   sheetEl.addEventListener('pointerup', fine);
   sheetEl.addEventListener('pointercancel', fine);
+
+  /* Tirare giu' il foglio da QUALUNQUE punto, non solo dalla maniglia (27/09), come i fogli
+     nativi — ma solo se il contenuto e' gia' in cima: se c'e' altro sopra, tirare giu' e'
+     scorrere, come sempre. Eventi touch e non pointer, per lo stesso motivo dello swipe fra le
+     schede (vedi sotto). Esclusi maniglia e testata (li' c'e' gia' il gestore qui sopra) e i
+     campi di testo (li' trascinare serve a selezionare). */
+  let g = null;
+  sheetEl.addEventListener('touchstart', (e)=>{
+    g = null;
+    if(e.touches.length!==1 || e.target.closest('.handle, .sheet-head, textarea, input')) return;
+    const t = e.touches[0];
+    g = { x0:t.clientX, y0:t.clientY, dy:0, t0:Date.now(), modo:null,
+          inCima: sheetEl.scrollTop <= 0, altezza: sheetEl.getBoundingClientRect().height };
+  }, {passive:true});
+  sheetEl.addEventListener('touchmove', (e)=>{
+    if(!g) return;
+    const t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
+    if(g.modo==null){
+      if(g.inCima && dy>0 && dy>=Math.abs(dx)){
+        if(e.cancelable) e.preventDefault();   // subito: dopo che il browser ha iniziato a scorrere non si ferma piu'
+        if(dy>6){ g.modo='trascina'; sheetEl.classList.add('trascinando'); }
+      }else if(Math.abs(dx)>10 || Math.abs(dy)>10){ g = null; return; }
+    }
+    if(g.modo==='trascina'){
+      if(e.cancelable) e.preventDefault();
+      g.dy = Math.max(0, dy);
+      spostaSheet(sheetEl, g.dy, g.altezza);
+    }
+  }, {passive:false});
+  function fineTouch(e){
+    if(!g) return;
+    const s = g; g = null;
+    if(s.modo!=='trascina') return;
+    if(e.type==='touchcancel'){ rilasciaSheet(sheetEl, 0, s.altezza, false); return; }
+    rilasciaSheet(sheetEl, s.dy, s.altezza, Date.now()-s.t0 < 250);
+  }
+  sheetEl.addEventListener('touchend', fineTouch);
+  sheetEl.addEventListener('touchcancel', fineTouch);
 }
 attivaTrascinamentoSheet(el('#sheet'));
 attivaTrascinamentoSheet(el('#settingsSheet'));
 
-/* Swipe orizzontale su Campo/Rosa/Moduli per cambiare tab senza tornare su alla testata.
-   Il blocco di direzione e' la parte che conta: nei primi millimetri di movimento si guarda
-   se il gesto e' piu orizzontale o piu verticale, UNA volta sola, e da li' in poi si resta
-   fedeli a quella scelta. Deciso verticale, non si tocca piu nulla: lo scroll della lista
-   funziona esattamente come se questo listener non esistesse. Deciso orizzontale, si
-   preventDefault() cosi la pagina non scorre di lato mentre si segue il dito. */
-(function(){
-  const main = el('#main');
-  let inizioX = null, inizioY = null, direzione = null, pid = null;
-  main.addEventListener('pointerdown', (e)=>{
-    if(e.pointerType==='mouse') return;   // lo swipe e' un gesto touch, non da trascinare col mouse
-    inizioX = e.clientX; inizioY = e.clientY; direzione = null; pid = e.pointerId;
-  });
-  main.addEventListener('pointermove', (e)=>{
-    if(inizioX==null || e.pointerId!==pid) return;
-    const dx = e.clientX - inizioX, dy = e.clientY - inizioY;
-    if(direzione==null && (Math.abs(dx)>10 || Math.abs(dy)>10)){
-      direzione = Math.abs(dx) > Math.abs(dy) ? 'orizzontale' : 'verticale';
-    }
-    if(direzione==='orizzontale') e.preventDefault();
-  }, { passive:false });
-  function fine(e){
-    if(inizioX==null || e.pointerId!==pid) return;
-    const dx = e.clientX - inizioX;
-    if(direzione==='orizzontale' && Math.abs(dx) > 70){
-      const i = VISTE.indexOf(S.vista);
-      const nuovo = dx < 0 ? VISTE[i+1] : VISTE[i-1];   // sinistra -> tab dopo, destra -> tab prima
-      if(nuovo) vaiA(nuovo);
-    }
-    inizioX = null; direzione = null; pid = null;
-  }
-  main.addEventListener('pointerup', fine);
-  main.addEventListener('pointercancel', fine);
-})();
+/* Swipe orizzontale fra Campo/Rosa/Moduli e pull-to-refresh: un solo gestore, perche' sono
+   due modi di leggere lo STESSO gesto e vanno decisi insieme nei primi millimetri.
 
-/* Pull-to-refresh: tirare in basso dalla cima del contenuto riaggiorna i dati di giornata, come
-   le app native — in piu' rispetto al tasto "Aggiorna" in testata, che resta comunque il modo
-   principale (piu' visibile, sempre raggiungibile con un pollice). Parte SOLO se main e' gia'
-   scrollato in cima: un trascinamento in basso quando c'e' altro sopra e' scroll normale, non un
-   gesto di refresh, e overscroll-behavior-y:contain su main (vedi CSS) evita che ci si impasti
-   col pull-to-refresh nativo del browser mentre il nostro e' attivo. */
+   PERCHE' EVENTI TOUCH E NON POINTER (27/09). Fino al 26/09 entrambi i gesti usavano gli
+   eventi pointer, verificati solo in emulazione. Sul telefono vero, appena il dito si muove di
+   qualche millimetro il browser si prende il gesto per scorrere la pagina e manda un
+   `pointercancel`: da li' in poi niente piu' movimenti, e il vecchio codice decideva la
+   direzione dalle coordinate del cancel, che non sono quelle del dito. Risultato segnalato
+   dall'utente: da Moduli lo swipe indietro non funzionava mai; riprodotto simulando la
+   sequenza vera, da Campo uno swipe verso destra portava persino a Rosa (verso sbagliato).
+   Gli eventi touch invece continuano ad arrivare fino a quando il dito si alza, e il primo
+   touchmove si puo' ancora fermare con preventDefault (dopo che lo scorrimento e' partito no).
+   In piu', main ha touch-action:pan-y (vedi CSS): il browser non considera suoi i movimenti
+   orizzontali, quindi lo swipe non viene mai "rubato".
+
+   Il blocco di direzione resta la parte che conta: nei primi millimetri si decide UNA volta
+   sola se il gesto e' orizzontale (swipe), verticale (scorrimento normale, non si tocca piu'
+   nulla) o un tiro verso il basso dalla cima (pull-to-refresh). */
 (function(){
   const main = el('#main'), tira = el('#pullTira');
-  const SOGLIA = 64;
-  let inizioY = null, pid = null, attivo = false;
-  main.addEventListener('pointerdown', (e)=>{
-    if(e.pointerType==='mouse' || main.scrollTop>0) return;
-    inizioY = e.clientY; pid = e.pointerId; attivo = false;
-  });
-  main.addEventListener('pointermove', (e)=>{
-    if(inizioY==null || e.pointerId!==pid) return;
-    const dy = e.clientY - inizioY;
-    if(dy<=0 || main.scrollTop>0){ inizioY=null; tira.style.height='0'; return; }
-    attivo = true;
-    tira.style.height = Math.min(SOGLIA, dy*0.5) + 'px';
-    tira.textContent = dy*0.5 >= SOGLIA ? 'Rilascia per aggiornare' : 'Tira per aggiornare';
-  });
-  async function fine(e){
-    if(inizioY==null || e.pointerId!==pid) return;
-    const scattato = attivo && (parseFloat(tira.style.height)||0) >= SOGLIA;
-    inizioY = null; pid = null; attivo = false;
-    if(scattato){
-      tira.textContent = 'Aggiornamento...';
-      await aggiornaDati(false);
-    }
-    tira.style.height = '0';
+  const SOGLIA_TIRA = 64;     // px di indicatore (meta' del movimento del dito) per aggiornare
+  const SOGLIA_SWIPE = 60;    // px di movimento orizzontale per cambiare scheda
+  let g = null;               // gesto in corso
+
+  function vicina(dx){
+    const i = VISTE.indexOf(S.vista);
+    return dx < 0 ? VISTE[i+1] : VISTE[i-1];   // dito verso sinistra -> scheda dopo, verso destra -> prima
   }
-  main.addEventListener('pointerup', fine);
-  main.addEventListener('pointercancel', fine);
+  function rientra(){
+    main.style.transition = riduciMovimento() ? 'none' : 'transform .18s var(--ease)';
+    main.style.transform = '';
+    setTimeout(()=>{ main.style.transition = ''; }, 200);
+  }
+  function vibra(){ try{ if(navigator.vibrate) navigator.vibrate(8); }catch(err){} }
+
+  main.addEventListener('touchstart', (e)=>{
+    g = null;
+    if(e.touches.length!==1) return;
+    const t = e.touches[0];
+    g = { x0:t.clientX, y0:t.clientY, x:t.clientX, y:t.clientY, t0:Date.now(), modo:null,
+          inCima: main.scrollTop <= 0, pronto:false };
+  }, {passive:true});
+
+  main.addEventListener('touchmove', (e)=>{
+    if(!g) return;
+    if(e.touches.length!==1){ annulla(); return; }
+    const t = e.touches[0];
+    g.x = t.clientX; g.y = t.clientY;
+    const dx = g.x - g.x0, dy = g.y - g.y0, ax = Math.abs(dx), ay = Math.abs(dy);
+    if(g.modo==null){
+      if(g.inCima && dy>0 && ay>=ax){
+        /* Tiro verso il basso con la lista gia' in cima: va fermato SUBITO, al primo
+           movimento, altrimenti il browser inizia il suo scorrimento/rimbalzo e non lo si
+           ferma piu'. Innocuo: dalla cima verso il basso non c'e' niente da scorrere. */
+        if(e.cancelable) e.preventDefault();
+        if(ay>6) g.modo = 'tira';
+      }else if(ax>10 || ay>10){
+        g.modo = ax>ay ? 'lato' : 'scorri';
+      }
+    }
+    if(g.modo==='tira'){
+      if(e.cancelable) e.preventDefault();
+      const h = Math.max(0, Math.min(SOGLIA_TIRA*1.25, dy*0.5));
+      tira.style.transition = 'none';
+      tira.style.height = h + 'px';
+      const pronto = dy*0.5 >= SOGLIA_TIRA;
+      if(pronto && !g.pronto) vibra();   // un tocco leggero nel momento in cui "rilascia" diventa vero
+      g.pronto = pronto;
+      tira.classList.toggle('pronto', pronto);
+      tira.textContent = pronto ? '↻ Rilascia per aggiornare' : '↓ Tira per aggiornare';
+    }else if(g.modo==='lato'){
+      if(e.cancelable) e.preventDefault();
+      /* Il contenuto segue il dito: si vede subito che il gesto e' stato capito. Se da quel
+         lato non c'e' un'altra scheda, si muove appena (resistenza del bordo). */
+      main.style.transition = 'none';
+      main.style.transform = 'translateX(' + (vicina(dx) ? dx*0.45 : dx*0.12) + 'px)';
+    }
+  }, {passive:false});
+
+  function annulla(){
+    if(!g) return;
+    if(g.modo==='lato') rientra();
+    if(g.modo==='tira'){ tira.style.transition=''; tira.style.height='0'; tira.classList.remove('pronto'); }
+    g = null;
+  }
+
+  async function fine(e){
+    if(!g) return;
+    if(e.type==='touchcancel'){ annulla(); return; }
+    const s = g; g = null;
+    const dx = s.x - s.x0, dy = s.y - s.y0;
+    if(s.modo==='lato'){
+      /* Anche un colpo veloce e corto vale (come nelle app native), non solo un trascinamento lungo. */
+      const veloce = Math.abs(dx) > 30 && (Date.now()-s.t0) < 250;
+      const nuovo = (Math.abs(dx) > SOGLIA_SWIPE || veloce) ? vicina(dx) : null;
+      if(nuovo) vaiA(nuovo, {daSwipe:true});
+      else rientra();
+    }else if(s.modo==='tira'){
+      tira.style.transition = '';
+      tira.classList.remove('pronto');
+      if(dy*0.5 >= SOGLIA_TIRA){
+        tira.style.height = Math.round(SOGLIA_TIRA*0.7) + 'px';
+        tira.textContent = 'Aggiornamento…';
+        await aggiornaDati(false);
+      }
+      tira.style.height = '0';
+    }
+  }
+  main.addEventListener('touchend', fine);
+  main.addEventListener('touchcancel', fine);
 })();
 
 /* Aggiornamento dei DATI quando l'app torna in primo piano, non un timer che gira in
