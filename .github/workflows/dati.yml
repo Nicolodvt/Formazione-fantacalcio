@@ -132,8 +132,20 @@ jobs:
           node "tools/invia-promemoria.mjs"
 
       # I voti si scaricano solo quando ha senso: ai giri di lunedi e martedi, o quando li si
-      # chiede a mano. `continue-on-error` perche una giornata non ancora conclusa fa fallire lo
-      # scraper di proposito, e non e un motivo per marcare rosso tutto il workflow.
+      # chiede a mano.
+      #
+      # QUANDO DIVENTA ROSSO (26/09). Prima c'erano `continue-on-error` e `|| true`: ogni errore
+      # dello scraper veniva ingoiato, quindi se il sito avesse cambiato la pagina dei voti
+      # questi avrebbero smesso di arrivare in silenzio, per sempre. Ora tools/fetch-voti.mjs
+      # esce con codici distinti (vedi in testa al file) e qui:
+      #   - 2 (giornata non ancora giocata o in corso) e 3 (rete/sito giu' un momento): normale,
+      #     si riprova al giro dopo, NIENTE email — salvo che la giornata sia piu' vecchia
+      #     dell'ultima conclusa: una settimana dopo, "non ancora pubblicati" non e' piu'
+      #     credibile (e' anche l'unico modo di accorgersi di una pagina rinominata, che
+      #     sembrerebbe una giornata non giocata).
+      #   - 1 (pagina completa ma letta male, 404...): rosso subito, arriva l'email.
+      # Ricalibrazione e commit sotto hanno !cancelled(): girano comunque, un voto rotto non
+      # blocca il resto.
       #
       # SI RIPROVA OGNI GIORNATA MANCANTE, NON SOLO "l'ultima meno uno". Prima si scaricava solo
       # la giornata immediatamente precedente a quella dichiarata nelle probabili: bastava un
@@ -148,23 +160,37 @@ jobs:
       # riuscita delle Probabili di questo stesso giro, sono un'altra pagina del sito. Senza
       # questo, un giorno di Probabili fallite salterebbe anche la raccolta voti e la
       # ricalibrazione sotto, non solo lo scraping del turno corrente.
+      # Il numero chiesto a mano passa da una variabile d'ambiente, non incollato nello script:
+      # cosi' un valore strano nel campo non puo' diventare un comando.
       - name: Voti delle giornate concluse
         if: ${{ !cancelled() && (github.event.schedule == '0 7,19 * * 1,2' || github.event.inputs.giornata_voti != '') }}
-        continue-on-error: true
+        env:
+          GIORNATA_A_MANO: ${{ github.event.inputs.giornata_voti }}
         run: |
-          if [ -n "${{ github.event.inputs.giornata_voti }}" ]; then
-            echo "Scarico la giornata ${{ github.event.inputs.giornata_voti }} (richiesta a mano)"
-            node "tools/fetch-voti.mjs" "${{ github.event.inputs.giornata_voti }}"
-          else
-            ULTIMA=$(node -e "const g=require('./dati/probabili.json').giornata; console.log(g>1?g-1:0)")
-            for G in $(seq 1 "$ULTIMA" 2>/dev/null || true); do
-              if [ ! -f "dati/voti-$G.json" ]; then
-                echo "Manca dati/voti-$G.json: provo a scaricarlo"
-                node "tools/fetch-voti.mjs" "$G" || true
-              fi
-            done
+          if [ -n "$GIORNATA_A_MANO" ]; then
+            echo "Scarico la giornata $GIORNATA_A_MANO (richiesta a mano)"
+            node "tools/fetch-voti.mjs" "$GIORNATA_A_MANO"
+            exit $?
           fi
-          exit 0
+          ULTIMA=$(node -e "const g=require('./dati/probabili.json').giornata; console.log(g>1?g-1:0)")
+          GUASTI=""
+          for G in $(seq 1 "$ULTIMA" 2>/dev/null || true); do
+            [ -f "dati/voti-$G.json" ] && continue
+            echo "Manca dati/voti-$G.json: provo a scaricarlo"
+            # "|| ESITO=$?": lo step gira con bash -e, un'uscita non zero senza cattura
+            # interromperebbe il ciclo alla prima giornata.
+            ESITO=0
+            node "tools/fetch-voti.mjs" "$G" || ESITO=$?
+            if [ "$ESITO" = "1" ]; then
+              GUASTI="$GUASTI $G(pagina letta male)"
+            elif [ "$ESITO" != "0" ] && [ "$G" -lt "$ULTIMA" ]; then
+              GUASTI="$GUASTI $G(ancora senza voti, ma non e' l'ultima conclusa)"
+            fi
+          done
+          if [ -n "$GUASTI" ]; then
+            echo "::error::Voti non scaricati per le giornate:$GUASTI — vedi il log sopra."
+            exit 1
+          fi
 
       # L'app che impara dalla stagione: confronta la stima pura con tutti i voti reali
       # scaricati finora e corregge un po' per volta uno scarto sistematico per ruolo, se il
