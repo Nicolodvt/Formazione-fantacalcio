@@ -35,9 +35,14 @@ function daOraRoma(anno, mese, giorno, ore, minuti) {
   return new Date(t);
 }
 
-/* "venerdi 04 settembre, 20:45" -> Date. Niente anno nella stringa scaricata: si assume
-   l'anno corrente, e se il risultato cade piu' di una settimana nel passato si prova l'anno
-   successivo (giornate di campionato a cavallo di capodanno).
+/* "venerdi 04 settembre, 20:45" -> Date. Niente anno nella stringa scaricata: fra l'anno
+   prima, quello corrente e quello dopo si prende la data PIU' VICINA a oggi — le date delle
+   probabili sono sempre a pochi giorni o settimane di distanza, mai a mesi.
+   Fino al 27/09 la regola era "anno corrente, e se cade piu' di una settimana nel passato
+   l'anno dopo": pensata per una data di gennaio letta a dicembre, sbagliava il caso opposto.
+   Il 2 gennaio una partita del 30 dicembre diventava il 30 dicembre dell'anno DOPO (giorno
+   della settimana sbagliato, quindi anche il turno infrasettimanale), e qualunque data passata
+   da piu' di 7 giorni saltava avanti di un anno. Trovato da tools/prove-pipeline.mjs.
    La gemella parseDataPartita() in index.html legge invece l'ora nel fuso del telefono: li'
    va bene cosi', il telefono e' in Italia. Se cambia il formato della data va aggiornata anche
    quella. */
@@ -50,9 +55,10 @@ export function parseData(s) {
   if (mese == null) return null;
   const oggi = new Date();
   const anno = oggi.getFullYear();
-  let d = daOraRoma(anno, mese, +giorno, +ore, +minuti);
-  if (d.getTime() < oggi.getTime() - 7 * 24 * 3600 * 1000) {
-    d = daOraRoma(anno + 1, mese, +giorno, +ore, +minuti);
+  let d = null;
+  for (const a of [anno - 1, anno, anno + 1]) {
+    const c = daOraRoma(a, mese, +giorno, +ore, +minuti);
+    if (!d || Math.abs(c - oggi) < Math.abs(d - oggi)) d = c;
   }
   return d;
 }
