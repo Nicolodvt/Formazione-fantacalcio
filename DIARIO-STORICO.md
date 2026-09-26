@@ -890,3 +890,118 @@ Coi dati della fonte di riserva (quelli in produzione dal 21/09): "3 giocatori n
 convocati", percentuali quasi tutte al 91%, modulo 3-5-2. Coi dati della fonte principale corretta
 (scaricati in locale, GitHub escluso via `fetch` sostituito nella pagina, file poi ripristinato con
 git): avviso sparito, Esposito F.P. titolare al 67%, modulo 3-4-3, panchina con percentuali vere.
+
+## Sessione del 26/09/2026, pomeriggio: gesti sul telefono vero, prove della pipeline, rigoristi, calendario
+
+**Richiesta dell'utente**: via libera al piano (prove generali di promemoria e voti della G6, casi
+limite di cambio d'ora e Capodanno, script di prove ripetibile, controllo dell'app), più tre
+aggiunte: la formula dei rigoristi "da fare ora", il calendario storico, e i gesti sul telefono
+("non funziona lo scorrimento indietro dal modulo verso le altre"), con un controllo generale
+dell'usabilità. Nessun deploy: l'utente lo chiederà a parte, e ha chiesto di ricordarglielo.
+Tutto su `dev`.
+
+### 1. Lo swipe fra le schede non poteva funzionare sul telefono vero (`c717a94`)
+
+Swipe e pull-to-refresh usavano gli eventi pointer, provati solo con `PointerEvent` sintetici
+(05/09). Sul telefono vero, con `touch-action` lasciato al browser, dopo pochi millimetri il
+browser si prende il gesto per scorrere e manda `pointercancel`: da lì niente più movimenti, e il
+vecchio `fine()` calcolava la direzione dalle coordinate del cancel. Riprodotto con la sequenza vera
+(pointerdown, due pointermove, pointercancel a 0,0): da Moduli lo swipe verso destra non faceva
+nulla, da Campo portava a **Rosa**, cioè nel verso sbagliato. Con le coordinate vere nel cancel lo
+spostamento arriva a ~40px, sotto la soglia di 70: nessuno swipe.
+
+Rifatto con eventi touch (arrivano fino a quando il dito si alza; il primo `touchmove` si può
+ancora fermare) e `touch-action: pan-y pinch-zoom` su `main` (il browser non considera suoi i
+movimenti orizzontali). Un solo gestore decide nei primi millimetri fra swipe, scorrimento e tiro
+dalla cima. In più: il contenuto segue il dito con resistenza al bordo, vale anche un colpo veloce
+(>30px in <250ms), il contenuto nuovo entra dal lato giusto, niente animazioni con "riduci
+movimento". Provato con `TouchEvent` sintetici: avanti/indietro da tutte le schede, bordi,
+diagonale, colpo veloce, `touchcancel` a metà, tiro in cima (aggiorna), tiro corto (niente), tiro a
+metà lista (scorre). **Resta da provare con il dito vero** (Prossimi passi).
+
+Nello stesso giro, dal controllo dell'usabilità:
+- **"Indietro" di Android** da Rosa/Moduli riporta a Campo invece di chiudere l'app (una voce di
+  cronologia sola; `popDaIgnorare` conta i `history.back()` fatti dal codice). Conta anche per lo
+  swipe: partito vicino al bordo, con la navigazione a gesti è un "indietro" di sistema.
+- **Sheet chiudibili tirando giù da qualunque punto** quando sono già in cima (prima solo dalla
+  maniglia). Spostamento con la proprietà `translate`, non `transform`: su tablet la sheet è
+  centrata con `transform`, che veniva sovrascritto. Lo sfondo schiarisce mentre si tira.
+- **`render()` non riporta più in cima** a ogni ridisegno (succedeva dopo una correzione a mano
+  in fondo alla Rosa, e all'aggiornamento automatico quando si riapre l'app); ogni scheda ricorda
+  la sua posizione. Toccare la scheda già aperta riporta in cima.
+- Tasto Aggiorna con stato "Aggiorno…" (prima nessun riscontro fino al toast, e ogni tocco rifaceva
+  tutto); componi-rosa che non ridisegna più il campo di ricerca a ogni lettera (su Android può
+  chiudere e riaprire la tastiera); aree sicure dell'iPhone; riscontro al tocco sulle righe dei
+  moduli; sheet che si aprono in cima.
+- Scheda giocatore: la cella "Partita" ripeteva "in casa con ..." già scritto in "Prossima partita"
+  e spingeva le azioni fuori schermo — data e modulo ora stanno in "Prossima partita" (`7053764`).
+- Impostazioni: con la rosa caricata partono da formazione da copiare, resoconto e notifiche;
+  import della rosa e incolla-dati scendono sotto.
+- Schede con ruoli ARIA.
+- **Errore mio, corretto** (`f7268ec`): avevo rimesso una vibrazione alla soglia del
+  pull-to-refresh, che l'utente aveva fatto togliere il 05/09. Trovato rileggendo questo diario.
+
+Nota sul pannello di anteprima: `visualViewport.scale` era 1.064 anche dopo il ricaricamento, e il
+bordo destro sembrava tagliato. Non è un difetto dell'app (`scrollWidth` = 375).
+
+### 2. Voti: una partita in corso poteva finire nel file (`c917f5a`)
+
+20 tabelle non bastano a dire "giornata finita": il lunedì della G6 Torino-Udinese comincia alle
+20:45 e il giro delle 19:00 UTC arriva spesso con ore di ritardo. Ogni partita della pagina ha
+`data-match-status`: scaricate le pagine G1-G6, sulle 50 partite giocate vale sempre "4", e la G6
+non ha ancora nessun indicatore. Ora si scrive solo se tutte le partite sono a 4, altrimenti esce
+con 2; se l'attributo sparisce, un `::warning::` nel log. Nuovo `--da-file` per provare lo script
+su pagine salvate. Confrontando le pagine di oggi con i file salvati: una sola differenza su 1590
+righe (Piccoli, G3: fantavoto 9 → 9.5), quindi le correzioni a posteriori della redazione sono
+trascurabili, e non si riscaricano.
+
+### 3. Prove ripetibili: `tools/prove-pipeline.mjs` (`0aadd44`)
+
+Calendario (fusi, cambi d'ora 25/10 e 28/03, Capodanno), promemoria (processi separati con un
+modulo `--import` che ferma l'orologio, mette il fuso a UTC e finge la funzione Netlify, più un
+finto `web-push`), ricalibrazione (replay da zero e rilancio), voti (pagine vere e sabotate, con
+`--pagine DIR`: le pagine non stanno nel repository). 47 prove. Sul codice di stamattina ne
+fallivano 8, per due difetti veri:
+- **Capodanno** (`calendario.mjs` e `parseDataPartita` in `index.html`): la regola "anno corrente,
+  e se è passata da più di 7 giorni l'anno dopo" leggeva il 2 gennaio una partita del 30 dicembre
+  come 30 dicembre dell'anno dopo, e spostava avanti di un anno qualunque data passata da più di
+  una settimana. Ora si sceglie, fra anno prima, corrente e dopo, la data più vicina a oggi.
+- **Promemoria in coda**: con il cron in ritardo partiva la soglia più vecchia non ancora mandata,
+  poi le altre ai giri successivi ("mancano 4 ore", poi "mancano 3 ore"). Ora, se più soglie
+  scattano insieme, parte solo la più vicina e le altre restano `"superata"`.
+Prova generale della G6: con il cron puntuale i sei promemoria partono tutti prima delle 12:55 UTC
+di sabato 10/10, con il tempo vero rimasto nel testo ("mancano 55 minuti" per la soglia 1h, perché
+i giri cadono ai quarti d'ora e la scadenza alle :55). Il cambio d'ora del 25/10 è corretto.
+
+### 4. Rigoristi: formula corretta e soglia sui rigori tirati (`acb73f8`)
+
+Fatto come proposto il 26/09 mattina (l'utente l'ha spostato fra le cose da fare ora): scarto
+misurato contro la sola base `BONUS_PIAZZATI`, e nessuna correzione sotto `MIN_RIGORI = 10` tiri
+per tag. Contati i rigori di G1-G5: 5 in tutta la A (3 segnati), di cui 2 da giocatori R1
+(Zaccagni segnato, Colombo sbagliato) e 3 da giocatori senza tag sul listone (Maldini, Yeboah J.,
+Varela G.). `costanti.json` ricostruito con il replay, questa volta con gli arrivi veri: **G1 e G2
+sono arrivate insieme** (stesso commit, 04/09), poi una alla volta. Il replay a passi singoli dava A
+0.233 invece di 0.225; con gli arrivi veri lo script vecchio ridà cifra per cifra il file in uso
+(piazzati compresi), il nuovo dà `rettificaRuolo` identica e `rettificaPiazzati` vuota. La sezione
+`ricalibra` delle prove legge gli arrivi dalla storia git.
+
+**Attenzione al merge**: finché `dev` non va su `main`, la Action gira con lo script vecchio. Se
+dopo la G6 scrive un `costanti.json` su `main`, al merge quel file andrà in conflitto: va rifatto
+con il replay (lo verifica `node tools/prove-pipeline.mjs ricalibra`).
+
+### 5. Calendario storico (`9b804d8`)
+
+L'intestazione di ogni tabella dei voti dice casa, risultato, trasferta, data e ora con l'anno
+("Juventus 2 - 0 Atalanta", "20/09/2026 - 18:00"). `fetch-voti.mjs` ora aggiorna
+`dati/calendario.json` a ogni giornata scritta, senza richieste in più al sito; ogni partita
+compare due volte (una tabella per squadra) e le due letture devono coincidere. Se il calendario
+non si legge, i voti si scrivono lo stesso e il passo esce con 1 (email). G1-G5 ricostruite con
+`--solo-calendario` (voti intatti). Se la G6 viene scritta dallo script vecchio, prima del merge,
+il calendario della G6 va recuperato con `node tools/fetch-voti.mjs 6 --solo-calendario`.
+
+Nuova diagnostica `tools/taratura-partita.mjs` (non scrive nulla): residuo = fantavoto vero meno
+stima pura, 1419 presenze. **Fattore campo: -0.01 ± 0.16** contro il +0.16 del modello
+(2 × `CASA_BONUS`), a 2.1 errori standard: al limite. **Avversario: +1.39 ± 0.71** contro 1.4,
+praticamente identico. Il margine scende a circa ±0.08 per il campo a metà stagione. Nessuna
+costante toccata: cinque giornate sono poche, e la decisione se correggere `CASA_BONUS` in
+automatico spetta all'utente (vedi Prossimi passi).
