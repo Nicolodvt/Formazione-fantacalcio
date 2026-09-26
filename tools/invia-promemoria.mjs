@@ -65,11 +65,19 @@ async function main() {
   /* Il protocollo Web Push vuole un contatto nel messaggio, per uso dei servizi push in caso
      di abuso. Un URL pubblico del progetto vale quanto un'email per questo scopo, e con il
      repository ormai pubblico non mette in giro un indirizzo personale senza motivo. */
-  webpush.setVapidDetails(
-    'https://github.com/Nicolodvt/Formazione-fantacalcio',
-    VAPID_PUBLIC_KEY,
-    VAPID_PRIVATE_KEY
-  );
+  /* Protetto come in promemoria-scadenza.mjs (27/09): una chiave malformata lancia un'eccezione
+     con uno stack trace invece di un errore leggibile. */
+  try {
+    webpush.setVapidDetails(
+      'https://github.com/Nicolodvt/Formazione-fantacalcio',
+      VAPID_PUBLIC_KEY,
+      VAPID_PRIVATE_KEY
+    );
+  } catch (e) {
+    console.error('VAPID_PRIVATE_KEY non valida:', e.message);
+    process.exitCode = 1;
+    return;
+  }
 
   const oraItaliana = prima.quando.toLocaleString('it-IT', {
     timeZone: 'Europe/Rome', weekday: 'long', day: 'numeric', month: 'long',

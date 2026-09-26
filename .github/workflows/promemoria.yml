@@ -4,8 +4,8 @@ name: Promemoria scadenza formazione
 # fantacalcio.it e per rispetto verso il sito non gira piu' spesso di una volta all'ora (vedi
 # dati.yml). Questo NON tocca fantacalcio.it per niente - legge solo dati/probabili.json gia'
 # sul disco - quindi puo' girare molto piu' spesso senza alcun costo di cortesia. Serve
-# questa frequenza (sulla carta): le soglie piu' vicine alla scadenza sono a 1 ora e 30 minuti,
-# ogni giorno della settimana - i turni si giocano anche il weekend, quando dati.yml non gira
+# questa frequenza (sulla carta): l'ultima soglia e' a 3 ore dalla scadenza (24h, 8h, 3h dal
+# 27/09), ogni giorno della settimana - i turni si giocano anche il weekend, quando dati.yml non gira
 # quasi mai. In pratica GitHub fa partire questo cron con gap di ore, non 15 minuti (misurato
 # il 15/09): per questo lo script non assume mai di essere puntuale (vedi il commento in testa
 # a tools/promemoria-scadenza.mjs).
@@ -17,7 +17,14 @@ name: Promemoria scadenza formazione
 on:
   schedule:
     - cron: '*/15 * * * *'
-  workflow_dispatch: {}
+  # Lanciato a mano con "prova" spuntato manda subito una notifica di prova (27/09): l'unico
+  # modo per sapere che la catena arriva davvero fino al telefono.
+  workflow_dispatch:
+    inputs:
+      prova:
+        description: 'Manda subito una notifica di prova (senza soglie, senza toccare lo stato)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -49,6 +56,7 @@ jobs:
           # schierato, quindi manda comunque il promemoria (vedi eGiaSchierato in
           # promemoria-scadenza.mjs: fallisce "aperto", non "chiuso").
           NETLIFY_SITE_URL: ${{ vars.NETLIFY_SITE_URL }}
+          PROVA: ${{ github.event.inputs.prova }}
         run: |
           npm install --no-save web-push@3.6.7 --silent
           node "tools/promemoria-scadenza.mjs"
@@ -77,4 +85,8 @@ jobs:
             exit 0
           fi
           git commit -m "Promemoria scadenza — $(date -u '+%d/%m %H:%M UTC')"
+          # Un altro workflow puo' aver scritto su main nel frattempo (dati.yml e promemoria.yml
+          # girano indipendenti): si riallinea prima di spingere, altrimenti il push viene rifiutato
+          # e il file di stato di questo giro va perso (27/09).
+          git pull --rebase origin main
           git push

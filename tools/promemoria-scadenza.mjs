@@ -41,16 +41,31 @@ const MINUTI_SCADENZA = 5;
    stessa: riattivare le notifiche dall'app e aggiornare il secret PUSH_SUBSCRIPTION. */
 const ABBONAMENTO_DA_RIFARE = [401, 403, 404, 410];
 
-/* Le sei soglie chieste, in ore prima della scadenza (non del calcio d'inizio). L'ordine qui
-   e' solo espositivo: ogni soglia si valuta per conto suo, non in sequenza. */
+/* Soglie in ore prima della scadenza (non del calcio d'inizio), in ordine decrescente: se
+   piu' d'una scatta nello stesso giro vale l'ultima (la piu' vicina), vedi "dovute" in main().
+   Rifatte il 27/09 (l'utente: "correggi tu gli intervalli, li ho sparati a caso"). Prima erano
+   sei (24h, 12h, 6h, 2h, 1h, 30m), pensate per un cron ogni 15 minuti; quello vero gira in
+   media ogni 3,8 ore (mediana 228 minuti su 112 giri, 09-26/09), quindi 1h e 30m quasi non
+   partivano mai e 12h/6h/2h arrivavano a coppie. Ora tre momenti con uno scopo ciascuno:
+   - 24h "domani si gioca": c'e' tutto il tempo per guardare le probabili;
+   - 8h  "oggi si gioca": la mattina stessa (con il silenzio notturno sotto);
+   - 3h  ultima chiamata: con giri ogni ~4 ore arriva prima della scadenza circa 3 volte su 4,
+         una soglia a 1h ci riusciva circa 1 volta su 4.
+   Prima ancora c'e' l'avviso "giornata nuova" di invia-promemoria.mjs, giorni prima. */
 const SOGLIE = [
   { chiave: '24h', ore: 24 },
-  { chiave: '12h', ore: 12 },
-  { chiave: '6h', ore: 6 },
-  { chiave: '2h', ore: 2 },
-  { chiave: '1h', ore: 1 },
-  { chiave: '30m', ore: 0.5 }
+  { chiave: '8h', ore: 8 },
+  { chiave: '3h', ore: 3 }
 ];
+
+/* Silenzio notturno (ora italiana): una soglia che scatta di notte aspetta il primo giro dopo
+   le 8. Non si perde: resta "dovuta" e parte al mattino (o viene assorbita dalla successiva). */
+const NOTTE_DALLE = 23, NOTTE_ALLE = 8;
+function eNotteInItalia(t) {
+  const ore = +new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Rome', hour: 'numeric', hourCycle: 'h23' })
+    .format(t);
+  return ore >= NOTTE_DALLE || ore < NOTTE_ALLE;
+}
 
 function leggiJson(percorso, fallback) {
   try { return JSON.parse(readFileSync(percorso, 'utf8')); }
@@ -62,16 +77,25 @@ function leggiJson(percorso, fallback) {
    ancora pubblicato, o essere temporaneamente giu. Tacere un promemoria per un dubbio tecnico
    sarebbe peggio che mandarne uno di troppo — l'intera ragion d'essere di questo script e
    avvisare, non il contrario. */
+/* Gli avvisi ::warning:: (27/09) finiscono fra le annotazioni del giro: prima un URL mancante
+   o una funzione che risponde male passavano in silenzio, e "Ho schierato" smetteva di
+   fermare i promemoria senza che nessuno se ne accorgesse. */
 async function eGiaSchierato(sitoUrl, giornata) {
   if (!sitoUrl) {
-    console.log('NETLIFY_SITE_URL non impostato: non posso verificare "schierato", procedo come se non lo fosse.');
+    console.log('::warning::NETLIFY_SITE_URL non impostato: "Ho schierato" non puo fermare i promemoria.');
     return false;
   }
   try {
     const r = await fetch(`${sitoUrl.replace(/\/$/, '')}/.netlify/functions/schierato?giornata=${giornata}`,
       { signal: AbortSignal.timeout(8000) });
-    if (!r.ok) return false;
+    if (!r.ok) {
+      console.log(`::warning::Funzione "schierato" risponde ${r.status}: procedo come se non fosse schierato.`);
+      return false;
+    }
     const d = await r.json();
+    if (typeof d.schierato !== 'boolean') {
+      console.log('::warning::Funzione "schierato": risposta senza il campo "schierato", procedo come se non lo fosse.');
+    }
     return !!d.schierato;
   } catch (e) {
     console.log('Funzione "schierato" non raggiungibile (' + e.message + '): procedo come se non fosse schierato.');
@@ -102,6 +126,31 @@ async function main() {
 
   if (!VAPID_PRIVATE_KEY || !SUB_RAW) {
     console.log('Notifiche non configurate (secret mancanti): salto, non e un errore.');
+    return;
+  }
+
+  /* Notifica di prova (27/09): lanciando il workflow a mano con "prova" spuntato parte subito
+     una notifica, senza soglie e senza toccare lo stato. Unico modo di sapere davvero che la
+     catena arriva fino al telefono: 201 e notifica = tutto bene; 404/410 = abbonamento da rifare. */
+  if (process.env.PROVA === 'true') {
+    let sub;
+    try { sub = JSON.parse(SUB_RAW); }
+    catch (e) { console.log('::error::Il secret PUSH_SUBSCRIPTION non e un JSON valido.'); process.exitCode = 1; return; }
+    const { default: webpush } = await import('web-push');
+    try {
+      webpush.setVapidDetails('https://github.com/Nicolodvt/Formazione-fantacalcio', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+      const r = await webpush.sendNotification(sub, JSON.stringify({
+        titolo: 'Prova notifica',
+        corpo: 'Se leggi questo, i promemoria arrivano sul telefono.'
+      }));
+      console.log(`Notifica di prova accettata dal servizio push (${r && r.statusCode}). Controlla il telefono.`);
+    } catch (err) {
+      console.log(`::error::Notifica di prova rifiutata (${err.statusCode || err.message}). ` +
+        (ABBONAMENTO_DA_RIFARE.includes(err.statusCode)
+          ? 'Abbonamento scaduto: riattiva le notifiche dall app e aggiorna il secret PUSH_SUBSCRIPTION.'
+          : 'Controlla la chiave VAPID_PRIVATE_KEY.'));
+      process.exitCode = 1;
+    }
     return;
   }
 
@@ -157,6 +206,11 @@ async function main() {
     console.log(`Soglia ${daInviare.chiave}: la scadenza e' gia' passata, la segno saltata senza mandare nulla.`);
     for (const s of dovute) stato.inviate[s.chiave] = 'saltata';
     writeFileSync(FILE_STATO, JSON.stringify(stato, null, 1) + '\n');
+    return;
+  }
+
+  if (eNotteInItalia(ora)) {
+    console.log(`Soglia ${daInviare.chiave} dovuta, ma e' notte in Italia: aspetto il primo giro dopo le ${NOTTE_ALLE}.`);
     return;
   }
 
