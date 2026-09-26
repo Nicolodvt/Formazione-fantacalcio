@@ -36,7 +36,7 @@ const args = process.argv.slice(2);
 const iPagine = args.indexOf('--pagine');
 const DIR_PAGINE = iPagine !== -1 ? resolve(args[iPagine + 1]) : null;
 const richieste = args.filter((a, i) => !a.startsWith('--') && (iPagine === -1 || i !== iPagine + 1));
-const SEZIONI = richieste.length ? richieste : ['calendario', 'promemoria', 'voti'];
+const SEZIONI = richieste.length ? richieste : ['calendario', 'promemoria', 'ricalibra', 'voti'];
 
 let falliti = 0, passati = 0;
 function verifica(nome, ok, dettaglio) {
@@ -302,9 +302,63 @@ function proveVoti() {
 
 /* ======================================================================================= */
 
+/* Ricalibrazione su una copia: replay da zero, un passo per ogni arrivo di voti (G1 e G2 sono
+   arrivate insieme il 04/09), e deve tornare cifra per cifra dati/costanti.json. Poi un secondo
+   lancio sugli stessi voti non deve cambiare nulla (bug del 26/09: un passo per ogni lancio). */
+function proveRicalibra() {
+  console.log('\nRICALIBRAZIONE (tools/ricalibra.mjs, replay su una copia di dati/)');
+  const voti = [];
+  for (let g = 1; g <= 38; g++) if (existsSync(join(RADICE, 'dati', `voti-${g}.json`))) voti.push(g);
+  if (voti.length < 2) { console.log('  – saltate: meno di due giornate di voti'); return; }
+  const dir = mkdtempSync(join(tmpdir(), 'prove-ricalibra-'));
+  try {
+    mkdirSync(join(dir, 'tools')); mkdirSync(join(dir, 'dati'));
+    copyFileSync(join(RADICE, 'index.html'), join(dir, 'index.html'));
+    for (const f of ['ricalibra.mjs', 'estrai-motore.mjs']) copyFileSync(join(QUI, f), join(dir, 'tools', f));
+    const lancia = () => spawnSync(process.execPath, [join(dir, 'tools', 'ricalibra.mjs')], { encoding: 'utf8' });
+    /* Gli arrivi veri si leggono dalla storia git (commit che ha aggiunto ogni voti-N.json):
+       se il cron recupera due giornate nello stesso giro, in CI sono un passo solo, e il
+       replay deve fare lo stesso. Senza git si ripiega su "G1+G2 insieme, poi una alla volta". */
+    let arrivi;
+    try {
+      const perCommit = new Map();
+      for (const g of voti) {
+        const c = spawnSync('git', ['log', '--diff-filter=A', '--format=%H', '--', `dati/voti-${g}.json`],
+          { cwd: RADICE, encoding: 'utf8' }).stdout.trim().split('\n').pop();
+        if (!c) throw new Error('senza storia');
+        if (!perCommit.has(c)) perCommit.set(c, []);
+        perCommit.get(c).push(g);
+      }
+      arrivi = [...perCommit.values()].sort((a, b) => a[0] - b[0]);
+    } catch (e) {
+      arrivi = [[1, 2], ...voti.filter(g => g > 2).map(g => [g])];
+    }
+    console.log('  arrivi dei voti: ' + arrivi.map(a => a.join('+')).join(', '));
+    for (const gruppo of arrivi) {
+      for (const g of gruppo) copyFileSync(join(RADICE, 'dati', `voti-${g}.json`), join(dir, 'dati', `voti-${g}.json`));
+      lancia();
+    }
+    const leggi = (p) => JSON.parse(readFileSync(p, 'utf8'));
+    const replay = leggi(join(dir, 'dati', 'costanti.json'));
+    const vero = leggi(join(RADICE, 'dati', 'costanti.json'));
+    const confronta = (c) => JSON.stringify([c.giornateUsate, c.rettificaRuolo, c.rettificaPiazzati]);
+    verifica('il replay da zero ridà dati/costanti.json', confronta(replay) === confronta(vero),
+      `replay ${confronta(replay)}\n      file   ${confronta(vero)}`);
+    const prima = readFileSync(join(dir, 'dati', 'costanti.json'), 'utf8');
+    const r = lancia();
+    verifica('rilanciato sugli stessi voti non cambia nulla',
+      readFileSync(join(dir, 'dati', 'costanti.json'), 'utf8') === prima && /Nessuna giornata nuova/.test(r.stdout), r.stdout.trim());
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+/* ======================================================================================= */
+
 for (const s of SEZIONI) {
   if (s === 'calendario') await proveCalendario();
   else if (s === 'promemoria') await provePromemoria();
+  else if (s === 'ricalibra') proveRicalibra();
   else if (s === 'voti') proveVoti();
   else { console.error('Sezione sconosciuta: ' + s); process.exit(1); }
 }

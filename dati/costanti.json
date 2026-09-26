@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-25T23:07:46.090Z",
+ "generato": "2026-09-26T14:40:02.515Z",
  "giornateUsate": [
   1,
   2,
@@ -14,9 +14,5 @@
   "C": 0.018,
   "A": 0.225
  },
- "rettificaPiazzati": {
-  "R1": -0.2,
-  "R2": -0.058,
-  "R3": -0.017
- }
+ "rettificaPiazzati": {}
 }

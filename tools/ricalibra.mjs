@@ -27,6 +27,8 @@
      (poche decine di portieri in tutta la Serie A): meglio aspettare che sbagliare presto.
    - Correzione limitata: mai oltre LIMITE in valore assoluto, qualunque cosa dicano i dati -
      un singolo dato anomalo non puo mandare tutto fuori scala.
+   - Per i piazzati, anche un minimo di rigori TIRATI per tag (MIN_RIGORI): le presenze non
+     bastano, la media si muove solo quando qualcuno calcia (27/09).
    - Aggiornamento smorzato, non un salto diretto al nuovo valore misurato: ogni giro si
      sposta solo TASSO_APPRENDIMENTO della distanza dal valore attuale a quello nuovo. Tre o
      quattro giornate anomale in fila non bastano a far ballare la correzione.
@@ -49,6 +51,10 @@ const RADICE = resolve(QUI, '..');
 const FILE_COSTANTI = resolve(RADICE, 'dati', 'costanti.json');
 
 const MIN_CAMPIONE = 30;
+/* Per i piazzati le presenze non dicono quanto e' solido il dato: un R1 con 80 presenze ha
+   tirato forse 2 rigori, e sono quei tiri (non le presenze) a muovere la media. Sotto questa
+   soglia di rigori tirati per tag non si corregge nulla (27/09, vedi il blocco dei piazzati). */
+const MIN_RIGORI = 10;
 const LIMITE = 0.4;
 const TASSO_APPRENDIMENTO = 0.3;
 
@@ -134,6 +140,7 @@ const PESO_RIGORE_SEGNATO = 3, PESO_RIGORE_SBAGLIATO = -3;
 const TAG_RIGORI = ['R1', 'R2', 'R3'];
 
 const perTagRigori = Object.fromEntries(TAG_RIGORI.map(t => [t, []]));
+const tiriPerTag = Object.fromEntries(TAG_RIGORI.map(t => [t, 0]));
 for (const g of giornate) {
   const V = JSON.parse(readFileSync(resolve(RADICE, 'dati', `voti-${g}.json`), 'utf8'));
   for (const p of Object.values(V.giocatori)) {
@@ -143,8 +150,9 @@ for (const g of giornate) {
     const b = p.bonus || {};
     const bonusRigoriReale = (b.rigoriSegnati || 0) * PESO_RIGORE_SEGNATO +
       (b.rigoriSbagliati || 0) * PESO_RIGORE_SBAGLIATO;
+    const tiri = (b.rigoriSegnati || 0) + (b.rigoriSbagliati || 0);
     for (const tag of TAG_RIGORI) {
-      if (l.pz.indexOf(tag) !== -1) perTagRigori[tag].push(bonusRigoriReale);
+      if (l.pz.indexOf(tag) !== -1) { perTagRigori[tag].push(bonusRigoriReale); tiriPerTag[tag] += tiri; }
     }
   }
 }
@@ -157,27 +165,27 @@ for (const tag of TAG_RIGORI) {
   const campione = perTagRigori[tag];
   const n = campione.length;
   const prec = precedentePiazzati[tag] || 0;
-  if (n < MIN_CAMPIONE) {
+  const tiri = tiriPerTag[tag];
+  if (n < MIN_CAMPIONE || tiri < MIN_RIGORI) {
     // Popolazione di un tag e' piccola per natura (pochi rigoristi in tutta la Serie A): sotto
     // soglia e' la norma per buona parte della stagione, non un guasto. Si tiene la correzione
     // precedente se ce n'era gia' una, altrimenti si lascia il tag assente (zero implicito).
     if (prec) nuovaPiazzati[tag] = prec;
-    dettaglioPiazzati[tag] = { n, campioneSufficiente: false, correzione: prec };
+    dettaglioPiazzati[tag] = { n, tiri, campioneSufficiente: false, correzione: prec };
     continue;
   }
   const mediaOsservata = campione.reduce((s, v) => s + v, 0) / n;
-  /* ATTENZIONE (26/09, non ancora deciso): lo scarto qui si misura contro base+correzione
-     precedente, non contro la base come fa RETTIFICA_RUOLO con la stima pura. Cosi' l'obiettivo
-     si sposta insieme alla correzione e il punto d'arrivo e' META' dello scarto vero (con G1-G5:
-     -0.20 invece di -0.40 per R1). Non corretto di proposito: MIN_CAMPIONE conta presenze (79 per
-     R1), ma gli eventi che muovono questa correzione sono i rigori tirati — 2 in tutto per R1
-     su G1-G5 — quindi la meta' per errore oggi fa da freno contro il rumore. Vedi CLAUDE.md,
-     Prossimi passi. */
-  const scartoGrezzo = mediaOsservata - ((motore.BONUS_PIAZZATI[tag] || 0) + prec);
+  /* Scarto misurato contro la sola base BONUS_PIAZZATI, come RETTIFICA_RUOLO si misura contro
+     la stima pura (27/09). Fino al 26/09 si misurava contro base+correzione precedente: il
+     bersaglio si spostava insieme alla correzione e il punto d'arrivo era META' dello scarto
+     vero (R1 verso -0.20 invece di -0.40 su G1-G5). Quella meta' faceva anche da freno contro il
+     rumore — su G1-G5 R1 aveva tirato 2 rigori in tutto — e il freno ora e' esplicito:
+     MIN_RIGORI tiri per tag prima di correggere qualcosa. */
+  const scartoGrezzo = mediaOsservata - (motore.BONUS_PIAZZATI[tag] || 0);
   const obiettivo = Math.max(-LIMITE, Math.min(LIMITE, scartoGrezzo));
   const smorzato = prec + TASSO_APPRENDIMENTO * (obiettivo - prec);
   nuovaPiazzati[tag] = Math.round(smorzato * 1000) / 1000;
-  dettaglioPiazzati[tag] = { n, campioneSufficiente: true, mediaOsservata, obiettivo, correzione: nuovaPiazzati[tag] };
+  dettaglioPiazzati[tag] = { n, tiri, campioneSufficiente: true, mediaOsservata, obiettivo, correzione: nuovaPiazzati[tag] };
 }
 
 /* ---------- scrittura ---------- */
@@ -206,14 +214,15 @@ for (const r of ['P', 'D', 'C', 'A']) {
 }
 
 console.log('\nRICALIBRAZIONE — correzione sui piazzati (bonus rigori)\n');
-console.log('  tag   n     bonus osservato   base+precedente   correzione precedente -> nuova');
+console.log('  tag   n     tiri   bonus osservato   base      correzione precedente -> nuova');
 for (const tag of TAG_RIGORI) {
   const d = dettaglioPiazzati[tag];
   if (!d.campioneSufficiente) {
-    console.log(`  ${tag}    ${String(d.n).padEnd(5)} (sotto i ${MIN_CAMPIONE}, invariata)              ${d.correzione.toFixed(3)}`);
+    const perche = d.n < MIN_CAMPIONE ? `presenze sotto ${MIN_CAMPIONE}` : `tiri sotto ${MIN_RIGORI}`;
+    console.log(`  ${tag}    ${String(d.n).padEnd(5)} ${String(d.tiri).padEnd(6)} (${perche}, invariata)    ${d.correzione.toFixed(3)}`);
   } else {
     console.log(
-      `  ${tag}    ${String(d.n).padEnd(5)} ${d.mediaOsservata.toFixed(3).padStart(6)}            ${(motore.BONUS_PIAZZATI[tag] + (precedentePiazzati[tag]||0)).toFixed(3)}             ` +
+      `  ${tag}    ${String(d.n).padEnd(5)} ${String(d.tiri).padEnd(6)} ${d.mediaOsservata.toFixed(3).padStart(6)}            ${motore.BONUS_PIAZZATI[tag].toFixed(3)}     ` +
       `${(precedentePiazzati[tag]||0).toFixed(3)} -> ${d.correzione.toFixed(3)}`
     );
   }
