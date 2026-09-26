@@ -53,7 +53,12 @@ jobs:
           npm install --no-save web-push@3.6.7 --silent
           node "tools/promemoria-scadenza.mjs"
 
+      # !cancelled(): deve salvare lo stato anche quando il passo sopra e' uscito in rosso per un
+      # abbonamento push scaduto (26/09). Li' lo script scrive "gia' segnalato per questa
+      # giornata": se il file non venisse committato, al giro dopo lo rifarebbe da capo e l'email
+      # arriverebbe a ogni esecuzione invece che una volta per giornata.
       - name: Committa se e cambiato qualcosa
+        if: ${{ !cancelled() }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
