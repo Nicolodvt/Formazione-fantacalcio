@@ -8,3 +8,7 @@ Thumbs.db
 
 # Chiave privata VAPID in chiaro (notifiche push) — mai in un repo pubblico.
 notifichepushsetup.txt
+
+# Note private (restano solo in locale)
+CLAUDE.md
+DIARIO-STORICO.md
