@@ -21,6 +21,10 @@
      node tools/fetch-voti.mjs 2 --prova  valida soltanto, senza scrivere
      node tools/fetch-voti.mjs 2 --prova --da-file pagina.html
                                           stessa cosa su una pagina salvata (per le prove)
+     node tools/fetch-voti.mjs 2 --solo-calendario
+                                          aggiorna solo dati/calendario.json (chi contro chi,
+                                          dove, risultato), senza riscrivere dati/voti-2.json
+   Ogni giornata scritta aggiorna anche dati/calendario.json (dal 27/09).
 
    CODICI D'USCITA (26/09) — servono a .github/workflows/dati.yml per non confondere "ancora
    presto" con "rotto". Prima uscivano tutti con 1 e il workflow li ingoiava tutti: se il sito
@@ -32,7 +36,8 @@
         (data-match-status diverso da 4, dal 27/09). Normale, si riprova al giro dopo.
      3  problema di rete temporaneo (timeout, errore 5xx): si riprova al giro dopo.
      1  tutto il resto: pagina completa ma letta male, 4xx, giornata dichiarata diversa. E' il
-        caso che deve arrivare per email.
+        caso che deve arrivare per email. Anche: voti validi (e scritti) ma calendario della
+        giornata non letto — i voti non si perdono, l'email arriva lo stesso (dal 27/09).
 */
 
 import { writeFile, mkdir, readFile } from 'node:fs/promises';
@@ -208,6 +213,70 @@ function estrai(html, giornata) {
   };
 }
 
+/* ---------- calendario storico (27/09) ----------
+   Chi ha giocato contro chi, dove e come e' finita: serve a tarare sul vero CASA_BONUS e
+   PESO_AVVERSARIO, che oggi sono a intuito (vedi tools/taratura-partita.mjs). I voti da soli
+   non bastano: dicono la squadra del giocatore, non l'avversario ne' se giocava in casa.
+   Si legge dall'intestazione di ogni tabella della stessa pagina dei voti — "Juventus 2 - 0
+   Atalanta" e "20/09/2026 - 18:00", anno compreso — quindi nessuna richiesta in piu' al sito.
+   Ogni partita compare due volte (una tabella per squadra): le due letture devono coincidere. */
+function estraiPartite(html) {
+  const partite = new Map();
+  const problemi = [];
+  for (const li of blocchi(html, 'class="team-table"')) {
+    const testa = li.split('</header>')[0];
+    const punteggio = /class="match-score"[^>]*>([\s\S]*?)<\/div>/.exec(testa);
+    const pezzi = punteggio
+      ? [...punteggio[1].matchAll(/<span[^>]*>([^<]*)<\/span>/g)].map(m => pulisci(m[1])) : [];
+    const quando = /(\d{2})\/(\d{2})\/(\d{4})\s*-\s*(\d{2}):(\d{2})/.exec(testa);
+    if (pezzi.length !== 5 || pezzi[2] !== '-' || !quando) {
+      problemi.push(`intestazione di tabella non riconosciuta: ${JSON.stringify(pezzi)}`);
+      continue;
+    }
+    const [casa, gc, , gt, trasferta] = pezzi;
+    const p = {
+      casa, trasferta,
+      golCasa: /^\d+$/.test(gc) ? +gc : null,
+      golTrasferta: /^\d+$/.test(gt) ? +gt : null,
+      data: `${quando[3]}-${quando[2]}-${quando[1]}`,    // giorno in Italia, come scritto sul sito
+      ora: `${quando[4]}:${quando[5]}`                     // ora italiana
+    };
+    const chiave = casa + '|' + trasferta;
+    const gia = partite.get(chiave);
+    if (gia && JSON.stringify(gia) !== JSON.stringify(p)) problemi.push(`${casa}-${trasferta} letta in due modi diversi`);
+    partite.set(chiave, p);
+  }
+  return { partite: [...partite.values()], problemi };
+}
+
+function validaPartite({ partite, problemi }, squadre) {
+  const out = [...problemi];
+  if (partite.length !== 10) out.push(`partite trovate: ${partite.length}, attese 10`);
+  const inCampo = partite.flatMap(p => [p.casa, p.trasferta]);
+  if (new Set(inCampo).size !== inCampo.length) out.push('una squadra compare in due partite');
+  const sconosciute = inCampo.filter(s => !squadre.includes(s));
+  if (sconosciute.length) out.push(`squadre del calendario che non sono fra quelle dei voti: ${sconosciute.join(', ')}`);
+  const senzaRisultato = partite.filter(p => p.golCasa == null || p.golTrasferta == null);
+  if (senzaRisultato.length) out.push(`${senzaRisultato.length} partite senza risultato`);
+  return out;
+}
+
+/* Aggiorna solo la giornata indicata dentro dati/calendario.json, lasciando le altre come sono. */
+async function scriviCalendario(giornata, partite) {
+  const file = resolve(DIR_DATI, 'calendario.json');
+  let cal = { schema: 1, stagione: STAGIONE, giornate: {} };
+  try { cal = JSON.parse(await readFile(file, 'utf8')); } catch (e) { /* primo giro: si crea */ }
+  const giornate = Object.assign({}, cal.giornate, { [giornata]: partite });
+  /* Giornate in ordine numerico, cosi' il file resta leggibile e i diff piccoli. */
+  const out = {
+    schema: 1, stagione: STAGIONE,
+    fonte: 'fantacalcio.it/voti-fantacalcio-serie-a — intestazioni delle tabelle dei voti',
+    giornate: Object.fromEntries(Object.entries(giornate).sort((a, b) => a[0] - b[0]))
+  };
+  await writeFile(file, JSON.stringify(out, null, 1) + '\n', 'utf8');
+  return file;
+}
+
 /* Pesi del punteggio, RICAVATI DAI DATI e non dati per scontati: su G1, 262 giocatori
    quadrano con questi pesi e i restanti 31 quadrano aggiungendo -0.5 per l'ammonizione.
    Zero casi non spiegati su 293. */
@@ -313,6 +382,9 @@ function validare(d, ordineFonti) {
 async function main() {
   const args = process.argv.slice(2);
   const soloProva = args.includes('--prova');
+  /* Solo dati/calendario.json, senza riscrivere i voti: per ricostruire il calendario delle
+     giornate scaricate prima che esistesse (i voti gia' salvati restano quelli di allora). */
+  const soloCalendario = args.includes('--solo-calendario');
   const giornata = +args.find(a => /^\d+$/.test(a));
 
   if (!giornata || giornata < 1 || giornata > 38) {
@@ -398,6 +470,12 @@ async function main() {
   const ordineFonti = verificaOrdineFonti(html);
   const dati = estrai(html, giornata);
   const problemi = validare(dati, ordineFonti);
+  /* Il calendario NON blocca i voti: se l'intestazione delle tabelle cambiasse, i voti (che
+     servono alla ricalibrazione) si scrivono lo stesso e il passo esce comunque con 1 alla
+     fine, cosi' arriva l'email; il calendario si recupera poi con --solo-calendario. */
+  const calendario = estraiPartite(html);
+  const problemiCalendario = validaPartite(calendario, dati.squadre);
+  if (soloCalendario) problemi.push(...problemiCalendario.map(p => 'calendario: ' + p));
 
   const gioc = Object.values(dati.giocatori);
   const conVoto = gioc.filter(g => g.voto != null);
@@ -413,9 +491,19 @@ async function main() {
     process.exit(1);
   }
 
-  if (soloProva) { console.log('\n--prova: validazione superata, niente scritto.'); return; }
+  if (problemiCalendario.length) {
+    console.log(`::error::Giornata ${giornata}: calendario non letto (i voti si scrivono lo stesso) — ` +
+      problemiCalendario.join('; '));
+    process.exitCode = 1;
+  } else {
+    console.log(`Calendario: ${calendario.partite.map(p => `${p.casa} ${p.golCasa}-${p.golTrasferta} ${p.trasferta}`).join(', ')}`);
+  }
+
+  if (soloProva) { console.log('\n--prova: ' + (problemiCalendario.length ? 'voti validi, calendario no' : 'validazione superata') + ', niente scritto.'); return; }
 
   await mkdir(DIR_DATI, { recursive: true });
+  if (!problemiCalendario.length) console.log('Scritto ' + await scriviCalendario(giornata, calendario.partite));
+  if (soloCalendario) { console.log('--solo-calendario: dati/voti-' + giornata + '.json non toccato.'); return; }
   const uscita = resolve(DIR_DATI, `voti-${giornata}.json`);
   await writeFile(uscita, JSON.stringify(dati, null, 1) + '\n', 'utf8');
   console.log('Scritto ' + uscita);
