@@ -19,6 +19,17 @@
    USO
      node tools/fetch-voti.mjs 2          scarica la giornata 2 e scrive dati/voti-2.json
      node tools/fetch-voti.mjs 2 --prova  valida soltanto, senza scrivere
+
+   CODICI D'USCITA (26/09) — servono a .github/workflows/dati.yml per non confondere "ancora
+   presto" con "rotto". Prima uscivano tutti con 1 e il workflow li ingoiava tutti: se il sito
+   avesse cambiato la pagina, i voti avrebbero smesso di arrivare senza una sola email.
+     0  scritto (o, con --prova, validazione superata)
+     2  non ancora completa: nessuna tabella (giornata non giocata o voti non pubblicati) oppure
+        meno di 20 squadre (giornata in corso, es. lunedi mattina con le partite della sera
+        ancora da giocare). Normale, si riprova al giro dopo.
+     3  problema di rete temporaneo (timeout, errore 5xx): si riprova al giro dopo.
+     1  tutto il resto: pagina completa ma letta male, 4xx, giornata dichiarata diversa. E' il
+        caso che deve arrivare per email.
 */
 
 import { writeFile, mkdir } from 'node:fs/promises';
@@ -263,6 +274,15 @@ function validare(d, ordineFonti) {
   const uniche = new Set(d.squadre).size;
   if (uniche !== d.squadre.length) problemi.push(`squadre duplicate: ${d.squadre.length} tabelle ma ${uniche} nomi distinti`);
 
+  /* Ogni squadra ha almeno gli 11 che hanno cominciato (su G1-G5: da 15 a 16 per squadra). Una
+     tabella presente ma vuota o quasi vuol dire una partita non ancora giocata o righe lette
+     male: in entrambi i casi il file uscirebbe incompleto, e una volta scritto la giornata non
+     verrebbe mai piu riscaricata. */
+  const perSquadra = {};
+  for (const g of gioc) perSquadra[g.squadra] = (perSquadra[g.squadra] || 0) + 1;
+  const scarne = d.squadre.filter(sq => (perSquadra[sq] || 0) < 11);
+  if (scarne.length) problemi.push(`${scarne.length} squadre con meno di 11 giocatori: ${scarne.join(', ')}`);
+
   /* IL CONTROLLO PIU IMPORTANTE. Se il fantavoto non si ricostruisce da voto + bonus, stiamo
      leggendo male qualcosa, e non c'e modo di accorgersene guardando i numeri: sarebbero tutti
      plausibili. Intercetta da solo la colonna di voto sbagliata, le righe fuse fra due
@@ -299,10 +319,20 @@ async function main() {
 
   const url = `https://www.fantacalcio.it/voti-fantacalcio-serie-a/${STAGIONE}/${giornata}`;
   /* Senza timeout una connessione appesa blocca il job della Action fino al limite di GitHub. */
-  const r = await fetch(url, {
-    headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it;q=0.9' },
-    signal: AbortSignal.timeout(30000)
-  });
+  let r;
+  try {
+    r = await fetch(url, {
+      headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it;q=0.9' },
+      signal: AbortSignal.timeout(30000)
+    });
+  } catch (e) {
+    console.error(`Rete: ${e.message} — riprovo al prossimo giro.`);
+    process.exit(3);
+  }
+  if (r.status >= 500) {
+    console.error(`HTTP ${r.status} da ${url} — errore del sito, riprovo al prossimo giro.`);
+    process.exit(3);
+  }
   if (!r.ok) throw new Error(`HTTP ${r.status} da ${url}`);
   const html = await r.text();
 
@@ -315,6 +345,19 @@ async function main() {
   const dichiarata = /class="matchweek"[^>]*>\s*(\d+)\s*</.exec(html);
   if (dichiarata && +dichiarata[1] !== giornata) {
     throw new Error(`chiesta la giornata ${giornata} ma la pagina dichiara la ${dichiarata[1]}`);
+  }
+
+  /* Giornata non ancora giocata (0 tabelle: verificato il 26/09 sulla G6, a due settimane dalle
+     partite) o ancora in corso (meno di 20 tabelle). Non e un guasto: si esce con 2 senza
+     scrivere nulla. Se invece il sito rinominasse le tabelle, anche una giornata giocata
+     darebbe 0 e finirebbe qui: a quel punto se ne accorge dati.yml, che segnala in rosso
+     una giornata PIU VECCHIA dell'ultima conclusa ancora senza voti. */
+  const nTabelle = blocchi(html, '<table class="grades-table').length;
+  if (nTabelle < 20) {
+    console.log(`Giornata ${giornata}: ${nTabelle} tabelle dei voti su 20 — ` +
+      (nTabelle === 0 ? 'non ancora giocata o voti non ancora pubblicati.' : 'giornata ancora in corso.') +
+      ' Niente scritto, si riprova al prossimo giro.');
+    process.exit(2);
   }
 
   const ordineFonti = verificaOrdineFonti(html);
