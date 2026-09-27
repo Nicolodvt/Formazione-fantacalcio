@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-26T12:06:35.216Z",
+ "generato": "2026-09-27T12:37:21.646Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -415,9 +415,9 @@
    "nome": "Meret",
    "squadra": "Napoli",
    "ruolo": "P",
-   "pct": 5,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "608": {
    "id": 608,
@@ -658,9 +658,9 @@
    "nome": "Milinkovic-Savic V.",
    "squadra": "Napoli",
    "ruolo": "P",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 5,
+   "titolare": false,
+   "incerto": true
   },
   "2194": {
    "id": 2194,
@@ -793,7 +793,7 @@
    "nome": "Zaniolo",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -1072,7 +1072,7 @@
    "nome": "Zortea",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -1207,7 +1207,7 @@
    "nome": "Pedraza",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1639,9 +1639,9 @@
    "nome": "Cancellieri",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "5504": {
    "id": 5504,
@@ -1768,15 +1768,6 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
-  },
-  "5678": {
-   "id": 5678,
-   "nome": "Holm",
-   "squadra": "Bologna",
-   "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
   },
   "5680": {
    "id": 5680,
@@ -1909,7 +1900,7 @@
    "nome": "Gudmundsson A.",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2503,9 +2494,9 @@
    "nome": "Isaksen",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "6403": {
    "id": 6403,
@@ -2812,6 +2803,15 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
+  },
+  "6666": {
+   "id": 6666,
+   "nome": "Bernabè",
+   "squadra": "Parma",
+   "ruolo": "C",
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "6669": {
    "id": 6669,
@@ -3695,6 +3695,15 @@
    "titolare": true,
    "incerto": false
   },
+  "7318": {
+   "id": 7318,
+   "nome": "Gandelman",
+   "squadra": "Lecce",
+   "ruolo": "C",
+   "pct": 30,
+   "titolare": false,
+   "incerto": true
+  },
   "7319": {
    "id": 7319,
    "nome": "Fofana Sa.",
@@ -4069,7 +4078,7 @@
    "nome": "Amondarain",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4262,15 +4271,6 @@
    "titolare": true,
    "incerto": false
   },
-  "7568": {
-   "id": 7568,
-   "nome": "De Martis",
-   "squadra": "Parma",
-   "ruolo": "A",
-   "pct": 10,
-   "titolare": false,
-   "incerto": true
-  },
   "7572": {
    "id": 7572,
    "nome": "Comotto",
@@ -4420,7 +4420,7 @@
    "nome": "Drobnic",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -4513,6 +4513,15 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
+  },
+  "7629": {
+   "id": 7629,
+   "nome": "Libra",
+   "squadra": "Bologna",
+   "ruolo": "C",
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
   },
   "7630": {
    "id": 7630,
@@ -4695,10 +4704,20 @@
    "tipo": "infortunato",
    "nota": "noie fisiche, da valutare convocazione contro l'Atalanta"
   },
+  "5678": {
+   "id": 5678,
+   "tipo": "infortunato",
+   "nota": "problema muscolare alla coscia, da valutare"
+  },
   "5735": {
    "id": 5735,
    "tipo": "infortunato",
    "nota": "lesione di grado moderato al flessore della gamba destra, da valutare convocazione contro il Milan"
+  },
+  "5800": {
+   "id": 5800,
+   "tipo": "dubbio",
+   "nota": "problema alla spalla sinistra, in dubbio contro il Monza"
   },
   "5880": {
    "id": 5880,
@@ -4752,7 +4771,7 @@
   },
   "6666": {
    "id": 6666,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "problema fisico, da valutare per Milano"
   },
   "6672": {
@@ -4837,7 +4856,7 @@
   },
   "7318": {
    "id": 7318,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "noie fisiche, da valutare contro il Bologna"
   },
   "7351": {
@@ -4863,7 +4882,7 @@
   "7550": {
    "id": 7550,
    "tipo": "infortunato",
-   "nota": "sindrome retto-adduttoria, da valutare convocazione contro il Napoli"
+   "nota": "sindrome retto-adduttoria, rientro da inizio novembre"
   },
   "7603": {
    "id": 7603,
