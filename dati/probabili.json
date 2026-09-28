@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-27T12:37:21.646Z",
+ "generato": "2026-09-28T14:52:25.372Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -320,6 +320,15 @@
    "titolare": true,
    "incerto": false
   },
+  "283": {
+   "id": 283,
+   "nome": "Neto",
+   "squadra": "Juventus",
+   "ruolo": "P",
+   "pct": 5,
+   "titolare": false,
+   "incerto": true
+  },
   "294": {
    "id": 294,
    "nome": "Rugani",
@@ -337,15 +346,6 @@
    "pct": 80,
    "titolare": true,
    "incerto": false
-  },
-  "333": {
-   "id": 333,
-   "nome": "Cataldi",
-   "squadra": "Lazio",
-   "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
   },
   "418": {
    "id": 418,
@@ -541,7 +541,7 @@
    "nome": "Pinsoglio",
    "squadra": "Juventus",
    "ruolo": "P",
-   "pct": 5,
+   "pct": 1,
    "titolare": false,
    "incerto": true
   },
@@ -730,7 +730,7 @@
    "nome": "De Bruyne",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -946,7 +946,7 @@
    "nome": "Muric",
    "squadra": "Sassuolo",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -1468,7 +1468,7 @@
    "nome": "Gilmour",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 70,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1585,7 +1585,7 @@
    "nome": "Raimondo",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -1639,7 +1639,7 @@
    "nome": "Cancellieri",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -2719,7 +2719,7 @@
    "nome": "Dele-Bashiru",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 25,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -3421,7 +3421,7 @@
    "nome": "Bayo V.",
    "squadra": "Udinese",
    "ruolo": "A",
-   "pct": 40,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -3623,15 +3623,6 @@
    "titolare": true,
    "incerto": false
   },
-  "7272": {
-   "id": 7272,
-   "nome": "Gueye",
-   "squadra": "Udinese",
-   "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
-  },
   "7274": {
    "id": 7274,
    "nome": "Zè Pedro",
@@ -3818,15 +3809,6 @@
    "squadra": "Venezia",
    "ruolo": "A",
    "pct": 15,
-   "titolare": false,
-   "incerto": true
-  },
-  "7409": {
-   "id": 7409,
-   "nome": "Meichtry",
-   "squadra": "Genoa",
-   "ruolo": "C",
-   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -4141,7 +4123,7 @@
    "nome": "Mitaj",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4589,6 +4571,11 @@
  },
  "ballottaggi": [],
  "indisponibili": {
+  "333": {
+   "id": 333,
+   "tipo": "infortunato",
+   "nota": "problema muscolare al quadricipite, out contro il Monza"
+  },
   "572": {
    "id": 572,
    "tipo": "dubbio",
@@ -4844,6 +4831,11 @@
    "tipo": "infortunato",
    "nota": "fascite plantare, out contro la Lazio"
   },
+  "7272": {
+   "id": 7272,
+   "tipo": "infortunato",
+   "nota": "problema alla caviglia, da valutare"
+  },
   "7312": {
    "id": 7312,
    "tipo": "dubbio",
@@ -4863,6 +4855,11 @@
    "id": 7351,
    "tipo": "infortunato",
    "nota": "lesione di medio grado al bicipite femorale sinistro, tentativo rientro dalla seconda metà di ottobre"
+  },
+  "7409": {
+   "id": 7409,
+   "tipo": "infortunato",
+   "nota": "problema fisico, da valutare"
   },
   "7453": {
    "id": 7453,
