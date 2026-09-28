@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-28T14:52:25.372Z",
+ "generato": "2026-09-28T23:37:02.643Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -518,15 +518,6 @@
    "titolare": true,
    "incerto": false
   },
-  "1871": {
-   "id": 1871,
-   "nome": "Deiola",
-   "squadra": "Cagliari",
-   "ruolo": "C",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
-  },
   "1926": {
    "id": 1926,
    "nome": "Di Gennaro",
@@ -659,6 +650,15 @@
    "squadra": "Napoli",
    "ruolo": "P",
    "pct": 5,
+   "titolare": false,
+   "incerto": true
+  },
+  "2188": {
+   "id": 2188,
+   "nome": "Marusic",
+   "squadra": "Lazio",
+   "ruolo": "D",
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -1612,7 +1612,7 @@
    "nome": "Ciervo",
    "squadra": "Cagliari",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1895,15 +1895,6 @@
    "titolare": true,
    "incerto": false
   },
-  "5800": {
-   "id": 5800,
-   "nome": "Gudmundsson A.",
-   "squadra": "Lazio",
-   "ruolo": "C",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
-  },
   "5812": {
    "id": 5812,
    "nome": "Terracciano F.",
@@ -2143,9 +2134,9 @@
    "nome": "Fazzini",
    "squadra": "Cagliari",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 75,
+   "titolare": true,
+   "incerto": false
   },
   "6020": {
    "id": 6020,
@@ -4591,9 +4582,14 @@
    "tipo": "dubbio",
    "nota": "lieve contrattura al bicipite femorale della coscia destra, da valutare contro il Frosinone"
   },
+  "1871": {
+   "id": 1871,
+   "tipo": "infortunato",
+   "nota": "lesione del menisco laterale del ginocchio sinistro, ipotesi di rientro da metà novembre"
+  },
   "2188": {
    "id": 2188,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "problema muscolare alla coscia destra, da valutare convocazione contro il Monza"
   },
   "2194": {
@@ -4624,7 +4620,7 @@
   "2832": {
    "id": 2832,
    "tipo": "infortunato",
-   "nota": "lesione di medio grado del bicipite femorale, tentativo di rientro da metà ottobre"
+   "nota": "lesione di medio grado del bicipite femorale, rientro da metà novembre"
   },
   "4220": {
    "id": 4220,
@@ -4703,8 +4699,8 @@
   },
   "5800": {
    "id": 5800,
-   "tipo": "dubbio",
-   "nota": "problema alla spalla sinistra, in dubbio contro il Monza"
+   "tipo": "infortunato",
+   "nota": "problema alla spalla sinistra, da valutare contro il Monza"
   },
   "5880": {
    "id": 5880,
@@ -4784,7 +4780,7 @@
   "6822": {
    "id": 6822,
    "tipo": "infortunato",
-   "nota": "lesione di medio grado del muscolo semitendinoso, ipotesi rientro da fine ottobre"
+   "nota": "lesione di medio grado del muscolo semitendinoso, rientro da metà novembre"
   },
   "6980": {
    "id": 6980,
