@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-29T13:40:42.025Z",
+ "generato": "2026-09-29T22:47:55.637Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -1018,7 +1018,7 @@
    "nome": "Raspadori",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1036,7 +1036,7 @@
    "nome": "Gabbia",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1108,7 +1108,7 @@
    "nome": "Elmas",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1261,7 +1261,7 @@
    "nome": "Saelemaekers",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1576,9 +1576,9 @@
    "nome": "Raimondo",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "5453": {
    "id": 5453,
@@ -2692,7 +2692,7 @@
    "nome": "Cissè A.",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -3475,7 +3475,7 @@
    "nome": "Jashari",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4357,7 +4357,7 @@
    "nome": "Birligea",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 40,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -4375,9 +4375,9 @@
    "nome": "Bobcek",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "7615": {
    "id": 7615,
@@ -4576,7 +4576,7 @@
   "1871": {
    "id": 1871,
    "tipo": "infortunato",
-   "nota": "lesione del menisco laterale del ginocchio sinistro, ipotesi di rientro da metà novembre"
+   "nota": "lesione del menisco laterale del ginocchio sinistro, ipotesi di rientro da fine ottobre"
   },
   "2188": {
    "id": 2188,
@@ -4653,15 +4653,25 @@
    "tipo": "dubbio",
    "nota": "lieve aritmia benigna, in dubbio il suo impiego contro il Frosinone"
   },
+  "4892": {
+   "id": 4892,
+   "tipo": "dubbio",
+   "nota": "fastidio alla caviglia, in dubbio contro Sassuolo"
+  },
   "5029": {
    "id": 5029,
    "tipo": "dubbio",
    "nota": "distorsione alla caviglia, in dubbio dal 1' contro il Bologna"
   },
+  "5436": {
+   "id": 5436,
+   "tipo": "dubbio",
+   "nota": "tendinopatia al tendine d'Achille destro, in dubbio contro il Napoli"
+  },
   "5449": {
    "id": 5449,
    "tipo": "infortunato",
-   "nota": "infortunio al legamento crociato, rientro da novembre"
+   "nota": "infortunio al legamento crociato, rientro da dicembre"
   },
   "5507": {
    "id": 5507,
