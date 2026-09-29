@@ -6,6 +6,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["tools/serve.mjs"],
       "port": 8099
+    },
+    {
+      "name": "formazione-rete-lenta",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/serve.mjs", "--porta", "8097", "--lento", "8000"],
+      "port": 8097
     }
   ]
 }

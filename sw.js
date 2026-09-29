@@ -15,7 +15,7 @@
 /* Il nome della cache va cambiato a ogni versione: e la chiave con cui activate() cancella
    le vecchie. Con la strategia rete-per-prima l'app si aggiorna comunque da sola, ma senza
    cambiarlo la copia vecchia resta occupata sul telefono per sempre. */
-const CACHE = 'formazione-v0-6';
+const CACHE = 'formazione-v0-7';
 
 /* Stessa icona 192x192 del manifest, incollata qui: showNotification() vuole un URL
    diretto a un'immagine, non puo' pescarla dal manifest. Un data URI evita un file a parte. */
@@ -46,30 +46,56 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+/* Quanto si aspetta la rete per APRIRE l'app prima di mostrare la copia salvata (29/09). Con
+   una tacca la rete non fallisce subito: resta appesa anche mezzo minuto, e prima l'app restava
+   bianca per tutto quel tempo. Passato questo tempo si apre la copia salvata, e la risposta di
+   rete, se arriva, aggiorna comunque la copia per la volta dopo. */
+const ATTESA_RETE_MS = 4000;
+
 /* Rete-per-prima con ricaduta sulla cache: una versione aggiornata dell'app (e dei dati di
    giornata) viene presa appena c'e' rete, ma senza rete si continua a lavorare sull'ultima
    copia buona. Per i dati e' esattamente il comportamento voluto: meglio le probabili di
    giovedi' che nessuna probabile. */
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
-  e.respondWith(
-    fetch(e.request)
-      .then(r => {
-        /* Solo le risposte buone diventano "l'ultima copia buona" (27/09): prima anche un 404
-           o un 500 momentaneo di Netlify/GitHub sovrascriveva la copia, e alla volta dopo
-           senza rete si apriva una pagina d'errore al posto dell'app. */
-        if (r.ok && (r.type === 'basic' || r.type === 'cors')) {
-          const copia = r.clone();
-          caches.open(CACHE).then(c => c.put(e.request, copia)).catch(() => {});
-        }
-        return r;
-      })
-      /* La pagina dell'app come ripiego solo per l'apertura dell'app, non per un dato che
-         manca: servire index.html al posto di un JSON lo faceva sembrare una risposta "ok",
-         e l'app non provava la copia di riserva. */
-      .catch(() => caches.match(e.request).then(r => r ||
-        (e.request.mode === 'navigate' ? caches.match('./index.html') : Response.error())))
-  );
+  const apertura = e.request.mode === 'navigate';
+  const rete = fetch(e.request).then(r => {
+    /* Solo le risposte buone diventano "l'ultima copia buona" (27/09): prima anche un 404
+       o un 500 momentaneo di Netlify/GitHub sovrascriveva la copia, e alla volta dopo
+       senza rete si apriva una pagina d'errore al posto dell'app. */
+    if (r.ok && (r.type === 'basic' || r.type === 'cors')) {
+      const copia = r.clone();
+      const salva = caches.open(CACHE).then(c => c.put(e.request, copia)).catch(() => {});
+      try { e.waitUntil(salva); } catch (err) { /* evento gia' chiuso: la copia si salva lo stesso */ }
+    }
+    return r;
+  });
+  /* La pagina dell'app come ripiego solo per l'apertura dell'app, non per un dato che
+     manca: servire index.html al posto di un JSON lo faceva sembrare una risposta "ok",
+     e l'app non provava la copia di riserva. */
+  const salvata = () => caches.match(e.request).then(r => r || (apertura ? caches.match('./index.html') : undefined));
+
+  if (!apertura) {
+    e.respondWith(rete.catch(() => salvata().then(r => r || Response.error())));
+    return;
+  }
+
+  /* Apertura: vince la prima fra la rete e la copia salvata dopo ATTESA_RETE_MS. Anche un
+     errore del server (5xx di un attimo) lascia il posto alla copia salvata, se c'e'. Tutto il
+     resto passa com'e', come prima: un redirect di navigazione arriva qui "opaco" (status 0,
+     ok falso) e va lasciato seguire al browser, altrimenti da quell'indirizzo l'app non si
+     aggiornerebbe piu'. */
+  e.waitUntil(rete.catch(() => {}));
+  e.respondWith(new Promise(risolvi => {
+    let fatto = false;
+    const usa = r => { if (!fatto && r) { fatto = true; risolvi(r); } };
+    const timer = setTimeout(() => salvata().then(usa).catch(() => {}), ATTESA_RETE_MS);
+    rete.then(r => r.status >= 500 ? salvata().then(c => c || r) : r)
+      .catch(() => salvata().then(c => c || Response.error()))
+      /* Mai lasciare la pagina senza risposta, nemmeno se anche la cache da' errore. */
+      .catch(() => Response.error())
+      .then(r => { clearTimeout(timer); usa(r); });
+  }));
 });
 
 /* Promemoria di schierare la formazione. Il corpo arriva da tools/invia-promemoria.mjs come
