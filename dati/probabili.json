@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-28T23:37:02.643Z",
+ "generato": "2026-09-29T13:40:42.025Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -785,15 +785,6 @@
    "squadra": "Inter",
    "ruolo": "A",
    "pct": 90,
-   "titolare": true,
-   "incerto": false
-  },
-  "2766": {
-   "id": 2766,
-   "nome": "Zaniolo",
-   "squadra": "Udinese",
-   "ruolo": "C",
-   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2908,9 +2899,9 @@
    "nome": "Unai Gomez",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "6813": {
    "id": 6813,
@@ -3025,7 +3016,7 @@
    "nome": "Conceicao",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -4617,6 +4608,11 @@
    "tipo": "infortunato",
    "nota": "lesione ai flessori della coscia destra, rientro dalla seconda metà di ottobre"
   },
+  "2766": {
+   "id": 2766,
+   "tipo": "infortunato",
+   "nota": "lesione muscolare al bicipite femorale destro, rientro dalla seconda metà di ottobre"
+  },
   "2832": {
    "id": 2832,
    "tipo": "infortunato",
@@ -4830,7 +4826,7 @@
   "7272": {
    "id": 7272,
    "tipo": "infortunato",
-   "nota": "problema alla caviglia, da valutare"
+   "nota": "problema alla caviglia, da valutare contro il Torino"
   },
   "7312": {
    "id": 7312,
