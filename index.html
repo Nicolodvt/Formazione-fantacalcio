@@ -1250,34 +1250,51 @@ async function caricaProbabili(forza){
   }
 }
 
-/* Nessuna cache locale apposta: e' una piccola correzione, non un dato di giornata — se non
-   risponde RETTIFICA_RUOLO resta a zero, che e' gia' il comportamento sicuro di sempre, non
-   uno stato rotto da segnalare. */
+/* Se costanti.json non risponde RETTIFICA_RUOLO resta a zero (o all'ultima copia salvata), che
+   e' gia' il comportamento sicuro di sempre, non uno stato rotto da segnalare. */
+const CACHE_COSTANTI = 'fantaFormazione_costanti';
+
+/* Copia locale (29/09): prima non c'era, e a ogni apertura il primo disegno usava correzioni a
+   zero per un attimo — fantamedie e frecce "in forma" diverse da quelle di un istante dopo, piu'
+   un ricalcolo dei moduli in piu'. Copia assente o rotta: si resta a zero, come prima. */
+function leggiCostantiSalvate(){
+  try{
+    const raw = localStorage.getItem(CACHE_COSTANTI);
+    if(raw) applicaCostanti(JSON.parse(raw));
+  }catch(e){}
+}
+
 async function caricaCostanti(){
   try{
     const r = await fetchDati('dati/costanti.json');
     if(!r.ok) return;
     const d = await r.json();
-    if(!d || d.schema!==1) return;
-    if(d.rettificaRuolo && typeof d.rettificaRuolo==='object'){
-      ROLE_ORDER.forEach(ruolo=>{
-        const v = d.rettificaRuolo[ruolo];
-        // tetto di sicurezza piu' ampio di quello del generatore (0.4): protegge da un file
-        // corrotto o modificato a mano, senza litigare con valori legittimi.
-        if(typeof v === 'number' && isFinite(v)) RETTIFICA_RUOLO[ruolo] = Math.max(-1, Math.min(1, v));
-      });
-    }
-    /* Si riparte da vuoto (27/09): caricaCostanti() ora si richiama anche da aggiornaDati(), e
-       un tag tolto da costanti.json (es. sotto la soglia di rigori) deve sparire anche qui,
-       non restare appeso al valore letto all'avvio. */
-    for(const k in RETTIFICA_PIAZZATI) delete RETTIFICA_PIAZZATI[k];
-    if(d.rettificaPiazzati && typeof d.rettificaPiazzati==='object'){
-      for(const k in d.rettificaPiazzati){
-        const v = d.rettificaPiazzati[k];
-        if(typeof v === 'number' && isFinite(v)) RETTIFICA_PIAZZATI[k] = Math.max(-1, Math.min(1, v));
-      }
-    }
+    if(applicaCostanti(d)){ try{ localStorage.setItem(CACHE_COSTANTI, JSON.stringify(d)); }catch(e){} }
   }catch(e){ /* nessuna correzione: fantamediaAttesa resta quella di sempre */ }
+}
+
+/* false se il file non ha la forma attesa (e allora non si tocca nulla). */
+function applicaCostanti(d){
+  if(!d || d.schema!==1) return false;
+  if(d.rettificaRuolo && typeof d.rettificaRuolo==='object'){
+    ROLE_ORDER.forEach(ruolo=>{
+      const v = d.rettificaRuolo[ruolo];
+      // tetto di sicurezza piu' ampio di quello del generatore (0.4): protegge da un file
+      // corrotto o modificato a mano, senza litigare con valori legittimi.
+      if(typeof v === 'number' && isFinite(v)) RETTIFICA_RUOLO[ruolo] = Math.max(-1, Math.min(1, v));
+    });
+  }
+  /* Si riparte da vuoto (27/09): caricaCostanti() ora si richiama anche da aggiornaDati(), e
+     un tag tolto da costanti.json (es. sotto la soglia di rigori) deve sparire anche qui,
+     non restare appeso al valore letto all'avvio. */
+  for(const k in RETTIFICA_PIAZZATI) delete RETTIFICA_PIAZZATI[k];
+  if(d.rettificaPiazzati && typeof d.rettificaPiazzati==='object'){
+    for(const k in d.rettificaPiazzati){
+      const v = d.rettificaPiazzati[k];
+      if(typeof v === 'number' && isFinite(v)) RETTIFICA_PIAZZATI[k] = Math.max(-1, Math.min(1, v));
+    }
+  }
+  return true;
 }
 
 /* Oltre questa soglia i dati non sono piu una fotografia della giornata in corso: le
@@ -1447,10 +1464,17 @@ async function caricaStorico(){
   try{ return await storicoInCorso; } finally{ storicoInCorso = null; }
 }
 
-async function caricaStoricoOra(){
+/* La parte senza rete, separata (29/09) perche' serve anche all'avvio, PRIMA del primo
+   disegno: prima il primo render usava uno STORICO vuoto (stime pure da quotazioni, formazione
+   a volte diversa) e lo correggeva un attimo dopo, con un ricalcolo completo dei moduli in piu'. */
+function leggiStoricoSalvato(){
   try{
     const raw = localStorage.getItem(CACHE_STORICO);
     if(raw) STORICO = JSON.parse(raw) || {};
+    /* Ora gira nell'avvio sincrono: una copia salvata di forma sbagliata non deve poter
+       fermare l'app (pagina bianca), si butta e si riscarica. */
+    if(typeof STORICO!=='object' || Array.isArray(STORICO)) STORICO = {};
+    for(const id in STORICO) if(!Array.isArray(STORICO[id])){ STORICO = {}; break; }
   }catch(e){ STORICO = {}; }
 
   /* Rete di sicurezza indipendente dal punto sopra: se uno storico duplicato fosse gia' salvato
@@ -1459,7 +1483,7 @@ async function caricaStoricoOra(){
   for(const id in STORICO){
     const viste = new Set();
     STORICO[id] = STORICO[id].filter(v=>{
-      if(viste.has(v.giornata)) return false;
+      if(!v || typeof v!=='object' || viste.has(v.giornata)) return false;
       viste.add(v.giornata); return true;
     });
   }
@@ -1471,6 +1495,10 @@ async function caricaStoricoOra(){
   for(const id in STORICO){
     if(STORICO[id].some(v=> typeof v.subentrato === 'undefined' || typeof v.gol === 'undefined')){ STORICO = {}; break; }
   }
+}
+
+async function caricaStoricoOra(){
+  leggiStoricoSalvato();
 
   const ultima = (PROB && PROB.giornata) ? PROB.giornata - 1 : 0;
   if(ultima < 1) return;
@@ -2876,9 +2904,14 @@ if(history.state && (history.state.sheet || history.state.tab)) history.replaceS
 carica();
 caricaResoconto();
 calcolaMvSquadre();
-aggiornaForzaSquadre();    // popola subito MV_SQUADRA/ATT_SQUADRA (= le pure finche' STORICO e' vuoto)
-caricaProbabili(false)
-  .then(()=> { render(); return caricaStorico(); })
+leggiStoricoSalvato();     // voti gia' scaricati e correzioni apprese entrano dal primo disegno (29/09)
+leggiCostantiSalvate();
+/* La parte sincrona di caricaProbabili() mette subito in PROB la copia salvata: la forza delle
+   squadre si calcola dopo, perche' pesoForma() guarda PROB.giornata. */
+const probabiliIniziali = caricaProbabili(false);
+aggiornaForzaSquadre();
+probabiliIniziali
+  .then(()=> { aggiornaForzaSquadre(); render(); return caricaStorico(); })
   .then(()=> { aggiornaForzaSquadre(); render(); });
 caricaCostanti().then(()=> render());
 render();
