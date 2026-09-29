@@ -68,7 +68,7 @@ const sorgente = [
   pezzo('rendimento'), pezzo('correzionePiazzati'), pezzo('fantamediaAttesa'),
   pezzo('CASA_BONUS', 'const'), pezzo('PESO_AVVERSARIO', 'const'), pezzo('rettificaPartita'),
   pezzo('datiGiornata'), pezzo('tassoSubentro'), pezzo('certezza'), pezzo('contributoAtteso'),
-  pezzo('scegliUndici'), pezzo('simula'), pezzo('valuta'), pezzo('classificaModuli'),
+  pezzo('scegliUndici'), pezzo('tabellaSimulazione'), pezzo('simula'), pezzo('valuta'), pezzo('classificaModuli'),
   'calcolaMvSquadre(); aggiornaForzaSquadre();',
   'return { fantamediaAttesa, certezza, contributoAtteso, rettificaPartita, scegliUndici, valuta, classificaModuli, LIS };'
 ].join('\n\n');

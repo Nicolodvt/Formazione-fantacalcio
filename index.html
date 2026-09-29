@@ -990,15 +990,33 @@ function scegliUndici(modulo){
   return {titolari, panchina};
 }
 
+/* Quello che simula() deve sapere di ogni giocatore, calcolato una volta per valuta() invece che
+   a ogni giornata simulata (29/09): non cambia da una simulazione all'altra, e rifarlo 1500
+   volte per modulo costava ~0,5 secondi a ricalcolo su PC (mvPura scorre tutto il listone a
+   ogni chiamata), piu' volte a telefono, e il ricalcolo scatta all'avvio e a ogni correzione a
+   mano. Stessi numeri di prima, stesse estrazioni casuali nello stesso ordine: cambia solo il
+   tempo. */
+function tabellaSimulazione(ids){
+  const t = new Map();
+  for(const id of ids){
+    const l = LIS[id];
+    const rp = rettificaPartita(l);
+    const mv = (l.r==='P' || l.r==='D') ? mvStimata(l) : null;
+    t.set(id, { r: l.r, c: certezza(id), punti: fantamediaAttesa(l) + rp, mv: mv==null ? null : mv + rp });
+  }
+  return t;
+}
+
 /* Una singola giornata simulata: chi gioca, chi entra al posto di chi, che modificatore esce. */
-function simula(titolari, panchina){
-  const gioca = {};
+function simula(titolari, panchina, tab){
   const tuttiId = titolari.concat(panchina);
-  tuttiId.forEach(id=>{ gioca[id] = Math.random() < certezza(id); });
+  if(!tab) tab = tabellaSimulazione(tuttiId);
+  const gioca = new Set();
+  for(const id of tuttiId) if(Math.random() < tab.get(id).c) gioca.add(id);
 
   const inCampo = [];
   const daSostituire = [];
-  titolari.forEach(id=>{ (gioca[id] ? inCampo : daSostituire).push(id); });
+  for(const id of titolari) (gioca.has(id) ? inCampo : daSostituire).push(id);
 
   /* I cambi si scorrono dalla PANCHINA nell'ordine in cui e stata messa, non dai titolari
      mancanti: e cosi che funziona il regolamento, ed e anche l'ordine che l'app stampa nel
@@ -1007,23 +1025,22 @@ function simula(titolari, panchina){
      diversi da quelli che sarebbero entrati davvero. */
   let cambi = 0;
   const buchiPerRuolo = {};
-  for(const id of daSostituire){ const r = LIS[id].r; buchiPerRuolo[r] = (buchiPerRuolo[r]||0) + 1; }
+  for(const id of daSostituire){ const r = tab.get(id).r; buchiPerRuolo[r] = (buchiPerRuolo[r]||0) + 1; }
   for(const sost of panchina){
     if(cambi >= MAX_CAMBI) break;
-    const r = LIS[sost].r;
+    const r = tab.get(sost).r;
     if(!buchiPerRuolo[r]) continue;        // in quel ruolo non manca nessuno
-    if(!gioca[sost]) continue;             // un sostituto senza voto non consuma il cambio
+    if(!gioca.has(sost)) continue;             // un sostituto senza voto non consuma il cambio
     buchiPerRuolo[r]--; inCampo.push(sost); cambi++;
   }
 
   let punti = 0;
   const mvP = [], mvD = [];
   for(const id of inCampo){
-    const l = LIS[id];
-    const rp = rettificaPartita(l);
-    punti += fantamediaAttesa(l) + rp;
-    if(l.r==='P'){ const v=mvStimata(l); if(v!=null) mvP.push(v+rp); }
-    if(l.r==='D'){ const v=mvStimata(l); if(v!=null) mvD.push(v+rp); }
+    const g = tab.get(id);
+    punti += g.punti;
+    if(g.r==='P' && g.mv!=null) mvP.push(g.mv);
+    if(g.r==='D' && g.mv!=null) mvD.push(g.mv);
   }
   /* Chi resta senza voto e senza sostituto vale 0: e' il buco che il quarto difensore evita. */
 
@@ -1058,9 +1075,10 @@ function modificatoreAtteso(media){
 }
 
 function valuta(titolari, panchina){
+  const tab = tabellaSimulazione(titolari.concat(panchina));
   let sp = 0, sm = 0, nm = 0, sb = 0;
   for(let i=0;i<N_SIM;i++){
-    const r = simula(titolari, panchina);
+    const r = simula(titolari, panchina, tab);
     sp += r.punti; sb += r.buchi;
     if(r.mod!=null){ sm += r.mod; nm++; }
   }
