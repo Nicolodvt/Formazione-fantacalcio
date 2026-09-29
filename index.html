@@ -1467,6 +1467,10 @@ async function caricaStorico(){
 /* La parte senza rete, separata (29/09) perche' serve anche all'avvio, PRIMA del primo
    disegno: prima il primo render usava uno STORICO vuoto (stime pure da quotazioni, formazione
    a volte diversa) e lo correggeva un attimo dopo, con un ricalcolo completo dei moduli in piu'. */
+/* Le voci di ogni giocatore stanno in ordine di giornata (29/09): tassoSubentro() prende le
+   ultime cinque e la scheda le elenca cosi' come sono. Una giornata scaricata in ritardo (un
+   giro senza rete proprio su quella) finiva in coda, dopo le giornate piu' recenti. */
+function perGiornata(a, b){ return a.giornata - b.giornata; }
 function leggiStoricoSalvato(){
   try{
     const raw = localStorage.getItem(CACHE_STORICO);
@@ -1485,7 +1489,7 @@ function leggiStoricoSalvato(){
     STORICO[id] = STORICO[id].filter(v=>{
       if(!v || typeof v!=='object' || viste.has(v.giornata)) return false;
       viste.add(v.giornata); return true;
-    });
+    }).sort(perGiornata);
   }
 
   /* Migrazione: 'subentrato' e poi 'gol' sono campi aggiunti in tempi diversi. Chi aveva gia
@@ -1533,6 +1537,7 @@ async function caricaStoricoOra(){
     }catch(e){ /* giornata non disponibile: si va avanti, si riprova al prossimo giro */ }
   }
   if(cambiato){
+    for(const id in STORICO) STORICO[id].sort(perGiornata);
     try{ localStorage.setItem(CACHE_STORICO, JSON.stringify(STORICO)); }catch(e){}
   }
 }
