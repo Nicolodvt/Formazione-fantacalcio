@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-01T12:15:12.975Z",
+ "generato": "2026-10-01T20:03:29.783Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -667,9 +667,9 @@
    "nome": "Calhanoglu",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "2263": {
    "id": 2263,
@@ -721,7 +721,7 @@
    "nome": "Stones",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 20,
+   "pct": 15,
    "titolare": false,
    "incerto": true
   },
@@ -1450,9 +1450,9 @@
    "nome": "Jones C.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "5273": {
    "id": 5273,
@@ -1486,7 +1486,7 @@
    "nome": "Luis Henrique",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -1495,7 +1495,7 @@
    "nome": "Valenti",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 20,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -2287,7 +2287,7 @@
    "nome": "Almqvist",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2314,7 +2314,7 @@
    "nome": "Bisseck",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -2773,7 +2773,7 @@
    "nome": "Bernabè",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -3268,7 +3268,7 @@
    "nome": "Sucic P.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3349,7 +3349,7 @@
    "nome": "Ordonez C.",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3386,6 +3386,15 @@
    "squadra": "Udinese",
    "ruolo": "A",
    "pct": 60,
+   "titolare": false,
+   "incerto": true
+  },
+  "7162": {
+   "id": 7162,
+   "nome": "Giovane",
+   "squadra": "Napoli",
+   "ruolo": "A",
+   "pct": 25,
    "titolare": false,
    "incerto": true
   },
@@ -4366,7 +4375,7 @@
    "nome": "Drobnic",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 35,
+   "pct": 25,
    "titolare": false,
    "incerto": true
   },
@@ -4548,7 +4557,7 @@
   "827": {
    "id": 827,
    "tipo": "infortunato",
-   "nota": "rottura del menisco esterno del ginocchio, ipotesi di rientro in campo da gennaio"
+   "nota": "rottura del menisco esterno del ginocchio, rientro in campo da febbraio"
   },
   "1852": {
    "id": 1852,
@@ -4568,7 +4577,7 @@
   "2194": {
    "id": 2194,
    "tipo": "dubbio",
-   "nota": "risentimento muscolare all'adduttore della coscia destra, in dubbio impiego contro il Parma"
+   "nota": "risentimento muscolare all'adduttore della coscia destra, in dubbio impiego dal 1' contro il Parma"
   },
   "2514": {
    "id": 2514,
@@ -4728,7 +4737,7 @@
   "6434": {
    "id": 6434,
    "tipo": "infortunato",
-   "nota": "frattura metatarso piede sinistro, ipotesi rientro da fine novembre"
+   "nota": "frattura metatarso piede sinistro, rientro da inizio dicembre"
   },
   "6629": {
    "id": 6629,
@@ -4797,7 +4806,7 @@
   },
   "7162": {
    "id": 7162,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "ernia inguinale, da valutare convocazione contro il Frosinone"
   },
   "7198": {
