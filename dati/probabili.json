@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-09-30T13:33:29.373Z",
+ "generato": "2026-10-01T12:15:12.975Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -101,7 +101,7 @@
    "stadio": "Giuseppe Meazza"
   },
   "Parma": {
-   "modulo": "3-4-2-1",
+   "modulo": "3-5-2",
    "inCasa": false,
    "avversario": "Inter",
    "data": "sabato 10 ottobre, 18:00",
@@ -568,7 +568,7 @@
    "nome": "Pasalic",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1013,15 +1013,6 @@
    "titolare": false,
    "incerto": true
   },
-  "4371": {
-   "id": 4371,
-   "nome": "Raspadori",
-   "squadra": "Atalanta",
-   "ruolo": "A",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
-  },
   "4378": {
    "id": 4378,
    "nome": "Ranieri L.",
@@ -1172,15 +1163,6 @@
    "squadra": "Milan",
    "ruolo": "D",
    "pct": 25,
-   "titolare": false,
-   "incerto": true
-  },
-  "4777": {
-   "id": 4777,
-   "nome": "McTominay",
-   "squadra": "Napoli",
-   "ruolo": "C",
-   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1558,7 +1540,7 @@
    "nome": "Zalewski",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -2188,7 +2170,7 @@
    "nome": "Hojlund",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -2359,7 +2341,7 @@
    "nome": "Tourè E.",
    "squadra": "Parma",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2791,9 +2773,9 @@
    "nome": "Bernabè",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
+   "pct": 75,
+   "titolare": true,
+   "incerto": false
   },
   "6669": {
    "id": 6669,
@@ -4177,7 +4159,7 @@
    "nome": "Romero D.",
    "squadra": "Parma",
    "ruolo": "A",
-   "pct": 85,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -4213,9 +4195,9 @@
    "nome": "Lontani",
    "squadra": "Parma",
    "ruolo": "A",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "7563": {
    "id": 7563,
@@ -4628,6 +4610,11 @@
    "tipo": "infortunato",
    "nota": "lesione di medio grado alla coscia destra, rientro da dicembre"
   },
+  "4371": {
+   "id": 4371,
+   "tipo": "infortunato",
+   "nota": "distrazione di basso grado al bicipite femorale, rientro dalla seconda metà di ottobre"
+  },
   "4374": {
    "id": 4374,
    "tipo": "infortunato",
@@ -4650,8 +4637,8 @@
   },
   "4777": {
    "id": 4777,
-   "tipo": "dubbio",
-   "nota": "lieve aritmia benigna, in dubbio il suo impiego contro il Frosinone"
+   "tipo": "infortunato",
+   "nota": "lieve aritmia benigna, da valutare contro il Frosinone"
   },
   "4892": {
    "id": 4892,
@@ -4696,7 +4683,7 @@
   "5678": {
    "id": 5678,
    "tipo": "infortunato",
-   "nota": "problema muscolare alla coscia, da valutare"
+   "nota": "problema al tendine della coscia destra, ipotesi rientro da fine febbraio"
   },
   "5735": {
    "id": 5735,
@@ -4706,7 +4693,7 @@
   "5800": {
    "id": 5800,
    "tipo": "infortunato",
-   "nota": "problema alla spalla sinistra, rientro dalla fine di ottobre"
+   "nota": "problema alla spalla destra, rientro dalla seconda metà di ottobre"
   },
   "5880": {
    "id": 5880,
@@ -4757,11 +4744,6 @@
    "id": 6646,
    "tipo": "infortunato",
    "nota": "lesione distrattiva di basso grado all'adduttore, da valutare convocazione contro Udinese"
-  },
-  "6666": {
-   "id": 6666,
-   "tipo": "dubbio",
-   "nota": "problema fisico, da valutare per Milano"
   },
   "6672": {
    "id": 6672,
@@ -4861,7 +4843,7 @@
   "7409": {
    "id": 7409,
    "tipo": "infortunato",
-   "nota": "problema fisico, da valutare"
+   "nota": "distrazione della muscolatura di un'anca, out contro Fiorentina"
   },
   "7453": {
    "id": 7453,
