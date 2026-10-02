@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-01T20:03:29.783Z",
+ "generato": "2026-10-02T12:05:10.961Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -451,7 +451,7 @@
    "nome": "Cristante",
    "squadra": "Roma",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 75,
    "titolare": true,
    "incerto": false
   },
@@ -1063,7 +1063,7 @@
    "nome": "Cambiaghi",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1684,7 +1684,7 @@
    "nome": "Malen",
    "squadra": "Roma",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 75,
    "titolare": true,
    "incerto": false
   },
