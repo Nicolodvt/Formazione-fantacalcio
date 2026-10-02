@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-02T12:05:10.961Z",
+ "generato": "2026-10-02T18:15:05.956Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -244,9 +244,9 @@
    "nome": "De Roon",
    "squadra": "Roma",
    "ruolo": "C",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
+   "pct": 85,
+   "titolare": true,
+   "incerto": false
   },
   "133": {
    "id": 133,
@@ -446,15 +446,6 @@
    "titolare": true,
    "incerto": false
   },
-  "779": {
-   "id": 779,
-   "nome": "Cristante",
-   "squadra": "Roma",
-   "ruolo": "C",
-   "pct": 75,
-   "titolare": true,
-   "incerto": false
-  },
   "791": {
    "id": 791,
    "nome": "Sabelli",
@@ -505,7 +496,7 @@
    "nome": "Spinazzola",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1270,7 +1261,7 @@
    "nome": "Colombo",
    "squadra": "Genoa",
    "ruolo": "A",
-   "pct": 75,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2260,7 +2251,7 @@
    "nome": "Beukema",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4208,15 +4199,6 @@
    "titolare": false,
    "incerto": true
   },
-  "7563": {
-   "id": 7563,
-   "nome": "Favasuli",
-   "squadra": "Napoli",
-   "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
-  },
   "7564": {
    "id": 7564,
    "nome": "Leysen F.",
@@ -4442,15 +4424,6 @@
    "titolare": false,
    "incerto": true
   },
-  "7626": {
-   "id": 7626,
-   "nome": "Pompei",
-   "squadra": "Atalanta",
-   "ruolo": "P",
-   "pct": 1,
-   "titolare": false,
-   "incerto": true
-  },
   "7627": {
    "id": 7627,
    "nome": "Enem",
@@ -4554,6 +4527,11 @@
    "tipo": "dubbio",
    "nota": "lesione di basso grado all'adduttore lungo, in dubbio impiego dal 1' contro il Frosinone"
   },
+  "779": {
+   "id": 779,
+   "tipo": "infortunato",
+   "nota": "infiammazione al ginocchio, da valutare contro il Como"
+  },
   "827": {
    "id": 827,
    "tipo": "infortunato",
@@ -4562,7 +4540,7 @@
   "1852": {
    "id": 1852,
    "tipo": "dubbio",
-   "nota": "lieve contrattura al bicipite femorale della coscia destra, da valutare contro il Frosinone"
+   "nota": "lieve contrattura al bicipite femorale della coscia destra, da valutare dal 1' contro il Frosinone"
   },
   "1871": {
    "id": 1871,
@@ -4874,6 +4852,11 @@
    "tipo": "infortunato",
    "nota": "sindrome retto-adduttoria, rientro da inizio novembre"
   },
+  "7563": {
+   "id": 7563,
+   "tipo": "infortunato",
+   "nota": "lesione muscolare al retto femorale, rientro da metà novembre"
+  },
   "7603": {
    "id": 7603,
    "tipo": "infortunato",
@@ -4883,6 +4866,11 @@
    "id": 7615,
    "tipo": "dubbio",
    "nota": "frattura dello scafoide del polso sinistro, in dubbio contro l'Inter"
+  },
+  "7626": {
+   "id": 7626,
+   "tipo": "infortunato",
+   "nota": "frattura della falange della mano destra, out contro il Venezia"
   }
  }
 }
