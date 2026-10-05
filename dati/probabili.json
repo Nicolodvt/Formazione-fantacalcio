@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-04T12:59:01.428Z",
+ "generato": "2026-10-05T15:28:57.768Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -496,9 +496,9 @@
    "nome": "Spinazzola",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 75,
+   "titolare": true,
+   "incerto": false
   },
   "1870": {
    "id": 1870,
@@ -568,9 +568,9 @@
    "nome": "Kean",
    "squadra": "Como",
    "ruolo": "A",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "2120": {
    "id": 2120,
@@ -649,7 +649,7 @@
    "nome": "Marusic",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 20,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -694,7 +694,7 @@
    "nome": "Alaba",
    "squadra": "Udinese",
    "ruolo": "D",
-   "pct": 35,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -910,7 +910,7 @@
    "nome": "Loftus-Cheek",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1058,6 +1058,15 @@
    "titolare": false,
    "incerto": true
   },
+  "4459": {
+   "id": 4459,
+   "nome": "Rovella",
+   "squadra": "Lazio",
+   "ruolo": "C",
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
+  },
   "4463": {
    "id": 4463,
    "nome": "Esposito Se.",
@@ -1126,7 +1135,7 @@
    "nome": "Badiashile",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 35,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -1436,15 +1445,6 @@
    "titolare": false,
    "incerto": true
   },
-  "5273": {
-   "id": 5273,
-   "nome": "Estupinan",
-   "squadra": "Milan",
-   "ruolo": "D",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
-  },
   "5295": {
    "id": 5295,
    "nome": "Musah",
@@ -1495,7 +1495,7 @@
    "nome": "Nzola",
    "squadra": "Cagliari",
    "ruolo": "A",
-   "pct": 30,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1702,7 +1702,7 @@
    "nome": "Davis K.",
    "squadra": "Udinese",
    "ruolo": "A",
-   "pct": 70,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1904,15 +1904,6 @@
    "titolare": true,
    "incerto": false
   },
-  "5840": {
-   "id": 5840,
-   "nome": "Olivera",
-   "squadra": "Napoli",
-   "ruolo": "D",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
-  },
   "5841": {
    "id": 5841,
    "nome": "Svilar",
@@ -2053,7 +2044,7 @@
    "nome": "Ebosse",
    "squadra": "Udinese",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2278,7 +2269,7 @@
    "nome": "Zarraga",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2404,7 +2395,7 @@
    "nome": "Doekhi",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -2422,7 +2413,7 @@
    "nome": "Moreira",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -2521,7 +2512,7 @@
    "nome": "Bartesaghi",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -2656,9 +2647,9 @@
    "nome": "Cissè A.",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "6629": {
    "id": 6629,
@@ -3187,9 +3178,9 @@
    "nome": "Douvikas",
    "squadra": "Como",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 75,
+   "titolare": true,
+   "incerto": false
   },
   "7023": {
    "id": 7023,
@@ -3376,7 +3367,7 @@
    "nome": "Giovane",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 25,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4109,15 +4100,6 @@
    "titolare": true,
    "incerto": false
   },
-  "7547": {
-   "id": 7547,
-   "nome": "Kevin Carlos",
-   "squadra": "Cagliari",
-   "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
-  },
   "7548": {
    "id": 7548,
    "nome": "Aurelio",
@@ -4528,11 +4510,6 @@
    "tipo": "infortunato",
    "nota": "rottura del menisco esterno del ginocchio, rientro in campo da febbraio"
   },
-  "1852": {
-   "id": 1852,
-   "tipo": "dubbio",
-   "nota": "lieve contrattura al bicipite femorale della coscia destra, da valutare dal 1' contro il Frosinone"
-  },
   "1871": {
    "id": 1871,
    "tipo": "infortunato",
@@ -4610,8 +4587,8 @@
   },
   "4459": {
    "id": 4459,
-   "tipo": "infortunato",
-   "nota": "problema muscolare al polpaccio, rientro metà di ottobre"
+   "tipo": "dubbio",
+   "nota": "problema muscolare al polpaccio, da valutare convocazione contro il Monza"
   },
   "4777": {
    "id": 4777,
@@ -4632,6 +4609,11 @@
    "id": 5029,
    "tipo": "dubbio",
    "nota": "distorsione alla caviglia, in dubbio dal 1' contro il Bologna"
+  },
+  "5273": {
+   "id": 5273,
+   "tipo": "infortunato",
+   "nota": "distorsione al ginocchio con fastidio interno, da valutare contro il Sassuolo"
   },
   "5436": {
    "id": 5436,
@@ -4677,6 +4659,11 @@
    "id": 5800,
    "tipo": "infortunato",
    "nota": "problema alla spalla destra, tentativo rientro dalla fine di ottobre"
+  },
+  "5840": {
+   "id": 5840,
+   "tipo": "infortunato",
+   "nota": "lesione distrattiva del muscolo otturatore esterno destro, out contro il Frosinone"
   },
   "5880": {
    "id": 5880,
@@ -4741,7 +4728,7 @@
   "6809": {
    "id": 6809,
    "tipo": "infortunato",
-   "nota": "lesione di alto grado del collaterale mediale del ginocchio sinistro, rientro dalla seconda metà di ottobre"
+   "nota": "lesione di alto grado del collaterale mediale del ginocchio sinistro, rientro dalla metà di ottobre"
   },
   "6822": {
    "id": 6822,
@@ -4776,7 +4763,7 @@
   "7162": {
    "id": 7162,
    "tipo": "dubbio",
-   "nota": "ernia inguinale, da valutare convocazione contro il Frosinone"
+   "nota": "ernia inguinale, da valutare impiego contro il Frosinone"
   },
   "7198": {
    "id": 7198,
@@ -4832,6 +4819,11 @@
    "id": 7481,
    "tipo": "infortunato",
    "nota": "problema fisico, da valutare convocazione per Bergamo"
+  },
+  "7547": {
+   "id": 7547,
+   "tipo": "infortunato",
+   "nota": "problema muscolare, da valutare"
   },
   "7550": {
    "id": 7550,
