@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-06T13:51:14.047Z",
+ "generato": "2026-10-06T22:51:32.934Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -415,9 +415,9 @@
    "nome": "Meret",
    "squadra": "Napoli",
    "ruolo": "P",
-   "pct": 60,
+   "pct": 75,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "608": {
    "id": 608,
@@ -640,7 +640,7 @@
    "nome": "Milinkovic-Savic V.",
    "squadra": "Napoli",
    "ruolo": "P",
-   "pct": 40,
+   "pct": 5,
    "titolare": false,
    "incerto": true
   },
@@ -706,15 +706,6 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
-  },
-  "2514": {
-   "id": 2514,
-   "nome": "Stones",
-   "squadra": "Inter",
-   "ruolo": "D",
-   "pct": 15,
-   "titolare": false,
-   "incerto": true
   },
   "2517": {
    "id": 2517,
@@ -847,7 +838,7 @@
    "nome": "Traorè Hj.",
    "squadra": "Genoa",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1135,7 +1126,7 @@
    "nome": "Badiashile",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1423,7 +1414,7 @@
    "nome": "Gilmour",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -1792,7 +1783,7 @@
    "nome": "Drameh",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 30,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2011,15 +2002,6 @@
    "pct": 55,
    "titolare": true,
    "incerto": true
-  },
-  "5946": {
-   "id": 5946,
-   "nome": "Sow",
-   "squadra": "Genoa",
-   "ruolo": "C",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
   },
   "5951": {
    "id": 5951,
@@ -2252,15 +2234,6 @@
    "squadra": "Parma",
    "ruolo": "C",
    "pct": 60,
-   "titolare": false,
-   "incerto": true
-  },
-  "6207": {
-   "id": 6207,
-   "nome": "Almqvist",
-   "squadra": "Parma",
-   "ruolo": "C",
-   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2989,9 +2962,9 @@
    "nome": "Moreno M.",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "6893": {
    "id": 6893,
@@ -3358,7 +3331,7 @@
    "nome": "Giovane",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3421,7 +3394,7 @@
    "nome": "Ndiaye",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -3457,7 +3430,7 @@
    "nome": "Frigan",
    "squadra": "Parma",
    "ruolo": "A",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -3478,15 +3451,6 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
-  },
-  "7223": {
-   "id": 7223,
-   "nome": "Vergara",
-   "squadra": "Napoli",
-   "ruolo": "C",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
   },
   "7232": {
    "id": 7232,
@@ -3541,6 +3505,15 @@
    "pct": 60,
    "titolare": false,
    "incerto": true
+  },
+  "7253": {
+   "id": 7253,
+   "nome": "Bella-Kotchap",
+   "squadra": "Venezia",
+   "ruolo": "D",
+   "pct": 75,
+   "titolare": true,
+   "incerto": false
   },
   "7255": {
    "id": 7255,
@@ -3691,9 +3664,9 @@
    "nome": "Amorim",
    "squadra": "Genoa",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 85,
+   "titolare": true,
+   "incerto": false
   },
   "7342": {
    "id": 7342,
@@ -4069,9 +4042,9 @@
    "nome": "Halhal",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "7540": {
    "id": 7540,
@@ -4171,6 +4144,15 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
+  },
+  "7568": {
+   "id": 7568,
+   "nome": "De Martis",
+   "squadra": "Parma",
+   "ruolo": "A",
+   "pct": 15,
+   "titolare": false,
+   "incerto": true
   },
   "7572": {
    "id": 7572,
@@ -4929,13 +4911,25 @@
   ],
   [
    {
+    "id": 6890,
+    "nome": "Moreno M.",
+    "pct": 60
+   },
+   {
+    "id": 7538,
+    "nome": "Halhal",
+    "pct": 40
+   }
+  ],
+  [
+   {
     "id": 4845,
     "nome": "Correia T.",
     "pct": 60
    },
    {
-    "id": 6681,
-    "nome": "Sagrado",
+    "id": 5481,
+    "nome": "Mazzocchi",
     "pct": 40
    }
   ],
@@ -4994,11 +4988,6 @@
    "tipo": "infortunato",
    "nota": "problema muscolare al quadricipite, out contro il Monza"
   },
-  "572": {
-   "id": 572,
-   "tipo": "dubbio",
-   "nota": "lesione di basso grado all'adduttore lungo, in dubbio impiego dal 1' contro il Frosinone"
-  },
   "779": {
    "id": 779,
    "tipo": "infortunato",
@@ -5021,7 +5010,7 @@
   },
   "2514": {
    "id": 2514,
-   "tipo": "dubbio",
+   "tipo": "infortunato",
    "nota": "risentimento ai flessori della coscia sinistra, da valutare convocazione contro il Parma"
   },
   "2724": {
@@ -5169,6 +5158,11 @@
    "tipo": "infortunato",
    "nota": "lesione del collaterale mediale di secondo grado del ginocchio sinistro, da valutare convocazione contro il Venezia"
   },
+  "5946": {
+   "id": 5946,
+   "tipo": "infortunato",
+   "nota": "problema muscolare, out contro la Fiorentina"
+  },
   "6015": {
    "id": 6015,
    "tipo": "infortunato",
@@ -5183,6 +5177,11 @@
    "id": 6046,
    "tipo": "infortunato",
    "nota": "lesione del tendine prossimale del muscolo semimembranoso della coscia sinistra, rientro da metà novembre"
+  },
+  "6207": {
+   "id": 6207,
+   "tipo": "infortunato",
+   "nota": "lesione muscolare polpaccio sinistro, rientro da fine ottobre"
   },
   "6219": {
    "id": 6219,
@@ -5254,11 +5253,6 @@
    "tipo": "infortunato",
    "nota": "lesione legamento crociato anteriore gamba destra, ipotesi rientro da fine ottobre"
   },
-  "7162": {
-   "id": 7162,
-   "tipo": "dubbio",
-   "nota": "ernia inguinale, da valutare impiego contro il Frosinone"
-  },
   "7198": {
    "id": 7198,
    "tipo": "infortunato",
@@ -5266,13 +5260,8 @@
   },
   "7223": {
    "id": 7223,
-   "tipo": "dubbio",
-   "nota": "fastidio muscolare al polpaccio, in dubbio impiego contro il Frosinone"
-  },
-  "7253": {
-   "id": 7253,
    "tipo": "infortunato",
-   "nota": "risentimento mio-fasciale adduttore destro, da valutare per Bergamo"
+   "nota": "lesione distrattiva al polpaccio, rientro da inizio novembre"
   },
   "7260": {
    "id": 7260,
@@ -5322,7 +5311,7 @@
   "7547": {
    "id": 7547,
    "tipo": "infortunato",
-   "nota": "problema muscolare, da valutare"
+   "nota": "problema muscolare al quadricipite della coscia sinistra, da valutare contro la Juve"
   },
   "7550": {
    "id": 7550,
