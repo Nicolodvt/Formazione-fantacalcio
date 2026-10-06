@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-05T15:28:57.768Z",
+ "generato": "2026-10-06T00:32:18.639Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -1238,15 +1238,6 @@
    "titolare": true,
    "incerto": false
   },
-  "4892": {
-   "id": 4892,
-   "nome": "Saelemaekers",
-   "squadra": "Milan",
-   "ruolo": "C",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
-  },
   "4896": {
    "id": 4896,
    "nome": "Maldini",
@@ -2233,7 +2224,7 @@
    "nome": "Beukema",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2530,7 +2521,7 @@
    "nome": "Fini",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2858,6 +2849,15 @@
    "titolare": true,
    "incerto": false
   },
+  "6809": {
+   "id": 6809,
+   "nome": "Marianucci",
+   "squadra": "Napoli",
+   "ruolo": "D",
+   "pct": 30,
+   "titolare": false,
+   "incerto": true
+  },
   "6813": {
    "id": 6813,
    "nome": "Torriani",
@@ -2980,16 +2980,7 @@
    "nome": "Moreno M.",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
-  },
-  "6892": {
-   "id": 6892,
-   "nome": "Schingtienne",
-   "squadra": "Venezia",
-   "ruolo": "D",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -3034,7 +3025,7 @@
    "nome": "Hasa",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -3493,7 +3484,7 @@
    "nome": "Vergara",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -3754,7 +3745,7 @@
    "nome": "Lisman",
    "squadra": "Venezia",
    "ruolo": "A",
-   "pct": 15,
+   "pct": 25,
    "titolare": false,
    "incerto": true
   },
@@ -3943,7 +3934,7 @@
    "nome": "Lauberbach",
    "squadra": "Venezia",
    "ruolo": "A",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4078,9 +4069,9 @@
    "nome": "Halhal",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
+   "pct": 80,
+   "titolare": true,
+   "incerto": false
   },
   "7540": {
    "id": 7540,
@@ -4295,15 +4286,6 @@
    "squadra": "Genoa",
    "ruolo": "C",
    "pct": 15,
-   "titolare": false,
-   "incerto": true
-  },
-  "7610": {
-   "id": 7610,
-   "nome": "Birligea",
-   "squadra": "Frosinone",
-   "ruolo": "A",
-   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -4597,13 +4579,13 @@
   },
   "4892": {
    "id": 4892,
-   "tipo": "dubbio",
-   "nota": "fastidio alla caviglia, in dubbio contro Sassuolo"
+   "tipo": "infortunato",
+   "nota": "problema alla caviglia, out contro Sassuolo"
   },
   "4923": {
    "id": 4923,
    "tipo": "infortunato",
-   "nota": "problema alla caviglia, da valutare contro la Fiorentina"
+   "nota": "problema alla caviglia, ipotesi rientro fine ottobre"
   },
   "5029": {
    "id": 5029,
@@ -4643,7 +4625,7 @@
   "5674": {
    "id": 5674,
    "tipo": "infortunato",
-   "nota": "noie fisiche, da valutare convocazione contro l'Atalanta"
+   "nota": "fascite plantare, da valutare convocazione contro l'Atalanta"
   },
   "5678": {
    "id": 5678,
@@ -4725,15 +4707,15 @@
    "tipo": "infortunato",
    "nota": "rottura di tibia e perone gamba sinistra, rientro da dicembre"
   },
-  "6809": {
-   "id": 6809,
-   "tipo": "infortunato",
-   "nota": "lesione di alto grado del collaterale mediale del ginocchio sinistro, rientro dalla metà di ottobre"
-  },
   "6822": {
    "id": 6822,
    "tipo": "infortunato",
    "nota": "lesione di medio grado del muscolo semitendinoso, rientro da metà novembre"
+  },
+  "6892": {
+   "id": 6892,
+   "tipo": "infortunato",
+   "nota": "noie fisiche, da valutare convocazione contro Atalanta"
   },
   "6980": {
    "id": 6980,
@@ -4770,6 +4752,11 @@
    "tipo": "infortunato",
    "nota": "lieve aritmia cardiaca benigna, ipotesi rientro da fine ottobre"
   },
+  "7223": {
+   "id": 7223,
+   "tipo": "dubbio",
+   "nota": "fastidio muscolare al polpaccio, in dubbio impiego contro il Frosinone"
+  },
   "7253": {
    "id": 7253,
    "tipo": "infortunato",
@@ -4783,7 +4770,7 @@
   "7272": {
    "id": 7272,
    "tipo": "infortunato",
-   "nota": "problema alla caviglia, da valutare contro il Torino"
+   "nota": "problema alla caviglia, rientro da fine gennaio"
   },
   "7312": {
    "id": 7312,
@@ -4839,6 +4826,11 @@
    "id": 7603,
    "tipo": "infortunato",
    "nota": "lesione al crociato anteriore del ginocchio destro, rientro da aprile"
+  },
+  "7610": {
+   "id": 7610,
+   "tipo": "infortunato",
+   "nota": "Lesione muscolare al quadricipite sinistro, rientro da fine ottobre"
   },
   "7615": {
    "id": 7615,
