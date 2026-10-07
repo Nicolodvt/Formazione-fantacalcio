@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-06T22:51:32.934Z",
+ "generato": "2026-10-07T14:23:10.111Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -101,7 +101,7 @@
    "stadio": "Giuseppe Meazza"
   },
   "Parma": {
-   "modulo": "3-4-2-1",
+   "modulo": "3-5-2",
    "inCasa": false,
    "avversario": "Inter",
    "data": "sabato 10 ottobre, 18:00",
@@ -883,7 +883,7 @@
    "nome": "Pavard",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 30,
    "titolare": false,
    "incerto": true
   },
@@ -1126,7 +1126,7 @@
    "nome": "Badiashile",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1154,6 +1154,15 @@
    "squadra": "Milan",
    "ruolo": "D",
    "pct": 25,
+   "titolare": false,
+   "incerto": true
+  },
+  "4777": {
+   "id": 4777,
+   "nome": "McTominay",
+   "squadra": "Napoli",
+   "ruolo": "C",
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2017,7 +2026,7 @@
    "nome": "Spence",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 30,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -2215,7 +2224,7 @@
    "nome": "Beukema",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -2287,9 +2296,9 @@
    "nome": "Tourè E.",
    "squadra": "Parma",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "6230": {
    "id": 6230,
@@ -2341,7 +2350,7 @@
    "nome": "Diouf",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2656,9 +2665,9 @@
    "nome": "Marin R.",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "6642": {
    "id": 6642,
@@ -2668,6 +2677,15 @@
    "pct": 80,
    "titolare": true,
    "incerto": false
+  },
+  "6646": {
+   "id": 6646,
+   "nome": "Adams C.",
+   "squadra": "Torino",
+   "ruolo": "A",
+   "pct": 25,
+   "titolare": false,
+   "incerto": true
   },
   "6650": {
    "id": 6650,
@@ -3520,7 +3538,7 @@
    "nome": "Britschgi",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -4133,7 +4151,7 @@
    "squadra": "Parma",
    "ruolo": "A",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7564": {
@@ -4375,9 +4393,9 @@
    "nome": "Sierro",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 85,
+   "titolare": true,
+   "incerto": false
   },
   "7629": {
    "id": 7629,
@@ -4527,6 +4545,18 @@
   ],
   [
    {
+    "id": 6229,
+    "nome": "Tourè E.",
+    "pct": 60
+   },
+   {
+    "id": 7561,
+    "nome": "Lontani",
+    "pct": 40
+   }
+  ],
+  [
+   {
     "id": 7554,
     "nome": "Romero D.",
     "pct": 60
@@ -4539,25 +4569,13 @@
   ],
   [
    {
-    "id": 7561,
-    "nome": "Lontani",
+    "id": 6638,
+    "nome": "Marin R.",
     "pct": 60
    },
    {
-    "id": 7628,
-    "nome": "Sierro",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 572,
-    "nome": "Meret",
-    "pct": 60
-   },
-   {
-    "id": 2170,
-    "nome": "Milinkovic-Savic V.",
+    "id": 4664,
+    "nome": "Badiashile",
     "pct": 40
    }
   ],
@@ -5080,8 +5098,8 @@
   },
   "4777": {
    "id": 4777,
-   "tipo": "infortunato",
-   "nota": "lieve aritmia benigna, da valutare contro il Frosinone"
+   "tipo": "dubbio",
+   "nota": "lieve aritmia benigna, in dubbio impiego contro il Frosinone"
   },
   "4892": {
    "id": 4892,
@@ -5200,7 +5218,7 @@
   },
   "6646": {
    "id": 6646,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "lesione distrattiva di basso grado all'adduttore, da valutare convocazione contro Udinese"
   },
   "6672": {
