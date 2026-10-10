@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-09T18:41:29.628Z",
+ "generato": "2026-10-10T13:22:13.000Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -80,14 +80,14 @@
  ],
  "squadre": {
   "Genoa": {
-   "modulo": "3-5-2",
+   "modulo": "4-4-1-1",
    "inCasa": true,
    "avversario": "Fiorentina",
    "data": "sabato 10 ottobre, 15:00",
    "stadio": "Luigi Ferraris"
   },
   "Fiorentina": {
-   "modulo": "4-2-3-1",
+   "modulo": "4-3-2-1",
    "inCasa": false,
    "avversario": "Genoa",
    "data": "sabato 10 ottobre, 15:00",
@@ -262,7 +262,7 @@
    "nome": "Zielinski",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": true,
    "incerto": true
   },
@@ -347,6 +347,15 @@
    "titolare": true,
    "incerto": false
   },
+  "333": {
+   "id": 333,
+   "nome": "Cataldi",
+   "squadra": "Lazio",
+   "ruolo": "C",
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
+  },
   "418": {
    "id": 418,
    "nome": "Goldaniga",
@@ -389,7 +398,7 @@
    "squadra": "Napoli",
    "ruolo": "C",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "543": {
@@ -415,9 +424,9 @@
    "nome": "Meret",
    "squadra": "Napoli",
    "ruolo": "P",
-   "pct": 55,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "608": {
    "id": 608,
@@ -433,9 +442,9 @@
    "nome": "Gollini",
    "squadra": "Roma",
    "ruolo": "P",
-   "pct": 5,
-   "titolare": false,
-   "incerto": true
+   "pct": 90,
+   "titolare": true,
+   "incerto": false
   },
   "632": {
    "id": 632,
@@ -460,9 +469,9 @@
    "nome": "El Shaarawy",
    "squadra": "Genoa",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "801": {
    "id": 801,
@@ -508,6 +517,15 @@
    "pct": 80,
    "titolare": true,
    "incerto": false
+  },
+  "1871": {
+   "id": 1871,
+   "nome": "Deiola",
+   "squadra": "Cagliari",
+   "ruolo": "C",
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "1926": {
    "id": 1926,
@@ -560,15 +578,6 @@
    "squadra": "Atalanta",
    "ruolo": "C",
    "pct": 60,
-   "titolare": false,
-   "incerto": true
-  },
-  "2097": {
-   "id": 2097,
-   "nome": "Kean",
-   "squadra": "Como",
-   "ruolo": "A",
-   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -640,16 +649,7 @@
    "nome": "Milinkovic-Savic V.",
    "squadra": "Napoli",
    "ruolo": "P",
-   "pct": 45,
-   "titolare": false,
-   "incerto": true
-  },
-  "2188": {
-   "id": 2188,
-   "nome": "Marusic",
-   "squadra": "Lazio",
-   "ruolo": "D",
-   "pct": 50,
+   "pct": 5,
    "titolare": false,
    "incerto": true
   },
@@ -658,8 +658,8 @@
    "nome": "Calhanoglu",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "2263": {
@@ -667,7 +667,7 @@
    "nome": "Lazzari",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -721,7 +721,7 @@
    "nome": "De Gea",
    "squadra": "Fiorentina",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -847,9 +847,9 @@
    "nome": "Traorè Hj.",
    "squadra": "Genoa",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "2874": {
    "id": 2874,
@@ -928,9 +928,9 @@
    "nome": "Muric",
    "squadra": "Sassuolo",
    "ruolo": "P",
-   "pct": 55,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4260": {
    "id": 4260,
@@ -1018,7 +1018,7 @@
    "nome": "Ranieri L.",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1081,7 +1081,7 @@
    "nome": "Fagioli",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1144,7 +1144,7 @@
    "nome": "Balerdi",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1216,7 +1216,7 @@
    "nome": "Turati",
    "squadra": "Sassuolo",
    "ruolo": "P",
-   "pct": 45,
+   "pct": 5,
    "titolare": false,
    "incerto": true
   },
@@ -1324,7 +1324,7 @@
    "nome": "Messias",
    "squadra": "Genoa",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1360,7 +1360,7 @@
    "nome": "Molina N.",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 65,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1396,7 +1396,7 @@
    "nome": "Geubbels",
    "squadra": "Lecce",
    "ruolo": "A",
-   "pct": 50,
+   "pct": 25,
    "titolare": false,
    "incerto": true
   },
@@ -1477,7 +1477,7 @@
    "nome": "Sohm",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1495,7 +1495,7 @@
    "nome": "Dragusin",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1558,7 +1558,7 @@
    "nome": "Ciervo",
    "squadra": "Cagliari",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -1567,7 +1567,7 @@
    "nome": "Mazzocchi",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -1577,15 +1577,6 @@
    "squadra": "Bologna",
    "ruolo": "D",
    "pct": 40,
-   "titolare": false,
-   "incerto": true
-  },
-  "5500": {
-   "id": 5500,
-   "nome": "Cancellieri",
-   "squadra": "Lazio",
-   "ruolo": "C",
-   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1603,7 +1594,7 @@
    "nome": "Vasquez",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1648,7 +1639,7 @@
    "nome": "Da Cunha",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1711,7 +1702,7 @@
    "nome": "Basic",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": true,
    "incerto": true
   },
@@ -1756,7 +1747,16 @@
    "nome": "Beto",
    "squadra": "Fiorentina",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
+  },
+  "5695": {
+   "id": 5695,
+   "nome": "Haps",
+   "squadra": "Venezia",
+   "ruolo": "D",
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1792,7 +1792,7 @@
    "nome": "Drameh",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1801,7 +1801,7 @@
    "nome": "Ostigard",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1837,7 +1837,7 @@
    "nome": "Frendrup",
    "squadra": "Genoa",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1873,9 +1873,9 @@
    "nome": "Baldanzi",
    "squadra": "Genoa",
    "ruolo": "C",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "5831": {
    "id": 5831,
@@ -1900,15 +1900,6 @@
    "nome": "Birindelli",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
-  },
-  "5841": {
-   "id": 5841,
-   "nome": "Svilar",
-   "squadra": "Roma",
-   "ruolo": "P",
    "pct": 90,
    "titolare": true,
    "incerto": false
@@ -1963,7 +1954,7 @@
    "nome": "Helgason",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2026,7 +2017,7 @@
    "nome": "Spence",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -2080,7 +2071,7 @@
    "nome": "Ellertsson",
    "squadra": "Genoa",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2125,7 +2116,7 @@
    "nome": "Ehizibue",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2134,7 +2125,7 @@
    "nome": "Hojlund",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -2189,7 +2180,7 @@
    "squadra": "Genoa",
    "ruolo": "A",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6170": {
@@ -2215,7 +2206,7 @@
    "nome": "Belahyane",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -2350,16 +2341,16 @@
    "nome": "Diouf",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 70,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6294": {
    "id": 6294,
    "nome": "Ndour",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2368,7 +2359,7 @@
    "nome": "Leite",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 30,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -2377,7 +2368,7 @@
    "nome": "Doekhi",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 60,
    "titolare": true,
    "incerto": true
   },
@@ -2413,9 +2404,9 @@
    "nome": "Isaksen",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 90,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6403": {
    "id": 6403,
@@ -2503,9 +2494,9 @@
    "nome": "Stankovic A.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 85,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "6506": {
    "id": 6506,
@@ -2539,7 +2530,7 @@
    "nome": "Jimenez A.",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2638,7 +2629,7 @@
    "nome": "Dele-Bashiru",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -2665,7 +2656,7 @@
    "nome": "Marin R.",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -2710,9 +2701,9 @@
    "nome": "Marcandalli",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "6662": {
    "id": 6662,
@@ -2800,7 +2791,7 @@
    "nome": "Sagrado",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -2899,9 +2890,9 @@
    "nome": "Njie",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 85,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "6831": {
    "id": 6831,
@@ -2909,16 +2900,7 @@
    "squadra": "Napoli",
    "ruolo": "A",
    "pct": 60,
-   "titolare": false,
-   "incerto": true
-  },
-  "6833": {
-   "id": 6833,
-   "nome": "Mbangula",
-   "squadra": "Bologna",
-   "ruolo": "C",
-   "pct": 20,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "6844": {
@@ -2980,9 +2962,18 @@
    "nome": "Moreno M.",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 55,
    "titolare": true,
    "incerto": true
+  },
+  "6892": {
+   "id": 6892,
+   "nome": "Schingtienne",
+   "squadra": "Venezia",
+   "ruolo": "D",
+   "pct": 80,
+   "titolare": true,
+   "incerto": false
   },
   "6893": {
    "id": 6893,
@@ -3088,16 +3079,16 @@
    "nome": "Otoa",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6986": {
    "id": 6986,
    "nome": "Rensch",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -3142,7 +3133,7 @@
    "nome": "Provstgaard",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 65,
    "titolare": true,
    "incerto": false
   },
@@ -3151,7 +3142,7 @@
    "nome": "Smolcic I.",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -3170,7 +3161,7 @@
    "squadra": "Fiorentina",
    "ruolo": "A",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7036": {
@@ -3187,7 +3178,7 @@
    "nome": "De Marzi",
    "squadra": "Roma",
    "ruolo": "P",
-   "pct": 1,
+   "pct": 5,
    "titolare": false,
    "incerto": true
   },
@@ -3214,7 +3205,7 @@
    "nome": "Sucic P.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -3232,7 +3223,7 @@
    "nome": "Mastantuono",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 65,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3250,7 +3241,7 @@
    "nome": "Lang",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 60,
    "titolare": true,
    "incerto": true
   },
@@ -3286,7 +3277,7 @@
    "nome": "Floriani Mussolini",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -3367,7 +3358,7 @@
    "nome": "Joao Mario",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -3457,7 +3448,7 @@
    "nome": "Fernandez T.",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -3466,7 +3457,7 @@
    "nome": "Troilo",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -3493,16 +3484,7 @@
    "nome": "Gorter",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
-  },
-  "7252": {
-   "id": 7252,
-   "nome": "Stulic",
-   "squadra": "Lecce",
-   "ruolo": "A",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3511,9 +3493,9 @@
    "nome": "Bella-Kotchap",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 75,
-   "titolare": true,
-   "incerto": false
+   "pct": 25,
+   "titolare": false,
+   "incerto": true
   },
   "7255": {
    "id": 7255,
@@ -3556,9 +3538,9 @@
    "nome": "Valdepenas",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7301": {
    "id": 7301,
@@ -3601,7 +3583,7 @@
    "nome": "Gandelman",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 30,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -3646,7 +3628,7 @@
    "nome": "Bijlow",
    "squadra": "Genoa",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3709,7 +3691,7 @@
    "nome": "Lisman",
    "squadra": "Venezia",
    "ruolo": "A",
-   "pct": 25,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -3718,9 +3700,9 @@
    "nome": "Viery",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 65,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "7411": {
    "id": 7411,
@@ -3790,7 +3772,7 @@
    "nome": "Gomes",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 25,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -3826,9 +3808,9 @@
    "nome": "Oulai",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7467": {
    "id": 7467,
@@ -3890,6 +3872,15 @@
    "squadra": "Monza",
    "ruolo": "C",
    "pct": 25,
+   "titolare": false,
+   "incerto": true
+  },
+  "7481": {
+   "id": 7481,
+   "nome": "Dagasso",
+   "squadra": "Venezia",
+   "ruolo": "C",
+   "pct": 30,
    "titolare": false,
    "incerto": true
   },
@@ -3962,15 +3953,6 @@
    "squadra": "Bologna",
    "ruolo": "C",
    "pct": 55,
-   "titolare": false,
-   "incerto": true
-  },
-  "7529": {
-   "id": 7529,
-   "nome": "Koulierakis",
-   "squadra": "Roma",
-   "ruolo": "D",
-   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -4054,6 +4036,15 @@
    "pct": 70,
    "titolare": true,
    "incerto": false
+  },
+  "7547": {
+   "id": 7547,
+   "nome": "Kevin Carlos",
+   "squadra": "Cagliari",
+   "ruolo": "A",
+   "pct": 30,
+   "titolare": false,
+   "incerto": true
   },
   "7548": {
    "id": 7548,
@@ -4186,7 +4177,7 @@
    "nome": "Sutalo J.",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4213,7 +4204,7 @@
    "nome": "Osmajic",
    "squadra": "Genoa",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4294,7 +4285,7 @@
    "nome": "Monteiro J.",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -4330,9 +4321,9 @@
    "nome": "Gnonto",
    "squadra": "Fiorentina",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7624": {
    "id": 7624,
@@ -4348,9 +4339,9 @@
    "nome": "Goncalves P.",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "7627": {
    "id": 7627,
@@ -4402,7 +4393,7 @@
    "nome": "Panada",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 30,
+   "pct": 25,
    "titolare": false,
    "incerto": true
   },
@@ -4424,21 +4415,12 @@
    "titolare": false,
    "incerto": true
   },
-  "7635": {
-   "id": 7635,
-   "nome": "Fanne",
-   "squadra": "Venezia",
-   "ruolo": "C",
-   "pct": 30,
-   "titolare": false,
-   "incerto": true
-  },
   "7647": {
    "id": 7647,
    "nome": "Esteban",
    "squadra": "Lecce",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   }
@@ -4446,74 +4428,26 @@
  "ballottaggi": [
   [
    {
-    "id": 6164,
-    "nome": "Vitinha O.",
-    "pct": 60
+    "id": 2194,
+    "nome": "Calhanoglu",
+    "pct": 55
    },
    {
-    "id": 4970,
-    "nome": "Messias",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 7410,
-    "nome": "Viery",
-    "pct": 65
-   },
-   {
-    "id": 7294,
-    "nome": "Valdepenas",
-    "pct": 35
-   }
-  ],
-  [
-   {
-    "id": 7078,
-    "nome": "Mastantuono",
-    "pct": 65
-   },
-   {
-    "id": 7623,
-    "nome": "Gnonto",
-    "pct": 35
-   }
-  ],
-  [
-   {
-    "id": 7023,
-    "nome": "Pellegrino M.",
-    "pct": 60
-   },
-   {
-    "id": 5694,
-    "nome": "Beto",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 6274,
-    "nome": "Diouf",
-    "pct": 60
-   },
-   {
-    "id": 5301,
-    "nome": "Luis Henrique",
-    "pct": 40
+    "id": 6503,
+    "nome": "Stankovic A.",
+    "pct": 45
    }
   ],
   [
    {
     "id": 152,
     "nome": "Zielinski",
-    "pct": 60
+    "pct": 55
    },
    {
     "id": 7070,
     "nome": "Sucic P.",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
@@ -4566,38 +4500,26 @@
   ],
   [
    {
-    "id": 572,
-    "nome": "Meret",
-    "pct": 55
+    "id": 6831,
+    "nome": "Neres",
+    "pct": 60
    },
    {
-    "id": 2170,
-    "nome": "Milinkovic-Savic V.",
-    "pct": 45
+    "id": 536,
+    "nome": "Politano",
+    "pct": 40
    }
   ],
   [
    {
     "id": 7120,
     "nome": "Lang",
-    "pct": 55
-   },
-   {
-    "id": 6831,
-    "nome": "Neres",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 536,
-    "nome": "Politano",
-    "pct": 55
+    "pct": 60
    },
    {
     "id": 6202,
     "nome": "Beukema",
-    "pct": 45
+    "pct": 40
    }
   ],
   [
@@ -4674,18 +4596,6 @@
   ],
   [
    {
-    "id": 4998,
-    "nome": "Molina N.",
-    "pct": 65
-   },
-   {
-    "id": 7599,
-    "nome": "Lulli",
-    "pct": 35
-   }
-  ],
-  [
-   {
     "id": 7556,
     "nome": "Mora",
     "pct": 55
@@ -4698,25 +4608,25 @@
   ],
   [
    {
-    "id": 6320,
-    "nome": "Doekhi",
-    "pct": 55
+    "id": 7012,
+    "nome": "Provstgaard",
+    "pct": 65
    },
    {
-    "id": 7580,
-    "nome": "Sutalo J.",
-    "pct": 45
+    "id": 6319,
+    "nome": "Leite",
+    "pct": 35
    }
   ],
   [
    {
-    "id": 6398,
-    "nome": "Isaksen",
+    "id": 6320,
+    "nome": "Doekhi",
     "pct": 60
    },
    {
-    "id": 5500,
-    "nome": "Cancellieri",
+    "id": 7580,
+    "nome": "Sutalo J.",
     "pct": 40
    }
   ],
@@ -4802,18 +4712,6 @@
     "id": 4436,
     "nome": "Cambiaghi",
     "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 4236,
-    "nome": "Muric",
-    "pct": 55
-   },
-   {
-    "id": 4867,
-    "nome": "Turati",
-    "pct": 45
    }
   ],
   [
@@ -4940,12 +4838,12 @@
    {
     "id": 6890,
     "nome": "Moreno M.",
-    "pct": 60
+    "pct": 55
    },
    {
     "id": 7538,
     "nome": "Halhal",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
@@ -4955,8 +4853,8 @@
     "pct": 60
    },
    {
-    "id": 5481,
-    "nome": "Mazzocchi",
+    "id": 6681,
+    "nome": "Sagrado",
     "pct": 40
    }
   ],
@@ -4964,12 +4862,12 @@
    {
     "id": 5674,
     "nome": "Basic",
-    "pct": 55
+    "pct": 60
    },
    {
     "id": 5872,
     "nome": "Helgason",
-    "pct": 45
+    "pct": 40
    }
   ],
   [
@@ -5022,30 +4920,25 @@
   ]
  ],
  "indisponibili": {
-  "333": {
-   "id": 333,
-   "tipo": "infortunato",
-   "nota": "problema muscolare al quadricipite, out contro il Monza"
-  },
   "779": {
    "id": 779,
    "tipo": "infortunato",
-   "nota": "infiammazione al ginocchio, da valutare contro il Como"
+   "nota": "infiammazione al ginocchio, out contro il Como"
   },
   "827": {
    "id": 827,
    "tipo": "infortunato",
    "nota": "rottura del menisco esterno del ginocchio, rientro in campo da febbraio"
   },
-  "1871": {
-   "id": 1871,
+  "2097": {
+   "id": 2097,
    "tipo": "infortunato",
-   "nota": "lesione del menisco laterale del ginocchio sinistro, ipotesi di rientro da fine ottobre"
+   "nota": "fastidio alla tibia, out contro la Roma"
   },
   "2188": {
    "id": 2188,
-   "tipo": "dubbio",
-   "nota": "problema muscolare alla coscia destra, da valutare convocazione contro il Monza"
+   "tipo": "infortunato",
+   "nota": "problema muscolare alla coscia destra, da valutare convocazione nella 7a giornata"
   },
   "2514": {
    "id": 2514,
@@ -5082,11 +4975,6 @@
    "tipo": "infortunato",
    "nota": "lesione miofasciale di basso grado dell'adduttore lungo, da valutare contro il Frosinone"
   },
-  "4236": {
-   "id": 4236,
-   "tipo": "dubbio",
-   "nota": "noie fisiche, in dubbio dal 1' contro il Milan"
-  },
   "4349": {
    "id": 4349,
    "tipo": "infortunato",
@@ -5110,7 +4998,7 @@
   "4459": {
    "id": 4459,
    "tipo": "infortunato",
-   "nota": "problema muscolare al polpaccio, da valutare convocazione contro il Monza"
+   "nota": "problema muscolare al polpaccio, da valutare convocazione dalla 7a giornata"
   },
   "4892": {
    "id": 4892,
@@ -5121,6 +5009,11 @@
    "id": 4923,
    "tipo": "infortunato",
    "nota": "problema alla caviglia, ipotesi rientro fine ottobre"
+  },
+  "5029": {
+   "id": 5029,
+   "tipo": "dubbio",
+   "nota": "fastidio alla caviglia, in dubbio impiego contro il Bologna"
   },
   "5172": {
    "id": 5172,
@@ -5137,6 +5030,11 @@
    "tipo": "infortunato",
    "nota": "infortunio al legamento crociato, rientro da dicembre"
   },
+  "5500": {
+   "id": 5500,
+   "tipo": "infortunato",
+   "nota": "noie fisiche, out contro il Monza"
+  },
   "5507": {
    "id": 5507,
    "tipo": "infortunato",
@@ -5152,20 +5050,10 @@
    "tipo": "infortunato",
    "nota": "lesione muscolare di medio-alto grado del bicipite femorale della coscia sinistra, rientro dalla seconda metà di novembre"
   },
-  "5674": {
-   "id": 5674,
-   "tipo": "dubbio",
-   "nota": "fascite plantare, in dubbio impiego contro l'Atalanta"
-  },
   "5678": {
    "id": 5678,
    "tipo": "infortunato",
    "nota": "problema al tendine della coscia destra, ipotesi rientro da fine febbraio"
-  },
-  "5695": {
-   "id": 5695,
-   "tipo": "infortunato",
-   "nota": "noie fisiche, da valutare per Bergamo"
   },
   "5735": {
    "id": 5735,
@@ -5181,6 +5069,11 @@
    "id": 5840,
    "tipo": "infortunato",
    "nota": "lesione distrattiva del muscolo otturatore esterno destro, rientro dalla metà di ottobre"
+  },
+  "5841": {
+   "id": 5841,
+   "tipo": "infortunato",
+   "nota": "frattura a un dito della mano, ipotesi rientro metà novembre"
   },
   "5880": {
    "id": 5880,
@@ -5200,7 +5093,7 @@
   "6015": {
    "id": 6015,
    "tipo": "infortunato",
-   "nota": "sovraccarico muscolare alla gamba, da valutare convocazione contro il Bologna"
+   "nota": "sovraccarico muscolare alla gamba, rientro da fine ottobre"
   },
   "6046": {
    "id": 6046,
@@ -5227,11 +5120,6 @@
    "tipo": "infortunato",
    "nota": "rottura del legamento crociato anteriore, ipotesi rientro da marzo"
   },
-  "6650": {
-   "id": 6650,
-   "tipo": "dubbio",
-   "nota": "fastidio agli adduttori della coscia destra, in dubbio convocazione contro la Juventus"
-  },
   "6672": {
    "id": 6672,
    "tipo": "infortunato",
@@ -5254,13 +5142,8 @@
   },
   "6833": {
    "id": 6833,
-   "tipo": "dubbio",
-   "nota": "noie fisiche, in dubbio per Lecce"
-  },
-  "6892": {
-   "id": 6892,
    "tipo": "infortunato",
-   "nota": "noie fisiche, da valutare convocazione contro Atalanta"
+   "nota": "noie fisiche, out per Lecce"
   },
   "6908": {
    "id": 6908,
@@ -5307,6 +5190,16 @@
    "tipo": "infortunato",
    "nota": "lesione distrattiva al polpaccio, rientro da inizio novembre"
   },
+  "7252": {
+   "id": 7252,
+   "tipo": "infortunato",
+   "nota": "problema muscolare alla gamba, out contro il Bologna"
+  },
+  "7253": {
+   "id": 7253,
+   "tipo": "dubbio",
+   "nota": "noie fisiche, da valutare per Bergamo"
+  },
   "7260": {
    "id": 7260,
    "tipo": "infortunato",
@@ -5325,7 +5218,7 @@
   "7317": {
    "id": 7317,
    "tipo": "infortunato",
-   "nota": "noie fisiche, rientro da metà ottobre"
+   "nota": "noie fisiche, rientro da fine ottobre"
   },
   "7341": {
    "id": 7341,
@@ -5352,15 +5245,15 @@
    "tipo": "infortunato",
    "nota": "problema alla spalla, rientro dalla metà di dicembre"
   },
-  "7481": {
-   "id": 7481,
+  "7529": {
+   "id": 7529,
    "tipo": "infortunato",
-   "nota": "problema fisico, da valutare convocazione per Bergamo"
+   "nota": "contusione alla gamba, out a Como"
   },
   "7547": {
    "id": 7547,
-   "tipo": "infortunato",
-   "nota": "problema muscolare al quadricipite della coscia sinistra, out contro la Juve"
+   "tipo": "dubbio",
+   "nota": "lieve problema muscolare al quadricipite della coscia sinistra, in dubbio impiego contro la Juve"
   },
   "7550": {
    "id": 7550,
