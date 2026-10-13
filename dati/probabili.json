@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-12T16:24:21.359Z",
+ "generato": "2026-10-13T01:04:19.090Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 6,
  "giornateDiscordi": [
@@ -541,7 +541,7 @@
    "nome": "Mandragora",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -559,7 +559,7 @@
    "nome": "Simeone",
    "squadra": "Torino",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -631,9 +631,9 @@
    "nome": "Rodriguez R.",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 30,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "2170": {
    "id": 2170,
@@ -685,8 +685,8 @@
    "nome": "Alaba",
    "squadra": "Udinese",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": true,
+   "pct": 50,
+   "titolare": false,
    "incerto": true
   },
   "2423": {
@@ -1351,9 +1351,9 @@
    "nome": "Vojvoda",
    "squadra": "Udinese",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4998": {
    "id": 4998,
@@ -1607,21 +1607,12 @@
    "titolare": true,
    "incerto": false
   },
-  "5527": {
-   "id": 5527,
-   "nome": "Zanoli",
-   "squadra": "Udinese",
-   "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
-  },
   "5555": {
    "id": 5555,
    "nome": "Kamara H.",
    "squadra": "Udinese",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1675,9 +1666,9 @@
    "nome": "Davis K.",
    "squadra": "Udinese",
    "ruolo": "A",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "5641": {
    "id": 5641,
@@ -1721,7 +1712,7 @@
    "squadra": "Torino",
    "ruolo": "C",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "5694": {
@@ -1991,7 +1982,7 @@
    "squadra": "Torino",
    "ruolo": "C",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "5951": {
@@ -2017,9 +2008,9 @@
    "nome": "Ebosse",
    "squadra": "Udinese",
    "ruolo": "D",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "5995": {
    "id": 5995,
@@ -2071,7 +2062,7 @@
    "nome": "Abankwah",
    "squadra": "Udinese",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2242,9 +2233,9 @@
    "nome": "Zarraga",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 35,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6215": {
    "id": 6215,
@@ -2269,9 +2260,9 @@
    "nome": "Oristanio",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6225": {
    "id": 6225,
@@ -2449,7 +2440,7 @@
    "nome": "Okoye",
    "squadra": "Udinese",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2476,7 +2467,7 @@
    "nome": "Comuzzo",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2539,7 +2530,7 @@
    "nome": "Perri",
    "squadra": "Torino",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2656,7 +2647,7 @@
    "nome": "Coco",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2665,9 +2656,9 @@
    "nome": "Adams C.",
    "squadra": "Torino",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6650": {
    "id": 6650,
@@ -2773,7 +2764,7 @@
    "nome": "Karlstrom",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2791,7 +2782,7 @@
    "nome": "Ekkelenkamp",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2827,9 +2818,9 @@
    "nome": "Unai Gomez",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6809": {
    "id": 6809,
@@ -3043,7 +3034,7 @@
    "nome": "Solet",
    "squadra": "Udinese",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3187,7 +3178,7 @@
    "nome": "Cacciamani",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3308,15 +3299,6 @@
    "titolare": false,
    "incerto": true
   },
-  "7161": {
-   "id": 7161,
-   "nome": "Bayo V.",
-   "squadra": "Udinese",
-   "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
-  },
   "7162": {
    "id": 7162,
    "nome": "Giovane",
@@ -3394,9 +3376,9 @@
    "nome": "Miller L.",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 75,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "7212": {
    "id": 7212,
@@ -3430,7 +3412,7 @@
    "nome": "Belghali",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3745,9 +3727,9 @@
    "nome": "Chakvetadze",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7436": {
    "id": 7436,
@@ -3944,7 +3926,7 @@
    "squadra": "Torino",
    "ruolo": "D",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7528": {
@@ -3997,9 +3979,9 @@
    "nome": "Fitz-Jim",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "7536": {
    "id": 7536,
@@ -4330,9 +4312,9 @@
    "nome": "Braganca",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7625": {
    "id": 7625,
@@ -4425,80 +4407,7 @@
    "incerto": false
   }
  },
- "ballottaggi": [
-  [
-   {
-    "id": 7526,
-    "nome": "Comert",
-    "pct": 60
-   },
-   {
-    "id": 2169,
-    "nome": "Rodriguez R.",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 5687,
-    "nome": "Vlasic",
-    "pct": 55
-   },
-   {
-    "id": 6218,
-    "nome": "Oristanio",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 5888,
-    "nome": "Casadei",
-    "pct": 55
-   },
-   {
-    "id": 6646,
-    "nome": "Adams C.",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 2404,
-    "nome": "Alaba",
-    "pct": 55
-   },
-   {
-    "id": 4263,
-    "nome": "Kabasele",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 4994,
-    "nome": "Vojvoda",
-    "pct": 60
-   },
-   {
-    "id": 5527,
-    "nome": "Zanoli",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 6783,
-    "nome": "Unai Gomez",
-    "pct": 55
-   },
-   {
-    "id": 7418,
-    "nome": "Chakvetadze",
-    "pct": 45
-   }
-  ]
- ],
+ "ballottaggi": [],
  "indisponibili": {
   "779": {
    "id": 779,
@@ -4609,6 +4518,11 @@
    "id": 5507,
    "tipo": "infortunato",
    "nota": "distrazione intratendinea del bicipite femorale destro, rientro dalla seconda metà di ottobre"
+  },
+  "5527": {
+   "id": 5527,
+   "tipo": "infortunato",
+   "nota": "Affaticamento muscolare, out con il Torino"
   },
   "5562": {
    "id": 5562,
@@ -4739,6 +4653,11 @@
    "id": 7156,
    "tipo": "infortunato",
    "nota": "lesione legamento crociato anteriore gamba destra, ipotesi rientro da fine ottobre"
+  },
+  "7161": {
+   "id": 7161,
+   "tipo": "infortunato",
+   "nota": "Problema di natura muscolare, indisponibile con il Torino"
   },
   "7198": {
    "id": 7198,
