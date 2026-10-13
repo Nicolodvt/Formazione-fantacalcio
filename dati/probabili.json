@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-13T14:44:41.165Z",
+ "generato": "2026-10-13T23:10:21.232Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 7,
  "giornateDiscordi": [
@@ -2107,7 +2107,7 @@
    "nome": "Ehizibue",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -2692,9 +2692,9 @@
    "nome": "Marcandalli",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "6662": {
    "id": 6662,
@@ -3074,6 +3074,15 @@
    "titolare": true,
    "incerto": true
   },
+  "6977": {
+   "id": 6977,
+   "nome": "Otoa",
+   "squadra": "Genoa",
+   "ruolo": "D",
+   "pct": 55,
+   "titolare": true,
+   "incerto": true
+  },
   "6985": {
    "id": 6985,
    "nome": "Candè",
@@ -3223,7 +3232,7 @@
    "nome": "Mastantuono",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -3641,6 +3650,15 @@
    "titolare": false,
    "incerto": true
   },
+  "7341": {
+   "id": 7341,
+   "nome": "Amorim",
+   "squadra": "Genoa",
+   "ruolo": "C",
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
+  },
   "7345": {
    "id": 7345,
    "nome": "Przyborek",
@@ -3826,7 +3844,7 @@
    "nome": "Oulai",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -4033,7 +4051,7 @@
    "nome": "Mitaj",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -4629,6 +4647,18 @@
   ],
   [
    {
+    "id": 6977,
+    "nome": "Otoa",
+    "pct": 55
+   },
+   {
+    "id": 6660,
+    "nome": "Marcandalli",
+    "pct": 45
+   }
+  ],
+  [
+   {
     "id": 5994,
     "nome": "Ebosse",
     "pct": 60
@@ -5024,17 +5054,17 @@
   "4892": {
    "id": 4892,
    "tipo": "infortunato",
-   "nota": "problema alla caviglia, out contro Sassuolo"
+   "nota": "problema alla caviglia destra, ipotesi rientro da febbraio"
   },
   "4923": {
    "id": 4923,
    "tipo": "infortunato",
-   "nota": "problema alla caviglia, ipotesi rientro fine ottobre"
+   "nota": "problema alla caviglia, rientro inizio novembre"
   },
   "5007": {
    "id": 5007,
    "tipo": "infortunato",
-   "nota": "problema muscolare alla gamba, out a Udine"
+   "nota": "lesione muscolare al retto femorale della coscia sinistra, rientro da inizio novembre"
   },
   "5172": {
    "id": 5172,
@@ -5196,11 +5226,6 @@
    "tipo": "infortunato",
    "nota": "sovraccarico funzionale dell'addome, da valutare contro il Como"
   },
-  "6977": {
-   "id": 6977,
-   "tipo": "infortunato",
-   "nota": "problema muscolare alla gamba, da valutare per Roma"
-  },
   "6980": {
    "id": 6980,
    "tipo": "infortunato",
@@ -5229,7 +5254,7 @@
   "7161": {
    "id": 7161,
    "tipo": "infortunato",
-   "nota": "problema di natura muscolare, out contro il Lecce"
+   "nota": "lesione al bicipite femorale della coscia destra, rientro da metà novembre"
   },
   "7198": {
    "id": 7198,
@@ -5273,7 +5298,7 @@
   },
   "7341": {
    "id": 7341,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "noie fisiche, da valutare per Roma"
   },
   "7342": {
@@ -5294,7 +5319,7 @@
   "7453": {
    "id": 7453,
    "tipo": "infortunato",
-   "nota": "problema alla caviglia, rientro dalla seconda metà di ottobre"
+   "nota": "problema alla caviglia, da valutare convocazione contro la Roma"
   },
   "7478": {
    "id": 7478,
