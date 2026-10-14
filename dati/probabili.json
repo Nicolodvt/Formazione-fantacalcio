@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-14T12:48:46.784Z",
+ "generato": "2026-10-14T17:55:33.915Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 7,
  "giornateDiscordi": [
@@ -397,7 +397,7 @@
    "nome": "Politano",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -487,16 +487,16 @@
    "nome": "Kessiè",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "1852": {
    "id": 1852,
    "nome": "Spinazzola",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -829,7 +829,7 @@
    "nome": "Di Lorenzo",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 75,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -937,7 +937,7 @@
    "nome": "Zambo Anguissa",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1414,7 +1414,7 @@
    "nome": "Caqueret",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1549,7 +1549,7 @@
    "nome": "Ricci S.",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -1693,9 +1693,9 @@
    "nome": "Chalobah T.",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "5674": {
    "id": 5674,
@@ -1909,7 +1909,7 @@
    "nome": "Olivera",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2377,7 +2377,7 @@
    "nome": "Sanchez Ro.",
    "squadra": "Como",
    "ruolo": "P",
-   "pct": 30,
+   "pct": 5,
    "titolare": false,
    "incerto": true
   },
@@ -2440,7 +2440,7 @@
    "nome": "Krstovic",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 70,
+   "pct": 75,
    "titolare": true,
    "incerto": false
   },
@@ -2800,9 +2800,9 @@
    "nome": "Couto",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 90,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6752": {
    "id": 6752,
@@ -2917,16 +2917,16 @@
    "nome": "Valle",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6869": {
    "id": 6869,
    "nome": "Ramon",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2935,7 +2935,7 @@
    "nome": "Paz N.",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 75,
    "titolare": true,
    "incerto": false
   },
@@ -2980,7 +2980,7 @@
    "nome": "Kempf",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 35,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3061,18 +3061,9 @@
    "nome": "Butez",
    "squadra": "Como",
    "ruolo": "P",
-   "pct": 70,
+   "pct": 80,
    "titolare": true,
    "incerto": false
-  },
-  "6967": {
-   "id": 6967,
-   "nome": "Diao",
-   "squadra": "Como",
-   "ruolo": "A",
-   "pct": 60,
-   "titolare": true,
-   "incerto": true
   },
   "6977": {
    "id": 6977,
@@ -3151,7 +3142,7 @@
    "nome": "Smolcic I.",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -3160,7 +3151,7 @@
    "nome": "Douvikas",
    "squadra": "Como",
    "ruolo": "A",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -3277,9 +3268,9 @@
    "nome": "Rodriguez Je.",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 80,
+   "titolare": true,
+   "incerto": false
   },
   "7131": {
    "id": 7131,
@@ -3691,7 +3682,7 @@
    "nome": "Santos A.",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -4743,26 +4734,14 @@
   ],
   [
    {
-    "id": 6727,
-    "nome": "Couto",
+    "id": 5641,
+    "nome": "Chalobah T.",
     "pct": 55
    },
    {
-    "id": 7014,
-    "nome": "Smolcic I.",
+    "id": 6893,
+    "nome": "Kempf",
     "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 6867,
-    "nome": "Valle",
-    "pct": 60
-   },
-   {
-    "id": 7414,
-    "nome": "Kaiki",
-    "pct": 40
    }
   ],
   [
@@ -4779,18 +4758,6 @@
   ],
   [
    {
-    "id": 6967,
-    "nome": "Diao",
-    "pct": 60
-   },
-   {
-    "id": 7129,
-    "nome": "Rodriguez Je.",
-    "pct": 40
-   }
-  ],
-  [
-   {
     "id": 554,
     "nome": "Zappacosta",
     "pct": 55
@@ -4798,6 +4765,18 @@
    {
     "id": 7219,
     "nome": "Bernasconi",
+    "pct": 45
+   }
+  ],
+  [
+   {
+    "id": 1850,
+    "nome": "Kessiè",
+    "pct": 55
+   },
+   {
+    "id": 4364,
+    "nome": "Gaetano",
     "pct": 45
    }
   ],
@@ -4981,6 +4960,11 @@
    "tipo": "infortunato",
    "nota": "rottura del menisco esterno del ginocchio, rientro in campo da febbraio"
   },
+  "1850": {
+   "id": 1850,
+   "tipo": "dubbio",
+   "nota": "sovraccarico al polpaccio destro, in dubbio dal 1' contro il Milan"
+  },
   "2097": {
    "id": 2097,
    "tipo": "infortunato",
@@ -5094,7 +5078,7 @@
   "5526": {
    "id": 5526,
    "tipo": "infortunato",
-   "nota": "fastidio muscolare al flessore della coscia sinistra, da valutare"
+   "nota": "risentimento muscolare al flessore della coscia sinistra, da valutare per Milano"
   },
   "5527": {
    "id": 5527,
@@ -5226,6 +5210,11 @@
    "tipo": "infortunato",
    "nota": "sovraccarico funzionale dell'addome, da valutare contro il Como"
   },
+  "6967": {
+   "id": 6967,
+   "tipo": "infortunato",
+   "nota": "noie muscolari alla gamba, da valutare"
+  },
   "6980": {
    "id": 6980,
    "tipo": "infortunato",
@@ -5305,11 +5294,6 @@
    "id": 7342,
    "tipo": "infortunato",
    "nota": "appendicite acuta, out contro il Torino"
-  },
-  "7351": {
-   "id": 7351,
-   "tipo": "dubbio",
-   "nota": "lesione di medio grado al bicipite femorale sinistro, in dubbio impiego dal 1' contro il Venezia"
   },
   "7409": {
    "id": 7409,
