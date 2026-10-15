@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-15T10:43:13.381Z",
+ "generato": "2026-10-15T16:08:25.547Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 7,
  "giornateDiscordi": [
@@ -244,7 +244,7 @@
    "nome": "De Roon",
    "squadra": "Roma",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -352,7 +352,7 @@
    "nome": "Cataldi",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1567,7 +1567,7 @@
    "nome": "Cancellieri",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -2858,21 +2858,12 @@
    "titolare": false,
    "incerto": true
   },
-  "6831": {
-   "id": 6831,
-   "nome": "Neres",
-   "squadra": "Napoli",
-   "ruolo": "A",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
-  },
   "6833": {
    "id": 6833,
    "nome": "Mbangula",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 20,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -3385,7 +3376,7 @@
    "nome": "Heggem",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 55,
    "titolare": true,
    "incerto": true
   },
@@ -3736,7 +3727,7 @@
    "nome": "Puczka",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -4024,7 +4015,7 @@
    "nome": "Mitaj",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -4562,12 +4553,12 @@
    {
     "id": 7212,
     "nome": "Heggem",
-    "pct": 60
+    "pct": 55
    },
    {
     "id": 5498,
     "nome": "Casale",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
@@ -5093,6 +5084,11 @@
    "tipo": "dubbio",
    "nota": "noie fisiche, in dubbio contro il Napoli"
   },
+  "5500": {
+   "id": 5500,
+   "tipo": "dubbio",
+   "nota": "noie fisiche, in dubbio convocazione per Torino"
+  },
   "5507": {
    "id": 5507,
    "tipo": "infortunato",
@@ -5218,10 +5214,10 @@
    "tipo": "infortunato",
    "nota": "lesione di medio grado del muscolo semitendinoso, rientro da metà novembre"
   },
-  "6833": {
-   "id": 6833,
-   "tipo": "dubbio",
-   "nota": "noie fisiche, in dubbio convocazione contro l'inter"
+  "6831": {
+   "id": 6831,
+   "tipo": "infortunato",
+   "nota": "lesione di basso grado al muscolo semimembranoso della coscia destra, tentativo rientro dalla prima metà di novembre"
   },
   "6908": {
    "id": 6908,
@@ -5236,7 +5232,7 @@
   "6980": {
    "id": 6980,
    "tipo": "infortunato",
-   "nota": "problema al tendine rotuleo, ipotesi rientro inizio novembre"
+   "nota": "problema al tendine rotuleo, rientro inizio novembre"
   },
   "7069": {
    "id": 7069,
@@ -5293,11 +5289,6 @@
    "tipo": "infortunato",
    "nota": "noie fisiche, rientro da fine ottobre"
   },
-  "7341": {
-   "id": 7341,
-   "tipo": "dubbio",
-   "nota": "noie fisiche, da valutare per Roma"
-  },
   "7342": {
    "id": 7342,
    "tipo": "infortunato",
@@ -5306,12 +5297,12 @@
   "7409": {
    "id": 7409,
    "tipo": "infortunato",
-   "nota": "distrazione della muscolatura di un'anca, da valutare per Roma"
+   "nota": "distrazione della muscolatura di un'anca, rientro dalla seconda metà di ottobre"
   },
   "7453": {
    "id": 7453,
    "tipo": "infortunato",
-   "nota": "problema alla caviglia, da valutare convocazione contro la Roma"
+   "nota": "problema alla caviglia, da valutare rientro dalla seconda metà di ottobre"
   },
   "7478": {
    "id": 7478,
