@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-15T16:08:25.547Z",
+ "generato": "2026-10-15T20:50:24.691Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 7,
  "giornateDiscordi": [
@@ -815,6 +815,15 @@
    "titolare": true,
    "incerto": true
   },
+  "2832": {
+   "id": 2832,
+   "nome": "Boga",
+   "squadra": "Juventus",
+   "ruolo": "A",
+   "pct": 15,
+   "titolare": false,
+   "incerto": true
+  },
   "2845": {
    "id": 2845,
    "nome": "Contini",
@@ -892,9 +901,9 @@
    "nome": "Gonzalez N.",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4199": {
    "id": 4199,
@@ -1001,15 +1010,6 @@
    "squadra": "Atalanta",
    "ruolo": "C",
    "pct": 60,
-   "titolare": false,
-   "incerto": true
-  },
-  "4371": {
-   "id": 4371,
-   "nome": "Raspadori",
-   "squadra": "Atalanta",
-   "ruolo": "A",
-   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1324,16 +1324,16 @@
    "nome": "McKennie",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "4976": {
    "id": 4976,
    "nome": "Kalulu",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1369,7 +1369,7 @@
    "nome": "Pavlovic",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -1495,7 +1495,7 @@
    "nome": "Zalewski",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1684,7 +1684,7 @@
    "nome": "Sarr P.",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1801,8 +1801,8 @@
    "nome": "Zhegrova",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "5791": {
@@ -1891,9 +1891,9 @@
    "nome": "Thorstvedt",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "5850": {
    "id": 5850,
@@ -2071,7 +2071,7 @@
    "nome": "Lucumì",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -2918,7 +2918,7 @@
    "squadra": "Juventus",
    "ruolo": "C",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6890": {
@@ -3133,9 +3133,9 @@
    "nome": "Bakola",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 75,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "7048": {
    "id": 7048,
@@ -4132,7 +4132,7 @@
    "nome": "Cinquegrano",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 60,
    "titolare": true,
    "incerto": true
   },
@@ -4232,6 +4232,15 @@
    "squadra": "Genoa",
    "ruolo": "C",
    "pct": 60,
+   "titolare": false,
+   "incerto": true
+  },
+  "7610": {
+   "id": 7610,
+   "nome": "Birligea",
+   "squadra": "Frosinone",
+   "ruolo": "A",
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -4433,12 +4442,12 @@
    {
     "id": 7573,
     "nome": "Cinquegrano",
-    "pct": 55
+    "pct": 60
    },
    {
     "id": 6896,
     "nome": "Van Der Brempt",
-    "pct": 45
+    "pct": 40
    }
   ],
   [
@@ -4448,8 +4457,8 @@
     "pct": 55
    },
    {
-    "id": 5844,
-    "nome": "Thorstvedt",
+    "id": 7036,
+    "nome": "Bakola",
     "pct": 45
    }
   ],
@@ -4815,25 +4824,25 @@
   ],
   [
    {
-    "id": 6884,
-    "nome": "Conceicao",
+    "id": 5761,
+    "nome": "Zhegrova",
     "pct": 55
    },
    {
-    "id": 5761,
-    "nome": "Zhegrova",
+    "id": 6884,
+    "nome": "Conceicao",
     "pct": 45
    }
   ],
   [
    {
-    "id": 4179,
-    "nome": "Gonzalez N.",
+    "id": 4973,
+    "nome": "McKennie",
     "pct": 60
    },
    {
-    "id": 7436,
-    "nome": "Alajbegovic",
+    "id": 6752,
+    "nome": "Woltemade",
     "pct": 40
    }
   ],
@@ -5021,13 +5030,18 @@
   },
   "2832": {
    "id": 2832,
-   "tipo": "infortunato",
-   "nota": "lesione di medio grado del bicipite femorale, rientro da metà novembre"
+   "tipo": "dubbio",
+   "nota": "lesione di medio grado del bicipite femorale, da valutare convocazione contro la Lazio"
   },
   "4349": {
    "id": 4349,
    "tipo": "infortunato",
    "nota": "lesione di medio grado alla coscia destra, rientro da dicembre"
+  },
+  "4371": {
+   "id": 4371,
+   "tipo": "infortunato",
+   "nota": "noie muscolari, da valutare"
   },
   "4387": {
    "id": 4387,
@@ -5328,11 +5342,6 @@
    "id": 7603,
    "tipo": "infortunato",
    "nota": "lesione al crociato anteriore del ginocchio destro, rientro da aprile"
-  },
-  "7610": {
-   "id": 7610,
-   "tipo": "infortunato",
-   "nota": "Lesione muscolare al quadricipite sinistro, rientro da fine ottobre"
   },
   "7626": {
    "id": 7626,
