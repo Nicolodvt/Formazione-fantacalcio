@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-16T10:57:41.697Z",
+ "generato": "2026-10-16T15:20:08.774Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 7,
  "giornateDiscordi": [
@@ -307,9 +307,9 @@
    "nome": "Dimarco",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "256": {
    "id": 256,
@@ -335,15 +335,6 @@
    "squadra": "Juventus",
    "ruolo": "D",
    "pct": 25,
-   "titolare": false,
-   "incerto": true
-  },
-  "309": {
-   "id": 309,
-   "nome": "Dybala",
-   "squadra": "Roma",
-   "ruolo": "A",
-   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -480,15 +471,6 @@
    "ruolo": "C",
    "pct": 40,
    "titolare": false,
-   "incerto": true
-  },
-  "1850": {
-   "id": 1850,
-   "nome": "Kessiè",
-   "squadra": "Atalanta",
-   "ruolo": "C",
-   "pct": 55,
-   "titolare": true,
    "incerto": true
   },
   "1852": {
@@ -739,7 +721,7 @@
    "nome": "Mkhitaryan",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -760,6 +742,15 @@
    "pct": 80,
    "titolare": true,
    "incerto": false
+  },
+  "2728": {
+   "id": 2728,
+   "nome": "Pellegrini Lu.",
+   "squadra": "Lazio",
+   "ruolo": "D",
+   "pct": 15,
+   "titolare": false,
+   "incerto": true
   },
   "2765": {
    "id": 2765,
@@ -883,15 +874,6 @@
    "nome": "Akanji",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": true,
-   "incerto": true
-  },
-  "4177": {
-   "id": 4177,
-   "nome": "Pavard",
-   "squadra": "Inter",
-   "ruolo": "D",
    "pct": 80,
    "titolare": true,
    "incerto": false
@@ -1009,9 +991,9 @@
    "nome": "Gaetano",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 90,
+   "titolare": true,
+   "incerto": false
   },
   "4374": {
    "id": 4374,
@@ -1036,9 +1018,9 @@
    "nome": "Ranieri L.",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "4409": {
    "id": 4409,
@@ -1279,7 +1261,7 @@
    "nome": "Brescianini",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1549,7 +1531,7 @@
    "nome": "Mazzocchi",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 20,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -1630,7 +1612,7 @@
    "nome": "Pongracic",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 30,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -2233,9 +2215,9 @@
    "nome": "Bisseck",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 80,
+   "titolare": true,
+   "incerto": false
   },
   "6218": {
    "id": 6218,
@@ -2342,7 +2324,7 @@
    "squadra": "Lazio",
    "ruolo": "D",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6344": {
@@ -2539,7 +2521,7 @@
    "nome": "Noslin",
    "squadra": "Lazio",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 60,
    "titolare": true,
    "incerto": true
   },
@@ -3304,7 +3286,7 @@
    "nome": "Joao Mario",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -3461,15 +3443,6 @@
    "titolare": false,
    "incerto": true
   },
-  "7253": {
-   "id": 7253,
-   "nome": "Bella-Kotchap",
-   "squadra": "Venezia",
-   "ruolo": "D",
-   "pct": 20,
-   "titolare": false,
-   "incerto": true
-  },
   "7255": {
    "id": 7255,
    "nome": "Britschgi",
@@ -3511,9 +3484,9 @@
    "nome": "Valdepenas",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7301": {
    "id": 7301,
@@ -3700,8 +3673,8 @@
    "nome": "Viery",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "7411": {
@@ -4169,7 +4142,7 @@
    "squadra": "Lazio",
    "ruolo": "D",
    "pct": 55,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "7581": {
@@ -4339,7 +4312,7 @@
    "nome": "Goncalves P.",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -4584,14 +4557,14 @@
   ],
   [
    {
-    "id": 4159,
-    "nome": "Akanji",
-    "pct": 55
+    "id": 254,
+    "nome": "Dimarco",
+    "pct": 60
    },
    {
-    "id": 6217,
-    "nome": "Bisseck",
-    "pct": 45
+    "id": 5877,
+    "nome": "Carlos Augusto",
+    "pct": 40
    }
   ],
   [
@@ -4740,14 +4713,14 @@
   ],
   [
    {
-    "id": 7294,
-    "nome": "Valdepenas",
-    "pct": 60
-   },
-   {
     "id": 7410,
     "nome": "Viery",
-    "pct": 40
+    "pct": 55
+   },
+   {
+    "id": 5603,
+    "nome": "Pongracic",
+    "pct": 45
    }
   ],
   [
@@ -4812,18 +4785,6 @@
   ],
   [
    {
-    "id": 1850,
-    "nome": "Kessiè",
-    "pct": 55
-   },
-   {
-    "id": 4364,
-    "nome": "Gaetano",
-    "pct": 45
-   }
-  ],
-  [
-   {
     "id": 5119,
     "nome": "Samardzic",
     "pct": 55
@@ -4872,13 +4833,13 @@
   ],
   [
    {
-    "id": 6320,
-    "nome": "Doekhi",
+    "id": 7580,
+    "nome": "Sutalo J.",
     "pct": 55
    },
    {
-    "id": 7580,
-    "nome": "Sutalo J.",
+    "id": 6320,
+    "nome": "Doekhi",
     "pct": 45
    }
   ],
@@ -4886,12 +4847,12 @@
    {
     "id": 6556,
     "nome": "Noslin",
-    "pct": 55
+    "pct": 60
    },
    {
     "id": 2038,
     "nome": "Pinamonti",
-    "pct": 45
+    "pct": 40
    }
   ],
   [
@@ -4994,13 +4955,13 @@
  "indisponibili": {
   "309": {
    "id": 309,
-   "tipo": "dubbio",
-   "nota": "risentimento muscolare alla gamba, in forte dubbio contro il Genoa"
+   "tipo": "infortunato",
+   "nota": "affaticamento sul gemello del polpaccio, da valutare convocazione nell'8a giornata"
   },
   "779": {
    "id": 779,
    "tipo": "infortunato",
-   "nota": "infiammazione al ginocchio, da valutare contro il Genoa"
+   "nota": "infiammazione al ginocchio, da valutare rientro dall'8a giornata"
   },
   "827": {
    "id": 827,
@@ -5009,8 +4970,8 @@
   },
   "1850": {
    "id": 1850,
-   "tipo": "dubbio",
-   "nota": "sovraccarico al polpaccio destro, in dubbio dal 1' contro il Milan"
+   "tipo": "infortunato",
+   "nota": "distrazione di basso grado al polpaccio della gamba destra, tentativo rientro dalla seconda metà di ottobre"
   },
   "2097": {
    "id": 2097,
@@ -5045,7 +5006,7 @@
   "2764": {
    "id": 2764,
    "tipo": "infortunato",
-   "nota": "risentimento muscolare ai flessori della coscia sinistra, out a Bologna"
+   "nota": "risentimento muscolare ai flessori della coscia sinistra, rientro da metà novembre"
   },
   "2766": {
    "id": 2766,
@@ -5057,6 +5018,11 @@
    "tipo": "dubbio",
    "nota": "lesione di medio grado del bicipite femorale, da valutare convocazione contro la Lazio"
   },
+  "4177": {
+   "id": 4177,
+   "tipo": "infortunato",
+   "nota": "risentimento agli adduttori della coscia destra, rientro inizio novembre"
+  },
   "4349": {
    "id": 4349,
    "tipo": "infortunato",
@@ -5066,6 +5032,11 @@
    "id": 4371,
    "tipo": "infortunato",
    "nota": "noie muscolari, da valutare"
+  },
+  "4378": {
+   "id": 4378,
+   "tipo": "dubbio",
+   "nota": "schiacciamento di un nervo al piede, in dubbio impiego contro il Como"
   },
   "4387": {
    "id": 4387,
@@ -5117,11 +5088,6 @@
    "tipo": "infortunato",
    "nota": "infortunio al legamento crociato, rientro da dicembre"
   },
-  "5481": {
-   "id": 5481,
-   "tipo": "dubbio",
-   "nota": "noie fisiche, in dubbio contro il Napoli"
-  },
   "5500": {
    "id": 5500,
    "tipo": "dubbio",
@@ -5155,7 +5121,7 @@
   "5589": {
    "id": 5589,
    "tipo": "infortunato",
-   "nota": "noie muscolari, da valutare"
+   "nota": "lesione di primo grado al bicipite femorale destro, tentativo di rientro dalla prima metà di novembre"
   },
   "5678": {
    "id": 5678,
@@ -5260,7 +5226,7 @@
   "6908": {
    "id": 6908,
    "tipo": "infortunato",
-   "nota": "sovraccarico funzionale dell'addome, da valutare contro il Como"
+   "nota": "sovraccarico funzionale dell'addome, out contro il Como"
   },
   "6967": {
    "id": 6967,
@@ -5309,8 +5275,8 @@
   },
   "7253": {
    "id": 7253,
-   "tipo": "dubbio",
-   "nota": "noie fisiche, in dubbio impiego contro il Napoli"
+   "tipo": "infortunato",
+   "nota": "noie fisiche, out contro il Napoli"
   },
   "7260": {
    "id": 7260,
