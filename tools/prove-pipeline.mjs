@@ -118,6 +118,7 @@ function preparaBancoPromemoria() {
   mkdirSync(join(dir, 'node_modules', 'web-push'), { recursive: true });
   copyFileSync(join(QUI, 'promemoria-scadenza.mjs'), join(dir, 'tools', 'promemoria-scadenza.mjs'));
   copyFileSync(join(QUI, 'calendario.mjs'), join(dir, 'tools', 'calendario.mjs'));
+  copyFileSync(join(QUI, 'notifiche.mjs'), join(dir, 'tools', 'notifiche.mjs'));
   writeFileSync(join(dir, 'node_modules', 'web-push', 'package.json'),
     JSON.stringify({ name: 'web-push', main: 'index.js', type: 'commonjs' }));
   writeFileSync(join(dir, 'node_modules', 'web-push', 'index.js'), `
@@ -126,7 +127,7 @@ function preparaBancoPromemoria() {
       setVapidDetails() {},
       async sendNotification(sub, payload) {
         if (process.env.FINTO_PUSH_ESITO) { const e = new Error('finto'); e.statusCode = +process.env.FINTO_PUSH_ESITO; throw e; }
-        fs.appendFileSync(process.env.FINTO_PUSH_LOG, JSON.stringify({ ora: new Date().toISOString(), ...JSON.parse(payload) }) + '\\n');
+        fs.appendFileSync(process.env.FINTO_PUSH_LOG, JSON.stringify({ ora: new Date().toISOString(), endpoint: sub.endpoint, ...JSON.parse(payload) }) + '\\n');
       }
     };`);
   writeFileSync(join(dir, 'orologio.mjs'), `
@@ -137,7 +138,9 @@ function preparaBancoPromemoria() {
       constructor(...a) { if (a.length) super(...a); else super(T); }
       static now() { return T; }
     };
-    globalThis.fetch = async () => ({ ok: true, json: async () => ({ schierato: process.env.FINTO_SCHIERATO === '1' }) });
+    globalThis.fetch = async (url) => String(url).includes('/notifiche')
+      ? (process.env.FINTO_SITO ? { ok: true, json: async () => JSON.parse(process.env.FINTO_SITO) } : { ok: false, status: 404 })
+      : { ok: true, json: async () => ({ schierato: process.env.FINTO_SCHIERATO === '1' }) };
   `);
   return dir;
 }
@@ -147,7 +150,7 @@ function giroPromemoria(dir, oraIso, extraEnv = {}) {
     ['--import', pathToFileURL(join(dir, 'orologio.mjs')).href, join(dir, 'tools', 'promemoria-scadenza.mjs')], {
       env: {
         ...process.env, ORA_FINTA: oraIso, VAPID_PRIVATE_KEY: 'finta', PUSH_SUBSCRIPTION: '{}',
-        NETLIFY_SITE_URL: 'https://finto.example', FINTO_PUSH_LOG: join(dir, 'spediti.jsonl'), ATTESA_RIPROVA_MS: '0', ...extraEnv
+        NETLIFY_SITE_URL: 'https://finto.example', FINTO_PUSH_LOG: join(dir, 'spediti.jsonl'), ATTESA_RIPROVA_MS: '0', ATTESA_RICEVUTA_PAUSA_MS: '0', ...extraEnv
       },
       encoding: 'utf8'
     });
@@ -235,6 +238,44 @@ async function provePromemoria() {
     verifica('  servizio tornato: parte il promemoria e il contatore si azzera',
       spediti(dir).length === 1 && st5c.erroriInvio === undefined, JSON.stringify(st5c));
 
+    /* 5c. Abbonamento registrato dall'app sul sito (16/10): si usa quello, non il secret, e il
+       telefono deve confermare con una ricevuta. */
+    const SUB_SITO = { endpoint: 'https://fcm.googleapis.com/fcm/send/telefono', keys: { p256dh: 'x', auth: 'y' } };
+    const sito = (ricevuta) => JSON.stringify({ abbonamento: SUB_SITO, abbonamentoAggiornato: '2026-10-16T10:00:00Z', ricevuta });
+    azzera(dir, G6);
+    const r1 = giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_SITO: sito(null) });
+    const u1 = statoPromemoria(dir).ultimoInvio || {};
+    verifica('abbonamento dal sito: spedito a quello, non al secret, con un id',
+      r1.codice === 0 && spediti(dir).length === 1 && spediti(dir)[0].endpoint === SUB_SITO.endpoint &&
+      spediti(dir)[0].id === '2026-10-09T13:00:00.000Z' && u1.fonte === 'sito', r1.uscita.trim());
+    const r2 = giroPromemoria(dir, '2026-10-09T17:00Z', { FINTO_SITO: sito({ id: u1.id, quando: '2026-10-09T13:00:05Z', esito: 'mostrata' }) });
+    verifica('  ricevuta del telefono: promemoria confermato, giro verde',
+      r2.codice === 0 && statoPromemoria(dir).ultimoInvio.confermato === '2026-10-09T13:00:05Z', r2.uscita.trim());
+
+    azzera(dir, G6);
+    giroPromemoria(dir, '2026-10-08T13:00Z', { FINTO_SITO: sito(null) });
+    const r3 = giroPromemoria(dir, '2026-10-08T20:00Z', { FINTO_SITO: sito(null) });
+    const r4 = giroPromemoria(dir, '2026-10-09T02:00Z', { FINTO_SITO: sito(null) });
+    const r5 = giroPromemoria(dir, '2026-10-09T05:00Z', { FINTO_SITO: sito(null) });
+    verifica('  nessuna ricevuta: verde dopo 7 ore, rosso dopo 13, una volta sola',
+      r3.codice === 0 && r4.codice === 1 && /::error::.*non ha\s+confermato/.test(r4.uscita) && r5.codice === 0,
+      `codici ${r3.codice}, ${r4.codice}, ${r5.codice}`);
+
+    azzera(dir, G6);
+    giroPromemoria(dir, '2026-10-08T13:00Z', { FINTO_SITO: sito(null) });
+    const u6 = statoPromemoria(dir).ultimoInvio;
+    const r6 = giroPromemoria(dir, '2026-10-08T14:00Z',
+      { FINTO_SITO: sito({ id: u6.id, quando: '2026-10-08T13:00:05Z', esito: 'non mostrata: No notification permission' }) });
+    verifica('  arrivata ma non mostrata (permesso tolto): rosso con la spiegazione',
+      r6.codice === 1 && /non e' stato mostrato/.test(r6.uscita), r6.uscita.trim());
+
+    azzera(dir, G6);
+    const r7 = giroPromemoria(dir, '2026-10-08T13:00Z');
+    verifica('  sito senza la funzione (app vecchia): si usa il secret e niente controllo ricevute',
+      r7.codice === 0 && spediti(dir).length === 1 && statoPromemoria(dir).ultimoInvio.fonte === 'secret', r7.uscita.trim());
+    const r8 = giroPromemoria(dir, '2026-10-09T13:30Z');
+    verifica('    ...anche dopo un giorno senza ricevute', r8.codice === 0, r8.uscita.trim());
+
     /* 6. Giro arrivato dopo la scadenza: niente promemoria. */
     azzera(dir, G6);
     const c = giroPromemoria(dir, '2026-10-10T13:10Z');
@@ -270,6 +311,16 @@ async function provePromemoria() {
     const p2 = giroPromemoria(dir, '2026-09-27T10:00Z', { PROVA: 'true', FINTO_PUSH_ESITO: '410' });
     verifica('  prova con abbonamento scaduto: giro rosso e spiegazione nel log',
       p2.codice === 1 && /::error::.*Abbonamento scaduto/.test(p2.uscita), p2.uscita.trim());
+    azzera(dir, G6);
+    const SUB_P = { endpoint: 'https://web.push.apple.com/telefono', keys: { p256dh: 'x', auth: 'y' } };
+    const p3 = giroPromemoria(dir, '2026-09-27T10:00Z', { PROVA: 'true', FINTO_SITO: JSON.stringify({ abbonamento: SUB_P,
+      ricevuta: { id: 'prova-2026-09-27T10:00:00.000Z', quando: '2026-09-27T10:00:03Z', esito: 'mostrata' } }) });
+    verifica('  prova con abbonamento del sito: aspetta la ricevuta e la conferma',
+      p3.codice === 0 && /Il telefono ha confermato/.test(p3.uscita) && spediti(dir)[0].endpoint === SUB_P.endpoint, p3.uscita.trim());
+    azzera(dir, G6);
+    const p4 = giroPromemoria(dir, '2026-09-27T10:00Z', { PROVA: 'true', FINTO_SITO: JSON.stringify({ abbonamento: SUB_P, ricevuta: null }) });
+    verifica('  prova senza ricevuta: giro rosso, "Nessuna conferma dal telefono"',
+      p4.codice === 1 && /Nessuna conferma dal telefono/.test(p4.uscita), p4.uscita.trim());
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

@@ -15,7 +15,7 @@
 /* Il nome della cache va cambiato a ogni versione: e la chiave con cui activate() cancella
    le vecchie. Con la strategia rete-per-prima l'app si aggiorna comunque da sola, ma senza
    cambiarlo la copia vecchia resta occupata sul telefono per sempre. */
-const CACHE = 'formazione-v0-7';
+const CACHE = 'formazione-v0-8';
 
 /* Stessa icona 192x192 del manifest, incollata qui: showNotification() vuole un URL
    diretto a un'immagine, non puo' pescarla dal manifest. Un data URI evita un file a parte. */
@@ -98,9 +98,23 @@ self.addEventListener('fetch', (e) => {
   }));
 });
 
-/* Promemoria di schierare la formazione. Il corpo arriva da tools/invia-promemoria.mjs come
-   JSON: {titolo, corpo}. Se per qualche motivo non e' JSON valido si mostra comunque qualcosa
-   invece di far sparire silenziosamente la notifica. */
+/* Promemoria di schierare la formazione. Il corpo arriva da tools/invia-promemoria.mjs e
+   tools/promemoria-scadenza.mjs come JSON: {titolo, corpo, id}. Se per qualche motivo non e' JSON
+   valido si mostra comunque qualcosa invece di far sparire silenziosamente la notifica. */
+const FUNZIONE_NOTIFICHE = './.netlify/functions/notifiche';
+const VAPID_PUBLIC_KEY = 'BHWwgaSHRz5TzxveQbvlZ6Cx__SgARqi_-hEXlD1g6Av-gYH_Y8cq48pY6-Zb2bcLlLNgDWwdFrDGn5M00ICRjM';
+
+/* Ricevuta (16/10): dice alla Action che il messaggio e' arrivato su QUESTO telefono e com'e'
+   andata a mostrarlo. Senza, un invio "accettato" dal servizio push non provava niente: fino al
+   16/10 nessuna notifica e' mai arrivata e nessuno poteva saperlo. Mai bloccante. */
+function ricevuta(id, esito) {
+  if (!id) return Promise.resolve();
+  return fetch(FUNZIONE_NOTIFICHE, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tipo: 'ricevuta', id: String(id), esito })
+  }).catch(() => {});
+}
+
 self.addEventListener('push', (e) => {
   let dati = { titolo: 'Formazione', corpo: 'Controlla la formazione della giornata.' };
   try{ if(e.data) dati = Object.assign(dati, e.data.json()); }catch(err){}
@@ -113,6 +127,25 @@ self.addEventListener('push', (e) => {
       renotify: true,                   // ...ma suona e vibra lo stesso: senza, sostituiva in silenzio (27/09)
       data: { url: './' }
     })
+      .then(() => ricevuta(dati.id, 'mostrata'))
+      /* Permesso tolto dalle impostazioni del telefono: il messaggio arriva ma non si vede. */
+      .catch(err => ricevuta(dati.id, 'non mostrata: ' + (err && err.message || err)))
+  );
+});
+
+/* Il browser puo' rinnovare l'abbonamento da solo (Firefox lo fa, Chrome raramente): quello
+   vecchio smette di funzionare. Ci si riabbona e si comunica quello nuovo, cosi' la Action non
+   resta a spedire a un indirizzo morto (16/10). */
+self.addEventListener('pushsubscriptionchange', (e) => {
+  const chiave = Uint8Array.from(atob(VAPID_PUBLIC_KEY.replace(/-/g, '+').replace(/_/g, '/') +
+    '='.repeat((4 - VAPID_PUBLIC_KEY.length % 4) % 4)), c => c.charCodeAt(0));
+  e.waitUntil(
+    self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: chiave })
+      .then(sub => fetch(FUNZIONE_NOTIFICHE, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tipo: 'abbonamento', abbonamento: sub.toJSON() })
+      }))
+      .catch(() => {})
   );
 });
 

@@ -23,41 +23,64 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { primaPartita, infrasettimanale } from './calendario.mjs';
+import {
+  VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, statoSito
+} from './notifiche.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
 const FILE_PROB = join(QUI, '..', 'dati', 'probabili.json');
 const FILE_STATO = join(QUI, '..', 'dati', 'scadenza-promemoria.json');
-
-const VAPID_PUBLIC_KEY = 'BHWwgaSHRz5TzxveQbvlZ6Cx__SgARqi_-hEXlD1g6Av-gYH_Y8cq48pY6-Zb2bcLlLNgDWwdFrDGn5M00ICRjM';
 
 /* Stessi 5 minuti di margine usati dal countdown in index.html (MINUTI_SCADENZA): i due vanno
    tenuti allineati, altrimenti l'app mostrerebbe "scaduto" in un momento diverso da quando la
    Action smette di considerarti in ritardo. */
 const MINUTI_SCADENZA = 5;
 
-/* Risposte del servizio push che vogliono dire "questo abbonamento non funziona piu', riprovare
-   non serve": 404/410 abbonamento scaduto o revocato, 401/403 chiavi VAPID che non
-   corrispondono piu' a quelle con cui e' stato creato. In tutti e quattro i casi la cura e' la
-   stessa: riattivare le notifiche dall'app e aggiornare il secret PUSH_SUBSCRIPTION. */
-const ABBONAMENTO_DA_RIFARE = [401, 403, 404, 410];
-
-/* Intoppi del servizio push che passano da soli (16/10): rete, 5xx, 429. Prima finivano come
-   "Invio fallito" con il giro in rosso, cioe' un'email per un problema che al giro dopo non
-   c'era piu'. Ora si riprova una volta dopo qualche secondo, e se non basta si riprova al giro
-   successivo; l'email arriva solo se il problema dura (vedi sotto). */
-const eTransitorio = (err) => !err.statusCode || err.statusCode >= 500 || err.statusCode === 429;
-async function inviaConRiprova(webpush, sub, payload) {
-  try { return await webpush.sendNotification(sub, payload); }
-  catch (err) {
-    if (!eTransitorio(err)) throw err;
-    console.log(`Servizio push non disponibile (${err.statusCode || err.message}): riprovo fra poco.`);
-    await new Promise(r => setTimeout(r, +(process.env.ATTESA_RIPROVA_MS ?? 5000)));
-    return await webpush.sendNotification(sub, payload);
-  }
-}
+/* Chiave pubblica, risposte da "abbonamento da rifare", riprova sugli intoppi momentanei:
+   in tools/notifiche.mjs, comuni con invia-promemoria.mjs. */
 /* Giri di fila con il servizio push irraggiungibile prima di andare in rosso: con il cron vero
    (un giro ogni ~4 ore) sono circa 8-12 ore. Una volta sola per giornata, come l'abbonamento. */
 const TRANSITORI_PRIMA_DEL_ROSSO = 3;
+
+/* Ore dopo un invio senza ricevuta dal telefono prima di andare in rosso (16/10). La notifica
+   aspetta il telefono anche se e' spento o senza rete (il servizio push la tiene per settimane):
+   12 ore coprono una notte e un viaggio, non una settimana di silenzio come a settembre. */
+const ORE_SENZA_RICEVUTA = 12;
+
+/* La ricevuta dell'ultimo invio (16/10): il service worker la scrive sul sito appena mostra la
+   notifica (sw.js). Fino a settembre "spedito" voleva dire solo "accettato dal servizio push": per
+   settimane nessuna notifica e' arrivata sul telefono e nessuno poteva saperlo. Solo per gli
+   abbonamenti presi dal sito: quello del secret puo' essere di un telefono con l'app vecchia,
+   che le ricevute non le manda. Restituisce true se lo stato e' cambiato. */
+async function controllaRicevuta(stato, sitoUrl, ora) {
+  const u = stato.ultimoInvio;
+  if (!u || u.confermato || u.fonte !== 'sito') return false;
+  const sito = await statoSito(sitoUrl);
+  if (!sito) return false;
+  const ric = sito.ricevuta;
+  if (ric && ric.id === u.id) {
+    u.confermato = ric.quando;
+    u.esito = ric.esito;
+    if (ric.esito === 'mostrata') {
+      console.log(`Il telefono ha confermato il promemoria del ${u.id} (alle ${ric.quando}).`);
+    } else if (!stato.ricevutaSegnalata) {
+      stato.ricevutaSegnalata = true;
+      console.log(`::error::Il promemoria del ${u.id} e' arrivato sul telefono ma non e' stato mostrato (${ric.esito}). ` +
+        'Controlla che le notifiche dell app siano permesse nelle impostazioni del telefono.');
+      process.exitCode = 1;
+    }
+    return true;
+  }
+  if (ora.getTime() - Date.parse(u.quando) > ORE_SENZA_RICEVUTA * 3600000 && !stato.ricevutaSegnalata) {
+    stato.ricevutaSegnalata = true;
+    console.log(`::error::Il promemoria del ${u.id} e' stato accettato dal servizio push ma il telefono non ha ` +
+      `confermato di averlo ricevuto in ${ORE_SENZA_RICEVUTA} ore. Apri l app (Impostazioni -> Notifiche): ` +
+      'deve dire "collegato a questo telefono"; altrimenti Disattiva e poi Attiva.');
+    process.exitCode = 1;
+    return true;
+  }
+  return false;
+}
 
 /* Soglie in ore prima della scadenza (non del calcio d'inizio), in ordine decrescente: se
    piu' d'una scatta nello stesso giro vale l'ultima (la piu' vicina), vedi "dovute" in main().
@@ -146,8 +169,8 @@ async function main() {
   const SUB_RAW = process.env.PUSH_SUBSCRIPTION;
   const SITO_URL = process.env.NETLIFY_SITE_URL || '';
 
-  if (!VAPID_PRIVATE_KEY || !SUB_RAW) {
-    console.log('Notifiche non configurate (secret mancanti): salto, non e un errore.');
+  if (!VAPID_PRIVATE_KEY || (!SUB_RAW && !SITO_URL)) {
+    console.log('Notifiche non configurate (secret o indirizzo del sito mancanti): salto, non e un errore.');
     return;
   }
 
@@ -155,24 +178,49 @@ async function main() {
      una notifica, senza soglie e senza toccare lo stato. Unico modo di sapere davvero che la
      catena arriva fino al telefono: 201 e notifica = tutto bene; 404/410 = abbonamento da rifare. */
   if (process.env.PROVA === 'true') {
-    let sub;
-    try { sub = JSON.parse(SUB_RAW); }
-    catch (e) { console.log('::error::Il secret PUSH_SUBSCRIPTION non e un JSON valido.'); process.exitCode = 1; return; }
+    const { sub, fonte, motivo } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
+    if (!sub) { console.log('::error::' + motivo); process.exitCode = 1; return; }
     const { default: webpush } = await import('web-push');
+    const id = 'prova-' + new Date().toISOString();
     try {
       webpush.setVapidDetails('https://github.com/Nicolodvt/Formazione-fantacalcio', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
       const r = await webpush.sendNotification(sub, JSON.stringify({
         titolo: 'Prova notifica',
-        corpo: 'Se leggi questo, i promemoria arrivano sul telefono.'
+        corpo: 'Se leggi questo, i promemoria arrivano sul telefono.',
+        id
       }));
       console.log(`Notifica di prova accettata dal servizio push (${r && r.statusCode}). Controlla il telefono.`);
     } catch (err) {
       console.log(`::error::Notifica di prova rifiutata (${err.statusCode || err.message}). ` +
         (ABBONAMENTO_DA_RIFARE.includes(err.statusCode)
-          ? 'Abbonamento scaduto: riattiva le notifiche dall app e aggiorna il secret PUSH_SUBSCRIPTION.'
+          ? (fonte === 'sito'
+            ? 'Abbonamento scaduto: apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva.'
+            : 'Abbonamento scaduto: riattiva le notifiche dall app e aggiorna il secret PUSH_SUBSCRIPTION.')
           : 'Controlla la chiave VAPID_PRIVATE_KEY.'));
       process.exitCode = 1;
+      return;
     }
+    /* Con l'abbonamento del sito si aspetta la ricevuta del telefono (16/10): e' la prova che la
+       notifica e' arrivata davvero, non solo che il servizio push l'ha presa. */
+    if (fonte !== 'sito') {
+      console.log('Abbonamento dal secret: nessuna ricevuta da aspettare, guarda il telefono.');
+      return;
+    }
+    /* Nove controlli a 10 secondi: un telefono acceso e online risponde in pochi secondi. */
+    const pausa = +(process.env.ATTESA_RICEVUTA_PAUSA_MS ?? 10000);
+    for (let i = 0; i < 9; i++) {
+      await new Promise(r => setTimeout(r, pausa));
+      const sito = await statoSito(SITO_URL);
+      if (sito && sito.ricevuta && sito.ricevuta.id === id) {
+        if (sito.ricevuta.esito === 'mostrata') console.log('Il telefono ha confermato: notifica arrivata e mostrata.');
+        else { console.log(`::error::Arrivata sul telefono ma non mostrata (${sito.ricevuta.esito}): controlla i permessi delle notifiche.`); process.exitCode = 1; }
+        return;
+      }
+    }
+    console.log('::error::Nessuna conferma dal telefono: la notifica e\' stata accettata dal servizio push ma il telefono ' +
+      'non l\'ha ricevuta (spento, senza rete, o l app aperta da un altro indirizzo). Se il telefono era acceso e online, ' +
+      'apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva, e rilancia la prova.');
+    process.exitCode = 1;
     return;
   }
 
@@ -194,6 +242,8 @@ async function main() {
   /* Giornata nuova rispetto all'ultima registrata: si riparte da zero, le soglie di una
      giornata passata non hanno piu senso per quella nuova. */
   if (stato.giornata !== prob.giornata) stato = { giornata: prob.giornata, inviate: {} };
+  const salvaStato = () => writeFileSync(FILE_STATO, JSON.stringify(stato, null, 1) + '\n');
+  if (await controllaRicevuta(stato, SITO_URL, ora)) salvaStato();
 
   /* Tutte le soglie gia' raggiunte e non ancora trattate; se sono piu' d'una (il giro e' arrivato
      con ore di ritardo) si manda SOLO la piu' vicina alla scadenza e le altre si segnano
@@ -243,9 +293,15 @@ async function main() {
     return;
   }
 
-  let subscription;
-  try { subscription = JSON.parse(SUB_RAW); }
-  catch (e) { console.error('Il secret PUSH_SUBSCRIPTION non e un JSON valido.'); process.exitCode = 1; return; }
+  const { sub: subscription, fonte, motivo } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
+  if (!subscription) {
+    /* Secret rotto: guasto vero. Nessun abbonamento da nessuna parte (sito giu', app non ancora
+       collegata): avviso, si riprova al giro dopo. */
+    const grave = /JSON/.test(motivo);
+    console.log((grave ? '::error::' : '::warning::') + motivo);
+    if (grave) process.exitCode = 1;
+    return;
+  }
 
   const { default: webpush } = await import('web-push');
   /* setVapidDetails lancia un'eccezione non gestita se la chiave privata e malformata (l'ho
@@ -272,6 +328,7 @@ async function main() {
   });
 
   const payload = JSON.stringify({
+    id: ora.toISOString(),
     titolo: `Mancano ${formattaTempoRimanente(scadenza.getTime() - ora.getTime())}: schiera la formazione`,
     corpo: (infra ? 'Turno infrasettimanale — ' : '') +
       `Giornata ${prob.giornata}, si comincia ${oraItaliana} (${prima.casa}-${prima.trasferta}). Non hai ancora segnato la formazione.`
@@ -282,6 +339,7 @@ async function main() {
     console.log(`Promemoria ${daInviare.chiave} spedito.`);
     segnaDovute(ora.toISOString());
     delete stato.erroriInvio;
+    stato.ultimoInvio = { id: ora.toISOString(), quando: ora.toISOString(), fonte };
   } catch (err) {
     if (ABBONAMENTO_DA_RIFARE.includes(err.statusCode)) {
       /* Prima questo caso finiva solo nel log e la soglia veniva segnata con l'orario, come se
@@ -292,8 +350,8 @@ async function main() {
       if (!stato.abbonamentoScadutoSegnalato) {
         stato.abbonamentoScadutoSegnalato = true;
         console.log(`::error::Promemoria non consegnato: il servizio push risponde ${err.statusCode} ` +
-          '(abbonamento scaduto o chiavi cambiate). Riattiva le notifiche dall app (Impostazioni -> Notifiche) ' +
-          'e aggiorna il secret PUSH_SUBSCRIPTION.');
+          '(abbonamento scaduto o chiavi cambiate). Apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva' +
+          (fonte === 'sito' ? '.' : ', e aggiorna il secret PUSH_SUBSCRIPTION (o pubblica l app nuova, che lo registra da sola).'));
         process.exitCode = 1;
       } else {
         console.log(`Abbonamento ancora non valido (${err.statusCode}), gia segnalato per questa giornata.`);

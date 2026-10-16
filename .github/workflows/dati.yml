@@ -135,6 +135,9 @@ jobs:
         env:
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
           PUSH_SUBSCRIPTION: ${{ secrets.PUSH_SUBSCRIPTION }}
+          # L'abbonamento del telefono lo registra l'app sul sito (16/10, tools/notifiche.mjs):
+          # il secret sopra resta solo come riserva.
+          NETLIFY_SITE_URL: ${{ vars.NETLIFY_SITE_URL }}
         run: |
           # Tre tentativi (16/10): un intoppo momentaneo del registro npm faceva rosso il giro
           # (e partiva l'email) anche se lo script non aveva nessun problema.

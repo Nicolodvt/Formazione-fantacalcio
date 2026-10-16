@@ -14,31 +14,14 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { primaPartita, infrasettimanale } from './calendario.mjs';
+import { VAPID_PUBLIC_KEY, eTransitorio, inviaConRiprova, abbonamentoDaUsare } from './notifiche.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
 const FILE_PROB = join(QUI, '..', 'dati', 'probabili.json');
 const FILE_PROMEMORIA = join(QUI, '..', 'dati', 'promemoria.json');
 
-/* Stessa chiave pubblica di index.html (const VAPID_PUBLIC_KEY). Non e' un segreto — e'
-   proprio il suo scopo essere pubblica — quindi sta bene come costante invece che come
-   secret in piu' da configurare. Se un giorno si rigenera la coppia, va cambiata in ENTRAMBI
-   i posti insieme, altrimenti gli abbonamenti esistenti smettono di funzionare. */
-const VAPID_PUBLIC_KEY = 'BHWwgaSHRz5TzxveQbvlZ6Cx__SgARqi_-hEXlD1g6Av-gYH_Y8cq48pY6-Zb2bcLlLNgDWwdFrDGn5M00ICRjM';
-
-/* Intoppi del servizio push che passano da soli (16/10): rete, 5xx, 429. Prima finivano come
-   "Invio fallito" con il giro in rosso, cioe' un'email per un problema che al giro dopo non
-   c'era piu'. Ora si riprova una volta dopo qualche secondo, e se non basta si riprova al giro
-   successivo; l'email arriva solo se il problema dura (vedi sotto). */
-const eTransitorio = (err) => !err.statusCode || err.statusCode >= 500 || err.statusCode === 429;
-async function inviaConRiprova(webpush, sub, payload) {
-  try { return await webpush.sendNotification(sub, payload); }
-  catch (err) {
-    if (!eTransitorio(err)) throw err;
-    console.log(`Servizio push non disponibile (${err.statusCode || err.message}): riprovo fra poco.`);
-    await new Promise(r => setTimeout(r, +(process.env.ATTESA_RIPROVA_MS ?? 5000)));
-    return await webpush.sendNotification(sub, payload);
-  }
-}
+/* Chiave pubblica, riprova sugli intoppi momentanei e da dove prendere l'abbonamento (prima il
+   sito, poi il secret): in tools/notifiche.mjs, comuni con promemoria-scadenza.mjs (16/10). */
 
 function leggiJson(percorso, fallback) {
   try { return JSON.parse(readFileSync(percorso, 'utf8')); }
@@ -48,9 +31,10 @@ function leggiJson(percorso, fallback) {
 async function main() {
   const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
   const SUB_RAW = process.env.PUSH_SUBSCRIPTION;
+  const SITO_URL = process.env.NETLIFY_SITE_URL || '';
 
-  if (!VAPID_PRIVATE_KEY || !SUB_RAW) {
-    console.log('Notifiche non configurate (secret mancanti): salto, non e un errore.');
+  if (!VAPID_PRIVATE_KEY || (!SUB_RAW && !SITO_URL)) {
+    console.log('Notifiche non configurate (secret o indirizzo del sito mancanti): salto, non e un errore.');
     return;
   }
 
@@ -72,9 +56,14 @@ async function main() {
     return;
   }
 
-  let subscription;
-  try { subscription = JSON.parse(SUB_RAW); }
-  catch (e) { console.error('Il secret PUSH_SUBSCRIPTION non e un JSON valido.'); process.exitCode = 1; return; }
+  const { sub: subscription, motivo } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
+  if (!subscription) {
+    /* Come in promemoria-scadenza.mjs: rosso solo per un secret rotto, altrimenti si riprova. */
+    const grave = /JSON/.test(motivo);
+    console.log((grave ? '::error::' : '::warning::') + motivo);
+    if (grave) process.exitCode = 1;
+    return;
+  }
 
   const { default: webpush } = await import('web-push');
   /* Il protocollo Web Push vuole un contatto nel messaggio, per uso dei servizi push in caso
@@ -111,11 +100,15 @@ async function main() {
   /* La frase "turno infrasettimanale" compare parola per parola, sia nel titolo sia nel corpo:
      chiesto esplicitamente, cosi' resta leggibile anche se la notifica sul telefono mostra solo
      una delle due righe. */
+  /* id: il service worker lo rimanda indietro come ricevuta (sw.js, 16/10). */
+  const id = new Date().toISOString();
   const payload = JSON.stringify(infra ? {
+    id,
     titolo: `Turno infrasettimanale — Giornata ${prob.giornata}`,
     corpo: `E' un turno infrasettimanale: si gioca gia' ${oraItaliana} (${prima.casa}-${prima.trasferta}). ` +
       `Schiera prima — questa settimana la preparazione e' compressa su lunedi e martedi.`
   } : {
+    id,
     titolo: `Giornata ${prob.giornata}: schiera la formazione`,
     corpo: `Si comincia ${oraItaliana} con ${prima.casa}-${prima.trasferta}.`
   });
@@ -133,8 +126,7 @@ async function main() {
        viene comunque segnata come avvisata e non si riprova. */
     if ([401, 403, 404, 410].includes(err.statusCode)) {
       console.log(`::error::Avviso di giornata non consegnato: il servizio push risponde ${err.statusCode} ` +
-        '(abbonamento scaduto o chiavi cambiate). Riattiva le notifiche dall app (Impostazioni -> Notifiche) ' +
-        'e aggiorna il secret PUSH_SUBSCRIPTION.');
+        '(abbonamento scaduto o chiavi cambiate). Apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva.');
       process.exitCode = 1;
     } else if (eTransitorio(err)) {
       /* Niente scritto in dati/promemoria.json: l'avviso riparte al prossimo giro di dati.yml.
