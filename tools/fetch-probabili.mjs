@@ -284,16 +284,37 @@ function validare(d, controlli) {
 
 /* ---------- esecuzione ---------- */
 
+/* Senza timeout una connessione appesa blocca il job della Action fino al limite di GitHub.
+   Tre tentativi (16/10) su rete e 5xx: un singhiozzo del sito faceva fallire il passo, e anche
+   se la fonte di riserva rimediava il giro restava rosso e partiva l'email. Una pagina letta
+   male invece non si riprova: quella e' un guasto vero. Pause brevi e solo dopo un errore,
+   quindi la cortesia verso il sito non cambia. */
+async function scarica() {
+  const PAUSE = [20000, 60000];
+  for (let tentativo = 0; ; tentativo++) {
+    let errore;
+    try {
+      const r = await fetch(URL_PAGINA, {
+        headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it;q=0.9' },
+        signal: AbortSignal.timeout(30000)
+      });
+      if (r.ok) return await r.text();
+      if (r.status < 500 && r.status !== 429) throw new Error(`HTTP ${r.status} da ${URL_PAGINA}`);
+      errore = `HTTP ${r.status}`;
+    } catch (e) {
+      if (/^HTTP \d/.test(e.message)) throw e;
+      errore = e.message;
+    }
+    if (tentativo >= PAUSE.length) throw new Error(`${errore} da ${URL_PAGINA}, ${tentativo + 1} tentativi`);
+    console.log(`Tentativo ${tentativo + 1} non riuscito (${errore}): riprovo fra ${PAUSE[tentativo] / 1000} secondi.`);
+    await new Promise(r => setTimeout(r, PAUSE[tentativo]));
+  }
+}
+
 async function main() {
   const soloProva = process.argv.includes('--prova');
 
-  /* Senza timeout una connessione appesa blocca il job della Action fino al limite di GitHub. */
-  const r = await fetch(URL_PAGINA, {
-    headers: { 'User-Agent': UA, 'Accept-Language': 'it-IT,it;q=0.9' },
-    signal: AbortSignal.timeout(30000)
-  });
-  if (!r.ok) throw new Error(`HTTP ${r.status} da ${URL_PAGINA}`);
-  const html = await r.text();
+  const html = await scarica();
 
   /* Una risposta troncata produce un file valido ma incompleto, e se il taglio cade nel punto
      giusto nessuna delle validazioni successive se ne accorge. */

@@ -30,10 +30,13 @@
    presto" con "rotto". Prima uscivano tutti con 1 e il workflow li ingoiava tutti: se il sito
    avesse cambiato la pagina, i voti avrebbero smesso di arrivare senza una sola email.
      0  scritto (o, con --prova, validazione superata)
-     2  non ancora completa: nessuna tabella (giornata non giocata o voti non pubblicati) oppure
-        meno di 20 squadre (giornata in corso, es. lunedi mattina con le partite della sera
-        ancora da giocare), oppure 20 tabelle ma almeno una partita non ancora conclusa
-        (data-match-status diverso da 4, dal 27/09). Normale, si riprova al giro dopo.
+     2  pagina vuota: nessuna tabella (giornata non giocata o voti non pubblicati). Normale, si
+        riprova al giro dopo.
+     4  giornata giocata a meta' (16/10, prima era 2): meno di 20 squadre (giornata in corso, es.
+        lunedi mattina con le partite della sera ancora da giocare, oppure una partita rinviata),
+        oppure 20 tabelle ma almeno una partita non ancora conclusa (data-match-status diverso
+        da 4, dal 27/09). Normale anche questo; distinto da 2 perche' una giornata vecchia a
+        meta' e' una partita rinviata (avviso), una vecchia vuota e' una pagina rinominata (rosso).
      3  problema di rete temporaneo (timeout, errore 5xx): si riprova al giro dopo.
      1  tutto il resto: pagina completa ma letta male, 4xx, giornata dichiarata diversa. E' il
         caso che deve arrivare per email. Anche: voti validi (e scritti) ma calendario della
@@ -441,9 +444,9 @@ async function main() {
   const nTabelle = blocchi(html, '<table class="grades-table').length;
   if (nTabelle < 20) {
     console.log(`Giornata ${giornata}: ${nTabelle} tabelle dei voti su 20 — ` +
-      (nTabelle === 0 ? 'non ancora giocata o voti non ancora pubblicati.' : 'giornata ancora in corso.') +
+      (nTabelle === 0 ? 'non ancora giocata o voti non ancora pubblicati.' : 'giornata ancora in corso (o una partita rinviata).') +
       ' Niente scritto, si riprova al prossimo giro.');
-    process.exit(2);
+    process.exit(nTabelle === 0 ? 2 : 4);
   }
 
   /* 20 tabelle non bastano a dire "giornata finita" (27/09). Il lunedi della G6 Torino-Udinese
@@ -452,13 +455,13 @@ async function main() {
      voti provvisori o mancanti), nessun controllo sotto se ne accorgerebbe per forza, e un
      file scritto non viene mai piu' riscaricato. Ogni partita della pagina ha uno stato
      (data-match-status): su G1-G5, 50 partite su 50 concluse valgono "4". Si scrive solo se
-     sono tutte a 4; altrimenti e' una giornata in corso, uscita 2 come sopra. */
+     sono tutte a 4; altrimenti e' una giornata in corso (o con un rinvio), uscita 4 come sopra. */
   const stati = [...html.matchAll(/data-match-status="(\d+)"/g)].map(m => m[1]);
   const nonFinite = stati.filter(s => s !== '4').length;
   if (nonFinite) {
     console.log(`Giornata ${giornata}: ${nonFinite} partite su ${stati.length} non ancora concluse ` +
       `(stati visti: ${[...new Set(stati)].join(', ')}). Niente scritto, si riprova al prossimo giro.`);
-    process.exit(2);
+    process.exit(4);
   }
   if (stati.length !== 10) {
     /* Il segnale di sopra e' sparito o e' cambiato: non si blocca (le altre validazioni restano),

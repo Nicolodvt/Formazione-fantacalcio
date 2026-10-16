@@ -35,7 +35,12 @@ concurrency:
 
 jobs:
   controlla:
-    runs-on: ubuntu-latest
+    # Versione fissa, non ubuntu-latest (16/10): dal 19/10 "latest" passa a Ubuntu 26 e un
+    # cambio d'immagine a sorpresa e' il tipo di guasto che arriva per email una settimana dopo.
+    # 24.04 resta supportata da GitHub per anni; si cambia a mano, provando, quando serve.
+    runs-on: ubuntu-24.04
+    # Senza tetto un passo appeso (rete, npm) tiene occupato il runner fino a 6 ore.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
 
@@ -58,7 +63,13 @@ jobs:
           NETLIFY_SITE_URL: ${{ vars.NETLIFY_SITE_URL }}
           PROVA: ${{ github.event.inputs.prova }}
         run: |
-          npm install --no-save web-push@3.6.7 --silent
+          # Tre tentativi (16/10): un intoppo momentaneo del registro npm faceva rosso il giro
+          # (e partiva l'email) anche se lo script non aveva nessun problema.
+          for i in 1 2 3; do
+            npm install --no-save web-push@3.6.7 --silent && break
+            [ "$i" = 3 ] && exit 1
+            echo "npm install non riuscito (tentativo $i), riprovo fra 15 secondi"; sleep 15
+          done
           node "tools/promemoria-scadenza.mjs"
 
       # !cancelled(): deve salvare lo stato anche quando il passo sopra e' uscito in rosso per un
@@ -88,5 +99,11 @@ jobs:
           # Un altro workflow puo' aver scritto su main nel frattempo (dati.yml e promemoria.yml
           # girano indipendenti): si riallinea prima di spingere, altrimenti il push viene rifiutato
           # e il file di stato di questo giro va perso (27/09).
-          git pull --rebase origin main
-          git push
+          # Piu' tentativi (16/10): se l'altro workflow spinge proprio fra il pull e il push, il
+          # push viene rifiutato; prima bastava quello per un giro rosso e un'email.
+          for i in 1 2 3 4; do
+            git pull --rebase origin main && git push && exit 0
+            git rebase --abort 2>/dev/null || true
+            echo "Push non riuscito (tentativo $i), riprovo"; sleep $((i * 10))
+          done
+          exit 1

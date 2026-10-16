@@ -25,6 +25,21 @@ const FILE_PROMEMORIA = join(QUI, '..', 'dati', 'promemoria.json');
    i posti insieme, altrimenti gli abbonamenti esistenti smettono di funzionare. */
 const VAPID_PUBLIC_KEY = 'BHWwgaSHRz5TzxveQbvlZ6Cx__SgARqi_-hEXlD1g6Av-gYH_Y8cq48pY6-Zb2bcLlLNgDWwdFrDGn5M00ICRjM';
 
+/* Intoppi del servizio push che passano da soli (16/10): rete, 5xx, 429. Prima finivano come
+   "Invio fallito" con il giro in rosso, cioe' un'email per un problema che al giro dopo non
+   c'era piu'. Ora si riprova una volta dopo qualche secondo, e se non basta si riprova al giro
+   successivo; l'email arriva solo se il problema dura (vedi sotto). */
+const eTransitorio = (err) => !err.statusCode || err.statusCode >= 500 || err.statusCode === 429;
+async function inviaConRiprova(webpush, sub, payload) {
+  try { return await webpush.sendNotification(sub, payload); }
+  catch (err) {
+    if (!eTransitorio(err)) throw err;
+    console.log(`Servizio push non disponibile (${err.statusCode || err.message}): riprovo fra poco.`);
+    await new Promise(r => setTimeout(r, +(process.env.ATTESA_RIPROVA_MS ?? 5000)));
+    return await webpush.sendNotification(sub, payload);
+  }
+}
+
 function leggiJson(percorso, fallback) {
   try { return JSON.parse(readFileSync(percorso, 'utf8')); }
   catch (e) { return fallback; }
@@ -106,7 +121,7 @@ async function main() {
   });
 
   try {
-    await webpush.sendNotification(subscription, payload);
+    await inviaConRiprova(webpush, subscription, payload);
     console.log('Promemoria spedito.');
   } catch (err) {
     /* 404/410 vuol dire che l'abbonamento non e' piu' valido (disiscritto, endpoint
@@ -121,6 +136,12 @@ async function main() {
         '(abbonamento scaduto o chiavi cambiate). Riattiva le notifiche dall app (Impostazioni -> Notifiche) ' +
         'e aggiorna il secret PUSH_SUBSCRIPTION.');
       process.exitCode = 1;
+    } else if (eTransitorio(err)) {
+      /* Niente scritto in dati/promemoria.json: l'avviso riparte al prossimo giro di dati.yml.
+         Se il servizio push restasse giu' a lungo, lo segnala promemoria-scadenza.mjs. */
+      console.log(`::warning::Avviso di giornata non spedito: servizio push non disponibile ` +
+        `(${err.statusCode || err.message}). Riprovo al prossimo giro.`);
+      return;
     } else {
       console.error('Invio fallito:', err.statusCode, err.body || err.message);
       process.exitCode = 1;

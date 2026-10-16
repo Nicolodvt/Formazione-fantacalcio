@@ -147,7 +147,7 @@ function giroPromemoria(dir, oraIso, extraEnv = {}) {
     ['--import', pathToFileURL(join(dir, 'orologio.mjs')).href, join(dir, 'tools', 'promemoria-scadenza.mjs')], {
       env: {
         ...process.env, ORA_FINTA: oraIso, VAPID_PRIVATE_KEY: 'finta', PUSH_SUBSCRIPTION: '{}',
-        NETLIFY_SITE_URL: 'https://finto.example', FINTO_PUSH_LOG: join(dir, 'spediti.jsonl'), ...extraEnv
+        NETLIFY_SITE_URL: 'https://finto.example', FINTO_PUSH_LOG: join(dir, 'spediti.jsonl'), ATTESA_RIPROVA_MS: '0', ...extraEnv
       },
       encoding: 'utf8'
     });
@@ -219,6 +219,22 @@ async function provePromemoria() {
     verifica('  ...e nel file di stato resta "abbonamento-scaduto"',
       statoPromemoria(dir).inviate['24h'] === 'abbonamento-scaduto', JSON.stringify(statoPromemoria(dir).inviate));
 
+    /* 5b. Servizio push giu' per un po' (503, poi rete) (16/10): niente rosso ai primi giri, la
+       soglia resta dovuta; rosso una volta sola al terzo giro di fila; poi passa e riparte. */
+    azzera(dir, G6);
+    const t = ['2026-10-09T13:00Z', '2026-10-09T17:00Z', '2026-10-09T20:00Z', '2026-10-10T06:30Z']
+      .map((g, i) => giroPromemoria(dir, g, { FINTO_PUSH_ESITO: i % 2 ? '0' : '503' }));
+    verifica('push non disponibile: niente rosso ai primi due giri, rosso al terzo, non al quarto',
+      JSON.stringify(t.map(x => x.codice)) === '[0,0,1,0]' && /::warning::/.test(t[0].uscita) && /::error::/.test(t[2].uscita),
+      JSON.stringify(t.map(x => x.codice)) + ' ' + t[0].uscita.trim());
+    const st5b = statoPromemoria(dir);
+    verifica('  ...e nessuna soglia segnata, contatore dei giri falliti nello stato',
+      Object.keys(st5b.inviate).length === 0 && st5b.erroriInvio === 4, JSON.stringify(st5b));
+    giroPromemoria(dir, '2026-10-10T07:00Z');
+    const st5c = statoPromemoria(dir);
+    verifica('  servizio tornato: parte il promemoria e il contatore si azzera',
+      spediti(dir).length === 1 && st5c.erroriInvio === undefined, JSON.stringify(st5c));
+
     /* 6. Giro arrivato dopo la scadenza: niente promemoria. */
     azzera(dir, G6);
     const c = giroPromemoria(dir, '2026-10-10T13:10Z');
@@ -279,7 +295,7 @@ function proveVoti() {
     for (const g of pagine) {
       const r = esegui(g, join(DIR_PAGINE, `voti${g}.html`));
       if (r.status === 0) complete.push(g);
-      verifica(`G${g} vera: uscita ${r.status}`, r.status === 0 || r.status === 2, (r.stdout + r.stderr).trim().split('\n').pop());
+      verifica(`G${g} vera: uscita ${r.status}`, r.status === 0 || r.status === 2 || r.status === 4, (r.stdout + r.stderr).trim().split('\n').pop());
     }
     if (!complete.length) { console.log('  – nessuna giornata completa fra le pagine: sabotaggi saltati'); return; }
 
@@ -287,8 +303,9 @@ function proveVoti() {
     const h = readFileSync(join(DIR_PAGINE, `voti${g}.html`), 'utf8');
     const tab = '<table class="grades-table';
     const sabotaggi = [
-      ['una partita ancora in corso (stato 2)', h.replace('data-match-status="4"', 'data-match-status="2"'), 2],
-      ['due tabelle in meno (giornata in corso)', h.split(tab).slice(0, -2).join(tab) + '</html>', 2],
+      ['una partita ancora in corso (stato 2)', h.replace('data-match-status="4"', 'data-match-status="2"'), 4],
+      ['due tabelle in meno (giornata in corso)', h.split(tab).slice(0, -2).join(tab) + '</html>', 4],
+      ['nessuna tabella (giornata non giocata)', h.split(tab)[0] + '</html>', 2],
       ['tabella di una squadra svuotata', (() => {
         const i = h.indexOf(tab), j = h.indexOf('<tbody', i), k = h.indexOf('</tbody>', j);
         return h.slice(0, j) + '<tbody>' + h.slice(k);

@@ -73,7 +73,12 @@ concurrency:
 
 jobs:
   aggiorna:
-    runs-on: ubuntu-latest
+    # Versione fissa, non ubuntu-latest (16/10): dal 19/10 "latest" passa a Ubuntu 26 e un
+    # cambio d'immagine a sorpresa e' il tipo di guasto che arriva per email una settimana dopo.
+    # 24.04 resta supportata da GitHub per anni; si cambia a mano, provando, quando serve.
+    runs-on: ubuntu-24.04
+    # Senza tetto un passo appeso (rete, npm) tiene occupato il runner fino a 6 ore.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
 
@@ -131,7 +136,13 @@ jobs:
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
           PUSH_SUBSCRIPTION: ${{ secrets.PUSH_SUBSCRIPTION }}
         run: |
-          npm install --no-save web-push@3.6.7 --silent
+          # Tre tentativi (16/10): un intoppo momentaneo del registro npm faceva rosso il giro
+          # (e partiva l'email) anche se lo script non aveva nessun problema.
+          for i in 1 2 3; do
+            npm install --no-save web-push@3.6.7 --silent && break
+            [ "$i" = 3 ] && exit 1
+            echo "npm install non riuscito (tentativo $i), riprovo fra 15 secondi"; sleep 15
+          done
           node "tools/invia-promemoria.mjs"
 
       # I voti si scaricano solo quando ha senso: ai giri di lunedi e martedi, o quando li si
@@ -141,11 +152,13 @@ jobs:
       # dello scraper veniva ingoiato, quindi se il sito avesse cambiato la pagina dei voti
       # questi avrebbero smesso di arrivare in silenzio, per sempre. Ora tools/fetch-voti.mjs
       # esce con codici distinti (vedi in testa al file) e qui:
-      #   - 2 (giornata non ancora giocata o in corso) e 3 (rete/sito giu' un momento): normale,
-      #     si riprova al giro dopo, NIENTE email — salvo che la giornata sia piu' vecchia
+      #   - 2 (pagina vuota: giornata non ancora giocata), 4 (giornata giocata a meta': in corso
+      #     o con una partita rinviata) e 3 (rete/sito giu' un momento): normale, si riprova al
+      #     giro dopo, NIENTE email — salvo una pagina VUOTA per una giornata piu' vecchia
       #     dell'ultima conclusa: una settimana dopo, "non ancora pubblicati" non e' piu'
       #     credibile (e' anche l'unico modo di accorgersi di una pagina rinominata, che
-      #     sembrerebbe una giornata non giocata).
+      #     sembrerebbe una giornata non giocata). Una giornata vecchia a meta' (4) da' solo un
+      #     avviso: e' una partita rinviata, non un guasto (16/10).
       #   - 1 (pagina completa ma letta male, 404...): rosso subito, arriva l'email.
       # Ricalibrazione e commit sotto hanno !cancelled(): girano comunque, un voto rotto non
       # blocca il resto.
@@ -184,10 +197,16 @@ jobs:
             # interromperebbe il ciclo alla prima giornata.
             ESITO=0
             node "tools/fetch-voti.mjs" "$G" || ESITO=$?
+            # Per una giornata piu' vecchia dell'ultima conclusa (16/10) va in rosso solo la pagina
+            # VUOTA (uscita 2: e' il segno di una pagina rinominata). Una giornata giocata a meta'
+            # (uscita 4) e' una partita rinviata: puo' restare cosi' per settimane, e prima mandava
+            # un'email a ogni giro fino al recupero. La rete (3) si riprova e basta.
             if [ "$ESITO" = "1" ]; then
               GUASTI="$GUASTI $G(pagina letta male)"
-            elif [ "$ESITO" != "0" ] && [ "$G" -lt "$ULTIMA" ]; then
-              GUASTI="$GUASTI $G(ancora senza voti, ma non e' l'ultima conclusa)"
+            elif [ "$ESITO" = "2" ] && [ "$G" -lt "$ULTIMA" ]; then
+              GUASTI="$GUASTI $G(pagina dei voti vuota, ma non e' l'ultima conclusa)"
+            elif [ "$ESITO" = "4" ] && [ "$G" -lt "$ULTIMA" ]; then
+              echo "::warning::Giornata $G ancora incompleta anche se ne e' finita una dopo: partita rinviata? I voti si scrivono quando sara' recuperata."
             fi
           done
           if [ -n "$GUASTI" ]; then
@@ -247,5 +266,11 @@ jobs:
           # Un altro workflow puo' aver scritto su main nel frattempo (dati.yml e promemoria.yml
           # girano indipendenti): si riallinea prima di spingere, altrimenti il push viene rifiutato
           # e il file di stato di questo giro va perso (27/09).
-          git pull --rebase origin main
-          git push
+          # Piu' tentativi (16/10): se l'altro workflow spinge proprio fra il pull e il push, il
+          # push viene rifiutato; prima bastava quello per un giro rosso e un'email.
+          for i in 1 2 3 4; do
+            git pull --rebase origin main && git push && exit 0
+            git rebase --abort 2>/dev/null || true
+            echo "Push non riuscito (tentativo $i), riprovo"; sleep $((i * 10))
+          done
+          exit 1

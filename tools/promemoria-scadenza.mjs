@@ -41,6 +41,24 @@ const MINUTI_SCADENZA = 5;
    stessa: riattivare le notifiche dall'app e aggiornare il secret PUSH_SUBSCRIPTION. */
 const ABBONAMENTO_DA_RIFARE = [401, 403, 404, 410];
 
+/* Intoppi del servizio push che passano da soli (16/10): rete, 5xx, 429. Prima finivano come
+   "Invio fallito" con il giro in rosso, cioe' un'email per un problema che al giro dopo non
+   c'era piu'. Ora si riprova una volta dopo qualche secondo, e se non basta si riprova al giro
+   successivo; l'email arriva solo se il problema dura (vedi sotto). */
+const eTransitorio = (err) => !err.statusCode || err.statusCode >= 500 || err.statusCode === 429;
+async function inviaConRiprova(webpush, sub, payload) {
+  try { return await webpush.sendNotification(sub, payload); }
+  catch (err) {
+    if (!eTransitorio(err)) throw err;
+    console.log(`Servizio push non disponibile (${err.statusCode || err.message}): riprovo fra poco.`);
+    await new Promise(r => setTimeout(r, +(process.env.ATTESA_RIPROVA_MS ?? 5000)));
+    return await webpush.sendNotification(sub, payload);
+  }
+}
+/* Giri di fila con il servizio push irraggiungibile prima di andare in rosso: con il cron vero
+   (un giro ogni ~4 ore) sono circa 8-12 ore. Una volta sola per giornata, come l'abbonamento. */
+const TRANSITORI_PRIMA_DEL_ROSSO = 3;
+
 /* Soglie in ore prima della scadenza (non del calcio d'inizio), in ordine decrescente: se
    piu' d'una scatta nello stesso giro vale l'ultima (la piu' vicina), vedi "dovute" in main().
    Rifatte il 27/09 (l'utente: "correggi tu gli intervalli, li ho sparati a caso"). Prima erano
@@ -260,9 +278,10 @@ async function main() {
   });
 
   try {
-    await webpush.sendNotification(subscription, payload);
+    await inviaConRiprova(webpush, subscription, payload);
     console.log(`Promemoria ${daInviare.chiave} spedito.`);
     segnaDovute(ora.toISOString());
+    delete stato.erroriInvio;
   } catch (err) {
     if (ABBONAMENTO_DA_RIFARE.includes(err.statusCode)) {
       /* Prima questo caso finiva solo nel log e la soglia veniva segnata con l'orario, come se
@@ -278,6 +297,18 @@ async function main() {
         process.exitCode = 1;
       } else {
         console.log(`Abbonamento ancora non valido (${err.statusCode}), gia segnalato per questa giornata.`);
+      }
+    } else if (eTransitorio(err)) {
+      /* La soglia NON si segna: resta dovuta e si riprova al giro dopo. */
+      stato.erroriInvio = (stato.erroriInvio || 0) + 1;
+      const msg = `Promemoria ${daInviare.chiave} non spedito: servizio push non disponibile ` +
+        `(${err.statusCode || err.message}), ${stato.erroriInvio} giri di fila.`;
+      if (stato.erroriInvio >= TRANSITORI_PRIMA_DEL_ROSSO && !stato.erroriInvioSegnalati) {
+        stato.erroriInvioSegnalati = true;
+        console.log('::error::' + msg + ' Non passa da solo: guardare il log.');
+        process.exitCode = 1;
+      } else {
+        console.log('::warning::' + msg + ' Riprovo al prossimo giro.');
       }
     } else {
       console.error('Invio fallito:', err.statusCode, err.body || err.message);
