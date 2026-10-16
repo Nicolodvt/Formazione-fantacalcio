@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-16T15:20:08.774Z",
+ "generato": "2026-10-16T19:25:32.792Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 7,
  "giornateDiscordi": [
@@ -379,7 +379,7 @@
    "nome": "Berardi",
    "squadra": "Sassuolo",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -712,7 +712,7 @@
    "nome": "Matic",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -865,7 +865,7 @@
    "nome": "Caleta-Car",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -919,7 +919,7 @@
    "nome": "Muric",
    "squadra": "Sassuolo",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1063,7 +1063,7 @@
    "nome": "Esposito Se.",
    "squadra": "Sassuolo",
    "ruolo": "A",
-   "pct": 65,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1270,9 +1270,9 @@
    "nome": "Monterisi",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4957": {
    "id": 4957,
@@ -1495,7 +1495,7 @@
    "nome": "Raimondo",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1774,9 +1774,9 @@
    "nome": "Cittadini",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "5761": {
    "id": 5761,
@@ -1873,7 +1873,7 @@
    "nome": "Thorstvedt",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 70,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1891,7 +1891,7 @@
    "nome": "Doig",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2089,7 +2089,7 @@
    "nome": "Laurientè",
    "squadra": "Sassuolo",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2179,7 +2179,7 @@
    "nome": "Kvernadze",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2260,7 +2260,7 @@
    "nome": "Oyono A.",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2386,7 +2386,7 @@
    "nome": "Palmisani",
    "squadra": "Frosinone",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2476,7 +2476,7 @@
    "nome": "Ghedjemis",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2711,7 +2711,7 @@
    "squadra": "Sassuolo",
    "ruolo": "C",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6678": {
@@ -2944,9 +2944,9 @@
    "nome": "Van Der Brempt",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6898": {
    "id": 6898,
@@ -2980,7 +2980,7 @@
    "nome": "Masini",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3115,9 +3115,9 @@
    "nome": "Bakola",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7048": {
    "id": 7048,
@@ -3241,7 +3241,7 @@
    "nome": "Odenthal",
    "squadra": "Sassuolo",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3790,16 +3790,16 @@
    "nome": "Calvani",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "7469": {
    "id": 7469,
    "nome": "Bracaglia",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3808,7 +3808,7 @@
    "nome": "Calò",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4042,7 +4042,7 @@
    "nome": "Schmid",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4106,7 +4106,7 @@
    "squadra": "Sassuolo",
    "ruolo": "D",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7574": {
@@ -4399,54 +4399,6 @@
   }
  },
  "ballottaggi": [
-  [
-   {
-    "id": 4952,
-    "nome": "Monterisi",
-    "pct": 60
-   },
-   {
-    "id": 5757,
-    "nome": "Cittadini",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 7573,
-    "nome": "Cinquegrano",
-    "pct": 60
-   },
-   {
-    "id": 6896,
-    "nome": "Van Der Brempt",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 6677,
-    "nome": "Adzic",
-    "pct": 55
-   },
-   {
-    "id": 7036,
-    "nome": "Bakola",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 4463,
-    "nome": "Esposito Se.",
-    "pct": 65
-   },
-   {
-    "id": 7347,
-    "nome": "Bowie",
-    "pct": 35
-   }
-  ],
   [
    {
     "id": 6892,
