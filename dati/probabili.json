@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-16T19:25:32.792Z",
+ "generato": "2026-10-17T11:28:16.795Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 7,
  "giornateDiscordi": [
@@ -178,7 +178,7 @@
    "stadio": "Giuseppe Meazza"
   },
   "Juventus": {
-   "modulo": "4-2-3-1",
+   "modulo": "3-4-2-1",
    "inCasa": true,
    "avversario": "Lazio",
    "data": "domenica 18 ottobre, 20:45",
@@ -308,7 +308,7 @@
    "squadra": "Inter",
    "ruolo": "D",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "256": {
@@ -388,7 +388,7 @@
    "nome": "Politano",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -623,7 +623,7 @@
    "squadra": "Inter",
    "ruolo": "C",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "2263": {
@@ -1117,8 +1117,8 @@
    "nome": "Badiashile",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 50,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "4705": {
@@ -1153,7 +1153,7 @@
    "nome": "McTominay",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -1396,7 +1396,7 @@
    "nome": "Gilmour",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -1693,8 +1693,8 @@
    "nome": "Beto",
    "squadra": "Fiorentina",
    "ruolo": "A",
-   "pct": 55,
-   "titolare": true,
+   "pct": 60,
+   "titolare": false,
    "incerto": true
   },
   "5695": {
@@ -1783,8 +1783,8 @@
    "nome": "Zhegrova",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": true,
+   "pct": 60,
+   "titolare": false,
    "incerto": true
   },
   "5791": {
@@ -1927,8 +1927,8 @@
    "nome": "Carlos Augusto",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": false,
+   "pct": 60,
+   "titolare": true,
    "incerto": true
   },
   "5878": {
@@ -2206,9 +2206,9 @@
    "nome": "Lucca",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 85,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6217": {
    "id": 6217,
@@ -2485,7 +2485,7 @@
    "nome": "Jimenez A.",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -2611,8 +2611,8 @@
    "nome": "Marin R.",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": true,
+   "pct": 50,
+   "titolare": false,
    "incerto": true
   },
   "6642": {
@@ -2765,7 +2765,7 @@
    "squadra": "Juventus",
    "ruolo": "A",
    "pct": 60,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "6766": {
@@ -2836,8 +2836,8 @@
    "nome": "Njie",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "6833": {
@@ -3106,8 +3106,8 @@
    "nome": "Pellegrino M.",
    "squadra": "Fiorentina",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "7036": {
@@ -3151,8 +3151,8 @@
    "nome": "Sucic P.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "7071": {
@@ -3169,7 +3169,7 @@
    "nome": "Mastantuono",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 70,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -3187,9 +3187,9 @@
    "nome": "Lang",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "7126": {
    "id": 7126,
@@ -3259,8 +3259,8 @@
    "nome": "Giovane",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 35,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "7165": {
@@ -3484,7 +3484,7 @@
    "nome": "Valdepenas",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -3781,7 +3781,7 @@
    "nome": "Oulai",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -4294,8 +4294,8 @@
    "nome": "Gnonto",
    "squadra": "Fiorentina",
    "ruolo": "A",
-   "pct": 55,
-   "titolare": true,
+   "pct": 60,
+   "titolare": false,
    "incerto": true
   },
   "7624": {
@@ -4449,26 +4449,26 @@
   ],
   [
    {
-    "id": 6638,
-    "nome": "Marin R.",
+    "id": 4664,
+    "nome": "Badiashile",
     "pct": 55
    },
    {
-    "id": 4664,
-    "nome": "Badiashile",
+    "id": 6638,
+    "nome": "Marin R.",
     "pct": 45
    }
   ],
   [
    {
-    "id": 6215,
-    "nome": "Lucca",
-    "pct": 60
+    "id": 7162,
+    "nome": "Giovane",
+    "pct": 55
    },
    {
-    "id": 6052,
-    "nome": "Hojlund",
-    "pct": 40
+    "id": 7120,
+    "nome": "Lang",
+    "pct": 45
    }
   ],
   [
@@ -4509,25 +4509,25 @@
   ],
   [
    {
-    "id": 254,
-    "nome": "Dimarco",
+    "id": 5877,
+    "nome": "Carlos Augusto",
     "pct": 60
    },
    {
-    "id": 5877,
-    "nome": "Carlos Augusto",
+    "id": 254,
+    "nome": "Dimarco",
     "pct": 40
    }
   ],
   [
    {
-    "id": 2194,
-    "nome": "Calhanoglu",
+    "id": 7070,
+    "nome": "Sucic P.",
     "pct": 55
    },
    {
-    "id": 7070,
-    "nome": "Sucic P.",
+    "id": 2194,
+    "nome": "Calhanoglu",
     "pct": 45
    }
   ],
@@ -4677,25 +4677,25 @@
   ],
   [
    {
-    "id": 7623,
-    "nome": "Gnonto",
+    "id": 6827,
+    "nome": "Njie",
     "pct": 55
    },
    {
-    "id": 6827,
-    "nome": "Njie",
+    "id": 7623,
+    "nome": "Gnonto",
     "pct": 45
    }
   ],
   [
    {
-    "id": 5694,
-    "nome": "Beto",
+    "id": 7023,
+    "nome": "Pellegrino M.",
     "pct": 55
    },
    {
-    "id": 7023,
-    "nome": "Pellegrino M.",
+    "id": 5694,
+    "nome": "Beto",
     "pct": 45
    }
   ],
@@ -4761,25 +4761,13 @@
   ],
   [
    {
-    "id": 5761,
-    "nome": "Zhegrova",
-    "pct": 55
-   },
-   {
-    "id": 6884,
-    "nome": "Conceicao",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 4973,
-    "nome": "McKennie",
+    "id": 6752,
+    "nome": "Woltemade",
     "pct": 60
    },
    {
-    "id": 6752,
-    "nome": "Woltemade",
+    "id": 5761,
+    "nome": "Zhegrova",
     "pct": 40
    }
   ],
