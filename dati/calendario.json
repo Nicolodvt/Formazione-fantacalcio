@@ -494,6 +494,88 @@
     "data": "2026-10-12",
     "ora": "20:45"
    }
+  ],
+  "7": [
+   {
+    "casa": "Milan",
+    "trasferta": "Atalanta",
+    "golCasa": 3,
+    "golTrasferta": 2,
+    "data": "2026-10-18",
+    "ora": "18:00"
+   },
+   {
+    "casa": "Bologna",
+    "trasferta": "Inter",
+    "golCasa": 1,
+    "golTrasferta": 3,
+    "data": "2026-10-17",
+    "ora": "18:00"
+   },
+   {
+    "casa": "Monza",
+    "trasferta": "Cagliari",
+    "golCasa": 4,
+    "golTrasferta": 0,
+    "data": "2026-10-19",
+    "ora": "18:30"
+   },
+   {
+    "casa": "Fiorentina",
+    "trasferta": "Como",
+    "golCasa": 1,
+    "golTrasferta": 3,
+    "data": "2026-10-18",
+    "ora": "15:00"
+   },
+   {
+    "casa": "Frosinone",
+    "trasferta": "Sassuolo",
+    "golCasa": 4,
+    "golTrasferta": 2,
+    "data": "2026-10-16",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Roma",
+    "trasferta": "Genoa",
+    "golCasa": 2,
+    "golTrasferta": 0,
+    "data": "2026-10-17",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Juventus",
+    "trasferta": "Lazio",
+    "golCasa": 0,
+    "golTrasferta": 3,
+    "data": "2026-10-18",
+    "ora": "20:45"
+   },
+   {
+    "casa": "Udinese",
+    "trasferta": "Lecce",
+    "golCasa": 0,
+    "golTrasferta": 3,
+    "data": "2026-10-18",
+    "ora": "12:30"
+   },
+   {
+    "casa": "Venezia",
+    "trasferta": "Napoli",
+    "golCasa": 1,
+    "golTrasferta": 0,
+    "data": "2026-10-17",
+    "ora": "15:00"
+   },
+   {
+    "casa": "Parma",
+    "trasferta": "Torino",
+    "golCasa": 0,
+    "golTrasferta": 3,
+    "data": "2026-10-19",
+    "ora": "20:45"
+   }
   ]
  }
 }
