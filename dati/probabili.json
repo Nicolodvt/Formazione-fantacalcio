@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-20T12:28:52.212Z",
+ "generato": "2026-10-20T22:01:02.049Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 8,
  "giornateDiscordi": [
@@ -244,7 +244,7 @@
    "nome": "De Roon",
    "squadra": "Roma",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -362,15 +362,6 @@
    "squadra": "Bologna",
    "ruolo": "D",
    "pct": 30,
-   "titolare": false,
-   "incerto": true
-  },
-  "530": {
-   "id": 530,
-   "nome": "Pellegrini Lo.",
-   "squadra": "Roma",
-   "ruolo": "C",
-   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -982,9 +973,9 @@
    "nome": "N'Dicka",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 65,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4360": {
    "id": 4360,
@@ -1171,7 +1162,7 @@
    "nome": "McTominay",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1180,7 +1171,7 @@
    "nome": "Hermoso",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1522,7 +1513,7 @@
    "nome": "Ricci S.",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2179,7 +2170,7 @@
    "nome": "Pisilli",
    "squadra": "Roma",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -3241,16 +3232,7 @@
    "nome": "Addai",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
-  },
-  "7129": {
-   "id": 7129,
-   "nome": "Rodriguez Je.",
-   "squadra": "Como",
-   "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -4616,12 +4598,12 @@
    {
     "id": 4317,
     "nome": "N'Dicka",
-    "pct": 55
+    "pct": 65
    },
    {
     "id": 4705,
     "nome": "Balerdi",
-    "pct": 45
+    "pct": 35
    }
   ],
   [
@@ -4643,8 +4625,8 @@
     "pct": 60
    },
    {
-    "id": 530,
-    "nome": "Pellegrini Lo.",
+    "id": 779,
+    "nome": "Cristante",
     "pct": 40
    }
   ],
@@ -4943,6 +4925,11 @@
    "tipo": "infortunato",
    "nota": "lesione muscolare al gemello del polpaccio destro, rientro da inizio novembre"
   },
+  "530": {
+   "id": 530,
+   "tipo": "infortunato",
+   "nota": "noie muscolari alla coscia, da valutare"
+  },
   "779": {
    "id": 779,
    "tipo": "dubbio",
@@ -4986,7 +4973,7 @@
   "2640": {
    "id": 2640,
    "tipo": "infortunato",
-   "nota": "risentimento muscolare alla gamba, da valutare"
+   "nota": "distrazione muscolare al retto femorale della coscia sinistra, rientro metà novembre"
   },
   "2724": {
    "id": 2724,
@@ -5086,7 +5073,7 @@
   "5504": {
    "id": 5504,
    "tipo": "infortunato",
-   "nota": "problema muscolare alla coscia destra, da valutare"
+   "nota": "lesione muscolare al bicipite femorale della coscia destra, rientro dall'inizio di novembre"
   },
   "5507": {
    "id": 5507,
@@ -5116,7 +5103,7 @@
   "5641": {
    "id": 5641,
    "tipo": "infortunato",
-   "nota": "problema muscolare alla gamba, out contro il Sassuolo"
+   "nota": "problema muscolare alla gamba, rientro da inizio novembre"
   },
   "5678": {
    "id": 5678,
@@ -5233,6 +5220,11 @@
    "tipo": "infortunato",
    "nota": "rottura del legamento crociato, rientro da fine ottobre"
   },
+  "7129": {
+   "id": 7129,
+   "tipo": "infortunato",
+   "nota": "problema fisico, out contro Sassuolo"
+  },
   "7146": {
    "id": 7146,
    "tipo": "dubbio",
@@ -5246,7 +5238,7 @@
   "7223": {
    "id": 7223,
    "tipo": "infortunato",
-   "nota": "lesione distrattiva al polpaccio, rientro da inizio novembre"
+   "nota": "lesione distrattiva al polpaccio, rientro da fine ottobre"
   },
   "7253": {
    "id": 7253,
