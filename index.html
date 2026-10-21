@@ -371,6 +371,10 @@
   .btn-danger{ background:rgba(240,99,95,.16); color:#F5928F; border:1px solid rgba(240,99,95,.35); }
   .btn-row{ display:flex; gap:9px; }
   .btn-row .btn{ flex:1; }
+  /* Notifiche: fino a quattro bottoni (21/10). Tutti su una riga a 375px andavano a capo su tre
+     righe di testo ciascuno: qui due per riga. */
+  #notifBtns{ flex-wrap:wrap; }
+  #notifBtns .btn{ flex:1 1 40%; }
 
   /* Secondo livello di conferma per le due azioni facili da toccare per sbaglio (cancella
      rosa, disattiva notifiche): il confirm() del sistema si tocca via per abitudine, questo
@@ -2589,7 +2593,7 @@ function mostraStatoNotifiche(r, appenaAttivato){
     statoEl.innerHTML = (appenaAttivato
         ? '<b>Attivato e collegato.</b> Il telefono e\' registrato sul sito: non serve copiare niente. '
         : 'Promemoria attivo e collegato a questo telefono. ') +
-      (r.rifatto && !appenaAttivato ? 'Ricollegato adesso: l\'indirizzo di prima non funzionava piu\'. ' : '') +
+      (r.rifatto && !appenaAttivato ? 'Ricollegato adesso con un indirizzo nuovo. ' : '') +
       (ric
         ? 'Ultima notifica arrivata: <b>'+esc(quandoLeggibile(ric.quando))+'</b>' +
           (ric.esito && ric.esito!=='mostrata' ? ' ('+esc(ric.esito)+')' : '') + '.'
@@ -2600,10 +2604,10 @@ function mostraStatoNotifiche(r, appenaAttivato){
        testo da incollare a mano nel secret. */
     statoEl.innerHTML = 'Promemoria attivo su questo dispositivo, ma <b>il sito non risponde</b>: il ' +
       'collegamento si controlla da solo alla prossima apertura con la rete. Se il sito restasse giu\', ' +
-      'copia l\'indirizzo qui sotto nel secret <b>PUSH_SUBSCRIPTION</b> su GitHub ' +
+      'tocca Copia indirizzo e incollalo nel secret <b>PUSH_SUBSCRIPTION</b> su GitHub ' +
       '(repository → Settings → Secrets and variables → Actions).';
   }
-  btnEl.innerHTML = '<button class="btn btn-sec" id="btnNotifProva">Prova su questo telefono</button>' +
+  btnEl.innerHTML = '<button class="btn btn-sec" id="btnNotifProva">Prova notifica</button>' +
     '<button class="btn btn-sec" id="btnNotifRicollega">Ricollega</button>' +
     (esito==='collegato' ? '' : '<button class="btn btn-sec" id="btnCopiaSub">Copia indirizzo</button>') +
     '<button class="btn btn-sec" id="btnNotifOff">Disattiva</button>';
