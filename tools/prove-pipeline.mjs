@@ -142,6 +142,7 @@ function preparaBancoPromemoria() {
       static now() { return T; }
     };
     globalThis.fetch = async (url, opz) => {
+      new URL(url);   // come il fetch vero: un indirizzo senza schema non parte (21/10)
       if (!String(url).includes('/notifiche')) return { ok: true, json: async () => ({ schierato: process.env.FINTO_SCHIERATO === '1' }) };
       if (opz && opz.method === 'POST') {
         if (!process.env.FINTO_SITO || process.env.FINTO_POST_KO) return { ok: false, status: 404 };
@@ -299,6 +300,12 @@ async function provePromemoria() {
     const m2 = giroPromemoria(dir, '2026-10-10T06:30Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410' });
     verifica('  giro dopo, ancora morto: verde, segnalato di nuovo', m2.codice === 0 && segnalazioni(dir).length === 2, m2.uscita.trim());
     azzera(dir, G6);
+    giroPromemoria(dir, '2026-10-08T13:00Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410' });
+    giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_SITO: sito(null) });
+    const m5 = giroPromemoria(dir, '2026-10-10T06:30Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410' });
+    verifica('  morto, poi ricollegato, poi morto di nuovo nella stessa giornata: seconda email',
+      m5.codice === 1 && /::error::.*Si ricollega da solo/.test(m5.uscita), m5.uscita.trim());
+    azzera(dir, G6);
     const m3 = giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410', FINTO_POST_KO: '1' });
     verifica('  segnalazione non riuscita: l email dice di toccare Ricollega',
       m3.codice === 1 && /::error::.*Segnalazione al sito non riuscita.*Ricollega/.test(m3.uscita), m3.uscita.trim());
@@ -306,6 +313,14 @@ async function provePromemoria() {
     const m4 = giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_PUSH_ESITO: '410' });
     verifica('  morto quello del secret (sito giu): niente segnalazione, motivo del sito nell email',
       m4.codice === 1 && segnalazioni(dir).length === 0 && /::error::.*risponde 404/.test(m4.uscita), m4.uscita.trim());
+
+    /* 5d-bis. NETLIFY_SITE_URL senza "https://" (il guasto vero dal 16/10 al 21/10): si usa lo
+       stesso l'abbonamento del sito, non il secret. */
+    azzera(dir, G6);
+    const u1s = giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_SITO: sito(null), NETLIFY_SITE_URL: 'finto.example/' });
+    verifica('indirizzo del sito senza https://: abbonamento del sito usato lo stesso',
+      u1s.codice === 0 && spediti(dir).length === 1 && spediti(dir)[0].endpoint === SUB_SITO.endpoint &&
+      !/::warning::/.test(u1s.uscita), u1s.uscita.trim());
 
     /* 5e. Promemoria spenti dall'app (21/10): niente invio, neanche al secret, e niente rosso. */
     azzera(dir, G6);

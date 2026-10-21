@@ -12,6 +12,20 @@
    giorno si rigenera la coppia, va cambiata in TUTTI i posti insieme. */
 export const VAPID_PUBLIC_KEY = 'BHWwgaSHRz5TzxveQbvlZ6Cx__SgARqi_-hEXlD1g6Av-gYH_Y8cq48pY6-Zb2bcLlLNgDWwdFrDGn5M00ICRjM';
 
+/* L'indirizzo del sito dalla variabile NETLIFY_SITE_URL, scritto bene (21/10). Dal 16/10 la
+   variabile era senza "https://": fetch() rifiutava l'URL prima ancora di partire ("Failed to
+   parse URL"), quindi la Action non ha mai letto l'abbonamento dal sito (e ha ripiegato sul
+   secret scaduto: i 410 del 20/10) ne' saputo se avevi schierato. Ora lo schema si aggiunge da
+   solo. Stringa vuota se la variabile manca. */
+export function urlSito(grezzo) {
+  let u = String(grezzo || '').trim().replace(/\/+$/, '');
+  if (u && !/^https?:\/\//i.test(u)) {
+    console.log(`NETLIFY_SITE_URL senza "https://": uso https://${u} (conviene correggere la variabile).`);
+    u = 'https://' + u;
+  }
+  return u;
+}
+
 /* Risposte del servizio push che vogliono dire "questo abbonamento non funziona piu', riprovare
    non serve": 404/410 scaduto o revocato, 401/403 chiavi VAPID che non corrispondono. */
 export const ABBONAMENTO_DA_RIFARE = [401, 403, 404, 410];
