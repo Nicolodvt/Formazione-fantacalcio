@@ -1,7 +1,12 @@
 {
  "giornata": 8,
  "inviate": {
-  "72h": "abbonamento-scaduto"
+  "72h": "abbonamento-scaduto",
+  "48h": "2026-10-21T19:56:13.752Z"
  },
- "abbonamentoScadutoSegnalato": true
+ "ultimoInvio": {
+  "id": "2026-10-21T19:56:13.752Z",
+  "quando": "2026-10-21T19:56:13.752Z",
+  "fonte": "sito"
+ }
 }
