@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { primaPartita, infrasettimanale } from './calendario.mjs';
 import {
-  VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, segnalaScaduto, rimedioScaduto
+  VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, segnalaScaduto, rimedioScaduto, urlSito
 } from './notifiche.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
@@ -33,7 +33,7 @@ function leggiJson(percorso, fallback) {
 async function main() {
   const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
   const SUB_RAW = process.env.PUSH_SUBSCRIPTION;
-  const SITO_URL = process.env.NETLIFY_SITE_URL || '';
+  const SITO_URL = urlSito(process.env.NETLIFY_SITE_URL);
 
   if (!VAPID_PRIVATE_KEY || (!SUB_RAW && !SITO_URL)) {
     console.log('Notifiche non configurate (secret o indirizzo del sito mancanti): salto, non e un errore.');
