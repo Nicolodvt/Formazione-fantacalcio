@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-20T22:01:02.049Z",
+ "generato": "2026-10-21T12:51:10.069Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 8,
  "giornateDiscordi": [
@@ -626,15 +626,6 @@
    "titolare": false,
    "incerto": true
   },
-  "2169": {
-   "id": 2169,
-   "nome": "Rodriguez R.",
-   "squadra": "Torino",
-   "ruolo": "D",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
-  },
   "2170": {
    "id": 2170,
    "nome": "Milinkovic-Savic V.",
@@ -765,6 +756,15 @@
    "id": 2765,
    "nome": "Odgaard",
    "squadra": "Bologna",
+   "ruolo": "C",
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
+  },
+  "2766": {
+   "id": 2766,
+   "nome": "Zaniolo",
+   "squadra": "Udinese",
    "ruolo": "C",
    "pct": 50,
    "titolare": false,
@@ -919,7 +919,7 @@
    "nome": "Zambo Anguissa",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1126,9 +1126,9 @@
    "nome": "Badiashile",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 85,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4705": {
    "id": 4705,
@@ -1162,7 +1162,7 @@
    "nome": "McTominay",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -1183,15 +1183,6 @@
    "pct": 50,
    "titolare": false,
    "incerto": true
-  },
-  "4856": {
-   "id": 4856,
-   "nome": "Chukwueze",
-   "squadra": "Milan",
-   "ruolo": "C",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
   },
   "4867": {
    "id": 4867,
@@ -1351,7 +1342,7 @@
    "nome": "Ismajli",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 60,
    "titolare": true,
    "incerto": true
   },
@@ -1405,7 +1396,7 @@
    "nome": "Gilmour",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1415,7 +1406,7 @@
    "squadra": "Milan",
    "ruolo": "D",
    "pct": 60,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "5295": {
@@ -1423,7 +1414,7 @@
    "nome": "Musah",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": true,
    "incerto": true
   },
@@ -2368,9 +2359,9 @@
    "nome": "Ramos G.",
    "squadra": "Milan",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "6398": {
    "id": 6398,
@@ -2467,7 +2458,7 @@
    "nome": "Bartesaghi",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -2494,7 +2485,7 @@
    "nome": "Camarda",
    "squadra": "Milan",
    "ruolo": "A",
-   "pct": 30,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3376,7 +3367,7 @@
    "nome": "Jashari",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -3424,6 +3415,15 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
+  },
+  "7223": {
+   "id": 7223,
+   "nome": "Vergara",
+   "squadra": "Napoli",
+   "ruolo": "C",
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
   },
   "7232": {
    "id": 7232,
@@ -3952,7 +3952,7 @@
    "nome": "Comert",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 35,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4285,7 +4285,7 @@
    "nome": "Hutchinson",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -4430,12 +4430,12 @@
    {
     "id": 5010,
     "nome": "Ismajli",
-    "pct": 55
+    "pct": 60
    },
    {
-    "id": 2169,
-    "nome": "Rodriguez R.",
-    "pct": 45
+    "id": 7526,
+    "nome": "Comert",
+    "pct": 40
    }
   ],
   [
@@ -4556,18 +4556,6 @@
     "id": 6677,
     "nome": "Adzic",
     "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 4664,
-    "nome": "Badiashile",
-    "pct": 60
-   },
-   {
-    "id": 6638,
-    "nome": "Marin R.",
-    "pct": 40
    }
   ],
   [
@@ -4908,13 +4896,37 @@
   ],
   [
    {
+    "id": 5273,
+    "nome": "Estupinan",
+    "pct": 60
+   },
+   {
+    "id": 6496,
+    "nome": "Bartesaghi",
+    "pct": 40
+   }
+  ],
+  [
+   {
     "id": 5295,
     "nome": "Musah",
+    "pct": 60
+   },
+   {
+    "id": 4199,
+    "nome": "Loftus-Cheek",
+    "pct": 40
+   }
+  ],
+  [
+   {
+    "id": 6397,
+    "nome": "Ramos G.",
     "pct": 55
    },
    {
-    "id": 5273,
-    "nome": "Estupinan",
+    "id": 6519,
+    "nome": "Camarda",
     "pct": 45
    }
   ]
@@ -4955,6 +4967,11 @@
    "tipo": "infortunato",
    "nota": "lesione di primo grado al bicipite femorale della coscia destra, rientro dalla prima metà di novembre"
   },
+  "2169": {
+   "id": 2169,
+   "tipo": "infortunato",
+   "nota": "lesione tendinea di basso grado ai muscoli flessori della coscia sinistra, out contro il Monza"
+  },
   "2188": {
    "id": 2188,
    "tipo": "infortunato",
@@ -4992,8 +5009,8 @@
   },
   "2766": {
    "id": 2766,
-   "tipo": "infortunato",
-   "nota": "lesione muscolare al bicipite femorale destro, rientro dalla fine di ottobre"
+   "tipo": "dubbio",
+   "nota": "lesione muscolare al bicipite femorale destro, in dubbio impiego dal 1' contro Milan"
   },
   "4177": {
    "id": 4177,
@@ -5039,6 +5056,11 @@
    "id": 4845,
    "tipo": "infortunato",
    "nota": "risentimento muscolare al flessore della gamba sinistra, out contro il Genoa"
+  },
+  "4856": {
+   "id": 4856,
+   "tipo": "infortunato",
+   "nota": "problema all'anca, da valutare per Udine"
   },
   "4892": {
    "id": 4892,
@@ -5155,6 +5177,11 @@
    "tipo": "infortunato",
    "nota": "problema al ginocchio, da valutare rientro da fine ottobre"
   },
+  "6397": {
+   "id": 6397,
+   "tipo": "dubbio",
+   "nota": "sovraccarico muscolare al polpaccio, in dubbio dal 1' a Udine"
+  },
   "6434": {
    "id": 6434,
    "tipo": "infortunato",
@@ -5237,8 +5264,8 @@
   },
   "7223": {
    "id": 7223,
-   "tipo": "infortunato",
-   "nota": "lesione distrattiva al polpaccio, rientro da fine ottobre"
+   "tipo": "dubbio",
+   "nota": "lesione distrattiva al polpaccio, in dubbio convocazione contro la Roma"
   },
   "7253": {
    "id": 7253,
