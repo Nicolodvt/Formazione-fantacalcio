@@ -24,7 +24,8 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { primaPartita, infrasettimanale } from './calendario.mjs';
 import {
-  VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, statoSito
+  VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, statoSito,
+  segnalaScaduto, rimedioScaduto
 } from './notifiche.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
@@ -74,8 +75,8 @@ async function controllaRicevuta(stato, sitoUrl, ora) {
   if (ora.getTime() - Date.parse(u.quando) > ORE_SENZA_RICEVUTA * 3600000 && !stato.ricevutaSegnalata) {
     stato.ricevutaSegnalata = true;
     console.log(`::error::Il promemoria del ${u.id} e' stato accettato dal servizio push ma il telefono non ha ` +
-      `confermato di averlo ricevuto in ${ORE_SENZA_RICEVUTA} ore. Apri l app (Impostazioni -> Notifiche): ` +
-      'deve dire "collegato a questo telefono"; altrimenti Disattiva e poi Attiva.');
+      `confermato di averlo ricevuto in ${ORE_SENZA_RICEVUTA} ore. Apri l app con la rete (Impostazioni -> Notifiche): ` +
+      'deve dire "collegato a questo telefono"; se no tocca Ricollega.');
     process.exitCode = 1;
     return true;
   }
@@ -178,7 +179,7 @@ async function main() {
      una notifica, senza soglie e senza toccare lo stato. Unico modo di sapere davvero che la
      catena arriva fino al telefono: 201 e notifica = tutto bene; 404/410 = abbonamento da rifare. */
   if (process.env.PROVA === 'true') {
-    const { sub, fonte, motivo } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
+    const { sub, fonte, motivo, sito, perche } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
     if (!sub) { console.log('::error::' + motivo); process.exitCode = 1; return; }
     const { default: webpush } = await import('web-push');
     const id = 'prova-' + new Date().toISOString();
@@ -191,11 +192,10 @@ async function main() {
       }));
       console.log(`Notifica di prova accettata dal servizio push (${r && r.statusCode}). Controlla il telefono.`);
     } catch (err) {
+      const morto = ABBONAMENTO_DA_RIFARE.includes(err.statusCode);
+      const segnalato = morto && fonte === 'sito' && await segnalaScaduto(SITO_URL, sub.endpoint, err.statusCode);
       console.log(`::error::Notifica di prova rifiutata (${err.statusCode || err.message}). ` +
-        (ABBONAMENTO_DA_RIFARE.includes(err.statusCode)
-          ? (fonte === 'sito'
-            ? 'Abbonamento scaduto: apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva.'
-            : 'Abbonamento scaduto: riattiva le notifiche dall app e aggiorna il secret PUSH_SUBSCRIPTION.')
+        (morto ? 'Indirizzo del telefono non piu valido. ' + rimedioScaduto(fonte, sito, perche, segnalato)
           : 'Controlla la chiave VAPID_PRIVATE_KEY.'));
       process.exitCode = 1;
       return;
@@ -219,7 +219,7 @@ async function main() {
     }
     console.log('::error::Nessuna conferma dal telefono: la notifica e\' stata accettata dal servizio push ma il telefono ' +
       'non l\'ha ricevuta (spento, senza rete, o l app aperta da un altro indirizzo). Se il telefono era acceso e online, ' +
-      'apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva, e rilancia la prova.');
+      'apri l app, Impostazioni -> Notifiche, tocca Ricollega e rilancia la prova.');
     process.exitCode = 1;
     return;
   }
@@ -293,12 +293,12 @@ async function main() {
     return;
   }
 
-  const { sub: subscription, fonte, motivo } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
+  const { sub: subscription, fonte, motivo, perche, sito, disattivato } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
   if (!subscription) {
     /* Secret rotto: guasto vero. Nessun abbonamento da nessuna parte (sito giu', app non ancora
-       collegata): avviso, si riprova al giro dopo. */
+       collegata): avviso, si riprova al giro dopo. Spenti dall'utente: solo una riga. */
     const grave = /JSON/.test(motivo);
-    console.log((grave ? '::error::' : '::warning::') + motivo);
+    console.log((grave ? '::error::' : disattivato ? '' : '::warning::') + motivo);
     if (grave) process.exitCode = 1;
     return;
   }
@@ -347,11 +347,13 @@ async function main() {
          resta scritto nel file di stato e il workflow va in rosso UNA volta per giornata (il
          flag riparte da zero con la giornata nuova): un'email sola, non una per soglia. */
       segnaDovute('abbonamento-scaduto');
+      /* A ogni giro, non solo al primo: se l'app nel frattempo ha scritto un indirizzo nuovo la
+         funzione ignora la segnalazione sul vecchio (21/10). */
+      const segnalato = fonte === 'sito' && await segnalaScaduto(SITO_URL, subscription.endpoint, err.statusCode);
       if (!stato.abbonamentoScadutoSegnalato) {
         stato.abbonamentoScadutoSegnalato = true;
         console.log(`::error::Promemoria non consegnato: il servizio push risponde ${err.statusCode} ` +
-          '(abbonamento scaduto o chiavi cambiate). Apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva' +
-          (fonte === 'sito' ? '.' : ', e aggiorna il secret PUSH_SUBSCRIPTION (o pubblica l app nuova, che lo registra da sola).'));
+          '(indirizzo del telefono non piu valido). ' + rimedioScaduto(fonte, sito, perche, segnalato));
         process.exitCode = 1;
       } else {
         console.log(`Abbonamento ancora non valido (${err.statusCode}), gia segnalato per questa giornata.`);

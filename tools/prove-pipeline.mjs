@@ -130,7 +130,10 @@ function preparaBancoPromemoria() {
         fs.appendFileSync(process.env.FINTO_PUSH_LOG, JSON.stringify({ ora: new Date().toISOString(), endpoint: sub.endpoint, ...JSON.parse(payload) }) + '\\n');
       }
     };`);
+  /* Il sito finto (21/10) registra anche le POST (segnalazioni "scaduto") in post.jsonl; una
+     POST riesce solo se il sito "c'e'" (FINTO_SITO) e FINTO_POST_KO non e' impostato. */
   writeFileSync(join(dir, 'orologio.mjs'), `
+    import { appendFileSync } from 'node:fs';
     process.env.TZ = 'UTC';
     const T = Date.parse(process.env.ORA_FINTA);
     const Vero = Date;
@@ -138,9 +141,15 @@ function preparaBancoPromemoria() {
       constructor(...a) { if (a.length) super(...a); else super(T); }
       static now() { return T; }
     };
-    globalThis.fetch = async (url) => String(url).includes('/notifiche')
-      ? (process.env.FINTO_SITO ? { ok: true, json: async () => JSON.parse(process.env.FINTO_SITO) } : { ok: false, status: 404 })
-      : { ok: true, json: async () => ({ schierato: process.env.FINTO_SCHIERATO === '1' }) };
+    globalThis.fetch = async (url, opz) => {
+      if (!String(url).includes('/notifiche')) return { ok: true, json: async () => ({ schierato: process.env.FINTO_SCHIERATO === '1' }) };
+      if (opz && opz.method === 'POST') {
+        if (!process.env.FINTO_SITO || process.env.FINTO_POST_KO) return { ok: false, status: 404 };
+        appendFileSync(process.env.FINTO_POST_LOG, opz.body + '\\n');
+        return { ok: true, json: async () => ({ ok: true }) };
+      }
+      return process.env.FINTO_SITO ? { ok: true, json: async () => JSON.parse(process.env.FINTO_SITO) } : { ok: false, status: 404 };
+    };
   `);
   return dir;
 }
@@ -150,7 +159,8 @@ function giroPromemoria(dir, oraIso, extraEnv = {}) {
     ['--import', pathToFileURL(join(dir, 'orologio.mjs')).href, join(dir, 'tools', 'promemoria-scadenza.mjs')], {
       env: {
         ...process.env, ORA_FINTA: oraIso, VAPID_PRIVATE_KEY: 'finta', PUSH_SUBSCRIPTION: '{}',
-        NETLIFY_SITE_URL: 'https://finto.example', FINTO_PUSH_LOG: join(dir, 'spediti.jsonl'), ATTESA_RIPROVA_MS: '0', ATTESA_RICEVUTA_PAUSA_MS: '0', ...extraEnv
+        NETLIFY_SITE_URL: 'https://finto.example', FINTO_PUSH_LOG: join(dir, 'spediti.jsonl'), FINTO_POST_LOG: join(dir, 'post.jsonl'),
+        ATTESA_RIPROVA_MS: '0', ATTESA_RICEVUTA_PAUSA_MS: '0', ...extraEnv
       },
       encoding: 'utf8'
     });
@@ -159,10 +169,11 @@ function giroPromemoria(dir, oraIso, extraEnv = {}) {
 
 function azzera(dir, prob) {
   writeFileSync(join(dir, 'dati', 'probabili.json'), JSON.stringify(prob));
-  for (const f of ['dati/scadenza-promemoria.json', 'spediti.jsonl']) rmSync(join(dir, f), { force: true });
+  for (const f of ['dati/scadenza-promemoria.json', 'spediti.jsonl', 'post.jsonl']) rmSync(join(dir, f), { force: true });
 }
-const spediti = (dir) => existsSync(join(dir, 'spediti.jsonl'))
-  ? readFileSync(join(dir, 'spediti.jsonl'), 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse) : [];
+const righeJson = (file) => existsSync(file) ? readFileSync(file, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse) : [];
+const spediti = (dir) => righeJson(join(dir, 'spediti.jsonl'));
+const segnalazioni = (dir) => righeJson(join(dir, 'post.jsonl'));
 const statoPromemoria = (dir) => JSON.parse(readFileSync(join(dir, 'dati', 'scadenza-promemoria.json'), 'utf8'));
 
 async function provePromemoria() {
@@ -276,6 +287,33 @@ async function provePromemoria() {
     const r8 = giroPromemoria(dir, '2026-10-09T13:30Z');
     verifica('    ...anche dopo un giorno senza ricevute', r8.codice === 0, r8.uscita.trim());
 
+    /* 5d. Indirizzo del sito morto (21/10): si segna "scaduto" sul sito, cosi' l'app se ne fa uno
+       nuovo da sola; l'email dice che basta aprire l'app, non piu' "Disattiva e poi Attiva". */
+    azzera(dir, G6);
+    const m1 = giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410' });
+    const sg1 = segnalazioni(dir);
+    verifica('indirizzo del sito morto (410): segnalato al sito come scaduto, rosso una volta',
+      m1.codice === 1 && sg1.length === 1 && sg1[0].tipo === 'scaduto' && sg1[0].endpoint === SUB_SITO.endpoint &&
+      sg1[0].codice === 410 && /::error::.*Si ricollega da solo: basta aprire l app/.test(m1.uscita) && !/Disattiva e poi/.test(m1.uscita),
+      m1.uscita.trim() + ' ' + JSON.stringify(sg1));
+    const m2 = giroPromemoria(dir, '2026-10-10T06:30Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410' });
+    verifica('  giro dopo, ancora morto: verde, segnalato di nuovo', m2.codice === 0 && segnalazioni(dir).length === 2, m2.uscita.trim());
+    azzera(dir, G6);
+    const m3 = giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410', FINTO_POST_KO: '1' });
+    verifica('  segnalazione non riuscita: l email dice di toccare Ricollega',
+      m3.codice === 1 && /::error::.*Segnalazione al sito non riuscita.*Ricollega/.test(m3.uscita), m3.uscita.trim());
+    azzera(dir, G6);
+    const m4 = giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_PUSH_ESITO: '410' });
+    verifica('  morto quello del secret (sito giu): niente segnalazione, motivo del sito nell email',
+      m4.codice === 1 && segnalazioni(dir).length === 0 && /::error::.*risponde 404/.test(m4.uscita), m4.uscita.trim());
+
+    /* 5e. Promemoria spenti dall'app (21/10): niente invio, neanche al secret, e niente rosso. */
+    azzera(dir, G6);
+    const d1 = giroPromemoria(dir, '2026-10-09T13:00Z',
+      { FINTO_SITO: JSON.stringify({ abbonamento: null, ricevuta: null, disattivato: '2026-10-08T09:00:00Z' }) });
+    verifica('promemoria disattivati dall app: niente spedito, verde, nessun avviso',
+      d1.codice === 0 && spediti(dir).length === 0 && !/::(warning|error)::/.test(d1.uscita) && /disattivati/.test(d1.uscita), d1.uscita.trim());
+
     /* 6. Giro arrivato dopo la scadenza: niente promemoria. */
     azzera(dir, G6);
     const c = giroPromemoria(dir, '2026-10-10T13:10Z');
@@ -310,7 +348,7 @@ async function provePromemoria() {
     azzera(dir, G6);
     const p2 = giroPromemoria(dir, '2026-09-27T10:00Z', { PROVA: 'true', FINTO_PUSH_ESITO: '410' });
     verifica('  prova con abbonamento scaduto: giro rosso e spiegazione nel log',
-      p2.codice === 1 && /::error::.*Abbonamento scaduto/.test(p2.uscita), p2.uscita.trim());
+      p2.codice === 1 && /::error::.*Indirizzo del telefono non piu valido/.test(p2.uscita), p2.uscita.trim());
     azzera(dir, G6);
     const SUB_P = { endpoint: 'https://web.push.apple.com/telefono', keys: { p256dh: 'x', auth: 'y' } };
     const p3 = giroPromemoria(dir, '2026-09-27T10:00Z', { PROVA: 'true', FINTO_SITO: JSON.stringify({ abbonamento: SUB_P,
@@ -321,6 +359,12 @@ async function provePromemoria() {
     const p4 = giroPromemoria(dir, '2026-09-27T10:00Z', { PROVA: 'true', FINTO_SITO: JSON.stringify({ abbonamento: SUB_P, ricevuta: null }) });
     verifica('  prova senza ricevuta: giro rosso, "Nessuna conferma dal telefono"',
       p4.codice === 1 && /Nessuna conferma dal telefono/.test(p4.uscita), p4.uscita.trim());
+    azzera(dir, G6);
+    const p5 = giroPromemoria(dir, '2026-09-27T10:00Z', { PROVA: 'true', FINTO_PUSH_ESITO: '410',
+      FINTO_SITO: JSON.stringify({ abbonamento: SUB_P, ricevuta: null }) });
+    verifica('  prova su un indirizzo del sito morto: segnalato, "si ricollega da solo"',
+      p5.codice === 1 && segnalazioni(dir).length === 1 && segnalazioni(dir)[0].endpoint === SUB_P.endpoint &&
+      /Si ricollega da solo/.test(p5.uscita), p5.uscita.trim());
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

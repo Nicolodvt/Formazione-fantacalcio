@@ -14,7 +14,9 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { primaPartita, infrasettimanale } from './calendario.mjs';
-import { VAPID_PUBLIC_KEY, eTransitorio, inviaConRiprova, abbonamentoDaUsare } from './notifiche.mjs';
+import {
+  VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, segnalaScaduto, rimedioScaduto
+} from './notifiche.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
 const FILE_PROB = join(QUI, '..', 'dati', 'probabili.json');
@@ -56,11 +58,11 @@ async function main() {
     return;
   }
 
-  const { sub: subscription, motivo } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
+  const { sub: subscription, fonte, motivo, perche, sito, disattivato } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
   if (!subscription) {
     /* Come in promemoria-scadenza.mjs: rosso solo per un secret rotto, altrimenti si riprova. */
     const grave = /JSON/.test(motivo);
-    console.log((grave ? '::error::' : '::warning::') + motivo);
+    console.log((grave ? '::error::' : disattivato ? '' : '::warning::') + motivo);
     if (grave) process.exitCode = 1;
     return;
   }
@@ -118,15 +120,16 @@ async function main() {
     console.log('Promemoria spedito.');
   } catch (err) {
     /* 404/410 vuol dire che l'abbonamento non e' piu' valido (disiscritto, endpoint
-       cambiato): non e' un guasto dello script, serve solo ri-attivare dall'app e
-       aggiornare il secret. Qualsiasi altro errore invece e' un guasto vero. */
+       cambiato): non e' un guasto dello script. Qualsiasi altro errore invece e' un guasto vero. */
     /* 401/403 (chiavi che non corrispondono piu') hanno la stessa cura di 404/410. Prima finiva
        solo nel log: nessuna email, e il telefono smetteva di ricevere senza che si sapesse
        perche'. Ora il passo va in rosso — una volta per giornata, perche' sotto la giornata
        viene comunque segnata come avvisata e non si riprova. */
-    if ([401, 403, 404, 410].includes(err.statusCode)) {
+    /* 21/10: l'indirizzo del sito si segna morto li', e l'app se ne fa uno nuovo da sola. */
+    if (ABBONAMENTO_DA_RIFARE.includes(err.statusCode)) {
+      const segnalato = fonte === 'sito' && await segnalaScaduto(SITO_URL, subscription.endpoint, err.statusCode);
       console.log(`::error::Avviso di giornata non consegnato: il servizio push risponde ${err.statusCode} ` +
-        '(abbonamento scaduto o chiavi cambiate). Apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva.');
+        '(indirizzo del telefono non piu valido). ' + rimedioScaduto(fonte, sito, perche, segnalato));
       process.exitCode = 1;
     } else if (eTransitorio(err)) {
       /* Niente scritto in dati/promemoria.json: l'avviso riparte al prossimo giro di dati.yml.
