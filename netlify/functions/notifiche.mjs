@@ -11,6 +11,12 @@
      l'esito. La Action confronta l'ultimo invio con l'ultima ricevuta: spedito ma mai arrivato
      diventa un giro rosso con la spiegazione, non piu' un silenzio.
 
+   - "scaduto" (21/10): la Action ha avuto 404/410 dall'abbonamento letto qui. L'app, alla prima
+     apertura, vede che il SUO indirizzo e' morto, se ne fa uno nuovo e lo riscrive: niente piu'
+     "Disattiva e poi Attiva" a mano (che anzi uccideva l'indirizzo che la Action conosceva).
+   - "disattivato" (21/10): l'utente ha spento i promemoria dall'app. La Action non spedisce e
+     non ripiega sul secret, invece di andare in rosso ogni settimana su un indirizzo spento.
+
    Nessuna autenticazione, stessa scelta di schierato.mjs. Leggere l'abbonamento non permette di
    mandare notifiche (serve la chiave VAPID privata, che sta solo nei secret di GitHub); il
    peggio che puo' fare un estraneo che scrive qui e' farti perdere i promemoria finche' l'app
@@ -36,7 +42,9 @@ export default async (req) => {
     return risposta({
       abbonamento: stato.abbonamento || null,
       abbonamentoAggiornato: stato.abbonamentoAggiornato || null,
-      ricevuta: stato.ricevuta || null
+      ricevuta: stato.ricevuta || null,
+      scaduto: stato.scaduto || null,
+      disattivato: stato.disattivato || null
     });
   }
 
@@ -51,6 +59,21 @@ export default async (req) => {
       if (!abbonamentoValido(a)) return risposta({ errore: 'abbonamento non valido' }, 400);
       stato.abbonamento = { endpoint: a.endpoint, keys: { p256dh: a.keys.p256dh, auth: a.keys.auth } };
       stato.abbonamentoAggiornato = new Date().toISOString();
+      delete stato.scaduto;
+      delete stato.disattivato;
+    } else if (tipo === 'scaduto' || tipo === 'disattivato') {
+      /* Vale solo per l'indirizzo registrato adesso: se nel frattempo l'app ne ha scritto uno
+         nuovo, una segnalazione sul vecchio non deve toccarlo. */
+      const e = corpo.endpoint;
+      if (typeof e !== 'string' || e.length > 1000) return risposta({ errore: 'endpoint non valido' }, 400);
+      if (!stato.abbonamento || stato.abbonamento.endpoint !== e) return risposta({ ok: true, ignorato: true });
+      if (tipo === 'scaduto') {
+        stato.scaduto = { endpoint: e, quando: new Date().toISOString(), codice: Number(corpo.codice) || null };
+      } else {
+        delete stato.abbonamento;
+        delete stato.scaduto;
+        stato.disattivato = new Date().toISOString();
+      }
     } else if (tipo === 'ricevuta') {
       if (typeof corpo.id !== 'string' || corpo.id.length > 40) return risposta({ errore: 'id non valido' }, 400);
       stato.ricevuta = {

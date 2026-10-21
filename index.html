@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  App Formazione — v0.7 (16/10/2026)
+  App Formazione — v0.8 (21/10/2026)
 
   Serve a decidere CHI SCHIERARE ogni giornata. E' la seconda meta' dell'app asta:
   quella compra, questa manda in campo.
@@ -9,6 +9,11 @@
   quirks mode.
 
   CHANGELOG
+  v0.8  Notifiche che si ricollegano da sole: quando la Action trova l'indirizzo del telefono
+        morto lo segna sul sito, e l'app alla prima apertura (o al ritorno in primo piano) se ne
+        fa uno nuovo e lo riscrive. Lo stesso se il browser ha perso l'iscrizione. Niente piu'
+        "Disattiva e poi Attiva"; "Ricollega" resta come ultima risorsa. Disattiva lo dice al
+        sito, cosi' la Action non va in rosso su promemoria spenti apposta.
   v0.7  Notifiche: il telefono registra da solo il proprio abbonamento sul sito (niente piu'
         copia-incolla nel secret GitHub, che da settembre puntava a un abbonamento che non
         riceveva nulla), conferma ogni notifica arrivata, e da Impostazioni si vede quando e'
@@ -1722,9 +1727,9 @@ function etaDati(){
 const el = (s)=> document.querySelector(s);
 const esc = (s)=> String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-function toast(msg){
+function toast(msg, ms){
   const t = el('#toast'); t.textContent = msg; t.classList.add('on');
-  clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove('on'), 2100);
+  clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove('on'), ms || 2100);
 }
 
 /* Secondo livello di conferma per azioni distruttive/facili da toccare per sbaglio (cancella
@@ -2310,21 +2315,49 @@ async function abbonamentoAttuale(){
   }catch(e){ return null; }
 }
 
-async function attivaNotifiche(){
-  const permesso = await Notification.requestPermission();
-  if(permesso !== 'granted') return null;
+/* Le notifiche le vuoi (21/10): segnato quando le attivi (o quando un'iscrizione c'e' gia'),
+   tolto quando le disattivi. Distingue "il browser ha perso l'iscrizione", che si rifa' da sola,
+   da "le hai spente tu", che resta cosi'. */
+const CHIAVE_NOTIF_VOLUTE = 'formazione-notifiche-volute';
+function notificheVolute(){ try{ return localStorage.getItem(CHIAVE_NOTIF_VOLUTE)==='1'; }catch(e){ return false; } }
+function segnaNotificheVolute(si){
+  try{ if(si) localStorage.setItem(CHIAVE_NOTIF_VOLUTE,'1'); else localStorage.removeItem(CHIAVE_NOTIF_VOLUTE); }catch(e){}
+}
+
+/* Un'iscrizione nuova al servizio push: con il permesso gia' dato non chiede niente. La vecchia
+   si cancella prima (con chiavi diverse subscribe() rifiuterebbe). null se non riesce. */
+async function nuovaIscrizione(vecchia){
   try{
     const reg = await navigator.serviceWorker.ready;
+    if(vecchia){ try{ await vecchia.unsubscribe(); }catch(e){} }
     return await reg.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
     });
-  }catch(e){ toast('Iscrizione non riuscita'); return null; }
+  }catch(e){ return null; }
+}
+
+async function attivaNotifiche(){
+  const permesso = await Notification.requestPermission();
+  if(permesso !== 'granted') return null;
+  segnaNotificheVolute(true);
+  const sub = await nuovaIscrizione(await abbonamentoAttuale());
+  if(!sub) toast('Iscrizione non riuscita');
+  return sub;
 }
 
 async function disattivaNotifiche(){
+  segnaNotificheVolute(false);
   const sub = await abbonamentoAttuale();
-  if(sub){ try{ await sub.unsubscribe(); }catch(e){} }
+  if(sub){
+    /* Il sito smette di darlo alla Action (21/10): prima la Action continuava a spedire a un
+       indirizzo spento, o ripiegava sul secret, e andava in rosso ogni settimana. */
+    try{
+      await fetch(FUNZIONE_NOTIFICHE, { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({tipo:'disattivato', endpoint: sub.endpoint}) });
+    }catch(e){}
+    try{ await sub.unsubscribe(); }catch(e){}
+  }
   try{ localStorage.removeItem(CHIAVE_ABB_INVIATO); }catch(e){}
 }
 
@@ -2347,16 +2380,54 @@ async function registraAbbonamento(sub){
   }catch(e){ return false; }
 }
 
-/* A ogni apertura: se l'abbonamento del telefono non e' quello gia' comunicato, o se e' passata
-   una settimana (il sito potrebbe averlo perso o sovrascritto), lo si riscrive. Silenzioso. */
-async function sincronizzaAbbonamento(){
-  if(!('Notification' in window) || Notification.permission!=='granted') return;
-  const sub = await abbonamentoAttuale();
-  if(!sub) return;
-  let inviato = null;
-  try{ inviato = JSON.parse(localStorage.getItem(CHIAVE_ABB_INVIATO)||'null'); }catch(e){}
-  if(inviato && inviato.endpoint===sub.endpoint && Date.now()-inviato.quando < 7*86400000) return;
-  await registraAbbonamento(sub);
+/* Il ricollegamento automatico (21/10), a ogni apertura e a ogni ritorno sull'app (al massimo
+   ogni mezz'ora, sincronizzaSeServe). Prima l'unica cura di un indirizzo morto era "Disattiva e
+   poi Attiva" a mano, e se il sito non riceveva quello nuovo il giro dopo era di nuovo rotto:
+   - nessuna iscrizione, ma le notifiche le volevi (il browser l'ha persa): se ne fa una nuova;
+   - il sito dice che il TUO indirizzo e' morto (la Action ha avuto 404/410): idem;
+   - il sito ha un indirizzo diverso, o nessuno: gli si scrive il tuo.
+   forza: rifare l'iscrizione comunque (bottone Ricollega). Le chiamate si mettono in fila: due
+   insieme (apertura + Impostazioni) farebbero due iscrizioni, e la prima morirebbe subito.
+   Restituisce {esito, sub, sito, rifatto} per Impostazioni -> Notifiche; mai un'eccezione. */
+let codaSincronia = Promise.resolve();
+function sincronizzaAbbonamento(forza){
+  const giro = codaSincronia.then(()=> sincronizza(!!forza)).catch(()=> ({esito:'non-riuscito'}));
+  codaSincronia = giro;
+  return giro;
+}
+
+async function sincronizza(forza){
+  if(!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) return {esito:'non-supportato'};
+  if(Notification.permission==='denied') return {esito:'bloccate'};
+  let sub = await abbonamentoAttuale();
+  if(sub) segnaNotificheVolute(true);   // anche chi le aveva attivate prima del 21/10
+  if(Notification.permission!=='granted') return {esito: notificheVolute() ? 'permesso-perso' : 'spente'};
+  if(!sub && !notificheVolute()) return {esito:'spente'};
+  let sito = await statoNotificheSito();
+  const morto = !!(sub && sito && sito.scaduto && sito.scaduto.endpoint===sub.endpoint);
+  let rifatto = false;
+  if(!sub || morto || forza){
+    const nuova = await nuovaIscrizione(sub);
+    if(!nuova) return {esito:'non-riuscito', sito};
+    sub = nuova; rifatto = true;
+  }
+  if(!sito && !rifatto) return {esito:'sito-giu', sub};
+  if(rifatto || !sito.abbonamento || sito.abbonamento.endpoint!==sub.endpoint){
+    if(!(await registraAbbonamento(sub))) return {esito:'sito-giu', sub, rifatto};
+    sito = await statoNotificheSito();
+  }
+  return {esito:'collegato', sub, sito, rifatto};
+}
+
+let ultimaSincronia = 0;
+function sincronizzaSeServe(){
+  if(!('serviceWorker' in navigator) || location.protocol.indexOf('http')!==0) return;
+  if(Date.now() - ultimaSincronia < 30*60000) return;
+  ultimaSincronia = Date.now();
+  navigator.serviceWorker.ready.then(()=> sincronizzaAbbonamento()).then(r=>{
+    /* Il telefono ha tolto il permesso: l'unica cosa che l'app non puo' rifare da sola. */
+    if(r && r.esito==='permesso-perso') toast('Promemoria spenti dal telefono: riattivali in Impostazioni → Notifiche', 5000);
+  }).catch(()=>{});
 }
 
 async function statoNotificheSito(){
@@ -2474,84 +2545,96 @@ function apriSettings(){
       if(s) s.textContent = 'Questo browser non supporta le notifiche push.';
       return;
     }
-    const sub = await abbonamentoAttuale();
-    const statoEl = el('#notifStato'), btnEl = el('#notifBtns');
-    if(!statoEl || !btnEl) return;   // il foglio potrebbe essere gia stato chiuso nel frattempo
-    if(Notification.permission==='denied'){
-      statoEl.innerHTML = '<b>Notifiche bloccate</b> nelle impostazioni del telefono per questa app: ' +
-        'riattivale da li\' (Impostazioni → App → Formazione → Notifiche), poi riapri questa pagina.';
-      btnEl.innerHTML = '';
-      return;
-    }
-    if(sub){
-      /* Lo stato vero (16/10): se il sito ha l'abbonamento di QUESTO telefono e quando e'
-         arrivata l'ultima notifica. Prima diceva "attivo" anche quando la Action spediva altrove. */
-      statoEl.textContent = 'Promemoria attivo su questo dispositivo. Controllo il collegamento...';
-      btnEl.innerHTML = '<button class="btn btn-sec" id="btnNotifProva">Prova su questo telefono</button>' +
-        '<button class="btn btn-sec" id="btnNotifOff">Disattiva</button>';
-      el('#btnNotifProva').addEventListener('click', async ()=>{
-        try{
-          const reg = await navigator.serviceWorker.ready;
-          await reg.showNotification('Prova notifica', {
-            body: 'Se la vedi, il telefono mostra le notifiche di questa app.',
-            tag: 'prova-formazione', data: {url:'./'}
-          });
-          toast('Notifica di prova mostrata');
-        }catch(e){ toast('Il telefono non la mostra: controlla i permessi'); }
-      });
-      el('#btnNotifOff').addEventListener('click', ()=>{
-        confermaPericolosa('Disattivare i promemoria su questo dispositivo?', async ()=>{
-          await disattivaNotifiche();
-          toast('Promemoria disattivato');
-          apriSettings();
-        });
-      });
-      let sito = await statoNotificheSito();
-      if(sito && (!sito.abbonamento || sito.abbonamento.endpoint!==sub.endpoint)){
-        await registraAbbonamento(sub);
-        sito = await statoNotificheSito();
-      }
-      const s2 = el('#notifStato');
-      if(!s2) return;
-      if(!sito){
-        s2.textContent = 'Promemoria attivo su questo dispositivo. Non riesco a raggiungere il sito ' +
-          'per controllare il collegamento: riprova con la rete.';
-      }else if(!sito.abbonamento || sito.abbonamento.endpoint!==sub.endpoint){
-        s2.innerHTML = '<b>Questo telefono non risulta registrato</b> sul sito: i promemoria andrebbero altrove. ' +
-          'Prova Disattiva e poi Attiva.';
-      }else{
-        const ric = sito.ricevuta;
-        s2.innerHTML = 'Promemoria attivo e collegato a questo telefono. ' + (ric
-          ? 'Ultima notifica arrivata: <b>'+esc(quandoLeggibile(ric.quando))+'</b>' +
-            (ric.esito && ric.esito!=='mostrata' ? ' ('+esc(ric.esito)+')' : '') + '.'
-          : 'Nessuna notifica ancora arrivata da quando e\' collegato.');
-      }
-    }else{
-      statoEl.textContent = 'Non ancora attivo su questo dispositivo.';
-      btnEl.innerHTML = '<button class="btn btn-primary" id="btnNotifOn">Attiva promemoria</button>';
-      el('#btnNotifOn').addEventListener('click', async ()=>{
-        const nuovaSub = await attivaNotifiche();
-        if(!nuovaSub){ toast('Permesso negato o non riuscito'); return; }
-        if(await registraAbbonamento(nuovaSub)){
-          statoEl.innerHTML = '<b>Attivato e collegato.</b> Il telefono e\' registrato sul sito: non serve ' +
-            'copiare niente. Riceverai l\'avviso di giornata e i promemoria prima della scadenza.';
-          btnEl.innerHTML = '';
-          return;
-        }
-        /* Sito non raggiungibile (offline, o app aperta da un indirizzo senza la funzione): resta
-           la strada di prima, il testo da incollare a mano nel secret. */
-        const json = JSON.stringify(nuovaSub.toJSON ? nuovaSub.toJSON() : nuovaSub);
-        statoEl.innerHTML = '<b>Attivato, ma il sito non risponde.</b> Riapri questa pagina con la rete ' +
-          'per collegarlo; in alternativa copia il testo qui sotto nel secret <b>PUSH_SUBSCRIPTION</b> su GitHub ' +
-          '(repository → Settings → Secrets and variables → Actions).';
-        btnEl.innerHTML = '<textarea id="boxSub" readonly style="height:100px">'+esc(json)+'</textarea>' +
-          '<button class="btn btn-sec" id="btnCopiaSub">Copia</button>';
-        el('#btnCopiaSub').addEventListener('click', ()=>{
-          navigator.clipboard.writeText(json).then(()=>toast('Copiato')).catch(()=>toast('Copia a mano'));
-        });
-      });
-    }
+    /* Lo stato vero (16/10) e, se serve, il ricollegamento (21/10): e' lo stesso controllo
+       dell'apertura dell'app, quindi aprire questa pagina basta a sistemare il collegamento. */
+    mostraStatoNotifiche(await sincronizzaAbbonamento());
   })();
+}
+
+/* Impostazioni -> Notifiche, da un esito di sincronizzaAbbonamento(). Niente piu' "Disattiva e
+   poi Attiva" come cura (21/10): l'indirizzo si rifa' da solo; "Ricollega" resta come ultima
+   risorsa, e non spegne niente. */
+function mostraStatoNotifiche(r, appenaAttivato){
+  const statoEl = el('#notifStato'), btnEl = el('#notifBtns');
+  if(!statoEl || !btnEl) return;   // il foglio potrebbe essere gia stato chiuso nel frattempo
+  const esito = r && r.esito;
+  if(esito==='bloccate'){
+    statoEl.innerHTML = '<b>Notifiche bloccate</b> nelle impostazioni del telefono per questa app: ' +
+      'riattivale da li\' (Impostazioni → App → Formazione → Notifiche), poi riapri questa pagina.';
+    btnEl.innerHTML = '';
+    return;
+  }
+  if(esito==='non-supportato'){
+    statoEl.textContent = 'Questo browser non supporta le notifiche push.';
+    btnEl.innerHTML = '';
+    return;
+  }
+  if(!r.sub){
+    statoEl.innerHTML = esito==='permesso-perso'
+      ? '<b>Promemoria spenti</b>: il telefono ha tolto il permesso a questa app. Tocca Attiva per riaverli.'
+      : esito==='non-riuscito'
+        ? '<b>Iscrizione non riuscita</b> (serve la rete). Riprova:'
+        : 'Non ancora attivo su questo dispositivo.';
+    btnEl.innerHTML = '<button class="btn btn-primary" id="btnNotifOn">' +
+      (esito==='non-riuscito' ? 'Riprova' : 'Attiva promemoria') + '</button>';
+    el('#btnNotifOn').addEventListener('click', async ()=>{
+      const nuovaSub = await attivaNotifiche();
+      if(!nuovaSub){ toast('Permesso negato o non riuscito'); mostraStatoNotifiche(await sincronizzaAbbonamento()); return; }
+      mostraStatoNotifiche(await sincronizzaAbbonamento(), true);
+    });
+    return;
+  }
+  if(esito==='collegato'){
+    const ric = r.sito && r.sito.ricevuta;
+    statoEl.innerHTML = (appenaAttivato
+        ? '<b>Attivato e collegato.</b> Il telefono e\' registrato sul sito: non serve copiare niente. '
+        : 'Promemoria attivo e collegato a questo telefono. ') +
+      (r.rifatto && !appenaAttivato ? 'Ricollegato adesso: l\'indirizzo di prima non funzionava piu\'. ' : '') +
+      (ric
+        ? 'Ultima notifica arrivata: <b>'+esc(quandoLeggibile(ric.quando))+'</b>' +
+          (ric.esito && ric.esito!=='mostrata' ? ' ('+esc(ric.esito)+')' : '') + '.'
+        : 'Nessuna notifica ancora arrivata da quando e\' collegato.');
+  }else{
+    /* Sito non raggiungibile (offline, o app aperta da un indirizzo senza la funzione): si
+       ricontrolla da solo alla prossima apertura. Se il sito restasse giu', l'unica strada e' il
+       testo da incollare a mano nel secret. */
+    statoEl.innerHTML = 'Promemoria attivo su questo dispositivo, ma <b>il sito non risponde</b>: il ' +
+      'collegamento si controlla da solo alla prossima apertura con la rete. Se il sito restasse giu\', ' +
+      'copia l\'indirizzo qui sotto nel secret <b>PUSH_SUBSCRIPTION</b> su GitHub ' +
+      '(repository → Settings → Secrets and variables → Actions).';
+  }
+  btnEl.innerHTML = '<button class="btn btn-sec" id="btnNotifProva">Prova su questo telefono</button>' +
+    '<button class="btn btn-sec" id="btnNotifRicollega">Ricollega</button>' +
+    (esito==='collegato' ? '' : '<button class="btn btn-sec" id="btnCopiaSub">Copia indirizzo</button>') +
+    '<button class="btn btn-sec" id="btnNotifOff">Disattiva</button>';
+  el('#btnNotifProva').addEventListener('click', async ()=>{
+    try{
+      const reg = await navigator.serviceWorker.ready;
+      await reg.showNotification('Prova notifica', {
+        body: 'Se la vedi, il telefono mostra le notifiche di questa app.',
+        tag: 'prova-formazione', data: {url:'./'}
+      });
+      toast('Notifica di prova mostrata');
+    }catch(e){ toast('Il telefono non la mostra: controlla i permessi'); }
+  });
+  el('#btnNotifRicollega').addEventListener('click', async ()=>{
+    statoEl.textContent = 'Ricollego...';
+    const r2 = await sincronizzaAbbonamento(true);
+    mostraStatoNotifiche(r2);
+    toast(r2.esito==='collegato' ? 'Ricollegato' : 'Non riuscito: serve la rete');
+  });
+  const bc = el('#btnCopiaSub');
+  if(bc) bc.addEventListener('click', ()=>{
+    const json = JSON.stringify(r.sub.toJSON ? r.sub.toJSON() : r.sub);
+    navigator.clipboard.writeText(json).then(()=>toast('Copiato')).catch(()=>toast('Copia non riuscita'));
+  });
+  el('#btnNotifOff').addEventListener('click', ()=>{
+    confermaPericolosa('Disattivare i promemoria su questo dispositivo?', async ()=>{
+      await disattivaNotifiche();
+      toast('Promemoria disattivato');
+      apriSettings();
+    });
+  });
 }
 
 function importaRosa(testo){
@@ -2993,6 +3076,8 @@ document.addEventListener('visibilitychange', ()=>{
   if(document.visibilityState==='visible'){
     avviaCountdown();
     if(oreDati()!=null && oreDati()>0.75) aggiornaDati(false);
+    /* Un'app installata spesso non si riapre da zero ma torna in primo piano (21/10). */
+    sincronizzaSeServe();
   }else{
     fermaCountdown();
   }
@@ -3021,9 +3106,9 @@ avviaCountdown();
 
 if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
-  /* L'abbonamento del telefono sul sito, se e' cambiato (16/10). Dopo il primo disegno: non
-     deve rallentare l'apertura. */
-  navigator.serviceWorker.ready.then(()=> sincronizzaAbbonamento()).catch(()=>{});
+  /* L'abbonamento del telefono sul sito, e se serve uno nuovo (16/10, 21/10). Dopo il primo
+     disegno: non deve rallentare l'apertura. */
+  sincronizzaSeServe();
 }
 /* La rosa vive solo in questo telefono: si chiede al browser di non cancellare i dati del sito
    quando cerca spazio (27/09). Chrome lo concede da solo alle app installate o con le
