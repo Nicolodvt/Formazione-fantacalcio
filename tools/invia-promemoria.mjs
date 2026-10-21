@@ -56,7 +56,7 @@ async function main() {
     return;
   }
 
-  const { sub: subscription, motivo } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
+  const { sub: subscription, fonte, motivo, perche } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
   if (!subscription) {
     /* Come in promemoria-scadenza.mjs: rosso solo per un secret rotto, altrimenti si riprova. */
     const grave = /JSON/.test(motivo);
@@ -126,7 +126,8 @@ async function main() {
        viene comunque segnata come avvisata e non si riprova. */
     if ([401, 403, 404, 410].includes(err.statusCode)) {
       console.log(`::error::Avviso di giornata non consegnato: il servizio push risponde ${err.statusCode} ` +
-        '(abbonamento scaduto o chiavi cambiate). Apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva.');
+        '(abbonamento scaduto o chiavi cambiate). Apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva' +
+        (fonte === 'sito' ? '.' : ', e aggiorna il secret PUSH_SUBSCRIPTION. Usato il secret perche ' + perche + '.'));
       process.exitCode = 1;
     } else if (eTransitorio(err)) {
       /* Niente scritto in dati/promemoria.json: l'avviso riparte al prossimo giro di dati.yml.

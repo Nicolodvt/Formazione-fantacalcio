@@ -31,15 +31,30 @@ export async function inviaConRiprova(webpush, sub, payload) {
 
 /* Quello che il sito sa delle notifiche: {abbonamento, abbonamentoAggiornato, ricevuta}, o null
    se non risponde (sito non configurato, funzione non ancora pubblicata, rete). */
+/* Perche' l'ultima lettura non e' andata (21/10): il 20/10 i due giri rossi per un 410 hanno usato
+   il secret perche' il sito non aveva dato l'abbonamento, e il motivo non stava da nessuna parte
+   (i log completi si leggono solo da loggati, le annotazioni no). Ora finisce nell'avviso. */
+let motivoSito = '';
 export async function statoSito(sitoUrl) {
-  if (!sitoUrl) return null;
+  motivoSito = '';
+  if (!sitoUrl) { motivoSito = 'NETLIFY_SITE_URL non impostato'; return null; }
+  let r;
   try {
-    const r = await fetch(`${sitoUrl.replace(/\/$/, '')}/.netlify/functions/notifiche`,
+    r = await fetch(`${sitoUrl.replace(/\/$/, '')}/.netlify/functions/notifiche`,
       { signal: AbortSignal.timeout(8000) });
-    if (!r.ok) return null;
-    const d = await r.json();
-    return d && typeof d === 'object' && 'abbonamento' in d ? d : null;
-  } catch (e) { return null; }
+  } catch (e) { motivoSito = `sito non raggiungibile (${e.message})`; return null; }
+  if (!r.ok) {
+    motivoSito = `la funzione "notifiche" risponde ${r.status}` +
+      (r.status === 404 ? ', cioe\' non e\' online: controllare l\'ultimo deploy su Netlify' : '');
+    return null;
+  }
+  let d;
+  try { d = await r.json(); }
+  /* "JSON" no, nel testo: gli script riconoscono il secret rotto da quella parola nel motivo. */
+  catch (e) { motivoSito = 'la funzione "notifiche" risponde con una pagina, non con i dati (non e\' online?)'; return null; }
+  if (d && typeof d === 'object' && 'abbonamento' in d) return d;
+  motivoSito = 'la funzione "notifiche" risponde senza il campo "abbonamento"';
+  return null;
 }
 
 /* Impronta corta dell'endpoint, per il log: abbastanza per riconoscere "e' cambiato", niente
@@ -53,21 +68,25 @@ export function impronta(sub) {
 }
 
 /* L'abbonamento da usare: prima quello del sito, poi il secret. Restituisce
-   {sub, fonte: 'sito'|'secret', sito} oppure {sub: null, motivo}. */
+   {sub, fonte: 'sito'|'secret', sito, perche} oppure {sub: null, motivo}. "perche": con il
+   secret, perche' non si e' usato il sito (va nei messaggi d'errore degli script). */
 export async function abbonamentoDaUsare(sitoUrl, secretRaw) {
   const sito = await statoSito(sitoUrl);
   if (sito && sito.abbonamento && sito.abbonamento.endpoint) {
     console.log(`Abbonamento dal sito (registrato dall'app il ${sito.abbonamentoAggiornato || '?'}): ${impronta(sito.abbonamento)}.`);
     return { sub: sito.abbonamento, fonte: 'sito', sito };
   }
+  const perche = sito
+    ? 'il sito non ha ancora l\'abbonamento del telefono (app non aggiornata o notifiche da riattivare)'
+    : 'abbonamento non letto dal sito: ' + motivoSito;
   if (secretRaw) {
     let sub;
     try { sub = JSON.parse(secretRaw); }
     catch (e) { return { sub: null, sito, motivo: 'Il secret PUSH_SUBSCRIPTION non e un JSON valido.' }; }
-    console.log((sito
-      ? '::warning::Il sito non ha ancora l\'abbonamento del telefono (app non aggiornata o notifiche da riattivare): '
-      : 'Sito non raggiungibile per l\'abbonamento: ') + `uso il secret PUSH_SUBSCRIPTION, ${impronta(sub)}.`);
-    return { sub, fonte: 'secret', sito };
+    /* Sempre un avviso (21/10): prima, con il sito che non rispondeva, era una riga del log
+       invisibile dalle annotazioni. */
+    console.log(`::warning::${perche[0].toUpperCase() + perche.slice(1)}. Uso il secret PUSH_SUBSCRIPTION, ${impronta(sub)}.`);
+    return { sub, fonte: 'secret', sito, perche };
   }
-  return { sub: null, sito, motivo: 'Nessun abbonamento: ne sul sito ne nel secret PUSH_SUBSCRIPTION.' };
+  return { sub: null, sito, motivo: `Nessun abbonamento nel secret PUSH_SUBSCRIPTION, e ${perche}.` };
 }

@@ -293,7 +293,7 @@ async function main() {
     return;
   }
 
-  const { sub: subscription, fonte, motivo } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
+  const { sub: subscription, fonte, motivo, perche } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
   if (!subscription) {
     /* Secret rotto: guasto vero. Nessun abbonamento da nessuna parte (sito giu', app non ancora
        collegata): avviso, si riprova al giro dopo. */
@@ -351,7 +351,7 @@ async function main() {
         stato.abbonamentoScadutoSegnalato = true;
         console.log(`::error::Promemoria non consegnato: il servizio push risponde ${err.statusCode} ` +
           '(abbonamento scaduto o chiavi cambiate). Apri l app, Impostazioni -> Notifiche, Disattiva e poi Attiva' +
-          (fonte === 'sito' ? '.' : ', e aggiorna il secret PUSH_SUBSCRIPTION (o pubblica l app nuova, che lo registra da sola).'));
+          (fonte === 'sito' ? '.' : ', e aggiorna il secret PUSH_SUBSCRIPTION. Usato il secret perche ' + perche + '.'));
         process.exitCode = 1;
       } else {
         console.log(`Abbonamento ancora non valido (${err.statusCode}), gia segnalato per questa giornata.`);
