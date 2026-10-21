@@ -300,6 +300,12 @@ async function provePromemoria() {
     const m2 = giroPromemoria(dir, '2026-10-10T06:30Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410' });
     verifica('  giro dopo, ancora morto: verde, segnalato di nuovo', m2.codice === 0 && segnalazioni(dir).length === 2, m2.uscita.trim());
     azzera(dir, G6);
+    giroPromemoria(dir, '2026-10-08T13:00Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410' });
+    giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_SITO: sito(null) });
+    const m5 = giroPromemoria(dir, '2026-10-10T06:30Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410' });
+    verifica('  morto, poi ricollegato, poi morto di nuovo nella stessa giornata: seconda email',
+      m5.codice === 1 && /::error::.*Si ricollega da solo/.test(m5.uscita), m5.uscita.trim());
+    azzera(dir, G6);
     const m3 = giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_SITO: sito(null), FINTO_PUSH_ESITO: '410', FINTO_POST_KO: '1' });
     verifica('  segnalazione non riuscita: l email dice di toccare Ricollega',
       m3.codice === 1 && /::error::.*Segnalazione al sito non riuscita.*Ricollega/.test(m3.uscita), m3.uscita.trim());

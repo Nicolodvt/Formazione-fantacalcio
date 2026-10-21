@@ -144,7 +144,9 @@ async function eGiaSchierato(sitoUrl, giornata) {
     }
     return !!d.schierato;
   } catch (e) {
-    console.log('Funzione "schierato" non raggiungibile (' + e.message + '): procedo come se non fosse schierato.');
+    /* Avviso, non riga semplice (21/10): con NETLIFY_SITE_URL senza "https://" questa riga e'
+       comparsa a ogni promemoria per settimane, e da fuori (annotazioni) non si vedeva. */
+    console.log('::warning::Funzione "schierato" non raggiungibile (' + e.message + '): procedo come se non fosse schierato.');
     return false;
   }
 }
@@ -339,6 +341,9 @@ async function main() {
     console.log(`Promemoria ${daInviare.chiave} spedito.`);
     segnaDovute(ora.toISOString());
     delete stato.erroriInvio;
+    /* Tornato a funzionare (21/10): se l'indirizzo muore di nuovo nella stessa giornata, e' un
+       guasto nuovo e merita la sua email. Prima restava "gia' segnalato" fino alla giornata dopo. */
+    delete stato.abbonamentoScadutoSegnalato;
     stato.ultimoInvio = { id: ora.toISOString(), quando: ora.toISOString(), fonte };
   } catch (err) {
     if (ABBONAMENTO_DA_RIFARE.includes(err.statusCode)) {
