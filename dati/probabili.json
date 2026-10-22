@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-22T10:59:02.539Z",
+ "generato": "2026-10-22T16:27:25.537Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 8,
  "giornateDiscordi": [
@@ -766,7 +766,7 @@
    "nome": "Odgaard",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -784,7 +784,7 @@
    "nome": "Bremer",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -901,7 +901,7 @@
    "nome": "Gonzalez N.",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -1252,7 +1252,7 @@
    "nome": "Douglas Luiz",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -1558,9 +1558,9 @@
    "nome": "Casale",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 75,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "5500": {
    "id": 5500,
@@ -2080,7 +2080,7 @@
    "nome": "Lucumì",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -2197,7 +2197,7 @@
    "nome": "Beukema",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -2836,7 +2836,7 @@
    "nome": "Marianucci",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 30,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -3439,7 +3439,7 @@
    "nome": "Vergara",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 20,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -3979,7 +3979,7 @@
    "nome": "Comert",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -4033,7 +4033,7 @@
    "nome": "Fitz-Jim",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4384,7 +4384,7 @@
    "nome": "Enem",
    "squadra": "Bologna",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 55,
    "titolare": true,
    "incerto": true
   },
@@ -4515,26 +4515,14 @@
   ],
   [
    {
-    "id": 5498,
-    "nome": "Casale",
-    "pct": 60
-   },
-   {
-    "id": 7212,
-    "nome": "Heggem",
-    "pct": 40
-   }
-  ],
-  [
-   {
     "id": 7627,
     "nome": "Enem",
-    "pct": 60
+    "pct": 55
    },
    {
     "id": 6675,
     "nome": "Dovbyk",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
@@ -4991,7 +4979,7 @@
   "530": {
    "id": 530,
    "tipo": "infortunato",
-   "nota": "noie muscolari alla coscia, da valutare"
+   "nota": "lesione di alto grado in corrispondenza della giunzione muscolo - tendinea distale del muscolo semitendinoso della coscia destra, ipotesi rientro dalla fine di dicembre"
   },
   "779": {
    "id": 779,
@@ -5106,7 +5094,7 @@
   "4856": {
    "id": 4856,
    "tipo": "infortunato",
-   "nota": "problema all'anca, da valutare per Udine"
+   "nota": "problema all'anca sinistra, out per Udine"
   },
   "4892": {
    "id": 4892,
@@ -5317,11 +5305,6 @@
    "id": 7161,
    "tipo": "infortunato",
    "nota": "lesione al bicipite femorale della coscia destra, rientro da metà novembre"
-  },
-  "7223": {
-   "id": 7223,
-   "tipo": "dubbio",
-   "nota": "lesione distrattiva al polpaccio, in dubbio convocazione contro la Roma"
   },
   "7253": {
    "id": 7253,
