@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-22T16:27:25.537Z",
+ "generato": "2026-10-22T21:06:29.134Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 8,
  "giornateDiscordi": [
@@ -784,9 +784,9 @@
    "nome": "Bremer",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "2809": {
    "id": 2809,
@@ -829,7 +829,7 @@
    "nome": "Boga",
    "squadra": "Juventus",
    "ruolo": "A",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1108,9 +1108,9 @@
    "nome": "Elmas",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 70,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "4485": {
    "id": 4485,
@@ -1129,15 +1129,6 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
-  },
-  "4657": {
-   "id": 4657,
-   "nome": "Celik",
-   "squadra": "Juventus",
-   "ruolo": "D",
-   "pct": 60,
-   "titolare": true,
-   "incerto": true
   },
   "4664": {
    "id": 4664,
@@ -1234,9 +1225,9 @@
    "nome": "Bellanova",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "4896": {
    "id": 4896,
@@ -1252,7 +1243,7 @@
    "nome": "Douglas Luiz",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1369,7 +1360,7 @@
    "nome": "Pavlovic",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1432,7 +1423,7 @@
    "nome": "Musah",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": true,
    "incerto": true
   },
@@ -1585,9 +1576,9 @@
    "nome": "Cambiaso",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 90,
+   "titolare": true,
+   "incerto": false
   },
   "5527": {
    "id": 5527,
@@ -1747,7 +1738,7 @@
    "nome": "De Winter",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1810,7 +1801,7 @@
    "nome": "Ederson D.S.",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -1846,7 +1837,7 @@
    "nome": "Gatti",
    "squadra": "Juventus",
    "ruolo": "D",
-   "pct": 35,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1990,7 +1981,7 @@
    "nome": "Kolo Muani",
    "squadra": "Juventus",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -2017,7 +2008,7 @@
    "nome": "De Ketelaere",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -2368,7 +2359,7 @@
    "nome": "Moreira",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -2431,9 +2422,9 @@
    "nome": "Krstovic",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 75,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6462": {
    "id": 6462,
@@ -2548,7 +2539,7 @@
    "nome": "Pierotti",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2899,7 +2890,7 @@
    "nome": "Rowe",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -3421,9 +3412,9 @@
    "nome": "Bernasconi",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7220": {
    "id": 7220,
@@ -3493,7 +3484,7 @@
    "nome": "Stulic",
    "squadra": "Lecce",
    "ruolo": "A",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -3727,6 +3718,15 @@
    "nome": "Lisman",
    "squadra": "Venezia",
    "ruolo": "A",
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
+  },
+  "7409": {
+   "id": 7409,
+   "nome": "Meichtry",
+   "squadra": "Genoa",
+   "ruolo": "C",
    "pct": 20,
    "titolare": false,
    "incerto": true
@@ -4321,7 +4321,7 @@
    "nome": "Monteiro J.",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -4420,7 +4420,7 @@
    "nome": "Obric",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -4767,8 +4767,8 @@
   ],
   [
    {
-    "id": 7219,
-    "nome": "Bernasconi",
+    "id": 4887,
+    "nome": "Bellanova",
     "pct": 60
    },
    {
@@ -4791,13 +4791,13 @@
   ],
   [
    {
-    "id": 6435,
-    "nome": "Krstovic",
+    "id": 4479,
+    "nome": "Elmas",
     "pct": 60
    },
    {
-    "id": 2137,
-    "nome": "Scamacca",
+    "id": 5422,
+    "nome": "Zalewski",
     "pct": 40
    }
   ],
@@ -4868,20 +4868,20 @@
     "pct": 60
    },
    {
-    "id": 6549,
-    "nome": "Pierotti",
+    "id": 7619,
+    "nome": "Monteiro J.",
     "pct": 40
    }
   ],
   [
    {
-    "id": 4657,
-    "nome": "Celik",
+    "id": 2788,
+    "nome": "Bremer",
     "pct": 60
    },
    {
-    "id": 5520,
-    "nome": "Cambiaso",
+    "id": 6766,
+    "nome": "Kelly L.",
     "pct": 40
    }
   ],
@@ -4949,12 +4949,12 @@
    {
     "id": 5295,
     "nome": "Musah",
-    "pct": 60
+    "pct": 55
    },
    {
     "id": 4199,
     "nome": "Loftus-Cheek",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
@@ -5085,6 +5085,11 @@
    "id": 4459,
    "tipo": "dubbio",
    "nota": "problema muscolare al polpaccio, da valutare convocazione contro il Parma"
+  },
+  "4657": {
+   "id": 4657,
+   "tipo": "infortunato",
+   "nota": "fastidio muscolare alla gamba, da valutare per Lecce"
   },
   "4845": {
    "id": 4845,
@@ -5333,8 +5338,8 @@
   },
   "7409": {
    "id": 7409,
-   "tipo": "infortunato",
-   "nota": "distrazione della muscolatura di un'anca, rientro dalla seconda metà di ottobre"
+   "tipo": "dubbio",
+   "nota": "distrazione della muscolatura di un'anca, in dubbio convocazione contro il Venezia"
   },
   "7453": {
    "id": 7453,
