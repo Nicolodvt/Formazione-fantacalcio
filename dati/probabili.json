@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-21T17:57:57.094Z",
+ "generato": "2026-10-22T10:59:02.539Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 8,
  "giornateDiscordi": [
@@ -262,7 +262,7 @@
    "nome": "Zielinski",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 70,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -568,7 +568,7 @@
    "nome": "Kean",
    "squadra": "Como",
    "ruolo": "A",
-   "pct": 30,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -802,7 +802,7 @@
    "nome": "Provedel",
    "squadra": "Inter",
    "ruolo": "P",
-   "pct": 5,
+   "pct": 30,
    "titolare": false,
    "incerto": true
   },
@@ -1280,7 +1280,7 @@
    "squadra": "Fiorentina",
    "ruolo": "C",
    "pct": 55,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "4952": {
@@ -1387,16 +1387,16 @@
    "nome": "Caqueret",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "5116": {
    "id": 5116,
    "nome": "Martinez Jo.",
    "squadra": "Inter",
    "ruolo": "P",
-   "pct": 75,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -1522,7 +1522,7 @@
    "nome": "Ricci S.",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2242,7 +2242,7 @@
    "nome": "Bisseck",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -2764,9 +2764,9 @@
    "nome": "Liberali",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 40,
+   "titolare": false,
+   "incerto": true
   },
   "6680": {
    "id": 6680,
@@ -3196,7 +3196,7 @@
    "nome": "Esposito F.P.",
    "squadra": "Inter",
    "ruolo": "A",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -3232,7 +3232,7 @@
    "nome": "Baturina",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -3845,7 +3845,7 @@
    "squadra": "Fiorentina",
    "ruolo": "C",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7467": {
@@ -4580,8 +4580,8 @@
     "pct": 60
    },
    {
-    "id": 5036,
-    "nome": "Caqueret",
+    "id": 2097,
+    "nome": "Kean",
     "pct": 40
    }
   ],
@@ -4743,14 +4743,14 @@
   ],
   [
    {
-    "id": 7464,
-    "nome": "Oulai",
-    "pct": 60
-   },
-   {
     "id": 4947,
     "nome": "Brescianini",
-    "pct": 40
+    "pct": 55
+   },
+   {
+    "id": 7464,
+    "nome": "Oulai",
+    "pct": 45
    }
   ],
   [
@@ -5011,7 +5011,7 @@
   "2097": {
    "id": 2097,
    "tipo": "dubbio",
-   "nota": "fastidio alla tibia, in dubbio impiego contro il Sassuolo"
+   "nota": "fastidio alla tibia, in dubbio impiego dal 1' contro il Sassuolo"
   },
   "2167": {
    "id": 2167,
@@ -5181,7 +5181,7 @@
   "5800": {
    "id": 5800,
    "tipo": "infortunato",
-   "nota": "problema alla spalla destra, tentativo rientro da inizio novembre"
+   "nota": "problema alla spalla destra, rientro da metà novembre"
   },
   "5841": {
    "id": 5841,
@@ -5252,6 +5252,11 @@
    "id": 6673,
    "tipo": "infortunato",
    "nota": "problema all'anca, rientro fine ottobre"
+  },
+  "6678": {
+   "id": 6678,
+   "tipo": "dubbio",
+   "nota": "fastidio alla gamba, in dubbio contro Sassuolo"
   },
   "6717": {
    "id": 6717,
