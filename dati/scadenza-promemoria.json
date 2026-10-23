@@ -10,7 +10,9 @@
  "ultimoInvio": {
   "id": "2026-10-23T17:27:05.537Z",
   "quando": "2026-10-23T17:27:05.537Z",
-  "fonte": "sito"
+  "fonte": "sito",
+  "confermato": "2026-10-23T19:11:24.340Z",
+  "esito": "mostrata"
  },
  "ricevutaSegnalata": true
 }
