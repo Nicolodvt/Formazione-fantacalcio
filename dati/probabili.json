@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-23T16:40:56.152Z",
+ "generato": "2026-10-23T20:14:26.577Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 8,
  "giornateDiscordi": [
@@ -532,7 +532,7 @@
    "nome": "Mandragora",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -550,7 +550,7 @@
    "nome": "Simeone",
    "squadra": "Torino",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1207,7 +1207,7 @@
    "nome": "Carboni A.",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 75,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1306,7 +1306,7 @@
    "nome": "Ismajli",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1630,7 +1630,7 @@
    "nome": "Vlasic",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1801,7 +1801,7 @@
    "nome": "Birindelli",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1900,9 +1900,9 @@
    "nome": "Mota",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "5885": {
    "id": 5885,
@@ -2404,7 +2404,7 @@
    "nome": "Comuzzo",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2467,7 +2467,7 @@
    "nome": "Perri",
    "squadra": "Torino",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2476,7 +2476,7 @@
    "nome": "Goglichidze",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2521,7 +2521,7 @@
    "nome": "Akinsanmiro",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2584,7 +2584,7 @@
    "nome": "Coco",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2593,7 +2593,7 @@
    "nome": "Adams C.",
    "squadra": "Torino",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2611,9 +2611,9 @@
    "nome": "Lucchesi",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6660": {
    "id": 6660,
@@ -3088,7 +3088,7 @@
    "nome": "Cacciamani",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3349,7 +3349,7 @@
    "nome": "Belghali",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3385,9 +3385,9 @@
    "nome": "Kouadio",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "7240": {
    "id": 7240,
@@ -3466,7 +3466,7 @@
    "nome": "Tornqvist",
    "squadra": "Monza",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3496,15 +3496,6 @@
    "pct": 65,
    "titolare": true,
    "incerto": false
-  },
-  "7317": {
-   "id": 7317,
-   "nome": "Trepy",
-   "squadra": "Cagliari",
-   "ruolo": "A",
-   "pct": 10,
-   "titolare": false,
-   "incerto": true
   },
   "7318": {
    "id": 7318,
@@ -3817,7 +3808,7 @@
    "nome": "Bakoune",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -3871,16 +3862,16 @@
    "nome": "Mangas",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7523": {
    "id": 7523,
    "nome": "Varela G.",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3952,7 +3943,7 @@
    "nome": "Fitz-Jim",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3997,7 +3988,7 @@
    "nome": "Robinson J.",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4105,9 +4096,9 @@
    "nome": "Foe Ondoa",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7575": {
    "id": 7575,
@@ -4325,6 +4316,15 @@
    "titolare": false,
    "incerto": true
   },
+  "7630": {
+   "id": 7630,
+   "nome": "Sugamele",
+   "squadra": "Cagliari",
+   "ruolo": "A",
+   "pct": 15,
+   "titolare": false,
+   "incerto": true
+  },
   "7632": {
    "id": 7632,
    "nome": "Panada",
@@ -4372,42 +4372,6 @@
   }
  },
  "ballottaggi": [
-  [
-   {
-    "id": 7485,
-    "nome": "Mangas",
-    "pct": 55
-   },
-   {
-    "id": 7476,
-    "nome": "Bakoune",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 7574,
-    "nome": "Foe Ondoa",
-    "pct": 60
-   },
-   {
-    "id": 6252,
-    "nome": "Folorunsho",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 5882,
-    "nome": "Mota",
-    "pct": 60
-   },
-   {
-    "id": 2155,
-    "nome": "Cutrone",
-    "pct": 40
-   }
-  ],
   [
    {
     "id": 4210,
