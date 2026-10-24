@@ -125,9 +125,9 @@ function preparaBancoPromemoria() {
     const fs = require('fs');
     module.exports = {
       setVapidDetails() {},
-      async sendNotification(sub, payload) {
+      async sendNotification(sub, payload, opzioni) {
         if (process.env.FINTO_PUSH_ESITO) { const e = new Error('finto'); e.statusCode = +process.env.FINTO_PUSH_ESITO; throw e; }
-        fs.appendFileSync(process.env.FINTO_PUSH_LOG, JSON.stringify({ ora: new Date().toISOString(), endpoint: sub.endpoint, ...JSON.parse(payload) }) + '\\n');
+        fs.appendFileSync(process.env.FINTO_PUSH_LOG, JSON.stringify({ ora: new Date().toISOString(), endpoint: sub.endpoint, opzioni, ...JSON.parse(payload) }) + '\\n');
       }
     };`);
   /* Il sito finto (21/10) registra anche le POST (segnalazioni "scaduto") in post.jsonl; una
@@ -192,6 +192,12 @@ async function provePromemoria() {
     verifica('cron puntuale: 3 promemoria (24h, 8h rimandata al mattino, 3h), tutti prima della scadenza',
       JSON.stringify(titoli(s1)) === JSON.stringify(['13:00 Mancano 72 ore', '13:00 Mancano 48 ore', '13:00 Mancano 24 ore', '06:00 Mancano 7 ore', '10:00 Mancano 3 ore']) &&
       s1.every(x => Date.parse(x.ora) < SCADENZA_G6), JSON.stringify(titoli(s1)));
+    /* 24/10: con l'urgenza "normal" di default il telefono in standby consegnava in ritardo di ore
+       (il 3h del 23/10 comparso dopo la scadenza). Validita' = tempo alla scadenza, al secondo. */
+    verifica('spediti con urgenza alta, validi fino alla scadenza, con il topic che sostituisce il vecchio',
+      s1.length > 0 && s1.every(x => x.opzioni && x.opzioni.urgency === 'high' && x.opzioni.topic === 'promemoria-formazione' &&
+        Math.abs(x.opzioni.TTL - (SCADENZA_G6 - Date.parse(x.ora)) / 1000) <= 1),
+      JSON.stringify(s1.map(x => x.opzioni)));
     verifica('il testo nomina la partita e l\'ora italiana giuste',
       s1[0] && /Giornata 6, si comincia sabato 10 ottobre alle ore 15:00 \(Genoa-Fiorentina\)/.test(s1[0].corpo), s1[0] && s1[0].corpo);
 

@@ -33,14 +33,30 @@ export const ABBONAMENTO_DA_RIFARE = [401, 403, 404, 410];
 /* Intoppi che passano da soli (16/10): rete, 5xx, 429. */
 export const eTransitorio = (err) => !err.statusCode || err.statusCode >= 500 || err.statusCode === 429;
 
-export async function inviaConRiprova(webpush, sub, payload) {
-  try { return await webpush.sendNotification(sub, payload); }
+export async function inviaConRiprova(webpush, sub, payload, opzioni) {
+  try { return await webpush.sendNotification(sub, payload, opzioni); }
   catch (err) {
     if (!eTransitorio(err)) throw err;
     console.log(`Servizio push non disponibile (${err.statusCode || err.message}): riprovo fra poco.`);
     await new Promise(r => setTimeout(r, +(process.env.ATTESA_RIPROVA_MS ?? 5000)));
-    return await webpush.sendNotification(sub, payload);
+    return await webpush.sendNotification(sub, payload, opzioni);
   }
+}
+
+/* Come spedire un promemoria con una scadenza (24/10). Fino ad allora tutto partiva con i valori
+   di web-push: urgenza "normal" e validita' di 4 settimane. Con il telefono in standby Android
+   tiene da parte i messaggi "normal" e li consegna in blocco quando si risveglia: il 22-23/10 il
+   promemoria 24h (22:44) non e' arrivato in 12 ore (email del 23/10), l'8h (14:38) nemmeno in 5,
+   e il 3h (19:27) e' comparso alle 21:11, mezz'ora DOPO la scadenza. "high" lo consegna subito
+   anche in standby; la validita' fino alla scadenza evita che un promemoria compaia quando non
+   serve piu'; il topic fa si' che un promemoria nuovo sostituisca quello vecchio ancora in attesa,
+   invece di arrivare in fila. */
+export function opzioniPromemoria(msAllaScadenza) {
+  return {
+    urgency: 'high',
+    TTL: Math.max(60, Math.floor(msAllaScadenza / 1000)),
+    topic: 'promemoria-formazione'
+  };
 }
 
 /* Quello che il sito sa delle notifiche: {abbonamento, abbonamentoAggiornato, ricevuta}, o null
