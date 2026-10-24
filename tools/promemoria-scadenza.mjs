@@ -25,7 +25,7 @@ import { dirname, join } from 'node:path';
 import { primaPartita, infrasettimanale } from './calendario.mjs';
 import {
   VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, statoSito,
-  segnalaScaduto, rimedioScaduto, urlSito
+  segnalaScaduto, rimedioScaduto, urlSito, opzioniPromemoria
 } from './notifiche.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
@@ -191,7 +191,7 @@ async function main() {
         titolo: 'Prova notifica',
         corpo: 'Se leggi questo, i promemoria arrivano sul telefono.',
         id
-      }));
+      }), opzioniPromemoria(10 * 60000));  // come un promemoria vero; dopo 10 minuti non serve piu'
       console.log(`Notifica di prova accettata dal servizio push (${r && r.statusCode}). Controlla il telefono.`);
     } catch (err) {
       const morto = ABBONAMENTO_DA_RIFARE.includes(err.statusCode);
@@ -337,7 +337,7 @@ async function main() {
   });
 
   try {
-    await inviaConRiprova(webpush, subscription, payload);
+    await inviaConRiprova(webpush, subscription, payload, opzioniPromemoria(scadenza.getTime() - ora.getTime()));
     console.log(`Promemoria ${daInviare.chiave} spedito.`);
     segnaDovute(ora.toISOString());
     delete stato.erroriInvio;
