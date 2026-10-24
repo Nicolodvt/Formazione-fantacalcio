@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-23T20:14:26.577Z",
+ "generato": "2026-10-24T11:53:40.912Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 8,
  "giornateDiscordi": [
@@ -1198,9 +1198,9 @@
    "nome": "Douglas Luiz",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 85,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4925": {
    "id": 4925,
@@ -1612,9 +1612,9 @@
    "nome": "Sarr P.",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "5685": {
    "id": 5685,
@@ -4806,14 +4806,14 @@
   ],
   [
    {
-    "id": 4911,
-    "nome": "Douglas Luiz",
-    "pct": 60
+    "id": 5680,
+    "nome": "Sarr P.",
+    "pct": 55
    },
    {
     "id": 5685,
     "nome": "Koopmeiners",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
