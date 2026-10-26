@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-26T13:48:22.738Z",
+ "generato": "2026-10-26T22:59:20.689Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 9,
  "giornateDiscordi": [
@@ -482,15 +482,6 @@
    "titolare": true,
    "incerto": false
   },
-  "1850": {
-   "id": 1850,
-   "nome": "Kessiè",
-   "squadra": "Atalanta",
-   "ruolo": "C",
-   "pct": 25,
-   "titolare": false,
-   "incerto": true
-  },
   "1870": {
    "id": 1870,
    "nome": "Barella",
@@ -527,6 +518,15 @@
    "titolare": false,
    "incerto": true
   },
+  "2038": {
+   "id": 2038,
+   "nome": "Pinamonti",
+   "squadra": "Lazio",
+   "ruolo": "A",
+   "pct": 25,
+   "titolare": false,
+   "incerto": true
+  },
   "2061": {
    "id": 2061,
    "nome": "Simeone",
@@ -542,15 +542,6 @@
    "squadra": "Atalanta",
    "ruolo": "C",
    "pct": 60,
-   "titolare": false,
-   "incerto": true
-  },
-  "2097": {
-   "id": 2097,
-   "nome": "Kean",
-   "squadra": "Como",
-   "ruolo": "A",
-   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1063,9 +1054,9 @@
    "nome": "Tomori",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 90,
+   "titolare": true,
+   "incerto": false
   },
   "4777": {
    "id": 4777,
@@ -1486,7 +1477,7 @@
    "nome": "Scalvini",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 15,
+   "pct": 25,
    "titolare": false,
    "incerto": true
   },
@@ -1702,7 +1693,7 @@
    "nome": "Terracciano F.",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1732,15 +1723,6 @@
    "pct": 80,
    "titolare": true,
    "incerto": false
-  },
-  "5833": {
-   "id": 5833,
-   "nome": "Gila",
-   "squadra": "Milan",
-   "ruolo": "D",
-   "pct": 55,
-   "titolare": true,
-   "incerto": true
   },
   "5838": {
    "id": 5838,
@@ -1873,7 +1855,7 @@
    "nome": "Sulemana K.",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 20,
+   "pct": 30,
    "titolare": false,
    "incerto": true
   },
@@ -2224,9 +2206,9 @@
    "nome": "Leite",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 35,
-   "titolare": false,
-   "incerto": true
+   "pct": 75,
+   "titolare": true,
+   "incerto": false
   },
   "6320": {
    "id": 6320,
@@ -2243,15 +2225,6 @@
    "squadra": "Como",
    "ruolo": "P",
    "pct": 30,
-   "titolare": false,
-   "incerto": true
-  },
-  "6372": {
-   "id": 6372,
-   "nome": "Moreira",
-   "squadra": "Milan",
-   "ruolo": "C",
-   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2624,15 +2597,6 @@
    "titolare": false,
    "incerto": true
   },
-  "6678": {
-   "id": 6678,
-   "nome": "Liberali",
-   "squadra": "Como",
-   "ruolo": "C",
-   "pct": 25,
-   "titolare": false,
-   "incerto": true
-  },
   "6680": {
    "id": 6680,
    "nome": "Karlstrom",
@@ -2926,7 +2890,7 @@
    "nome": "Rensch",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2971,8 +2935,8 @@
    "nome": "Provstgaard",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": true,
+   "pct": 50,
+   "titolare": false,
    "incerto": true
   },
   "7014": {
@@ -3196,9 +3160,9 @@
    "nome": "Wesley",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "7182": {
    "id": 7182,
@@ -3241,7 +3205,7 @@
    "nome": "Jashari",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -3844,7 +3808,7 @@
    "nome": "Diawara S.",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 30,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -4006,9 +3970,9 @@
    "nome": "Mora",
    "squadra": "Roma",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 70,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7560": {
    "id": 7560,
@@ -4042,7 +4006,7 @@
    "nome": "Comotto",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 20,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -4087,9 +4051,9 @@
    "nome": "Sutalo J.",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "7581": {
    "id": 7581,
@@ -4105,7 +4069,7 @@
    "nome": "Lulli",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -4186,7 +4150,7 @@
    "nome": "Hutchinson",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -4365,8 +4329,8 @@
   ],
   [
    {
-    "id": 7012,
-    "nome": "Provstgaard",
+    "id": 7580,
+    "nome": "Sutalo J.",
     "pct": 60
    },
    {
@@ -4413,6 +4377,18 @@
   ],
   [
    {
+    "id": 7181,
+    "nome": "Wesley",
+    "pct": 55
+   },
+   {
+    "id": 7599,
+    "nome": "Lulli",
+    "pct": 45
+   }
+  ],
+  [
+   {
     "id": 779,
     "nome": "Cristante",
     "pct": 55
@@ -4421,18 +4397,6 @@
     "id": 22,
     "nome": "De Roon",
     "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 7556,
-    "nome": "Mora",
-    "pct": 60
-   },
-   {
-    "id": 309,
-    "nome": "Dybala",
-    "pct": 40
    }
   ],
   [
@@ -4541,18 +4505,6 @@
     "id": 5036,
     "nome": "Caqueret",
     "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 5833,
-    "nome": "Gila",
-    "pct": 55
-   },
-   {
-    "id": 4751,
-    "nome": "Tomori",
-    "pct": 45
    }
   ],
   [
@@ -5049,7 +5001,7 @@
   },
   "1850": {
    "id": 1850,
-   "tipo": "dubbio",
+   "tipo": "infortunato",
    "nota": "distrazione di basso grado al polpaccio della gamba destra, da valutare convocazione per Firenze"
   },
   "1852": {
@@ -5064,13 +5016,13 @@
   },
   "2038": {
    "id": 2038,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "tracheite, da valutare contro il Sassuolo"
   },
   "2097": {
    "id": 2097,
-   "tipo": "dubbio",
-   "nota": "fastidio alla tibia, da valutare impiego a Torino"
+   "tipo": "infortunato",
+   "nota": "fastidio alla tibia, rientro da fine ottobre"
   },
   "2167": {
    "id": 2167,
@@ -5140,7 +5092,7 @@
   "4199": {
    "id": 4199,
    "tipo": "infortunato",
-   "nota": "problema fisico, out contro il Bologna"
+   "nota": "lesione muscolare al flessore, out contro il Bologna"
   },
   "4260": {
    "id": 4260,
@@ -5150,7 +5102,7 @@
   "4349": {
    "id": 4349,
    "tipo": "infortunato",
-   "nota": "lesione di medio grado alla coscia destra, rientro da dicembre"
+   "nota": "lesione di medio grado alla coscia destra, rientro da inizio novembre"
   },
   "4359": {
    "id": 4359,
@@ -5284,8 +5236,8 @@
   },
   "5833": {
    "id": 5833,
-   "tipo": "dubbio",
-   "nota": "sovraccarico alla caviglia sinistra, in dubbio dal 1' contro il Bologna"
+   "tipo": "infortunato",
+   "nota": "sovraccarico alla caviglia sinistra, da valutare contro il Bologna"
   },
   "5841": {
    "id": 5841,
@@ -5334,8 +5286,8 @@
   },
   "6372": {
    "id": 6372,
-   "tipo": "dubbio",
-   "nota": "affaticamento muscolare al flessore sinistro, in dubbio impiego contro il Bologna"
+   "tipo": "infortunato",
+   "nota": "affaticamento muscolare al flessore sinistro, da valutare contro il Bologna"
   },
   "6434": {
    "id": 6434,
@@ -5369,8 +5321,8 @@
   },
   "6678": {
    "id": 6678,
-   "tipo": "dubbio",
-   "nota": "fastidio alla gamba, da valutare per Torino"
+   "tipo": "infortunato",
+   "nota": "fastidio alla gamba, rientro fine ottobre"
   },
   "6717": {
    "id": 6717,
