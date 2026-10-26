@@ -1,18 +1,12 @@
 {
- "giornata": 8,
+ "giornata": 9,
  "inviate": {
-  "72h": "abbonamento-scaduto",
-  "48h": "2026-10-21T19:56:13.752Z",
-  "24h": "2026-10-22T20:44:25.822Z",
-  "8h": "2026-10-23T12:38:29.949Z",
-  "3h": "2026-10-23T17:27:05.537Z"
+  "72h": "superata",
+  "48h": "2026-10-26T13:49:43.404Z"
  },
  "ultimoInvio": {
-  "id": "2026-10-23T17:27:05.537Z",
-  "quando": "2026-10-23T17:27:05.537Z",
-  "fonte": "sito",
-  "confermato": "2026-10-23T19:11:24.340Z",
-  "esito": "mostrata"
- },
- "ricevutaSegnalata": true
+  "id": "2026-10-26T13:49:43.404Z",
+  "quando": "2026-10-26T13:49:43.404Z",
+  "fonte": "sito"
+ }
 }
