@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-27T11:44:16.021Z",
+ "generato": "2026-10-27T12:55:09.974Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 9,
  "giornateDiscordi": [
@@ -338,15 +338,6 @@
    "titolare": false,
    "incerto": true
   },
-  "309": {
-   "id": 309,
-   "nome": "Dybala",
-   "squadra": "Roma",
-   "ruolo": "A",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
-  },
   "333": {
    "id": 333,
    "nome": "Cataldi",
@@ -388,7 +379,7 @@
    "nome": "Politano",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -946,7 +937,7 @@
    "nome": "Rrahmani",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -1063,7 +1054,7 @@
    "nome": "McTominay",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -2422,7 +2413,7 @@
    "nome": "Castro S.",
    "squadra": "Roma",
    "ruolo": "A",
-   "pct": 50,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -2485,7 +2476,7 @@
    "nome": "Marin R.",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -4989,6 +4980,11 @@
   ]
  ],
  "indisponibili": {
+  "309": {
+   "id": 309,
+   "tipo": "infortunato",
+   "nota": "fastidio muscolare al polpaccio, rientro da fine ottobre"
+  },
   "530": {
    "id": 530,
    "tipo": "infortunato",
