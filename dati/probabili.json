@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-27T21:53:40.242Z",
+ "generato": "2026-10-28T13:56:28.936Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 9,
  "giornateDiscordi": [
@@ -415,7 +415,7 @@
    "nome": "Meret",
    "squadra": "Napoli",
    "ruolo": "P",
-   "pct": 45,
+   "pct": 5,
    "titolare": false,
    "incerto": true
   },
@@ -604,9 +604,9 @@
    "nome": "Milinkovic-Savic V.",
    "squadra": "Napoli",
    "ruolo": "P",
-   "pct": 55,
+   "pct": 75,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "2194": {
    "id": 2194,
@@ -1981,9 +1981,9 @@
    "nome": "Hojlund",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "6054": {
    "id": 6054,
@@ -2125,7 +2125,7 @@
    "nome": "Lucca",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -3124,9 +3124,9 @@
    "nome": "Giovane",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 85,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7165": {
    "id": 7165,
@@ -4620,13 +4620,13 @@
   ],
   [
    {
-    "id": 2170,
-    "nome": "Milinkovic-Savic V.",
+    "id": 6052,
+    "nome": "Hojlund",
     "pct": 55
    },
    {
-    "id": 572,
-    "nome": "Meret",
+    "id": 6215,
+    "nome": "Lucca",
     "pct": 45
    }
   ],
@@ -4640,18 +4640,6 @@
     "id": 5131,
     "nome": "Gilmour",
     "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 7162,
-    "nome": "Giovane",
-    "pct": 60
-   },
-   {
-    "id": 7120,
-    "nome": "Lang",
-    "pct": 40
    }
   ],
   [
@@ -4782,7 +4770,7 @@
   "1850": {
    "id": 1850,
    "tipo": "infortunato",
-   "nota": "distrazione di basso grado al polpaccio della gamba destra, da valutare convocazione per Firenze"
+   "nota": "distrazione di basso grado al polpaccio della gamba destra, tentativo rientro da inizio novembre"
   },
   "1852": {
    "id": 1852,
@@ -4807,7 +4795,7 @@
   "2137": {
    "id": 2137,
    "tipo": "infortunato",
-   "nota": "risentimento ai muscoli flessori della coscia destra, out a Firenze"
+   "nota": "risentimento ai muscoli flessori della coscia destra, tentativo rientro da inizio novembre"
   },
   "2167": {
    "id": 2167,
@@ -4947,7 +4935,7 @@
   "5007": {
    "id": 5007,
    "tipo": "infortunato",
-   "nota": "lesione miotendinea del retto femorale sinistro con lesione parziale del tendine, rientro da fine marzo"
+   "nota": "lesione miotendinea del retto femorale sinistro con lesione parziale del tendine, rientro da aprile"
   },
   "5172": {
    "id": 5172,
