@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-10-29T12:07:28.950Z",
+ "generato": "2026-10-29T20:01:04.414Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 9,
  "giornateDiscordi": [
@@ -199,7 +199,7 @@
    "stadio": "Benito Stirpe"
   },
   "Lecce": {
-   "modulo": "4-3-3",
+   "modulo": "5-3-2",
    "inCasa": false,
    "avversario": "Frosinone",
    "data": "giovedì 29 ottobre, 18:30",
@@ -397,7 +397,7 @@
    "nome": "Zappacosta",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -577,7 +577,7 @@
    "nome": "Falcone",
    "squadra": "Lecce",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -649,7 +649,7 @@
    "nome": "De Gea",
    "squadra": "Fiorentina",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -910,9 +910,9 @@
    "nome": "Gaetano",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4374": {
    "id": 4374,
@@ -928,9 +928,9 @@
    "nome": "Terzic",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "4378": {
    "id": 4378,
@@ -955,7 +955,7 @@
    "nome": "Carnesecchi",
    "squadra": "Atalanta",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -991,7 +991,7 @@
    "nome": "Fagioli",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1009,7 +1009,7 @@
    "nome": "Elmas",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1027,7 +1027,7 @@
    "nome": "Gallo",
    "squadra": "Lecce",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1162,16 +1162,16 @@
    "nome": "Brescianini",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "4952": {
    "id": 4952,
    "nome": "Monterisi",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1261,8 +1261,8 @@
    "nome": "Geubbels",
    "squadra": "Lecce",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": true,
+   "pct": 10,
+   "titolare": false,
    "incerto": true
   },
   "5036": {
@@ -1351,7 +1351,7 @@
    "nome": "Dragusin",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1369,9 +1369,9 @@
    "nome": "Zalewski",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "5424": {
    "id": 5424,
@@ -1387,7 +1387,7 @@
    "nome": "Raimondo",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1405,7 +1405,7 @@
    "nome": "Maleh",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1477,8 +1477,8 @@
    "nome": "Scalvini",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": true,
+   "pct": 30,
+   "titolare": false,
    "incerto": true
   },
   "5555": {
@@ -1577,7 +1577,7 @@
    "squadra": "Fiorentina",
    "ruolo": "A",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "5695": {
@@ -1675,7 +1675,7 @@
    "nome": "Ederson D.S.",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1891,7 +1891,7 @@
    "nome": "De Ketelaere",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2089,7 +2089,7 @@
    "nome": "Kvernadze",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2179,7 +2179,7 @@
    "nome": "Oyono A.",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2215,7 +2215,7 @@
    "nome": "Ndour",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2288,7 +2288,7 @@
    "squadra": "Lecce",
    "ruolo": "C",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6415": {
@@ -2296,7 +2296,7 @@
    "nome": "Palmisani",
    "squadra": "Frosinone",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2305,7 +2305,7 @@
    "nome": "Krstovic",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2332,7 +2332,7 @@
    "nome": "Kristensen T.",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2386,7 +2386,7 @@
    "nome": "Ghedjemis",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2395,9 +2395,9 @@
    "nome": "Jimenez A.",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6534": {
    "id": 6534,
@@ -2737,7 +2737,7 @@
    "nome": "Njie",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 70,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2756,7 +2756,7 @@
    "squadra": "Atalanta",
    "ruolo": "C",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6867": {
@@ -2872,9 +2872,9 @@
    "nome": "Masini",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "6925": {
    "id": 6925,
@@ -2926,16 +2926,16 @@
    "nome": "Tiago Gabriel",
    "squadra": "Lecce",
    "ruolo": "D",
-   "pct": 20,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6990": {
    "id": 6990,
    "nome": "Veiga D.",
    "squadra": "Lecce",
    "ruolo": "D",
-   "pct": 75,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2954,7 +2954,7 @@
    "squadra": "Lecce",
    "ruolo": "A",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7012": {
@@ -2989,9 +2989,9 @@
    "nome": "Pellegrino M.",
    "squadra": "Fiorentina",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7036": {
    "id": 7036,
@@ -3052,7 +3052,7 @@
    "nome": "Mastantuono",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3160,9 +3160,9 @@
    "nome": "Joao Mario",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 35,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7181": {
    "id": 7181,
@@ -3178,7 +3178,7 @@
    "nome": "Ndaba",
    "squadra": "Lecce",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3250,7 +3250,7 @@
    "nome": "Bernasconi",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3304,7 +3304,7 @@
    "nome": "Siebert",
    "squadra": "Lecce",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3376,9 +3376,9 @@
    "nome": "Valdepenas",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 85,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "7301": {
    "id": 7301,
@@ -3439,9 +3439,9 @@
    "nome": "Gandelman",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7319": {
    "id": 7319,
@@ -3457,7 +3457,7 @@
    "nome": "Ngom",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3583,7 +3583,7 @@
    "nome": "Viery",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3692,7 +3692,7 @@
    "squadra": "Fiorentina",
    "ruolo": "C",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7467": {
@@ -3700,9 +3700,9 @@
    "nome": "Calvani",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7469": {
    "id": 7469,
@@ -3710,7 +3710,7 @@
    "squadra": "Frosinone",
    "ruolo": "D",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7472": {
@@ -3718,7 +3718,7 @@
    "nome": "Calò",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3727,9 +3727,9 @@
    "nome": "Cichella",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7475": {
    "id": 7475,
@@ -3952,7 +3952,7 @@
    "nome": "Schmid",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4168,7 +4168,7 @@
    "nome": "Monteiro J.",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4249,9 +4249,9 @@
    "nome": "Obric",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7634": {
    "id": 7634,
@@ -4267,9 +4267,9 @@
    "nome": "Esteban",
    "squadra": "Lecce",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7652": {
    "id": 7652,
@@ -4281,140 +4281,7 @@
    "incerto": true
   }
  },
- "ballottaggi": [
-  [
-   {
-    "id": 7467,
-    "nome": "Calvani",
-    "pct": 60
-   },
-   {
-    "id": 5757,
-    "nome": "Cittadini",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 7469,
-    "nome": "Bracaglia",
-    "pct": 55
-   },
-   {
-    "id": 4375,
-    "nome": "Terzic",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 6410,
-    "nome": "Kaba",
-    "pct": 60
-   },
-   {
-    "id": 7248,
-    "nome": "Gorter",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 7001,
-    "nome": "N'Dri",
-    "pct": 55
-   },
-   {
-    "id": 7602,
-    "nome": "Fatah",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 5029,
-    "nome": "Geubbels",
-    "pct": 60
-   },
-   {
-    "id": 7647,
-    "nome": "Esteban",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 6531,
-    "nome": "Jimenez A.",
-    "pct": 60
-   },
-   {
-    "id": 5885,
-    "nome": "Dodò",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 7464,
-    "nome": "Oulai",
-    "pct": 55
-   },
-   {
-    "id": 4947,
-    "nome": "Brescianini",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 5694,
-    "nome": "Beto",
-    "pct": 55
-   },
-   {
-    "id": 7023,
-    "nome": "Pellegrino M.",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 5526,
-    "nome": "Scalvini",
-    "pct": 55
-   },
-   {
-    "id": 7633,
-    "nome": "Obric",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 4364,
-    "nome": "Gaetano",
-    "pct": 60
-   },
-   {
-    "id": 2077,
-    "nome": "Pasalic",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 6844,
-    "nome": "Rowe",
-    "pct": 60
-   },
-   {
-    "id": 5422,
-    "nome": "Zalewski",
-    "pct": 40
-   }
-  ]
- ],
+ "ballottaggi": [],
  "indisponibili": {
   "309": {
    "id": 309,
@@ -4765,11 +4632,6 @@
    "id": 6980,
    "tipo": "infortunato",
    "nota": "problema al tendine rotuleo, rientro inizio novembre"
-  },
-  "6989": {
-   "id": 6989,
-   "tipo": "dubbio",
-   "nota": "contusione al ginocchio, da valutare per Frosinone"
   },
   "7069": {
    "id": 7069,
