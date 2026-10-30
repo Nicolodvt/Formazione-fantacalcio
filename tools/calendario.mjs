@@ -63,6 +63,12 @@ export function parseData(s) {
   return d;
 }
 
+/* Margine fra il calcio d'inizio e la scadenza per schierare: lo stesso del countdown in
+   index.html (MINUTI_SCADENZA), altrimenti l'app mostrerebbe "scaduto" in un momento diverso da
+   quando la Action smette di considerarti in ritardo. Qui dal 30/10, comune ai due promemoria. */
+export const MINUTI_SCADENZA = 5;
+export const scadenzaDi = (prima) => new Date(prima.quando.getTime() - MINUTI_SCADENZA * 60000);
+
 export function primaPartita(prob) {
   let prima = null;
   for (const p of prob.partite || []) {
