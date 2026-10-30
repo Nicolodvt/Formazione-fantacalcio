@@ -851,11 +851,28 @@ function rettificaPartita(p){
    solo nasconde il caso peggiore (il fortissimo che pero' non gioca).
    ======================================================================================= */
 
-/* Chi non parte titolare puo comunque entrare e prendere voto. Si applica SOLO a chi non e
-   dato titolare: per un titolare al 90% sommare la coda del subentro non cambia la sostanza
-   e appiattisce la lettura (diventavano tutti 91%, indistinguibili). Per una riserva, invece,
-   la coda pesa: entrare a mezzora dalla fine e prendere voto capita spesso. */
-const SUBENTRO = 0.18;
+/* CALIBRAZIONE DELLE PROBABILI (30/10). La percentuale di fantacalcio.it non e' la
+   probabilita' di prendere voto: misurata a ritroso su G3-G8 (tools/banco-previsioni.mjs, 2671
+   convocati senza infortuni), i titolari giocano piu' spesso di quanto dice (dati al 55%:
+   giocano l'82%; al 90%: il 96%), le riserve molto meno (al 5%: 2%; al 25%: 12%). Il modello di
+   prima ci aggiungeva due errori suoi: uno sconto del 15% sui titolari "incerti", che la
+   percentuale aveva gia' scontato (un titolare in ballottaggio finiva al 47% e giocava l'82%), e
+   una coda fissa del 18% per il subentro delle riserve, che nei dati non c'e' (una riserva al 5%
+   finiva al 20%). Ora: curva logistica sulla percentuale, separata per titolari e riserve, piu'
+   quante delle ultime 3 giornate ha preso voto (chi gioca sempre tende a giocare ancora).
+   Coefficienti stimati su G3-G8 e verificati lasciando fuori una giornata alla volta: Brier sui
+   convocati da 0.154 a 0.128. Da ristimare con "node tools/banco-previsioni.mjs --certezza"
+   quando ci sono piu' giornate. [costante, peso del logit della percentuale, peso delle giocate] */
+const CERTEZZA_TITOLARE = [0.49, 0.76, 0.94];
+const CERTEZZA_RISERVA = [-0.39, 1.20, 0.79];
+
+/* Quota delle ultime 3 giornate (prima di quella in arrivo) in cui ha preso voto, 0..1. Sempre
+   su 3, anche a inizio stagione, come nella stima dei coefficienti. */
+function giocateRecenti(id){
+  const v = STORICO[id];
+  if(!v || !PROB || PROB.giornata==null) return 0;
+  return v.filter(x=> x.giornata >= PROB.giornata-3 && x.giornata < PROB.giornata && x.fantavoto != null).length / 3;
+}
 
 function datiGiornata(id){
   if(!PROB) return {prob:null, ind:null, squadraInCampo:false};
@@ -867,18 +884,11 @@ function datiGiornata(id){
   };
 }
 
-/* CONDIZIONE: quanto spesso e' entrato dalla panchina nelle ultime presenze vere, invece di
-   partire titolare. Un segnale che il dato della settimana (titolare/pct) non cattura da
-   solo: un allenatore che continua a farlo entrare a gara in corso, nonostante le probabili
-   lo dessero "titolare", di solito lo sta ancora gestendo (rientro da un problema, minutaggio
-   contato) piu' di quanto un singolo dato settimanale lasci intuire. null con troppo poche
-   presenze per dire qualcosa (serve la stagione avviata, non i primi turni). */
-function tassoSubentro(id){
-  const v = STORICO[id];
-  if(!v || !v.length) return null;
-  const recenti = v.filter(x=> x.fantavoto != null).slice(-5);
-  if(recenti.length < 2) return null;
-  return recenti.filter(x=> x.subentrato).length / recenti.length;
+function probabilitaCalibrata(prob, giocate){
+  const pct = Math.max(1, Math.min(99, prob.pct==null ? (prob.titolare?85:20) : prob.pct)) / 100;
+  const w = prob.titolare ? CERTEZZA_TITOLARE : CERTEZZA_RISERVA;
+  const z = w[0] + w[1]*Math.log(pct/(1-pct)) + w[2]*giocate;
+  return 1/(1+Math.exp(-z));
 }
 
 function certezza(id){
@@ -898,27 +908,14 @@ function certezza(id){
        lasciarlo salire al 100% lo faceva schierare davanti a chi era davvero confermato. */
     p = Math.min((l.t==null ? 70 : l.t)/100, 0.75);
   }else if(d.prob){
-    p = (d.prob.pct==null ? (d.prob.titolare?0.85:0.20) : d.prob.pct/100);
-    /* data-status="warn" e' un dubbio dichiarato dalla fonte, ma le riserve ce l'hanno
-       tutte per definizione: vale come segnale solo sui titolari. Lo sconto base e' 0.85;
-       se nelle ultime presenze e' entrato spesso dalla panchina nonostante fosse "titolare"
-       sulla carta, il dubbio pesa di piu' (fino a 0.70 per chi e' sempre subentrato). Senza
-       abbastanza presenze per saperlo, resta lo sconto base di sempre. */
-    if(d.prob.incerto && d.prob.titolare){
-      const tasso = tassoSubentro(id);
-      p *= (tasso==null) ? 0.85 : (0.85 - 0.15*tasso);
-    }
+    /* Il dubbio dichiarato (data-status="warn") e i subentri non entrano piu' a parte: misurati,
+       non aggiungevano nulla alla percentuale calibrata (vedi CERTEZZA_TITOLARE sopra). */
+    p = probabilitaCalibrata(d.prob, giocateRecenti(id));
   }else{
     /* La sua squadra gioca ma lui non e' tra i 24 convocabili elencati. Non e' un buco nei
        dati: e' l'informazione che non giochera'. */
     p = 0.02;
   }
-
-  /* La coda del subentro va applicata PRIMA dei tetti, e solo a chi risulta comunque
-     convocato. Applicandola dopo, come faceva la versione precedente, un infortunato risaliva
-     da 0.12 a 0.196 e uno fuori dai convocati da 0.02 a 0.196: i due tetti non tenevano piu
-     nulla, e tutti e 42 gli infortunati della giornata uscivano identici al 19,6%. */
-  if(d.prob && !d.prob.titolare) p = p + SUBENTRO*(1-p);
 
   /* Questi sono tetti, non sconti: vengono per ultimi e nessuno li deve poter risalire. */
   if(d.ind && d.ind.tipo==='dubbio') p *= 0.65;
@@ -1481,8 +1478,8 @@ async function caricaStorico(){
 /* La parte senza rete, separata (29/09) perche' serve anche all'avvio, PRIMA del primo
    disegno: prima il primo render usava uno STORICO vuoto (stime pure da quotazioni, formazione
    a volte diversa) e lo correggeva un attimo dopo, con un ricalcolo completo dei moduli in piu'. */
-/* Le voci di ogni giocatore stanno in ordine di giornata (29/09): tassoSubentro() prende le
-   ultime cinque e la scheda le elenca cosi' come sono. Una giornata scaricata in ritardo (un
+/* Le voci di ogni giocatore stanno in ordine di giornata (29/09): la scheda le elenca cosi'
+   come sono. Una giornata scaricata in ritardo (un
    giro senza rete proprio su quella) finiva in coda, dopo le giornate piu' recenti. */
 function perGiornata(a, b){ return a.giornata - b.giornata; }
 function leggiStoricoSalvato(){

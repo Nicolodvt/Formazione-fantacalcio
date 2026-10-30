@@ -56,7 +56,7 @@ const sorgente = [
   'let RETTIFICA_PIAZZATI = {};',
   'const LIS = {}; LISTONE.forEach(p=> LIS[p.id]=p);',
   pezzo('MV_ZONA', 'const'), pezzo('BONUS_MAX', 'const'), pezzo('BONUS_CURVA', 'const'),
-  pezzo('BONUS_PIAZZATI', 'const'), pezzo('MALUS_FISSO', 'const'), pezzo('SUBENTRO', 'const'),
+  pezzo('BONUS_PIAZZATI', 'const'), pezzo('MALUS_FISSO', 'const'), pezzo('CERTEZZA_TITOLARE', 'const'), pezzo('CERTEZZA_RISERVA', 'const'),
   pezzo('MODULI', 'const'), pezzo('SLOT_MAX', 'const'), pezzo('MAX_CAMBI', 'const'),
   pezzo('MOD_MIN_DIFENSORI', 'const'), pezzo('MOD_FASCE', 'const'), pezzo('MOD_INCERTEZZA', 'const'),
   pezzo('bonusModificatore'), pezzo('modificatoreAttesoCache', 'const'), pezzo('modificatoreAtteso'), pezzo('N_SIM', 'const'),
@@ -67,7 +67,7 @@ const sorgente = [
   pezzo('votoMisurato'), pezzo('mvStimata'), pezzo('golSubitiAttesi'), pezzo('fantamediaStimata'),
   pezzo('rendimento'), pezzo('correzionePiazzati'), pezzo('fantamediaAttesa'),
   pezzo('CASA_BONUS', 'const'), pezzo('PESO_AVVERSARIO', 'const'), pezzo('rettificaPartita'),
-  pezzo('datiGiornata'), pezzo('tassoSubentro'), pezzo('certezza'), pezzo('contributoAtteso'),
+  pezzo('datiGiornata'), pezzo('giocateRecenti'), pezzo('probabilitaCalibrata'), pezzo('certezza'), pezzo('contributoAtteso'),
   pezzo('scegliUndici'), pezzo('tabellaSimulazione'), pezzo('simula'), pezzo('valuta'), pezzo('classificaModuli'),
   'calcolaMvSquadre(); aggiornaForzaSquadre();',
   'return { fantamediaAttesa, certezza, contributoAtteso, rettificaPartita, scegliUndici, valuta, classificaModuli, LIS };'
