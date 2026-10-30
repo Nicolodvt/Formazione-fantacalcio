@@ -1,16 +1,15 @@
 {
- "giornata": 9,
+ "giornata": 10,
  "inviate": {
   "72h": "superata",
-  "48h": "2026-10-26T13:49:43.404Z",
-  "24h": "2026-10-26T19:42:27.357Z",
-  "8h": "superata",
-  "3h": "2026-10-27T14:30:07.394Z"
+  "48h": "superata",
+  "24h": "2026-10-30T15:47:35.790Z"
  },
  "ultimoInvio": {
-  "id": "2026-10-27T14:30:07.394Z",
-  "quando": "2026-10-27T14:30:07.394Z",
-  "fonte": "sito"
+  "id": "2026-10-30T15:47:35.790Z",
+  "quando": "2026-10-30T15:47:35.790Z",
+  "fonte": "sito",
+  "scade": "2026-10-31T13:54:59.790Z"
  },
- "ricevutaSegnalata": true
+ "persiDiFila": 1
 }
