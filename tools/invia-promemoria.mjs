@@ -13,9 +13,10 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { primaPartita, infrasettimanale } from './calendario.mjs';
+import { primaPartita, infrasettimanale, scadenzaDi } from './calendario.mjs';
 import {
-  VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, segnalaScaduto, rimedioScaduto, urlSito
+  VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, segnalaScaduto, rimedioScaduto, urlSito,
+  opzioniPromemoria
 } from './notifiche.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
@@ -115,8 +116,12 @@ async function main() {
     corpo: `Si comincia ${oraItaliana} con ${prima.casa}-${prima.trasferta}.`
   });
 
+  /* Stesse opzioni dei promemoria di scadenza (30/10): fino ad allora questo partiva con i valori
+     di web-push (urgenza "normal", validita' 4 settimane, nessun topic), cioe' poteva arrivare ore
+     dopo, in blocco, e la sua ricevuta prendere sul sito il posto di quella di un promemoria
+     spedito nel frattempo. Con il topic comune un promemoria sostituisce l'avviso ancora in attesa. */
   try {
-    await inviaConRiprova(webpush, subscription, payload);
+    await inviaConRiprova(webpush, subscription, payload, opzioniPromemoria(scadenzaDi(prima) - Date.now()));
     console.log('Promemoria spedito.');
   } catch (err) {
     /* 404/410 vuol dire che l'abbonamento non e' piu' valido (disiscritto, endpoint

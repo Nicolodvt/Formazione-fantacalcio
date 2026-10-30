@@ -24,14 +24,20 @@ name: Aggiorna dati di giornata
 # Il grosso arriva il venerdi (allenamenti, dubbi, ballottaggi che si sciolgono), quindi e' li'
 # che si concentra la lettura piu' fitta, un giro all'ora. L'ultimo giro di venerdi e' alle 20:00,
 # non piu' tardi: col venerdi sera che spesso ha gia' una partita alle 20:45, un giro dopo il
-# fischio d'inizio sarebbe uno sprecato. Orari in UTC (d'estate l'Italia e' UTC+2):
-#   lunedi e martedi  09:00 e 21:00 CEST   -> voti del turno concluso, sempre
-#   martedi           08:00-20:00 CEST     -> in piu', un giro all'ora ma solo se infrasettimanale
-#   mercoledi         09:00 e 15:00 CEST   -> due letture, si comincia a preparare
-#   giovedi           08/11/14/17/20 CEST  -> cinque letture nella giornata
-#   venerdi           08:00-20:00 CEST     -> un giro all'ora, si ferma prima delle partite serali
-#   sabato            09:00 e 12:00 CEST   -> aggiornamenti prima delle partite del pomeriggio
-#   domenica          09:00 CEST           -> ultimo giro prima del grosso della giornata
+# fischio d'inizio sarebbe uno sprecato. Orari in UTC: il cron di GitHub non conosce il cambio
+# d'ora, quindi d'inverno (ora solare, UTC+1, da fine ottobre a fine marzo) ogni giro scatta
+# un'ora PRIMA in ora italiana. Ora legale (CEST) / ora solare (CET):
+#   lunedi e martedi  09 e 21 / 08 e 20      -> voti del turno concluso, sempre
+#   martedi           08-20 / 07-19          -> in piu', un giro all'ora ma solo se infrasettimanale
+#   mercoledi         09 e 15 / 08 e 14      -> due letture, si comincia a preparare
+#   giovedi           08/11/14/17/20 / 07/10/13/16/19 -> cinque letture nella giornata
+#   venerdi           08-21 / 07-20          -> un giro all'ora fino alle partite serali
+#   sabato            09 e 12 / 08 e 11      -> aggiornamenti prima delle partite del pomeriggio
+#   domenica          09 / 08                -> ultimo giro prima del grosso della giornata
+# Il venerdi arriva fino alle 19 UTC (30/10): con l'ora solare l'ultimo giro utile prima di un
+# anticipo delle 20:45 cadeva alle 19 italiane invece che alle 20. D'estate quel giro diventa le
+# 21, dopo il fischio d'inizio: serve comunque per le partite del sabato. Gli altri giorni l'ora
+# di differenza non cambia niente (il cron salta comunque quasi un giro su due).
 #
 # VOTI — hanno senso solo a giornata conclusa. Si prova lunedi e martedi, e dal 27/09 anche nei
 # giri di mercoledi e giovedi: il cron salta spesso dei giri, e se saltano i due del martedi
@@ -54,7 +60,7 @@ on:
                                  # (l'ora 07 e' gia' coperta dalla riga sopra, per non farle scattare insieme)
     - cron: '0 7,13 * * 3'      # mercoledi, 09:00 e 15:00 CEST
     - cron: '0 6,9,12,15,18 * * 4'   # giovedi, 5 giri (08/11/14/17/20 CEST)
-    - cron: '0 6-18 * * 5'      # venerdi, ogni ora dalle 08:00 alle 20:00 CEST
+    - cron: '0 6-19 * * 5'      # venerdi, ogni ora (08-21 CEST, 07-20 CET)
     - cron: '0 7,10 * * 6'      # sabato, invariato
     - cron: '0 7 * * 0'         # domenica, invariato
   workflow_dispatch:

@@ -22,7 +22,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { primaPartita, infrasettimanale } from './calendario.mjs';
+import { primaPartita, infrasettimanale, scadenzaDi } from './calendario.mjs';
 import {
   VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, statoSito,
   segnalaScaduto, rimedioScaduto, urlSito, opzioniPromemoria
@@ -32,10 +32,8 @@ const QUI = dirname(fileURLToPath(import.meta.url));
 const FILE_PROB = join(QUI, '..', 'dati', 'probabili.json');
 const FILE_STATO = join(QUI, '..', 'dati', 'scadenza-promemoria.json');
 
-/* Stessi 5 minuti di margine usati dal countdown in index.html (MINUTI_SCADENZA): i due vanno
-   tenuti allineati, altrimenti l'app mostrerebbe "scaduto" in un momento diverso da quando la
-   Action smette di considerarti in ritardo. */
-const MINUTI_SCADENZA = 5;
+/* Scadenza = calcio d'inizio meno MINUTI_SCADENZA (scadenzaDi in calendario.mjs, allineata al
+   countdown di index.html). */
 
 /* Chiave pubblica, risposte da "abbonamento da rifare", riprova sugli intoppi momentanei:
    in tools/notifiche.mjs, comuni con invia-promemoria.mjs. */
@@ -48,6 +46,51 @@ const TRANSITORI_PRIMA_DEL_ROSSO = 3;
    12 ore coprono una notte e un viaggio, non una settimana di silenzio come a settembre. */
 const ORE_SENZA_RICEVUTA = 12;
 
+/* Dal 24/10 un promemoria vale solo fino alla scadenza (TTL, opzioniPromemoria): se il telefono
+   non lo prende entro allora il servizio push lo butta, e la ricevuta non arrivera' mai. Quindi
+   il verdetto si da' alla scadenza (piu' un margine per la ricevuta), non dopo 12 ore fisse. */
+const MINUTI_MARGINE_RICEVUTA = 15;
+
+/* Promemoria non arrivati di fila prima di andare in rosso (30/10). Uno solo vuol dire telefono
+   spento o senza rete in quelle ore (il 3h del 27/10, 15:30 italiane, mentre il 24h della sera
+   prima era arrivato in 9 minuti): un avviso, non un'email di "non funziona". Due di fila sono un
+   guasto vero (telefono scollegato, Chrome limitato dal risparmio energetico). Il contatore passa
+   da una giornata all'altra e si azzera alla prima ricevuta. */
+const PERSI_PRIMA_DEL_ROSSO = 2;
+
+/* Entro quando deve arrivare la ricevuta dell'invio u (ms). Senza "scade" (stati scritti prima
+   del 30/10) vale la regola vecchia delle 12 ore. */
+function limiteRicevuta(u) {
+  const limite = Date.parse(u.quando) + ORE_SENZA_RICEVUTA * 3600000;
+  return u.scade ? Math.min(limite, Date.parse(u.scade) + MINUTI_MARGINE_RICEVUTA * 60000) : limite;
+}
+
+/* Verdetto "non arrivato" sull'ultimo invio: avviso al primo, rosso (una volta per giornata) dal
+   secondo di fila. */
+function segnaNonArrivato(stato, u, entroQuando) {
+  u.esito = 'non arrivata';
+  stato.persiDiFila = (stato.persiDiFila || 0) + 1;
+  const quale = `Il promemoria del ${u.id} non e' arrivato sul telefono ${entroQuando}`;
+  if (stato.persiDiFila < PERSI_PRIMA_DEL_ROSSO) {
+    console.log(`::warning::${quale}: probabilmente spento o senza rete in quelle ore. Primo di fila, nessuna email; ` +
+      'al secondo di fila il giro va in rosso.');
+    return;
+  }
+  if (stato.ricevutaSegnalata) {
+    console.log(`::warning::${quale} (${stato.persiDiFila} di fila, gia' segnalato per questa giornata).`);
+    return;
+  }
+  stato.ricevutaSegnalata = true;
+  console.log(`::error::${quale}, ed e' il ${stato.persiDiFila}° di fila. Apri l app con la rete (Impostazioni -> ` +
+    'Notifiche): deve dire "collegato a questo telefono", se no tocca Ricollega. Se lo dice gia\', sul telefono: ' +
+    'Impostazioni -> App -> Chrome -> Batteria -> "Senza limitazioni".');
+  process.exitCode = 1;
+}
+
+/* true se in questo giro il sito ha risposto alla lettura delle ricevute: senza, un invio non
+   confermato non si puo' dare per perso (non lo sappiamo). */
+let ricevuteLette = false;
+
 /* La ricevuta dell'ultimo invio (16/10): il service worker la scrive sul sito appena mostra la
    notifica (sw.js). Fino a settembre "spedito" voleva dire solo "accettato dal servizio push": per
    settimane nessuna notifica e' arrivata sul telefono e nessuno poteva saperlo. Solo per gli
@@ -55,13 +98,15 @@ const ORE_SENZA_RICEVUTA = 12;
    che le ricevute non le manda. Restituisce true se lo stato e' cambiato. */
 async function controllaRicevuta(stato, sitoUrl, ora) {
   const u = stato.ultimoInvio;
-  if (!u || u.confermato || u.fonte !== 'sito') return false;
+  if (!u || u.confermato || u.esito || u.fonte !== 'sito') return false;
   const sito = await statoSito(sitoUrl);
   if (!sito) return false;
+  ricevuteLette = true;
   const ric = sito.ricevuta;
   if (ric && ric.id === u.id) {
     u.confermato = ric.quando;
     u.esito = ric.esito;
+    delete stato.persiDiFila;
     if (ric.esito === 'mostrata') {
       console.log(`Il telefono ha confermato il promemoria del ${u.id} (alle ${ric.quando}).`);
     } else if (!stato.ricevutaSegnalata) {
@@ -72,12 +117,20 @@ async function controllaRicevuta(stato, sitoUrl, ora) {
     }
     return true;
   }
-  if (ora.getTime() - Date.parse(u.quando) > ORE_SENZA_RICEVUTA * 3600000 && !stato.ricevutaSegnalata) {
-    stato.ricevutaSegnalata = true;
-    console.log(`::error::Il promemoria del ${u.id} e' stato accettato dal servizio push ma il telefono non ha ` +
-      `confermato di averlo ricevuto in ${ORE_SENZA_RICEVUTA} ore. Apri l app con la rete (Impostazioni -> Notifiche): ` +
-      'deve dire "collegato a questo telefono"; se no tocca Ricollega.');
-    process.exitCode = 1;
+  /* Sul sito c'e' posto per una ricevuta sola: se dopo questo invio il telefono ha mostrato
+     un'altra notifica (l'avviso di giornata nuova, una prova a mano), quella ha preso il posto
+     della nostra. Il telefono pero' era raggiungibile e la catena funzionava: non e' un guasto. */
+  if (ric && ric.esito === 'mostrata' && Date.parse(ric.quando) >= Date.parse(u.quando)) {
+    u.confermato = ric.quando;
+    u.esito = 'mostrata (ricevuta sostituita da quella di ' + ric.id + ')';
+    delete stato.persiDiFila;
+    console.log(`Nessuna ricevuta col proprio id per il promemoria del ${u.id}, ma il telefono ha mostrato ` +
+      `un'altra notifica dopo (${ric.id}, alle ${ric.quando}): raggiungibile.`);
+    return true;
+  }
+  if (ora.getTime() > limiteRicevuta(u)) {
+    segnaNonArrivato(stato, u, u.scade && limiteRicevuta(u) < Date.parse(u.quando) + ORE_SENZA_RICEVUTA * 3600000
+      ? 'prima della scadenza (dopo il servizio push lo scarta)' : `in ${ORE_SENZA_RICEVUTA} ore`);
     return true;
   }
   return false;
@@ -237,13 +290,21 @@ async function main() {
     console.log('Nessuna data di partita leggibile: salto.');
     return;
   }
-  const scadenza = new Date(prima.quando.getTime() - MINUTI_SCADENZA * 60000);
+  const scadenza = scadenzaDi(prima);
   const ora = new Date();
 
   let stato = leggiJson(FILE_STATO, { giornata: null, inviate: {} });
   /* Giornata nuova rispetto all'ultima registrata: si riparte da zero, le soglie di una
-     giornata passata non hanno piu senso per quella nuova. */
-  if (stato.giornata !== prob.giornata) stato = { giornata: prob.giornata, inviate: {} };
+     giornata passata non hanno piu senso per quella nuova. Restano (30/10) il conto dei
+     promemoria non arrivati di fila e l'ultimo invio se aspetta ancora il verdetto. */
+  if (stato.giornata !== prob.giornata) {
+    const u = stato.ultimoInvio;
+    stato = {
+      giornata: prob.giornata, inviate: {},
+      ...(stato.persiDiFila ? { persiDiFila: stato.persiDiFila } : {}),
+      ...(u && !u.confermato && !u.esito ? { ultimoInvio: u } : {})
+    };
+  }
   const salvaStato = () => writeFileSync(FILE_STATO, JSON.stringify(stato, null, 1) + '\n');
   if (await controllaRicevuta(stato, SITO_URL, ora)) salvaStato();
 
@@ -336,15 +397,26 @@ async function main() {
       `Giornata ${prob.giornata}, si comincia ${oraItaliana} (${prima.casa}-${prima.trasferta}). Non hai ancora segnato la formazione.`
   });
 
+  const opzioni = opzioniPromemoria(scadenza.getTime() - ora.getTime());
   try {
-    await inviaConRiprova(webpush, subscription, payload, opzioniPromemoria(scadenza.getTime() - ora.getTime()));
+    await inviaConRiprova(webpush, subscription, payload, opzioni);
     console.log(`Promemoria ${daInviare.chiave} spedito.`);
     segnaDovute(ora.toISOString());
     delete stato.erroriInvio;
     /* Tornato a funzionare (21/10): se l'indirizzo muore di nuovo nella stessa giornata, e' un
        guasto nuovo e merita la sua email. Prima restava "gia' segnalato" fino alla giornata dopo. */
     delete stato.abbonamentoScadutoSegnalato;
-    stato.ultimoInvio = { id: ora.toISOString(), quando: ora.toISOString(), fonte };
+    /* L'invio di prima senza ricevuta, ora che il nuovo lo sostituisce (stesso topic), non
+       arrivera' piu' (30/10). Prima veniva sovrascritto in silenzio: il 48h della G9 non si sa
+       se sia mai arrivato. Solo se il sito ha appena risposto, altrimenti non lo sappiamo. */
+    const prec = stato.ultimoInvio;
+    if (prec && prec.fonte === 'sito' && !prec.confermato && !prec.esito && ricevuteLette) {
+      segnaNonArrivato(stato, prec, 'prima del promemoria successivo');
+    }
+    stato.ultimoInvio = {
+      id: ora.toISOString(), quando: ora.toISOString(), fonte,
+      scade: new Date(ora.getTime() + opzioni.TTL * 1000).toISOString()
+    };
   } catch (err) {
     if (ABBONAMENTO_DA_RIFARE.includes(err.statusCode)) {
       /* Prima questo caso finiva solo nel log e la soglia veniva segnata con l'orario, come se

@@ -117,6 +117,7 @@ function preparaBancoPromemoria() {
   mkdirSync(join(dir, 'tools')); mkdirSync(join(dir, 'dati'));
   mkdirSync(join(dir, 'node_modules', 'web-push'), { recursive: true });
   copyFileSync(join(QUI, 'promemoria-scadenza.mjs'), join(dir, 'tools', 'promemoria-scadenza.mjs'));
+  copyFileSync(join(QUI, 'invia-promemoria.mjs'), join(dir, 'tools', 'invia-promemoria.mjs'));
   copyFileSync(join(QUI, 'calendario.mjs'), join(dir, 'tools', 'calendario.mjs'));
   copyFileSync(join(QUI, 'notifiche.mjs'), join(dir, 'tools', 'notifiche.mjs'));
   writeFileSync(join(dir, 'node_modules', 'web-push', 'package.json'),
@@ -155,9 +156,9 @@ function preparaBancoPromemoria() {
   return dir;
 }
 
-function giroPromemoria(dir, oraIso, extraEnv = {}) {
+function giroPromemoria(dir, oraIso, extraEnv = {}, script = 'promemoria-scadenza.mjs') {
   const r = spawnSync(process.execPath,
-    ['--import', pathToFileURL(join(dir, 'orologio.mjs')).href, join(dir, 'tools', 'promemoria-scadenza.mjs')], {
+    ['--import', pathToFileURL(join(dir, 'orologio.mjs')).href, join(dir, 'tools', script)], {
       env: {
         ...process.env, ORA_FINTA: oraIso, VAPID_PRIVATE_KEY: 'finta', PUSH_SUBSCRIPTION: '{}',
         NETLIFY_SITE_URL: 'https://finto.example', FINTO_PUSH_LOG: join(dir, 'spediti.jsonl'), FINTO_POST_LOG: join(dir, 'post.jsonl'),
@@ -270,14 +271,69 @@ async function provePromemoria() {
     verifica('  ricevuta del telefono: promemoria confermato, giro verde',
       r2.codice === 0 && statoPromemoria(dir).ultimoInvio.confermato === '2026-10-09T13:00:05Z', r2.uscita.trim());
 
+    /* 30/10: un promemoria perso da solo (telefono spento qualche ora) e' un avviso; rosso solo
+       dal secondo di fila, una volta per giornata. Il 48h vale 48 ore: verdetto dopo 12. */
     azzera(dir, G6);
     giroPromemoria(dir, '2026-10-08T13:00Z', { FINTO_SITO: sito(null) });
     const r3 = giroPromemoria(dir, '2026-10-08T20:00Z', { FINTO_SITO: sito(null) });
     const r4 = giroPromemoria(dir, '2026-10-09T02:00Z', { FINTO_SITO: sito(null) });
     const r5 = giroPromemoria(dir, '2026-10-09T05:00Z', { FINTO_SITO: sito(null) });
-    verifica('  nessuna ricevuta: verde dopo 7 ore, rosso dopo 13, una volta sola',
-      r3.codice === 0 && r4.codice === 1 && /::error::.*non ha\s+confermato/.test(r4.uscita) && r5.codice === 0,
-      `codici ${r3.codice}, ${r4.codice}, ${r5.codice}`);
+    verifica('  nessuna ricevuta: niente dopo 7 ore, avviso senza rosso dopo 13, una volta sola',
+      r3.codice === 0 && !/non e' arrivato/.test(r3.uscita) && r4.codice === 0 && /::warning::.*non e' arrivato.*in 12 ore/.test(r4.uscita) &&
+      r5.codice === 0 && !/non e' arrivato/.test(r5.uscita) && statoPromemoria(dir).persiDiFila === 1,
+      `codici ${r3.codice}, ${r4.codice}, ${r5.codice} ` + r4.uscita.trim());
+    const r5b = giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_SITO: sito(null) });
+    const r5c = giroPromemoria(dir, '2026-10-10T06:30Z', { FINTO_SITO: sito(null) });
+    const r5d = giroPromemoria(dir, '2026-10-10T10:00Z', { FINTO_SITO: sito(null) });
+    verifica('  il 24h senza ricevuta e\' il secondo di fila: rosso; l\'8h sostituito dal 3h e\' il terzo, solo avviso',
+      r5b.codice === 0 && r5c.codice === 1 && /::error::.*2° di fila/.test(r5c.uscita) &&
+      r5d.codice === 0 && /::warning::.*prima del promemoria successivo.*3 di fila/.test(r5d.uscita) && spediti(dir).length === 4,
+      `codici ${r5b.codice}, ${r5c.codice}, ${r5d.codice} ` + r5c.uscita.trim());
+    const r5e = giroPromemoria(dir, '2026-10-10T13:00Z', { FINTO_SITO: sito(null) });
+    const r5f = giroPromemoria(dir, '2026-10-10T13:15Z', { FINTO_SITO: sito(null) });
+    verifica('  il 3h vale fino alla scadenza: verdetto 15 minuti dopo, non 12 ore',
+      statoPromemoria(dir).ultimoInvio.scade === '2026-10-10T12:55:00.000Z' && !/non e' arrivato/.test(r5e.uscita) &&
+      /non e' arrivato.*prima della scadenza/.test(r5f.uscita) && statoPromemoria(dir).persiDiFila === 4,
+      r5e.uscita.trim() + ' | ' + r5f.uscita.trim());
+    const r5g = giroPromemoria(dir, '2026-10-10T14:00Z',
+      { FINTO_SITO: sito({ id: 'prova-2026-10-10T13:50:00.000Z', quando: '2026-10-10T13:50:04Z', esito: 'mostrata' }) });
+    verifica('  il conto si azzera solo con una ricevuta nuova; quelle di un invio gia\' giudicato non contano',
+      r5g.codice === 0 && statoPromemoria(dir).persiDiFila === 4, r5g.uscita.trim());
+
+    /* La ricevuta sul sito e' una sola: un'altra notifica mostrata DOPO l'invio (avviso di
+       giornata, prova a mano) dice che il telefono era raggiungibile. Prima di quell'invio no. */
+    azzera(dir, G6);
+    giroPromemoria(dir, '2026-10-09T13:00Z', { FINTO_SITO: sito(null) });
+    const ricAltra = (quando) => sito({ id: '2026-10-09T12:59:00.000Z', quando, esito: 'mostrata' });
+    giroPromemoria(dir, '2026-10-09T13:30Z', { FINTO_SITO: ricAltra('2026-10-09T12:59:30Z') });
+    const ua = statoPromemoria(dir).ultimoInvio;
+    const ra = giroPromemoria(dir, '2026-10-09T14:00Z', { FINTO_SITO: ricAltra('2026-10-09T13:00:20Z') });
+    verifica('  ricevuta di un\'altra notifica: conta solo se arrivata dopo l\'invio',
+      !ua.confermato && ra.codice === 0 && /raggiungibile/.test(ra.uscita) && statoPromemoria(dir).ultimoInvio.confermato === '2026-10-09T13:00:20Z',
+      ra.uscita.trim());
+
+    /* Avviso di giornata nuova (invia-promemoria.mjs, 30/10): stesse opzioni dei promemoria, cosi'
+       non arriva ore dopo in blocco e un promemoria lo sostituisce se e' ancora in attesa. */
+    azzera(dir, G6);
+    rmSync(join(dir, 'dati', 'promemoria.json'), { force: true });
+    const av = giroPromemoria(dir, '2026-10-06T13:00Z', { FINTO_SITO: sito(null) }, 'invia-promemoria.mjs');
+    const sav = spediti(dir);
+    verifica('avviso di giornata: urgenza alta, valido fino alla scadenza, stesso topic dei promemoria',
+      av.codice === 0 && sav.length === 1 && sav[0].opzioni && sav[0].opzioni.urgency === 'high' &&
+      sav[0].opzioni.topic === 'promemoria-formazione' && sav[0].opzioni.TTL === (SCADENZA_G6 - Date.parse('2026-10-06T13:00Z')) / 1000,
+      av.uscita.trim() + ' ' + JSON.stringify(sav[0] && sav[0].opzioni));
+
+    /* Il conto passa alla giornata dopo, e anche l'invio che aspetta ancora il verdetto. */
+    azzera(dir, G6);
+    writeFileSync(join(dir, 'dati', 'scadenza-promemoria.json'), JSON.stringify({
+      giornata: 5, inviate: { '3h': '2026-10-04T10:00:00.000Z' }, persiDiFila: 1, ricevutaSegnalata: true,
+      ultimoInvio: { id: '2026-10-04T10:00:00.000Z', quando: '2026-10-04T10:00:00.000Z', fonte: 'sito', scade: '2026-10-04T12:55:00.000Z' }
+    }));
+    const rg = giroPromemoria(dir, '2026-10-06T09:00Z', { FINTO_SITO: sito(null) });
+    const sg = statoPromemoria(dir);
+    verifica('  giornata nuova: il 3h della precedente perso e\' il secondo di fila, rosso',
+      rg.codice === 1 && /::error::.*2° di fila/.test(rg.uscita) && sg.giornata === 6 && sg.persiDiFila === 2 && !sg.inviate['3h'],
+      rg.uscita.trim() + ' ' + JSON.stringify(sg));
 
     azzera(dir, G6);
     giroPromemoria(dir, '2026-10-08T13:00Z', { FINTO_SITO: sito(null) });
