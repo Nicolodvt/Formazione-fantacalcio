@@ -3,14 +3,14 @@
  "inviate": {
   "72h": "superata",
   "48h": "superata",
-  "24h": "2026-10-30T15:47:35.790Z"
+  "24h": "2026-10-30T15:47:35.790Z",
+  "8h": "2026-10-31T10:30:06.489Z"
  },
  "ultimoInvio": {
-  "id": "2026-10-30T15:47:35.790Z",
-  "quando": "2026-10-30T15:47:35.790Z",
+  "id": "2026-10-31T10:30:06.489Z",
+  "quando": "2026-10-31T10:30:06.489Z",
   "fonte": "sito",
-  "scade": "2026-10-31T13:54:59.790Z",
-  "esito": "non arrivata"
+  "scade": "2026-10-31T13:54:59.489Z"
  },
  "persiDiFila": 2,
  "ricevutaSegnalata": true
