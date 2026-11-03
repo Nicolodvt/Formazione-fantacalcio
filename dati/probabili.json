@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-02T16:44:48.945Z",
+ "generato": "2026-11-03T01:25:40.681Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 10,
  "giornateDiscordi": [
@@ -388,7 +388,7 @@
    "nome": "Zappacosta",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -532,7 +532,7 @@
    "nome": "Pasalic",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -794,7 +794,7 @@
    "squadra": "Parma",
    "ruolo": "D",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "4147": {
@@ -928,7 +928,7 @@
    "nome": "Carnesecchi",
    "squadra": "Atalanta",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -983,7 +983,7 @@
    "squadra": "Atalanta",
    "ruolo": "C",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "4485": {
@@ -1324,9 +1324,9 @@
    "nome": "Zalewski",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "5424": {
    "id": 5424,
@@ -1432,7 +1432,7 @@
    "nome": "Scalvini",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1630,7 +1630,7 @@
    "nome": "Ederson D.S.",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1729,7 +1729,7 @@
    "nome": "Valeri",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1846,7 +1846,7 @@
    "nome": "De Ketelaere",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2044,9 +2044,9 @@
    "nome": "Fabbian",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6207": {
    "id": 6207,
@@ -2107,7 +2107,7 @@
    "nome": "Tourè E.",
    "squadra": "Parma",
    "ruolo": "A",
-   "pct": 75,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2260,7 +2260,7 @@
    "nome": "Krstovic",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2512,7 +2512,7 @@
    "nome": "Delprato",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2710,7 +2710,7 @@
    "nome": "Rowe",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2800,7 +2800,7 @@
    "nome": "Keita M.",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3196,7 +3196,7 @@
    "nome": "Bernasconi",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3232,7 +3232,7 @@
    "nome": "Troilo",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3286,7 +3286,7 @@
    "nome": "Britschgi",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3547,7 +3547,7 @@
    "nome": "Daffara",
    "squadra": "Parma",
    "ruolo": "P",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3917,7 +3917,7 @@
    "squadra": "Parma",
    "ruolo": "A",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7556": {
@@ -3943,9 +3943,9 @@
    "nome": "Lontani",
    "squadra": "Parma",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7572": {
    "id": 7572,
@@ -4096,9 +4096,9 @@
    "nome": "Drobnic",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7618": {
    "id": 7618,
@@ -4168,7 +4168,7 @@
    "nome": "Sierro",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4186,7 +4186,7 @@
    "nome": "Obric",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4263,56 +4263,7 @@
    "incerto": true
   }
  },
- "ballottaggi": [
-  [
-   {
-    "id": 4479,
-    "nome": "Elmas",
-    "pct": 60
-   },
-   {
-    "id": 5422,
-    "nome": "Zalewski",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 4137,
-    "nome": "Diego Carlos",
-    "pct": 55
-   },
-   {
-    "id": 7615,
-    "nome": "Drobnic",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 6206,
-    "nome": "Fabbian",
-    "pct": 60
-   },
-   {
-    "id": 7138,
-    "nome": "Ordonez C.",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 7554,
-    "nome": "Romero D.",
-    "pct": 60
-   },
-   {
-    "id": 7561,
-    "nome": "Lontani",
-    "pct": 40
-   }
-  ]
- ],
+ "ballottaggi": [],
  "indisponibili": {
   "309": {
    "id": 309,
