@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-03T23:50:09.679Z",
+ "generato": "2026-11-04T15:19:00.560Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 11,
  "giornateDiscordi": [
@@ -424,9 +424,9 @@
    "nome": "Gollini",
    "squadra": "Roma",
    "ruolo": "P",
-   "pct": 70,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "632": {
    "id": 632,
@@ -671,6 +671,15 @@
    "titolare": true,
    "incerto": false
   },
+  "2514": {
+   "id": 2514,
+   "nome": "Stones",
+   "squadra": "Inter",
+   "ruolo": "D",
+   "pct": 25,
+   "titolare": false,
+   "incerto": true
+  },
   "2517": {
    "id": 2517,
    "nome": "De Bruyne",
@@ -712,7 +721,7 @@
    "nome": "Mkhitaryan",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -739,8 +748,8 @@
    "nome": "Odgaard",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": true,
+   "pct": 60,
+   "titolare": false,
    "incerto": true
   },
   "2766": {
@@ -776,15 +785,6 @@
    "squadra": "Inter",
    "ruolo": "P",
    "pct": 5,
-   "titolare": false,
-   "incerto": true
-  },
-  "2816": {
-   "id": 2816,
-   "nome": "Di Lorenzo",
-   "squadra": "Napoli",
-   "ruolo": "D",
-   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -939,6 +939,15 @@
    "ruolo": "C",
    "pct": 40,
    "titolare": false,
+   "incerto": true
+  },
+  "4359": {
+   "id": 4359,
+   "nome": "Piccoli",
+   "squadra": "Bologna",
+   "ruolo": "A",
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "4360": {
@@ -1190,7 +1199,7 @@
    "squadra": "Fiorentina",
    "ruolo": "C",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "4952": {
@@ -1324,7 +1333,7 @@
    "nome": "Jones C.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 20,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1522,7 +1531,7 @@
    "nome": "Da Cunha",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 100,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2026,7 +2035,7 @@
    "nome": "Vasquez D.",
    "squadra": "Roma",
    "ruolo": "P",
-   "pct": 5,
+   "pct": 45,
    "titolare": false,
    "incerto": true
   },
@@ -2377,7 +2386,7 @@
    "nome": "Stankovic A.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 30,
    "titolare": false,
    "incerto": true
   },
@@ -2629,7 +2638,7 @@
    "nome": "Dovbyk",
    "squadra": "Bologna",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2764,7 +2773,7 @@
    "nome": "Mbangula",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3137,6 +3146,15 @@
    "titolare": false,
    "incerto": true
   },
+  "7161": {
+   "id": 7161,
+   "nome": "Bayo V.",
+   "squadra": "Udinese",
+   "ruolo": "A",
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
+  },
   "7162": {
    "id": 7162,
    "nome": "Giovane",
@@ -3403,7 +3421,7 @@
    "nome": "Lavelli",
    "squadra": "Inter",
    "ruolo": "A",
-   "pct": 20,
+   "pct": 10,
    "titolare": false,
    "incerto": true
   },
@@ -3701,7 +3719,7 @@
    "squadra": "Fiorentina",
    "ruolo": "C",
    "pct": 60,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "7467": {
@@ -4518,13 +4536,25 @@
   ],
   [
    {
-    "id": 2765,
-    "nome": "Odgaard",
+    "id": 4359,
+    "nome": "Piccoli",
     "pct": 55
    },
    {
-    "id": 6675,
-    "nome": "Dovbyk",
+    "id": 2765,
+    "nome": "Odgaard",
+    "pct": 45
+   }
+  ],
+  [
+   {
+    "id": 610,
+    "nome": "Gollini",
+    "pct": 55
+   },
+   {
+    "id": 6125,
+    "nome": "Vasquez D.",
     "pct": 45
    }
   ],
@@ -4770,13 +4800,13 @@
   ],
   [
    {
-    "id": 4947,
-    "nome": "Brescianini",
+    "id": 7464,
+    "nome": "Oulai",
     "pct": 60
    },
    {
-    "id": 7464,
-    "nome": "Oulai",
+    "id": 4947,
+    "nome": "Brescianini",
     "pct": 40
    }
   ],
@@ -4845,6 +4875,11 @@
    "tipo": "infortunato",
    "nota": "lesione di alto grado in corrispondenza della giunzione muscolo - tendinea distale del muscolo semitendinoso della coscia destra, ipotesi rientro dalla fine di dicembre"
   },
+  "610": {
+   "id": 610,
+   "tipo": "dubbio",
+   "nota": "fastidio alla schiena, in dubbio dal 1' contro Sassuolo"
+  },
   "827": {
    "id": 827,
    "tipo": "infortunato",
@@ -4890,11 +4925,6 @@
    "tipo": "infortunato",
    "nota": "risentimento muscolare al polpaccio destro, rientro da metà novembre"
   },
-  "2514": {
-   "id": 2514,
-   "tipo": "infortunato",
-   "nota": "risentimento ai flessori della coscia sinistra, da valutare convocazione contro il Como"
-  },
   "2640": {
    "id": 2640,
    "tipo": "infortunato",
@@ -4922,8 +4952,8 @@
   },
   "2816": {
    "id": 2816,
-   "tipo": "dubbio",
-   "nota": "risentimento muscolare all'adduttore, in forte dubbio contro la Lazio"
+   "tipo": "infortunato",
+   "nota": "risentimento muscolare all'adduttore, tentativo rientro dalla seconda metà di novembre"
   },
   "4179": {
    "id": 4179,
@@ -4939,11 +4969,6 @@
    "id": 4287,
    "tipo": "infortunato",
    "nota": "problema alla caviglia sinistra, recuperabile da metà dicembre"
-  },
-  "4359": {
-   "id": 4359,
-   "tipo": "infortunato",
-   "nota": "problema muscolare al bicipite femorale della coscia destra, da valutare per Parma"
   },
   "4364": {
    "id": 4364,
@@ -4998,7 +5023,7 @@
   "4856": {
    "id": 4856,
    "tipo": "infortunato",
-   "nota": "problema all'anca sinistra, out contro Genoa"
+   "nota": "rottura del tendine del muscolo tensore della fascia lata dell'anca sinistra, ipotesi rientro da aprile"
   },
   "4887": {
    "id": 4887,
@@ -5024,11 +5049,6 @@
    "id": 5029,
    "tipo": "infortunato",
    "nota": "lesione muscolare all'adduttore destro, da valutare convocazione per Torino"
-  },
-  "5172": {
-   "id": 5172,
-   "tipo": "dubbio",
-   "nota": "risentimento miofasciale agli adduttori della coscia destra, da valutare convocazione contro il Como"
   },
   "5301": {
    "id": 5301,
@@ -5237,8 +5257,8 @@
   },
   "7161": {
    "id": 7161,
-   "tipo": "infortunato",
-   "nota": "lesione al bicipite femorale della coscia destra, rientro da metà novembre"
+   "tipo": "dubbio",
+   "nota": "lesione al bicipite femorale della coscia destra, da valutare convocazione contro il Venezia"
   },
   "7220": {
    "id": 7220,
@@ -5308,7 +5328,7 @@
   "7626": {
    "id": 7626,
    "tipo": "infortunato",
-   "nota": "frattura della falange della mano destra, out contro Monza"
+   "nota": "frattura della falange della mano destra, rientro da dicembre"
   },
   "7627": {
    "id": 7627,
