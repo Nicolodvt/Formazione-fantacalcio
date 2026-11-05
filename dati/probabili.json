@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-04T15:19:00.560Z",
+ "generato": "2026-11-05T13:51:21.557Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 11,
  "giornateDiscordi": [
@@ -428,15 +428,6 @@
    "titolare": true,
    "incerto": true
   },
-  "632": {
-   "id": 632,
-   "nome": "Zaccagni",
-   "squadra": "Lazio",
-   "ruolo": "C",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
-  },
   "779": {
    "id": 779,
    "nome": "Cristante",
@@ -524,7 +515,7 @@
    "squadra": "Lazio",
    "ruolo": "A",
    "pct": 60,
-   "titolare": false,
+   "titolare": true,
    "incerto": true
   },
   "2061": {
@@ -622,7 +613,7 @@
    "nome": "Marusic",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 10,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -910,7 +901,7 @@
    "nome": "Kabasele",
    "squadra": "Udinese",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1018,7 +1009,7 @@
    "nome": "Rovella",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 10,
+   "pct": 30,
    "titolare": false,
    "incerto": true
   },
@@ -1324,7 +1315,7 @@
    "nome": "Gilmour",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 70,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -1372,15 +1363,6 @@
    "pct": 80,
    "titolare": true,
    "incerto": false
-  },
-  "5336": {
-   "id": 5336,
-   "nome": "Nzola",
-   "squadra": "Cagliari",
-   "ruolo": "A",
-   "pct": 25,
-   "titolare": false,
-   "incerto": true
   },
   "5365": {
    "id": 5365,
@@ -1477,7 +1459,7 @@
    "nome": "Coulibaly L.",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1531,9 +1513,9 @@
    "nome": "Da Cunha",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 70,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "5585": {
    "id": 5585,
@@ -1549,16 +1531,16 @@
    "nome": "Tavares N.",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "5637": {
    "id": 5637,
    "nome": "Davis K.",
    "squadra": "Udinese",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 65,
    "titolare": true,
    "incerto": false
   },
@@ -2107,7 +2089,7 @@
    "nome": "Beukema",
    "squadra": "Napoli",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -2269,7 +2251,7 @@
    "nome": "Sanchez Ro.",
    "squadra": "Como",
    "ruolo": "P",
-   "pct": 5,
+   "pct": 45,
    "titolare": false,
    "incerto": true
   },
@@ -2449,9 +2431,9 @@
    "nome": "Noslin",
    "squadra": "Lazio",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 80,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6569": {
    "id": 6569,
@@ -2791,8 +2773,8 @@
    "nome": "Valle",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 55,
-   "titolare": true,
+   "pct": 60,
+   "titolare": false,
    "incerto": true
   },
   "6869": {
@@ -2926,9 +2908,9 @@
    "nome": "Butez",
    "squadra": "Como",
    "ruolo": "P",
-   "pct": 75,
+   "pct": 55,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "6977": {
    "id": 6977,
@@ -3007,7 +2989,7 @@
    "nome": "Douvikas",
    "squadra": "Como",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 75,
    "titolare": true,
    "incerto": false
   },
@@ -3088,18 +3070,18 @@
    "nome": "Lang",
    "squadra": "Napoli",
    "ruolo": "A",
-   "pct": 70,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "7126": {
    "id": 7126,
    "nome": "Baturina",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 85,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7131": {
    "id": 7131,
@@ -3151,7 +3133,7 @@
    "nome": "Bayo V.",
    "squadra": "Udinese",
    "ruolo": "A",
-   "pct": 20,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3205,7 +3187,7 @@
    "nome": "Ndaba",
    "squadra": "Lecce",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -3250,7 +3232,7 @@
    "nome": "Miller L.",
    "squadra": "Udinese",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -3286,7 +3268,7 @@
    "nome": "Belghali",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 60,
    "titolare": true,
    "incerto": true
   },
@@ -3439,7 +3421,7 @@
    "nome": "Arizala",
    "squadra": "Udinese",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3655,8 +3637,8 @@
    "nome": "Kaiki",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "7418": {
@@ -4321,7 +4303,7 @@
    "nome": "Vinciati",
    "squadra": "Udinese",
    "ruolo": "A",
-   "pct": 35,
+   "pct": 25,
    "titolare": false,
    "incerto": true
   },
@@ -4416,6 +4398,18 @@
   ],
   [
    {
+    "id": 5637,
+    "nome": "Davis K.",
+    "pct": 65
+   },
+   {
+    "id": 6783,
+    "nome": "Unai Gomez",
+    "pct": 35
+   }
+  ],
+  [
+   {
     "id": 4210,
     "nome": "Mina",
     "pct": 55
@@ -4490,12 +4484,12 @@
    {
     "id": 7220,
     "nome": "Belghali",
-    "pct": 55
+    "pct": 60
    },
    {
     "id": 7183,
     "nome": "Aboukhlal",
-    "pct": 45
+    "pct": 40
    }
   ],
   [
@@ -4620,8 +4614,8 @@
   ],
   [
    {
-    "id": 2517,
-    "nome": "De Bruyne",
+    "id": 7120,
+    "nome": "Lang",
     "pct": 60
    },
    {
@@ -4632,13 +4626,37 @@
   ],
   [
    {
-    "id": 6556,
-    "nome": "Noslin",
+    "id": 2517,
+    "nome": "De Bruyne",
     "pct": 60
    },
    {
+    "id": 7162,
+    "nome": "Giovane",
+    "pct": 40
+   }
+  ],
+  [
+   {
+    "id": 5620,
+    "nome": "Tavares N.",
+    "pct": 55
+   },
+   {
+    "id": 4817,
+    "nome": "Pedraza",
+    "pct": 45
+   }
+  ],
+  [
+   {
     "id": 2038,
     "nome": "Pinamonti",
+    "pct": 60
+   },
+   {
+    "id": 5500,
+    "nome": "Cancellieri",
     "pct": 40
    }
   ],
@@ -4764,20 +4782,32 @@
   ],
   [
    {
-    "id": 6867,
-    "nome": "Valle",
+    "id": 6966,
+    "nome": "Butez",
     "pct": 55
    },
    {
-    "id": 7414,
-    "nome": "Kaiki",
+    "id": 6344,
+    "nome": "Sanchez Ro.",
     "pct": 45
    }
   ],
   [
    {
-    "id": 7126,
-    "nome": "Baturina",
+    "id": 7414,
+    "nome": "Kaiki",
+    "pct": 55
+   },
+   {
+    "id": 6867,
+    "nome": "Valle",
+    "pct": 45
+   }
+  ],
+  [
+   {
+    "id": 5559,
+    "nome": "Da Cunha",
     "pct": 60
    },
    {
@@ -4880,6 +4910,11 @@
    "tipo": "dubbio",
    "nota": "fastidio alla schiena, in dubbio dal 1' contro Sassuolo"
   },
+  "632": {
+   "id": 632,
+   "tipo": "infortunato",
+   "nota": "problema muscolare alla coscia sinistra, out a Napoli"
+  },
   "827": {
    "id": 827,
    "tipo": "infortunato",
@@ -4898,7 +4933,7 @@
   "1933": {
    "id": 1933,
    "tipo": "infortunato",
-   "nota": "problema muscolare al flessore della coscia sinistra, rientro dalla metà di novembre"
+   "nota": "problema muscolare al flessore della coscia sinistra, da valutare convocazione contro il Lecce"
   },
   "2097": {
    "id": 2097,
@@ -4914,11 +4949,6 @@
    "id": 2170,
    "tipo": "dubbio",
    "nota": "affaticamento muscolare alla gamba, in dubbio contro la Lazio"
-  },
-  "2188": {
-   "id": 2188,
-   "tipo": "dubbio",
-   "nota": "problema muscolare alla coscia destra, da valutare convocazione per Napoli"
   },
   "2404": {
    "id": 2404,
@@ -4995,11 +5025,6 @@
    "tipo": "infortunato",
    "nota": "lesione del flessore della coscia sinistra con parziale interessamento tendineo, ipotesi rientro da fine febbraio"
   },
-  "4459": {
-   "id": 4459,
-   "tipo": "dubbio",
-   "nota": "problema muscolare al polpaccio, da valutare convocazione per Napoli"
-  },
   "4657": {
    "id": 4657,
    "tipo": "infortunato",
@@ -5057,8 +5082,8 @@
   },
   "5336": {
    "id": 5336,
-   "tipo": "dubbio",
-   "nota": "affaticamento muscolare alla coscia destra, in dubbio contro Frosinone"
+   "tipo": "infortunato",
+   "nota": "distrazione muscolare ai flessori della coscia destra, rientro dalla seconda metà di novembre"
   },
   "5436": {
    "id": 5436,
@@ -5099,6 +5124,11 @@
    "id": 5603,
    "tipo": "infortunato",
    "nota": "lesione mio-fasciale a carico del capo lungo del bicipite femorale della coscia destra, rientro dalla seconda metà di novembre"
+  },
+  "5620": {
+   "id": 5620,
+   "tipo": "dubbio",
+   "nota": "Iieve affaticamento muscolare al flessore, in dubbio dal 1' a Napoli"
   },
   "5641": {
    "id": 5641,
@@ -5158,7 +5188,7 @@
   "6434": {
    "id": 6434,
    "tipo": "infortunato",
-   "nota": "frattura metatarso piede sinistro, rientro da inizio dicembre"
+   "nota": "frattura metatarso piede sinistro, rientro dalla prima metà di dicembre"
   },
   "6485": {
    "id": 6485,
@@ -5255,15 +5285,10 @@
    "tipo": "infortunato",
    "nota": "problema fisico, ipotesi rientro metà dicembre"
   },
-  "7161": {
-   "id": 7161,
-   "tipo": "dubbio",
-   "nota": "lesione al bicipite femorale della coscia destra, da valutare convocazione contro il Venezia"
-  },
   "7220": {
    "id": 7220,
    "tipo": "dubbio",
-   "nota": "trauma contusivo al ginocchio, in dubbio dal 1' contro il Lecce"
+   "nota": "trauma contusivo al ginocchio, in leggero dubbio dal 1' contro il Lecce"
   },
   "7260": {
    "id": 7260,
