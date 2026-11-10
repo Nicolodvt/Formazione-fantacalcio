@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-10T15:21:42.773Z",
+ "generato": "2026-11-10T23:51:02.150Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -185,7 +185,7 @@
    "stadio": "Gewiss Stadium"
   },
   "Inter": {
-   "modulo": "3-5-2",
+   "modulo": "3-5-1-1",
    "inCasa": false,
    "avversario": "Atalanta",
    "data": "domenica 22 novembre, 20:45",
@@ -343,7 +343,7 @@
    "nome": "Dybala",
    "squadra": "Roma",
    "ruolo": "A",
-   "pct": 30,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -779,6 +779,15 @@
    "titolare": false,
    "incerto": true
   },
+  "2764": {
+   "id": 2764,
+   "nome": "Martinez L.",
+   "squadra": "Inter",
+   "ruolo": "A",
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
+  },
   "2765": {
    "id": 2765,
    "nome": "Odgaard",
@@ -901,7 +910,7 @@
    "nome": "Pavard",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -910,7 +919,7 @@
    "nome": "Gonzalez N.",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 20,
+   "pct": 30,
    "titolare": false,
    "incerto": true
   },
@@ -1202,15 +1211,6 @@
    "titolare": true,
    "incerto": false
   },
-  "4871": {
-   "id": 4871,
-   "nome": "Thuram",
-   "squadra": "Inter",
-   "ruolo": "A",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
-  },
   "4887": {
    "id": 4887,
    "nome": "Bellanova",
@@ -1405,7 +1405,7 @@
    "nome": "Jones C.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -2462,15 +2462,6 @@
    "titolare": false,
    "incerto": true
   },
-  "6503": {
-   "id": 6503,
-   "nome": "Stankovic A.",
-   "squadra": "Inter",
-   "ruolo": "C",
-   "pct": 30,
-   "titolare": false,
-   "incerto": true
-  },
   "6506": {
    "id": 6506,
    "nome": "Fini",
@@ -2602,7 +2593,7 @@
    "nome": "Ghilardi",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -3178,16 +3169,16 @@
    "nome": "Sucic P.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "7071": {
    "id": 7071,
    "nome": "Esposito F.P.",
    "squadra": "Inter",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -4518,7 +4509,7 @@
   "632": {
    "id": 632,
    "tipo": "infortunato",
-   "nota": "lesione del quadricipite femorale sinistro, rientro da fine novembre"
+   "nota": "lesione del quadricipite femorale sinistro, da valutare convocazione contro il Lecce"
   },
   "827": {
    "id": 827,
@@ -4552,7 +4543,7 @@
   },
   "2764": {
    "id": 2764,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "risentimento muscolare ai flessori della coscia sinistra, da valutare convocazione contro Atalanta"
   },
   "2815": {
@@ -4629,6 +4620,11 @@
    "id": 4856,
    "tipo": "infortunato",
    "nota": "rottura del tendine del muscolo tensore della fascia lata dell'anca sinistra, ipotesi rientro da aprile"
+  },
+  "4871": {
+   "id": 4871,
+   "tipo": "infortunato",
+   "nota": "problema muscolare al bicipite femorale della coscia, da valutare convocazione contro Atalanta"
   },
   "4887": {
    "id": 4887,
@@ -4764,6 +4760,11 @@
    "id": 6485,
    "tipo": "infortunato",
    "nota": "distrazione di basso grado ai muscoli flessori della coscia sinistra, rientro dalla seconda metà di novembre"
+  },
+  "6503": {
+   "id": 6503,
+   "tipo": "infortunato",
+   "nota": "lesione al muscolo adduttore della coscia destra, out contro Atalanta"
   },
   "6549": {
    "id": 6549,
