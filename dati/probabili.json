@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-09T17:04:04.743Z",
+ "generato": "2026-11-10T15:21:42.773Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -739,7 +739,7 @@
    "nome": "Mkhitaryan",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2686,15 +2686,6 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
-  },
-  "6669": {
-   "id": 6669,
-   "nome": "Bonny",
-   "squadra": "Inter",
-   "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
   },
   "6672": {
    "id": 6672,
@@ -4788,6 +4779,11 @@
    "id": 6666,
    "tipo": "infortunato",
    "nota": "distrazione muscolare al retto femorale della coscia sinistra, rientro dalla seconda metà di novembre"
+  },
+  "6669": {
+   "id": 6669,
+   "tipo": "infortunato",
+   "nota": "risentimento muscolare ai flessori della coscia destra, da valutare contro Atalanta"
   },
   "6673": {
    "id": 6673,
