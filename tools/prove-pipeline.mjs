@@ -56,6 +56,14 @@ const G6 = {
     ['lunedì 12 ottobre, 18:30', 'Atalanta', 'Venezia'], ['lunedì 12 ottobre, 20:45', 'Torino', 'Udinese']
   ].map(([data, casa, trasferta]) => ({ data, casa, trasferta }))
 };
+/* La G12 vera: aperta dal sito lunedi 9/11, giocata dopo la pausa per le nazionali del 14-15/11. */
+const G12 = {
+  giornata: 12,
+  partite: [
+    ['sabato 21 novembre, 15:00', 'Como', 'Cagliari'], ['sabato 21 novembre, 20:45', 'Napoli', 'Torino'],
+    ['domenica 22 novembre, 15:00', 'Bologna', 'Udinese'], ['lunedì 23 novembre, 20:45', 'Monza', 'Fiorentina']
+  ].map(([data, casa, trasferta]) => ({ data, casa, trasferta }))
+};
 /* Prima partita 15:00 italiane = 13:00 UTC (ora legale), scadenza 5 minuti prima. */
 const SCADENZA_G6 = Date.parse('2026-10-10T12:55:00Z');
 
@@ -106,6 +114,25 @@ async function proveCalendario() {
   verifica('martedi-giovedi e\' un turno infrasettimanale', conOggi('2026-10-20T12:00Z', () => cal.infrasettimanale(infra)) === true);
   const lunedi = { partite: [{ data: 'sabato 10 ottobre, 15:00' }, { data: 'lunedì 12 ottobre, 20:45' }] };
   verifica('weekend con coda al lunedi NON e\' infrasettimanale', conOggi('2026-09-26T12:00Z', () => cal.infrasettimanale(lunedi)) === false);
+
+  /* Pausa (11/11): il prossimo weekend senza partite. */
+  const pausaIl = (oggi, prob) => conOggi(oggi, () => cal.pausa(prob, new Date()));
+  const pz = pausaIl('2026-11-09T17:04Z', G12);
+  verifica('pausa: lunedi 9/11 la G12 (21/11) lascia libero il weekend 14-15, finestra delle nazionali',
+    pz && pz.nazionali === true && cal.giorniPausa(pz) === 'sabato 14 e domenica 15 novembre', JSON.stringify(pz));
+  verifica('pausa: vale fino al venerdi compreso', !!pausaIl('2026-11-13T22:00Z', G12));
+  verifica('pausa: da sabato 14 il prossimo weekend e\' quello della partita',
+    pausaIl('2026-11-14T07:00Z', G12) === null && pausaIl('2026-11-15T07:00Z', G12) === null);
+  verifica('pausa: domenica alle 23:30 UTC a Roma e\' gia\' lunedi', pausaIl('2026-11-15T23:30Z', G12) === null);
+  verifica('pausa: settimana normale (G6 vista lunedi 5/10) no', pausaIl('2026-10-05T17:00Z', G6) === null);
+  verifica('pausa: di domenica sera, con la giornata dopo il venerdi, no',
+    pausaIl('2026-10-04T21:00Z', { partite: [{ data: 'venerdì 9 ottobre, 20:45' }] }) === null);
+  verifica('pausa: turno infrasettimanale visto il sabato prima, no', pausaIl('2026-10-24T20:00Z', infra) === null);
+  const inverno = pausaIl('2026-12-28T12:00Z', { partite: [{ data: 'mercoledì 6 gennaio, 15:00' }] });
+  verifica('pausa fuori dalle finestre FIFA: "campionato fermo", a cavallo d\'anno',
+    inverno && inverno.nazionali === false && cal.giorniPausa(inverno) === 'sabato 2 e domenica 3 gennaio', JSON.stringify(inverno));
+  const cavallo = pausaIl('2026-10-26T12:00Z', { partite: [{ data: 'sabato 7 novembre, 15:00' }] });
+  verifica('pausa a cavallo di due mesi: scrive entrambi', cavallo && cal.giorniPausa(cavallo) === 'sabato 31 ottobre e domenica 1 novembre', cavallo && cal.giorniPausa(cavallo));
 
   if (vecchioTZ === undefined) delete process.env.TZ; else process.env.TZ = vecchioTZ;
 }
@@ -322,6 +349,49 @@ async function provePromemoria() {
       av.codice === 0 && sav.length === 1 && sav[0].opzioni && sav[0].opzioni.urgency === 'high' &&
       sav[0].opzioni.topic === 'promemoria-formazione' && sav[0].opzioni.TTL === (SCADENZA_G6 - Date.parse('2026-10-06T13:00Z')) / 1000,
       av.uscita.trim() + ' ' + JSON.stringify(sav[0] && sav[0].opzioni));
+
+    /* PAUSA NAZIONALI (11/11). Il caso vero: la G12 si apre lunedi 9/11, si gioca il 21/11. */
+    const fileAvviso = join(dir, 'dati', 'promemoria.json');
+    const avviso = (ora, extra = {}) => giroPromemoria(dir, ora, { FINTO_SITO: sito(null), ...extra }, 'invia-promemoria.mjs');
+    azzera(dir, G12);
+    rmSync(fileAvviso, { force: true });
+    const pa1 = avviso('2026-11-09T17:04Z');
+    const sp1 = spediti(dir);
+    verifica('pausa: l\'avviso di giornata nuova dice che nel weekend non si gioca',
+      pa1.codice === 0 && sp1.length === 1 && /^Pausa nazionali/.test(sp1[0].titolo) &&
+      /Sabato 14 e domenica 15 novembre non si gioca/.test(sp1[0].corpo) && /giornata 12 comincia sabato 21 novembre/.test(sp1[0].corpo),
+      pa1.uscita.trim() + " " + JSON.stringify(sp1[0]));
+    avviso('2026-11-11T07:00Z'); avviso('2026-11-13T12:00Z'); avviso('2026-11-14T07:00Z');
+    verifica('  durante la pausa non si ripete', spediti(dir).length === 1);
+    avviso('2026-11-15T07:00Z');
+    verifica('  la domenica del weekend di pausa e\' presto per la ripresa', spediti(dir).length === 1);
+    const pa2 = avviso('2026-11-16T07:00Z');
+    const sp2 = spediti(dir);
+    verifica('  lunedi della settimana in cui si gioca: avviso vero, "Finita la pausa"',
+      pa2.codice === 0 && sp2.length === 2 && sp2[1].titolo === 'Giornata 12: schiera la formazione' && /^Finita la pausa\. Si comincia sabato 21 novembre/.test(sp2[1].corpo),
+      pa2.uscita.trim() + " " + JSON.stringify(sp2[1]));
+    avviso('2026-11-16T19:00Z'); avviso('2026-11-18T07:00Z');
+    verifica('  la ripresa parte una volta sola', spediti(dir).length === 2);
+
+    /* Lo stato vero di oggi: avviso della G12 spedito il 9/11 dal codice di prima (senza pausa). */
+    azzera(dir, G12);
+    writeFileSync(fileAvviso, JSON.stringify({ ultimaGiornataAvvisata: 12, inviato: '2026-11-09T17:04:08.766Z' }));
+    avviso('2026-11-12T07:00Z');
+    const pa3 = avviso('2026-11-16T07:00Z');
+    verifica('  avviso spedito in pausa dal codice vecchio: la ripresa parte lo stesso',
+      spediti(dir).length === 1 && /Finita la pausa/.test(spediti(dir)[0].corpo), pa3.uscita.trim());
+    azzera(dir, G12);
+    writeFileSync(fileAvviso, JSON.stringify({ ultimaGiornataAvvisata: 12, inviato: '2026-11-09T17:04:08.766Z' }));
+    const pa4 = avviso('2026-11-16T07:00Z', { FINTO_SCHIERATO: '1' });
+    avviso('2026-11-16T19:00Z');
+    verifica('  formazione gia\' schierata durante la pausa: nessuna ripresa, e non ci riprova',
+      pa4.codice === 0 && spediti(dir).length === 0 && /gia' schierata/.test(pa4.uscita), pa4.uscita.trim());
+    /* Settimana normale: nessuna pausa, nessuna ripresa. */
+    azzera(dir, G6);
+    rmSync(fileAvviso, { force: true });
+    avviso('2026-10-05T17:00Z'); avviso('2026-10-06T07:00Z'); avviso('2026-10-08T07:00Z');
+    verifica('  settimana normale: un solo avviso, senza pausa',
+      spediti(dir).length === 1 && spediti(dir)[0].titolo === 'Giornata 6: schiera la formazione', JSON.stringify(spediti(dir)));
 
     /* Il conto passa alla giornata dopo, e anche l'invio che aspetta ancora il verdetto. */
     azzera(dir, G6);

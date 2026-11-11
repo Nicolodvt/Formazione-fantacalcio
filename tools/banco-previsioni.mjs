@@ -148,7 +148,7 @@ export function probabiliPrima() {
 
 /* Correzione di ruolo come l'avrebbe tenuta ricalibra.mjs prima della giornata g: un passo
    per ogni giornata di voti arrivata, sugli stessi parametri (soglia 30, limite 0.4, passo 0.3). */
-function rettificaRuoloFinoA(motore, LISTONE, g) {
+export function rettificaRuoloFinoA(motore, LISTONE, g) {
   const byId = Object.fromEntries(LISTONE.map(p => [p.id, p]));
   const r = { P: 0, D: 0, C: 0, A: 0 };
   const perRuolo = { P: [], D: [], C: [], A: [] };

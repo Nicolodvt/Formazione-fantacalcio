@@ -25,7 +25,7 @@ import { dirname, join } from 'node:path';
 import { primaPartita, infrasettimanale, scadenzaDi } from './calendario.mjs';
 import {
   VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, statoSito,
-  segnalaScaduto, rimedioScaduto, urlSito, opzioniPromemoria
+  segnalaScaduto, rimedioScaduto, urlSito, opzioniPromemoria, eGiaSchierato
 } from './notifiche.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
@@ -171,38 +171,7 @@ function leggiJson(percorso, fallback) {
   catch (e) { return fallback; }
 }
 
-/* Chiede alla funzione Netlify se questa giornata e gia segnata come schierata. Fallisce
-   "aperto" (assume NON schierato) se la funzione non risponde: il sito potrebbe non essere
-   ancora pubblicato, o essere temporaneamente giu. Tacere un promemoria per un dubbio tecnico
-   sarebbe peggio che mandarne uno di troppo — l'intera ragion d'essere di questo script e
-   avvisare, non il contrario. */
-/* Gli avvisi ::warning:: (27/09) finiscono fra le annotazioni del giro: prima un URL mancante
-   o una funzione che risponde male passavano in silenzio, e "Ho schierato" smetteva di
-   fermare i promemoria senza che nessuno se ne accorgesse. */
-async function eGiaSchierato(sitoUrl, giornata) {
-  if (!sitoUrl) {
-    console.log('::warning::NETLIFY_SITE_URL non impostato: "Ho schierato" non puo fermare i promemoria.');
-    return false;
-  }
-  try {
-    const r = await fetch(`${sitoUrl.replace(/\/$/, '')}/.netlify/functions/schierato?giornata=${giornata}`,
-      { signal: AbortSignal.timeout(8000) });
-    if (!r.ok) {
-      console.log(`::warning::Funzione "schierato" risponde ${r.status}: procedo come se non fosse schierato.`);
-      return false;
-    }
-    const d = await r.json();
-    if (typeof d.schierato !== 'boolean') {
-      console.log('::warning::Funzione "schierato": risposta senza il campo "schierato", procedo come se non lo fosse.');
-    }
-    return !!d.schierato;
-  } catch (e) {
-    /* Avviso, non riga semplice (21/10): con NETLIFY_SITE_URL senza "https://" questa riga e'
-       comparsa a ogni promemoria per settimane, e da fuori (annotazioni) non si vedeva. */
-    console.log('::warning::Funzione "schierato" non raggiungibile (' + e.message + '): procedo come se non fosse schierato.');
-    return false;
-  }
-}
+/* eGiaSchierato(): in tools/notifiche.mjs dall'11/11, serve anche a invia-promemoria.mjs. */
 
 /* Il testo del promemoria riporta il tempo REALE rimasto alla scadenza, non l'etichetta
    nominale della soglia scattata (24h/12h/...): il cron gira ogni 15 minuti solo sulla carta —

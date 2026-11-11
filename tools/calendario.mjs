@@ -98,3 +98,53 @@ export function infrasettimanale(prob) {
   const WEEKEND = ['Friday', 'Saturday', 'Sunday'];
   return !partite.some(quando => WEEKEND.includes(nomeGiornoRoma(quando)));
 }
+
+/* PAUSA DEL CAMPIONATO (11/11, chiesto dall'utente). Durante la sosta per le nazionali il sito
+   apre comunque la giornata successiva appena finisce quella prima: l'avviso "Giornata 12:
+   schiera la formazione" e' arrivato lunedi 9/11 per una partita del 21/11, senza dire che nel
+   weekend in mezzo non si giocava. Qui si riconosce quel caso.
+
+   Regola: il prossimo weekend (il primo sabato da oggi in poi, con la sua domenica e il lunedi
+   di coda) e' libero se la prima partita della giornata viene DOPO quel lunedi. Di sabato e di
+   domenica "il prossimo weekend" e' quello dopo: quello in corso e' della giornata che si sta
+   giocando o e' appena finita (un turno infrasettimanale visto il sabato prima non e' una
+   pausa). I giorni si contano sul calendario di Roma, non in UTC.
+
+   Restituisce null se si gioca, altrimenti {sabato, domenica, nazionali}: i due giorni fermi
+   (mezzogiorno UTC di quel giorno, da stampare con timeZone UTC) e se cadono in una finestra FIFA. */
+const giornoRoma = (t) => {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit'
+  }).formatToParts(t).map(x => [x.type, x.value]));
+  return Date.UTC(+p.year, +p.month - 1, +p.day, 12);
+};
+const GIORNO = 86400000;
+
+/* Finestre FIFA per le nazionali della stagione 2026/27 (primo e ultimo giorno): servono solo a
+   scegliere la parola ("pausa nazionali" invece di "campionato fermo"), la pausa si riconosce
+   dalle date delle partite. Da aggiornare a inizio stagione; se mancano resta la parola generica. */
+const FINESTRE_NAZIONALI = [
+  ['2026-09-21', '2026-10-06'], ['2026-11-09', '2026-11-17'], ['2027-03-22', '2027-03-30'], ['2027-06-01', '2027-06-15']
+];
+
+export function pausa(prob, ora = new Date()) {
+  const prima = primaPartita(prob);
+  if (!prima) return null;
+  const oggi = giornoRoma(ora);
+  /* Da lunedi a venerdi il sabato che viene; di sabato e domenica quello della settimana dopo. */
+  const g = new Date(oggi).getUTCDay();   // 0 domenica ... 6 sabato
+  const sabato = oggi + (g === 6 ? 7 : 6 - g) * GIORNO;
+  if (giornoRoma(prima.quando) <= sabato + 2 * GIORNO) return null;
+  const iso = new Date(sabato).toISOString().slice(0, 10);
+  return {
+    sabato: new Date(sabato), domenica: new Date(sabato + GIORNO),
+    nazionali: FINESTRE_NAZIONALI.some(([da, a]) => iso >= da && iso <= a)
+  };
+}
+
+/* "sabato 14 e domenica 15 novembre" (o "sabato 31 ottobre e domenica 1 novembre"). */
+export function giorniPausa(p) {
+  const f = (d, mese) => d.toLocaleDateString('it-IT', { timeZone: 'UTC', weekday: 'long', day: 'numeric', ...(mese ? { month: 'long' } : {}) });
+  const stessoMese = p.sabato.getUTCMonth() === p.domenica.getUTCMonth();
+  return f(p.sabato, !stessoMese) + ' e ' + f(p.domenica, true);
+}

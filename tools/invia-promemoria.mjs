@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /* Manda un promemoria push quando si apre una giornata nuova, con l'orario della prima
-   partita. Gira dentro .github/workflows/dati.yml, subito dopo aver riscaricato le probabili.
+   partita. Se nel weekend in arrivo il campionato e' fermo (pausa nazionali) lo dice, e manda
+   l'avviso vero la settimana della partita (11/11). Gira dentro .github/workflows/dati.yml, subito dopo aver riscaricato le probabili.
 
    Se i secret non sono ancora impostati (l'utente non ha ancora attivato le notifiche
    dall'app, o non le vuole) esce senza errore: e' un extra sopra lo scraper dei dati, non
@@ -13,10 +14,10 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { primaPartita, infrasettimanale, scadenzaDi } from './calendario.mjs';
+import { primaPartita, infrasettimanale, scadenzaDi, pausa, giorniPausa } from './calendario.mjs';
 import {
   VAPID_PUBLIC_KEY, ABBONAMENTO_DA_RIFARE, eTransitorio, inviaConRiprova, abbonamentoDaUsare, segnalaScaduto, rimedioScaduto, urlSito,
-  opzioniPromemoria
+  opzioniPromemoria, eGiaSchierato
 } from './notifiche.mjs';
 
 const QUI = dirname(fileURLToPath(import.meta.url));
@@ -25,6 +26,10 @@ const FILE_PROMEMORIA = join(QUI, '..', 'dati', 'promemoria.json');
 
 /* Chiave pubblica, riprova sugli intoppi momentanei e da dove prendere l'abbonamento (prima il
    sito, poi il secret): in tools/notifiche.mjs, comuni con promemoria-scadenza.mjs (16/10). */
+
+/* Giorni alla prima partita sotto i quali, finita una pausa, parte l'avviso di ripresa. */
+const GIORNI_RIPRESA = 6;
+const maiuscola = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 function leggiJson(percorso, fallback) {
   try { return JSON.parse(readFileSync(percorso, 'utf8')); }
@@ -47,16 +52,38 @@ async function main() {
     return;
   }
 
-  const promemoria = leggiJson(FILE_PROMEMORIA, { ultimaGiornataAvvisata: null });
-  if (promemoria.ultimaGiornataAvvisata === prob.giornata) {
-    console.log(`Giornata ${prob.giornata} gia avvisata: salto.`);
-    return;
-  }
-
   const prima = primaPartita(prob);
   if (!prima) {
     console.log('Nessuna data di partita leggibile nel file: salto.');
     return;
+  }
+
+  /* PAUSA (11/11, chiesto dall'utente). Se nel prossimo weekend non si gioca (sosta per le
+     nazionali) l'avviso di giornata nuova lo dice, invece di "schiera la formazione" per una
+     partita lontana due settimane. Poi, la settimana della partita, parte l'avviso normale: una
+     "ripresa", una volta sola. Che il primo avviso fosse di pausa si ricava dalla data in cui e'
+     partito (campo "inviato"), senza un campo in piu' nel file: vale anche per l'avviso della
+     G12, spedito il 9/11 prima di questa modifica. */
+  const promemoria = leggiJson(FILE_PROMEMORIA, { ultimaGiornataAvvisata: null });
+  const ora = new Date();
+  const inPausa = pausa(prob, ora);
+  let ripresa = false;
+  if (promemoria.ultimaGiornataAvvisata === prob.giornata) {
+    const inviato = promemoria.inviato ? new Date(promemoria.inviato) : null;
+    const avvisoDiPausa = !!(inviato && !isNaN(inviato) && pausa(prob, inviato));
+    /* Meno di 6 giorni alla prima partita: il lunedi della settimana in cui si gioca, non la
+       domenica del weekend di pausa (che per la regola di pausa() "non e' piu' pausa"). */
+    const vicina = prima.quando.getTime() - ora.getTime() < GIORNI_RIPRESA * 86400000;
+    if (!avvisoDiPausa || inPausa || !vicina || ora >= scadenzaDi(prima)) {
+      console.log(`Giornata ${prob.giornata} gia avvisata: salto.`);
+      return;
+    }
+    if (await eGiaSchierato(SITO_URL, prob.giornata)) {
+      console.log(`Giornata ${prob.giornata}: finita la pausa, ma e' gia' schierata. Niente avviso.`);
+      writeFileSync(FILE_PROMEMORIA, JSON.stringify({ ultimaGiornataAvvisata: prob.giornata, inviato: ora.toISOString() }, null, 1) + '\n');
+      return;
+    }
+    ripresa = true;
   }
 
   const { sub: subscription, fonte, motivo, perche, sito, disattivato } = await abbonamentoDaUsare(SITO_URL, SUB_RAW);
@@ -105,7 +132,16 @@ async function main() {
      una delle due righe. */
   /* id: il service worker lo rimanda indietro come ricevuta (sw.js, 16/10). */
   const id = new Date().toISOString();
-  const payload = JSON.stringify(infra ? {
+  const payload = JSON.stringify(inPausa ? {
+    id,
+    titolo: (inPausa.nazionali ? 'Pausa nazionali' : 'Campionato fermo') + ': weekend senza Serie A',
+    corpo: `${maiuscola(giorniPausa(inPausa))} non si gioca. La giornata ${prob.giornata} comincia ${oraItaliana} ` +
+      `(${prima.casa}-${prima.trasferta}): ti avviso di nuovo quella settimana.`
+  } : ripresa ? {
+    id,
+    titolo: `Giornata ${prob.giornata}: schiera la formazione`,
+    corpo: 'Finita la pausa. ' + (infra ? 'Turno infrasettimanale: ' : '') + `Si comincia ${oraItaliana} con ${prima.casa}-${prima.trasferta}.`
+  } : infra ? {
     id,
     titolo: `Turno infrasettimanale — Giornata ${prob.giornata}`,
     corpo: `E' un turno infrasettimanale: si gioca gia' ${oraItaliana} (${prima.casa}-${prima.trasferta}). ` +
@@ -122,7 +158,7 @@ async function main() {
      spedito nel frattempo. Con il topic comune un promemoria sostituisce l'avviso ancora in attesa. */
   try {
     await inviaConRiprova(webpush, subscription, payload, opzioniPromemoria(scadenzaDi(prima) - Date.now()));
-    console.log('Promemoria spedito.');
+    console.log(inPausa ? 'Avviso di pausa spedito.' : ripresa ? 'Avviso di ripresa spedito.' : 'Promemoria spedito.');
   } catch (err) {
     /* 404/410 vuol dire che l'abbonamento non e' piu' valido (disiscritto, endpoint
        cambiato): non e' un guasto dello script. Qualsiasi altro errore invece e' un guasto vero. */
