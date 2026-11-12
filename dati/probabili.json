@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-11T15:01:51.063Z",
+ "generato": "2026-11-12T14:29:04.834Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -928,7 +928,7 @@
    "nome": "Pavard",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -1027,7 +1027,7 @@
    "nome": "Raspadori",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 30,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1229,12 +1229,21 @@
    "titolare": true,
    "incerto": false
   },
+  "4871": {
+   "id": 4871,
+   "nome": "Thuram",
+   "squadra": "Inter",
+   "ruolo": "A",
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
+  },
   "4887": {
    "id": 4887,
    "nome": "Bellanova",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 20,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -1453,6 +1462,15 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
+  },
+  "5301": {
+   "id": 5301,
+   "nome": "Luis Henrique",
+   "squadra": "Inter",
+   "ruolo": "C",
+   "pct": 30,
+   "titolare": false,
+   "incerto": true
   },
   "5319": {
    "id": 5319,
@@ -1796,6 +1814,15 @@
    "titolare": true,
    "incerto": false
   },
+  "5800": {
+   "id": 5800,
+   "nome": "Gudmundsson A.",
+   "squadra": "Lazio",
+   "ruolo": "C",
+   "pct": 35,
+   "titolare": false,
+   "incerto": true
+  },
   "5812": {
    "id": 5812,
    "nome": "Terracciano F.",
@@ -2045,6 +2072,15 @@
    "squadra": "Cagliari",
    "ruolo": "C",
    "pct": 60,
+   "titolare": false,
+   "incerto": true
+  },
+  "6015": {
+   "id": 6015,
+   "nome": "Berisha M.",
+   "squadra": "Lecce",
+   "ruolo": "C",
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -2368,7 +2404,7 @@
    "nome": "Sanchez Ro.",
    "squadra": "Como",
    "ruolo": "P",
-   "pct": 30,
+   "pct": 5,
    "titolare": false,
    "incerto": true
   },
@@ -2917,7 +2953,7 @@
    "nome": "Conceicao",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3034,7 +3070,7 @@
    "nome": "Butez",
    "squadra": "Como",
    "ruolo": "P",
-   "pct": 70,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -3226,6 +3262,15 @@
    "pct": 70,
    "titolare": true,
    "incerto": false
+  },
+  "7125": {
+   "id": 7125,
+   "nome": "Idrissi R.",
+   "squadra": "Cagliari",
+   "ruolo": "D",
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
   },
   "7126": {
    "id": 7126,
@@ -4402,7 +4447,7 @@
    "nome": "Obric",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -4604,11 +4649,6 @@
    "tipo": "infortunato",
    "nota": "distrazione di medio grado ai muscoli adduttori della coscia destra, rientro fine novembre"
   },
-  "4371": {
-   "id": 4371,
-   "tipo": "dubbio",
-   "nota": "distrazione muscolare di basso grado al bicipite femorale della coscia destra, da valutare convocazione contro Inter"
-  },
   "4375": {
    "id": 4375,
    "tipo": "infortunato",
@@ -4641,13 +4681,8 @@
   },
   "4871": {
    "id": 4871,
-   "tipo": "infortunato",
-   "nota": "problema muscolare al bicipite femorale della coscia, da valutare convocazione contro Atalanta"
-  },
-  "4887": {
-   "id": 4887,
    "tipo": "dubbio",
-   "nota": "distrazione di basso grado dell'adduttore lungo dell’arto sinistro, da valutare convocazione contro l'Inter"
+   "nota": "problema muscolare al bicipite femorale della coscia, da valutare convocazione contro Atalanta"
   },
   "4892": {
    "id": 4892,
@@ -4668,11 +4703,6 @@
    "id": 5022,
    "tipo": "dubbio",
    "nota": "problema alla spalla, in dubbio dal 1' contro il Frosinone"
-  },
-  "5301": {
-   "id": 5301,
-   "tipo": "infortunato",
-   "nota": "risentimento all'adduttore lungo della coscia sinistra, rientro dalla seconda metà di novembre"
   },
   "5336": {
    "id": 5336,
@@ -4736,8 +4766,8 @@
   },
   "5800": {
    "id": 5800,
-   "tipo": "infortunato",
-   "nota": "problema alla spalla destra, rientro dalla seconda metà novembre"
+   "tipo": "dubbio",
+   "nota": "problema alla spalla destra, da valutare convocazione contro il Lecce"
   },
   "5838": {
    "id": 5838,
@@ -4748,11 +4778,6 @@
    "id": 5841,
    "tipo": "dubbio",
    "nota": "frattura a un dito del piede, in dubbio impiego a Parma"
-  },
-  "6015": {
-   "id": 6015,
-   "tipo": "infortunato",
-   "nota": "sovraccarico muscolare alla gamba, rientro dalla seconda metà di novembre"
   },
   "6046": {
    "id": 6046,
@@ -4819,11 +4844,6 @@
    "tipo": "infortunato",
    "nota": "lesione muscolare al bicipite femorale, rientro dalla seconda metà di novembre"
   },
-  "6884": {
-   "id": 6884,
-   "tipo": "dubbio",
-   "nota": "lussazione alla spalla sinistra, da valutare convocazione contro Venezia"
-  },
   "6908": {
    "id": 6908,
    "tipo": "dubbio",
@@ -4843,11 +4863,6 @@
    "id": 7069,
    "tipo": "infortunato",
    "nota": "affaticamento muscolare all'adduttore, da valutare per Napoli"
-  },
-  "7125": {
-   "id": 7125,
-   "tipo": "infortunato",
-   "nota": "rottura del legamento crociato, rientro da fine novembre"
   },
   "7127": {
    "id": 7127,
