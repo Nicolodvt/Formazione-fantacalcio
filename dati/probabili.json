@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-12T14:29:04.834Z",
+ "generato": "2026-11-12T21:40:59.676Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -652,15 +652,6 @@
    "pct": 70,
    "titolare": true,
    "incerto": false
-  },
-  "2188": {
-   "id": 2188,
-   "nome": "Marusic",
-   "squadra": "Lazio",
-   "ruolo": "D",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
   },
   "2194": {
    "id": 2194,
@@ -4588,6 +4579,11 @@
    "id": 2169,
    "tipo": "dubbio",
    "nota": "lesione tendinea di basso grado ai muscoli flessori della coscia sinistra, da valutare convocazione per Napoli"
+  },
+  "2188": {
+   "id": 2188,
+   "tipo": "infortunato",
+   "nota": "problema muscolare alla gamba, da valutare"
   },
   "2296": {
    "id": 2296,
