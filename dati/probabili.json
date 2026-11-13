@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-12T21:40:59.676Z",
+ "generato": "2026-11-13T13:59:00.609Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -199,7 +199,7 @@
    "stadio": "Gewiss Stadium"
   },
   "Inter": {
-   "modulo": "3-5-1-1",
+   "modulo": "3-5-2",
    "inCasa": false,
    "avversario": "Atalanta",
    "data": "domenica 22 novembre, 20:45",
@@ -688,6 +688,15 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
+  },
+  "2404": {
+   "id": 2404,
+   "nome": "Alaba",
+   "squadra": "Udinese",
+   "ruolo": "D",
+   "pct": 30,
+   "titolare": false,
+   "incerto": true
   },
   "2423": {
    "id": 2423,
@@ -1225,9 +1234,9 @@
    "nome": "Thuram",
    "squadra": "Inter",
    "ruolo": "A",
-   "pct": 50,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "4887": {
    "id": 4887,
@@ -3025,7 +3034,7 @@
    "nome": "Atta",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 25,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -3214,9 +3223,9 @@
    "nome": "Sucic P.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "7071": {
    "id": 7071,
@@ -3448,7 +3457,7 @@
    "nome": "Belghali",
    "squadra": "Torino",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -4592,7 +4601,7 @@
   },
   "2404": {
    "id": 2404,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "risentimento muscolare al polpaccio destro, da valutare per Bologna"
   },
   "2724": {
@@ -4678,7 +4687,7 @@
   "4871": {
    "id": 4871,
    "tipo": "dubbio",
-   "nota": "problema muscolare al bicipite femorale della coscia, da valutare convocazione contro Atalanta"
+   "nota": "problema muscolare al bicipite femorale della coscia, da valutare impiego dal 1' contro Atalanta"
   },
   "4892": {
    "id": 4892,
@@ -4743,7 +4752,7 @@
   "5620": {
    "id": 5620,
    "tipo": "infortunato",
-   "nota": "noie muscolari al flessore, out contro il Lecce"
+   "nota": "noie muscolari al flessore, rientro dalla metà di dicembre"
   },
   "5641": {
    "id": 5641,
@@ -4918,7 +4927,7 @@
   "7580": {
    "id": 7580,
    "tipo": "infortunato",
-   "nota": "problema muscolare al flessore, da valutare"
+   "nota": "problema muscolare al flessore, rientro seconda metà di dicembre"
   },
   "7603": {
    "id": 7603,
