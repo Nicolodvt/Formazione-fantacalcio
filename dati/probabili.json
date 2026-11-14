@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-13T20:50:21.354Z",
+ "generato": "2026-11-14T13:58:52.897Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -280,9 +280,9 @@
    "nome": "Bernardeschi",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "219": {
    "id": 219,
@@ -352,7 +352,7 @@
    "nome": "Cataldi",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -631,7 +631,7 @@
    "nome": "Orsolini",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 70,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -874,9 +874,9 @@
    "nome": "Frattesi",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "2857": {
    "id": 2857,
@@ -1090,16 +1090,16 @@
    "nome": "Cambiaghi",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "4459": {
    "id": 4459,
    "nome": "Rovella",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1198,7 +1198,7 @@
    "nome": "Pedraza",
    "squadra": "Lazio",
    "ruolo": "D",
-   "pct": 75,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -1819,7 +1819,7 @@
    "nome": "Gudmundsson A.",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2629,9 +2629,9 @@
    "nome": "Dele-Bashiru",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 80,
+   "titolare": true,
+   "incerto": false
   },
   "6631": {
    "id": 6631,
@@ -4610,6 +4610,11 @@
    "tipo": "infortunato",
    "nota": "lesione distrattiva del muscolo adduttore lungo della coscia sinistra, tentativo rientro dalla fine di novembre"
   },
+  "2848": {
+   "id": 2848,
+   "tipo": "dubbio",
+   "nota": "risentimento muscolare alla gamba, in forte dubbio contro il Lecce"
+  },
   "4179": {
    "id": 4179,
    "tipo": "dubbio",
@@ -4649,6 +4654,11 @@
    "id": 4401,
    "tipo": "infortunato",
    "nota": "lesione del flessore della coscia sinistra con parziale interessamento tendineo, ipotesi rientro da fine febbraio"
+  },
+  "4436": {
+   "id": 4436,
+   "tipo": "dubbio",
+   "nota": "fastidio alla caviglia, in dubbio impiego contro l'Udinese"
   },
   "4664": {
    "id": 4664,
@@ -4913,7 +4923,7 @@
   "7580": {
    "id": 7580,
    "tipo": "infortunato",
-   "nota": "problema muscolare al flessore, rientro seconda metà di dicembre"
+   "nota": "problema muscolare al flessore, rientro fine dicembre"
   },
   "7603": {
    "id": 7603,
