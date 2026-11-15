@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-14T13:58:52.897Z",
+ "generato": "2026-11-15T14:26:54.973Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -262,9 +262,9 @@
    "nome": "Zielinski",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "158": {
    "id": 158,
@@ -757,7 +757,7 @@
    "nome": "Mkhitaryan",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -793,7 +793,7 @@
    "nome": "Pessina",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -901,9 +901,9 @@
    "nome": "Diego Carlos",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
   },
   "4147": {
    "id": 4147,
@@ -919,7 +919,7 @@
    "nome": "Akanji",
    "squadra": "Inter",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -1432,9 +1432,9 @@
    "nome": "Jones C.",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "5273": {
    "id": 5273,
@@ -2359,7 +2359,7 @@
    "nome": "Diouf",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -3268,7 +3268,7 @@
    "nome": "Baturina",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -4132,9 +4132,9 @@
    "nome": "Robinson J.",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 30,
+   "titolare": false,
+   "incerto": true
   },
   "7547": {
    "id": 7547,
@@ -4348,9 +4348,9 @@
    "nome": "Drobnic",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 20,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "7618": {
    "id": 7618,
@@ -4366,9 +4366,9 @@
    "nome": "Zeballos",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "7621": {
    "id": 7621,
@@ -4535,6 +4535,11 @@
  },
  "ballottaggi": [],
  "indisponibili": {
+  "152": {
+   "id": 152,
+   "tipo": "dubbio",
+   "nota": "fastidio alla pianta del piede, in dubbio impiego contro Atalanta"
+  },
   "309": {
    "id": 309,
    "tipo": "dubbio",
@@ -4614,6 +4619,11 @@
    "id": 2848,
    "tipo": "dubbio",
    "nota": "risentimento muscolare alla gamba, in forte dubbio contro il Lecce"
+  },
+  "4137": {
+   "id": 4137,
+   "tipo": "dubbio",
+   "nota": "risentimento muscolare alla gamba, in dubbio contro la Roma"
   },
   "4179": {
    "id": 4179,
@@ -4798,7 +4808,7 @@
   "6434": {
    "id": 6434,
    "tipo": "infortunato",
-   "nota": "frattura metatarso piede sinistro, rientro dalla prima metà di dicembre"
+   "nota": "frattura metatarso piede sinistro, rientro dalla fine di dicembre"
   },
   "6485": {
    "id": 6485,
@@ -4900,6 +4910,11 @@
    "tipo": "infortunato",
    "nota": "problema alla spalla, rientro dalla metà di dicembre"
   },
+  "7546": {
+   "id": 7546,
+   "tipo": "dubbio",
+   "nota": "affaticamento muscolare all'adduttore, da valutare"
+  },
   "7548": {
    "id": 7548,
    "tipo": "infortunato",
@@ -4934,11 +4949,6 @@
    "id": 7604,
    "tipo": "infortunato",
    "nota": "noie fisiche, out contro Fiorentina"
-  },
-  "7615": {
-   "id": 7615,
-   "tipo": "dubbio",
-   "nota": "problema al piede sinistro, in dubbio impiego contro la Roma"
   },
   "7619": {
    "id": 7619,
