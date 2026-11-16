@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-15T14:26:54.973Z",
+ "generato": "2026-11-16T16:41:14.477Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -937,7 +937,7 @@
    "nome": "Gonzalez N.",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -955,7 +955,7 @@
    "nome": "Muric",
    "squadra": "Sassuolo",
    "ruolo": "P",
-   "pct": 70,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -982,7 +982,7 @@
    "nome": "Maignan",
    "squadra": "Milan",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -1021,6 +1021,15 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
+  },
+  "4364": {
+   "id": 4364,
+   "nome": "Gaetano",
+   "squadra": "Atalanta",
+   "ruolo": "C",
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
   },
   "4371": {
    "id": 4371,
@@ -1216,7 +1225,7 @@
    "nome": "Turati",
    "squadra": "Sassuolo",
    "ruolo": "P",
-   "pct": 30,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -1711,7 +1720,7 @@
    "nome": "Vlasic",
    "squadra": "Torino",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -1792,7 +1801,7 @@
    "nome": "Zhegrova",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -2489,6 +2498,15 @@
    "titolare": true,
    "incerto": false
   },
+  "6485": {
+   "id": 6485,
+   "nome": "Kristensen T.",
+   "squadra": "Atalanta",
+   "ruolo": "D",
+   "pct": 30,
+   "titolare": false,
+   "incerto": true
+  },
   "6495": {
    "id": 6495,
    "nome": "Comuzzo",
@@ -2746,9 +2764,9 @@
    "nome": "Adzic",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "6678": {
    "id": 6678,
@@ -3178,9 +3196,9 @@
    "nome": "Bakola",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 70,
+   "titolare": true,
+   "incerto": false
   },
   "7048": {
    "id": 7048,
@@ -4625,11 +4643,6 @@
    "tipo": "dubbio",
    "nota": "risentimento muscolare alla gamba, in dubbio contro la Roma"
   },
-  "4179": {
-   "id": 4179,
-   "tipo": "dubbio",
-   "nota": "lesione di basso grado del soleo destro, da valutare contro Venezia"
-  },
   "4199": {
    "id": 4199,
    "tipo": "infortunato",
@@ -4652,8 +4665,8 @@
   },
   "4364": {
    "id": 4364,
-   "tipo": "infortunato",
-   "nota": "distrazione di medio grado ai muscoli adduttori della coscia destra, rientro fine novembre"
+   "tipo": "dubbio",
+   "nota": "distrazione di medio grado ai muscoli adduttori della coscia destra, da valutare convocazione contro Inter"
   },
   "4375": {
    "id": 4375,
@@ -4770,10 +4783,20 @@
    "tipo": "infortunato",
    "nota": "problema al tendine della coscia destra, ipotesi rientro da fine febbraio"
   },
+  "5687": {
+   "id": 5687,
+   "tipo": "dubbio",
+   "nota": "fastidio al bicipite femorale, in dubbio dal 1' contro il Napoli"
+  },
   "5735": {
    "id": 5735,
    "tipo": "infortunato",
    "nota": "problema muscolare alla gamba, da valutare contro il Genoa"
+  },
+  "5761": {
+   "id": 5761,
+   "tipo": "dubbio",
+   "nota": "noie fisiche, da valutare"
   },
   "5800": {
    "id": 5800,
@@ -4812,8 +4835,8 @@
   },
   "6485": {
    "id": 6485,
-   "tipo": "infortunato",
-   "nota": "distrazione di basso grado ai muscoli flessori della coscia sinistra, rientro dalla seconda metà di novembre"
+   "tipo": "dubbio",
+   "nota": "distrazione di basso grado ai muscoli flessori della coscia sinistra, da valutare convocazione contro Inter"
   },
   "6503": {
    "id": 6503,
