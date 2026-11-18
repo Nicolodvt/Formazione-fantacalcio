@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-17T16:37:57.257Z",
+ "generato": "2026-11-18T01:27:55.795Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -343,7 +343,7 @@
    "nome": "Dybala",
    "squadra": "Roma",
    "ruolo": "A",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -478,7 +478,7 @@
    "nome": "Kessiè",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -667,7 +667,7 @@
    "nome": "Mancini",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -748,7 +748,7 @@
    "nome": "Mkhitaryan",
    "squadra": "Inter",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -793,7 +793,7 @@
    "nome": "Martinez L.",
    "squadra": "Inter",
    "ruolo": "A",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -923,6 +923,15 @@
    "titolare": false,
    "incerto": true
   },
+  "4210": {
+   "id": 4210,
+   "nome": "Mina",
+   "squadra": "Cagliari",
+   "ruolo": "D",
+   "pct": 30,
+   "titolare": false,
+   "incerto": true
+  },
   "4220": {
    "id": 4220,
    "nome": "Zambo Anguissa",
@@ -1009,7 +1018,7 @@
    "nome": "Gaetano",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 20,
+   "pct": 15,
    "titolare": false,
    "incerto": true
   },
@@ -1018,7 +1027,7 @@
    "nome": "Raspadori",
    "squadra": "Atalanta",
    "ruolo": "A",
-   "pct": 50,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1225,7 +1234,7 @@
    "nome": "Thuram",
    "squadra": "Inter",
    "ruolo": "A",
-   "pct": 70,
+   "pct": 75,
    "titolare": true,
    "incerto": false
   },
@@ -1234,7 +1243,7 @@
    "nome": "Bellanova",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1405,7 +1414,7 @@
    "nome": "Samardzic",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -1606,6 +1615,15 @@
    "pct": 90,
    "titolare": true,
    "incerto": false
+  },
+  "5527": {
+   "id": 5527,
+   "nome": "Zanoli",
+   "squadra": "Udinese",
+   "ruolo": "D",
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
   },
   "5555": {
    "id": 5555,
@@ -1864,7 +1882,7 @@
    "nome": "Svilar",
    "squadra": "Roma",
    "ruolo": "P",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2485,7 +2503,7 @@
    "nome": "Kristensen T.",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 30,
+   "pct": 15,
    "titolare": false,
    "incerto": true
   },
@@ -2872,7 +2890,7 @@
    "nome": "Njie",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -3358,7 +3376,7 @@
    "nome": "Joao Mario",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -3439,7 +3457,7 @@
    "nome": "Bernasconi",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -4483,7 +4501,7 @@
    "nome": "Plaia",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 15,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -4492,7 +4510,7 @@
    "nome": "Idele",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 15,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -4535,11 +4553,6 @@
  },
  "ballottaggi": [],
  "indisponibili": {
-  "309": {
-   "id": 309,
-   "tipo": "dubbio",
-   "nota": "fastidio muscolare al polpaccio, da valutare impiego a Parma"
-  },
   "487": {
    "id": 487,
    "tipo": "infortunato",
@@ -4573,7 +4586,7 @@
   "2097": {
    "id": 2097,
    "tipo": "infortunato",
-   "nota": "fastidio alla tibia, rientro da inizio dicembre"
+   "nota": "fastidio alla tibia, tentativo rientro da fine dicembre"
   },
   "2169": {
    "id": 2169,
@@ -4598,7 +4611,7 @@
   "2764": {
    "id": 2764,
    "tipo": "dubbio",
-   "nota": "risentimento muscolare ai flessori della coscia sinistra, da valutare convocazione contro Atalanta"
+   "nota": "risentimento muscolare ai flessori della coscia sinistra, da valutare impiego contro Atalanta"
   },
   "2815": {
    "id": 2815,
@@ -4627,7 +4640,7 @@
   },
   "4210": {
    "id": 4210,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "microlesione muscolare al bicipite femorale, da valutare per Como"
   },
   "4260": {
@@ -4680,11 +4693,6 @@
    "tipo": "infortunato",
    "nota": "rottura del tendine del muscolo tensore della fascia lata dell'anca sinistra, ipotesi rientro da aprile"
   },
-  "4871": {
-   "id": 4871,
-   "tipo": "dubbio",
-   "nota": "problema muscolare al bicipite femorale della coscia, da valutare impiego dal 1' contro Atalanta"
-  },
   "4892": {
    "id": 4892,
    "tipo": "infortunato",
@@ -4722,7 +4730,7 @@
   },
   "5527": {
    "id": 5527,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "problema muscolare, da valutare per Bologna"
   },
   "5562": {
