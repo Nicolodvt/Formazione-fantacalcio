@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-19T15:03:35.857Z",
+ "generato": "2026-11-20T00:10:28.003Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -356,12 +356,30 @@
    "titolare": false,
    "incerto": true
   },
+  "487": {
+   "id": 487,
+   "nome": "De Silvestri",
+   "squadra": "Bologna",
+   "ruolo": "D",
+   "pct": 20,
+   "titolare": false,
+   "incerto": true
+  },
   "526": {
    "id": 526,
    "nome": "Duncan",
    "squadra": "Venezia",
    "ruolo": "C",
    "pct": 15,
+   "titolare": false,
+   "incerto": true
+  },
+  "531": {
+   "id": 531,
+   "nome": "Berardi",
+   "squadra": "Sassuolo",
+   "ruolo": "A",
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -391,15 +409,6 @@
    "pct": 80,
    "titolare": true,
    "incerto": false
-  },
-  "572": {
-   "id": 572,
-   "nome": "Meret",
-   "squadra": "Napoli",
-   "ruolo": "P",
-   "pct": 60,
-   "titolare": true,
-   "incerto": true
   },
   "608": {
    "id": 608,
@@ -631,9 +640,9 @@
    "nome": "Milinkovic-Savic V.",
    "squadra": "Napoli",
    "ruolo": "P",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
+   "pct": 90,
+   "titolare": true,
+   "incerto": false
   },
   "2194": {
    "id": 2194,
@@ -658,9 +667,9 @@
    "nome": "Mancini",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "2379": {
    "id": 2379,
@@ -703,9 +712,9 @@
    "nome": "De Bruyne",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "2521": {
    "id": 2521,
@@ -847,7 +856,7 @@
    "nome": "Contini",
    "squadra": "Napoli",
    "ruolo": "P",
-   "pct": 1,
+   "pct": 5,
    "titolare": false,
    "incerto": true
   },
@@ -919,7 +928,7 @@
    "nome": "Zambo Anguissa",
    "squadra": "Napoli",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -931,15 +940,6 @@
    "pct": 70,
    "titolare": true,
    "incerto": false
-  },
-  "4260": {
-   "id": 4260,
-   "nome": "Winks",
-   "squadra": "Cagliari",
-   "ruolo": "C",
-   "pct": 25,
-   "titolare": false,
-   "incerto": true
   },
   "4263": {
    "id": 4263,
@@ -1333,7 +1333,7 @@
    "nome": "Molina N.",
    "squadra": "Roma",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 55,
    "titolare": true,
    "incerto": true
   },
@@ -1513,7 +1513,7 @@
    "nome": "Ciervo",
    "squadra": "Cagliari",
    "ruolo": "C",
-   "pct": 30,
+   "pct": 25,
    "titolare": false,
    "incerto": true
   },
@@ -1731,6 +1731,15 @@
    "ruolo": "A",
    "pct": 55,
    "titolare": true,
+   "incerto": true
+  },
+  "5735": {
+   "id": 5735,
+   "nome": "Volpato",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "pct": 20,
+   "titolare": false,
    "incerto": true
   },
   "5739": {
@@ -2062,7 +2071,7 @@
    "nome": "Berisha M.",
    "squadra": "Lecce",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -2332,7 +2341,7 @@
    "nome": "Lipani",
    "squadra": "Sassuolo",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2732,23 +2741,14 @@
    "titolare": false,
    "incerto": true
   },
-  "6677": {
-   "id": 6677,
-   "nome": "Adzic",
-   "squadra": "Sassuolo",
-   "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
-  },
   "6678": {
    "id": 6678,
    "nome": "Liberali",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 70,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "6680": {
    "id": 6680,
@@ -2828,6 +2828,15 @@
    "squadra": "Milan",
    "ruolo": "P",
    "pct": 5,
+   "titolare": false,
+   "incerto": true
+  },
+  "6815": {
+   "id": 6815,
+   "nome": "Fadera",
+   "squadra": "Cagliari",
+   "ruolo": "C",
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3331,7 +3340,7 @@
    "nome": "Liteta",
    "squadra": "Cagliari",
    "ruolo": "C",
-   "pct": 40,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -3808,8 +3817,8 @@
    "nome": "Milla",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "7413": {
@@ -4240,7 +4249,7 @@
    "nome": "Massolin",
    "squadra": "Cagliari",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -4250,15 +4259,6 @@
    "squadra": "Parma",
    "ruolo": "C",
    "pct": 25,
-   "titolare": false,
-   "incerto": true
-  },
-  "7591": {
-   "id": 7591,
-   "nome": "Kulla",
-   "squadra": "Sassuolo",
-   "ruolo": "A",
-   "pct": 10,
    "titolare": false,
    "incerto": true
   },
@@ -4551,6 +4551,18 @@
   ],
   [
    {
+    "id": 7412,
+    "nome": "Milla",
+    "pct": 55
+   },
+   {
+    "id": 6678,
+    "nome": "Liberali",
+    "pct": 45
+   }
+  ],
+  [
+   {
     "id": 7532,
     "nome": "Kofler",
     "pct": 65
@@ -4568,8 +4580,8 @@
     "pct": 55
    },
    {
-    "id": 7579,
-    "nome": "Massolin",
+    "id": 6815,
+    "nome": "Fadera",
     "pct": 45
    }
   ],
@@ -4647,14 +4659,26 @@
   ],
   [
    {
+    "id": 2296,
+    "nome": "Mancini",
+    "pct": 60
+   },
+   {
+    "id": 4705,
+    "nome": "Balerdi",
+    "pct": 40
+   }
+  ],
+  [
+   {
     "id": 4998,
     "nome": "Molina N.",
-    "pct": 60
+    "pct": 55
    },
    {
     "id": 7599,
     "nome": "Lulli",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
@@ -4671,18 +4695,6 @@
   ],
   [
    {
-    "id": 572,
-    "nome": "Meret",
-    "pct": 60
-   },
-   {
-    "id": 2170,
-    "nome": "Milinkovic-Savic V.",
-    "pct": 40
-   }
-  ],
-  [
-   {
     "id": 1852,
     "nome": "Spinazzola",
     "pct": 55
@@ -4691,6 +4703,18 @@
     "id": 5840,
     "nome": "Olivera",
     "pct": 45
+   }
+  ],
+  [
+   {
+    "id": 2517,
+    "nome": "De Bruyne",
+    "pct": 60
+   },
+   {
+    "id": 5131,
+    "nome": "Gilmour",
+    "pct": 40
    }
   ],
   [
@@ -4880,8 +4904,8 @@
     "pct": 60
    },
    {
-    "id": 6677,
-    "nome": "Adzic",
+    "id": 6024,
+    "nome": "Sulemana I.",
     "pct": 40
    }
   ],
@@ -5115,11 +5139,6 @@
   ]
  ],
  "indisponibili": {
-  "487": {
-   "id": 487,
-   "tipo": "infortunato",
-   "nota": "risentimento muscolare ai flessori della coscia destra, out contro Udinese"
-  },
   "530": {
    "id": 530,
    "tipo": "infortunato",
@@ -5127,8 +5146,13 @@
   },
   "531": {
    "id": 531,
+   "tipo": "dubbio",
+   "nota": "noie fisiche, in forte dubbio contro il Genoa"
+  },
+  "572": {
+   "id": 572,
    "tipo": "infortunato",
-   "nota": "noie fisiche, da valutare contro il Genoa"
+   "nota": "frattura della quinta vertebra lombare, ipotesi rientro da gennaio"
   },
   "610": {
    "id": 610,
@@ -5207,8 +5231,8 @@
   },
   "4260": {
    "id": 4260,
-   "tipo": "dubbio",
-   "nota": "lombalgia, in dubbio per Como"
+   "tipo": "infortunato",
+   "nota": "lombalgia, da valutare per Como"
   },
   "4287": {
    "id": 4287,
@@ -5317,7 +5341,7 @@
   },
   "5735": {
    "id": 5735,
-   "tipo": "infortunato",
+   "tipo": "dubbio",
    "nota": "problema muscolare alla gamba, da valutare contro il Genoa"
   },
   "5791": {
@@ -5390,15 +5414,15 @@
    "tipo": "infortunato",
    "nota": "problema all'anca, rientro fine novembre"
   },
+  "6677": {
+   "id": 6677,
+   "tipo": "infortunato",
+   "nota": "problema al ginocchio, out contro il Genoa"
+  },
   "6717": {
    "id": 6717,
    "tipo": "infortunato",
    "nota": "rottura di tibia e perone gamba sinistra, rientro da fine dicembre"
-  },
-  "6815": {
-   "id": 6815,
-   "tipo": "infortunato",
-   "nota": "lesione muscolare al bicipite femorale, rientro dalla seconda metà di novembre"
   },
   "6827": {
    "id": 6827,
@@ -5513,7 +5537,7 @@
   "7627": {
    "id": 7627,
    "tipo": "infortunato",
-   "nota": "lieve affaticamento muscolare, da valutare convocazione contro Udinese"
+   "nota": "lieve affaticamento muscolare, out contro Udinese"
   }
  }
 }
