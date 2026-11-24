@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-23T18:55:11.219Z",
+ "generato": "2026-11-24T04:09:41.878Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 12,
  "giornateDiscordi": [
@@ -721,7 +721,7 @@
    "nome": "De Gea",
    "squadra": "Fiorentina",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -784,9 +784,9 @@
    "nome": "Pessina",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "2764": {
    "id": 2764,
@@ -1100,7 +1100,7 @@
    "squadra": "Fiorentina",
    "ruolo": "C",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "4468": {
@@ -1126,9 +1126,9 @@
    "nome": "Thiam",
    "squadra": "Monza",
    "ruolo": "P",
-   "pct": 5,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "4502": {
    "id": 4502,
@@ -1252,9 +1252,9 @@
    "nome": "Carboni A.",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "4930": {
    "id": 4930,
@@ -1468,7 +1468,7 @@
    "nome": "Dragusin",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1837,9 +1837,9 @@
    "nome": "Birindelli",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "5840": {
    "id": 5840,
@@ -1937,7 +1937,7 @@
    "squadra": "Monza",
    "ruolo": "A",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "5885": {
@@ -2314,7 +2314,7 @@
    "nome": "Ndour",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2503,7 +2503,7 @@
    "nome": "Jimenez A.",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2521,7 +2521,7 @@
    "nome": "Goglichidze",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2566,7 +2566,7 @@
    "nome": "Akinsanmiro",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2647,9 +2647,9 @@
    "nome": "Lucchesi",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "6660": {
    "id": 6660,
@@ -2846,7 +2846,7 @@
    "squadra": "Fiorentina",
    "ruolo": "C",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6833": {
@@ -3124,7 +3124,7 @@
    "nome": "Pellegrino M.",
    "squadra": "Fiorentina",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3196,7 +3196,7 @@
    "nome": "Mastantuono",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3313,7 +3313,7 @@
    "nome": "Joao Mario",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 75,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3430,7 +3430,7 @@
    "nome": "Kouadio",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3529,9 +3529,9 @@
    "nome": "Tornqvist",
    "squadra": "Monza",
    "ruolo": "P",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 5,
+   "titolare": false,
+   "incerto": true
   },
   "7307": {
    "id": 7307,
@@ -3736,7 +3736,7 @@
    "nome": "Viery",
    "squadra": "Fiorentina",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3844,9 +3844,9 @@
    "nome": "Oulai",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7467": {
    "id": 7467,
@@ -3898,9 +3898,9 @@
    "nome": "Colombo L.",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7481": {
    "id": 7481,
@@ -3943,7 +3943,7 @@
    "nome": "Mangas",
    "squadra": "Monza",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3952,7 +3952,7 @@
    "nome": "Varela G.",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4060,9 +4060,9 @@
    "nome": "Robinson J.",
    "squadra": "Monza",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7547": {
    "id": 7547,
@@ -4168,9 +4168,9 @@
    "nome": "Foe Ondoa",
    "squadra": "Monza",
    "ruolo": "C",
-   "pct": 75,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "7575": {
    "id": 7575,
@@ -4312,9 +4312,9 @@
    "nome": "Gnonto",
    "squadra": "Fiorentina",
    "ruolo": "A",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7624": {
    "id": 7624,
@@ -4330,9 +4330,9 @@
    "nome": "Goncalves P.",
    "squadra": "Fiorentina",
    "ruolo": "C",
-   "pct": 55,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7628": {
    "id": 7628,
@@ -4452,80 +4452,7 @@
    "incerto": false
   }
  },
- "ballottaggi": [
-  [
-   {
-    "id": 5838,
-    "nome": "Birindelli",
-    "pct": 60
-   },
-   {
-    "id": 7146,
-    "nome": "Tourè I.",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 5882,
-    "nome": "Mota",
-    "pct": 60
-   },
-   {
-    "id": 2155,
-    "nome": "Cutrone",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 7546,
-    "nome": "Robinson J.",
-    "pct": 60
-   },
-   {
-    "id": 7620,
-    "nome": "Zeballos",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 4465,
-    "nome": "Fagioli",
-    "pct": 60
-   },
-   {
-    "id": 7464,
-    "nome": "Oulai",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 6827,
-    "nome": "Njie",
-    "pct": 55
-   },
-   {
-    "id": 7623,
-    "nome": "Gnonto",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 7625,
-    "nome": "Goncalves P.",
-    "pct": 55
-   },
-   {
-    "id": 4947,
-    "nome": "Brescianini",
-    "pct": 45
-   }
-  ]
- ],
+ "ballottaggi": [],
  "indisponibili": {
   "152": {
    "id": 152,
