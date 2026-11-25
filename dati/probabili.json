@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-24T18:34:11.171Z",
+ "generato": "2026-11-25T02:54:12.290Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 13,
  "giornateDiscordi": [
@@ -2746,8 +2746,8 @@
    "nome": "Liberali",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
+   "pct": 55,
+   "titolare": true,
    "incerto": true
   },
   "6680": {
@@ -3061,7 +3061,7 @@
    "nome": "Butez",
    "squadra": "Como",
    "ruolo": "P",
-   "pct": 75,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -3268,7 +3268,7 @@
    "nome": "Baturina",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -3781,9 +3781,9 @@
    "nome": "Milla",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 80,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "7413": {
    "id": 7413,
@@ -4882,6 +4882,18 @@
    {
     "id": 7414,
     "nome": "Kaiki",
+    "pct": 45
+   }
+  ],
+  [
+   {
+    "id": 6678,
+    "nome": "Liberali",
+    "pct": 55
+   },
+   {
+    "id": 6967,
+    "nome": "Diao",
     "pct": 45
    }
   ],
