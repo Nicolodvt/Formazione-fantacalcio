@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-25T02:54:12.290Z",
+ "generato": "2026-11-25T17:54:21.881Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 13,
  "giornateDiscordi": [
@@ -1189,7 +1189,7 @@
    "nome": "Tomori",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1387,7 +1387,7 @@
    "nome": "Caqueret",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -1432,7 +1432,7 @@
    "nome": "Estupinan",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 60,
    "titolare": false,
    "incerto": true
   },
@@ -1756,7 +1756,7 @@
    "nome": "Ostigard",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 70,
    "titolare": true,
    "incerto": false
   },
@@ -2485,7 +2485,7 @@
    "nome": "Bartesaghi",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -2512,7 +2512,7 @@
    "nome": "Camarda",
    "squadra": "Milan",
    "ruolo": "A",
-   "pct": 35,
+   "pct": 20,
    "titolare": false,
    "incerto": true
   },
@@ -3070,7 +3070,7 @@
    "nome": "Diao",
    "squadra": "Como",
    "ruolo": "A",
-   "pct": 25,
+   "pct": 35,
    "titolare": false,
    "incerto": true
   },
@@ -3151,7 +3151,7 @@
    "nome": "Smolcic I.",
    "squadra": "Como",
    "ruolo": "D",
-   "pct": 40,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -3817,7 +3817,7 @@
    "nome": "Alajbegovic",
    "squadra": "Juventus",
    "ruolo": "C",
-   "pct": 20,
+   "pct": 50,
    "titolare": false,
    "incerto": true
   },
@@ -4006,9 +4006,9 @@
    "nome": "Diawara S.",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "7526": {
    "id": 7526,
@@ -4976,9 +4976,21 @@
     "pct": 55
    },
    {
-    "id": 6496,
-    "nome": "Bartesaghi",
+    "id": 4751,
+    "nome": "Tomori",
     "pct": 45
+   }
+  ],
+  [
+   {
+    "id": 7525,
+    "nome": "Diawara S.",
+    "pct": 60
+   },
+   {
+    "id": 5273,
+    "nome": "Estupinan",
+    "pct": 40
    }
   ]
  ],
@@ -5132,6 +5144,11 @@
    "id": 5022,
    "tipo": "dubbio",
    "nota": "problema fisico, in dubbio impiego dal 1' a Cagliari"
+  },
+  "5036": {
+   "id": 5036,
+   "tipo": "dubbio",
+   "nota": "noie fisiche, in forte dubbio contro la Juventus"
   },
   "5436": {
    "id": 5436,
@@ -5317,11 +5334,6 @@
    "id": 7410,
    "tipo": "infortunato",
    "nota": "noie muscolari, out contro Udinese"
-  },
-  "7436": {
-   "id": 7436,
-   "tipo": "dubbio",
-   "nota": "sovraccarico muscolare alla gamba sinistra, da valutare contro il Como"
   },
   "7478": {
    "id": 7478,
