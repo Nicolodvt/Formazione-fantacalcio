@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-26T16:12:28.494Z",
+ "generato": "2026-11-27T01:24:27.522Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 13,
  "giornateDiscordi": [
@@ -424,9 +424,9 @@
    "nome": "Zaccagni",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 65,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "779": {
    "id": 779,
@@ -478,7 +478,7 @@
    "nome": "Kessiè",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -658,7 +658,7 @@
    "nome": "Rabiot",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -676,7 +676,7 @@
    "nome": "Pulisic",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -1009,7 +1009,7 @@
    "nome": "Gaetano",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 50,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1090,7 +1090,7 @@
    "nome": "Rovella",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 35,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -1126,7 +1126,7 @@
    "nome": "Elmas",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -1423,7 +1423,7 @@
    "nome": "Musah",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 90,
    "titolare": true,
    "incerto": false
   },
@@ -1486,7 +1486,7 @@
    "nome": "Zalewski",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": true,
    "incerto": true
   },
@@ -1594,7 +1594,7 @@
    "nome": "Scalvini",
    "squadra": "Atalanta",
    "ruolo": "D",
-   "pct": 85,
+   "pct": 65,
    "titolare": true,
    "incerto": false
   },
@@ -1756,9 +1756,9 @@
    "nome": "Ostigard",
    "squadra": "Genoa",
    "ruolo": "D",
-   "pct": 70,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "5751": {
    "id": 5751,
@@ -1801,9 +1801,9 @@
    "nome": "Ederson D.S.",
    "squadra": "Atalanta",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 60,
    "titolare": true,
-   "incerto": false
+   "incerto": true
   },
   "5800": {
    "id": 5800,
@@ -1846,7 +1846,7 @@
    "nome": "Gila",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 65,
    "titolare": true,
    "incerto": false
   },
@@ -2206,7 +2206,7 @@
    "nome": "Belahyane",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 80,
+   "pct": 85,
    "titolare": true,
    "incerto": false
   },
@@ -2377,7 +2377,7 @@
    "nome": "Moreira",
    "squadra": "Milan",
    "ruolo": "C",
-   "pct": 85,
+   "pct": 80,
    "titolare": true,
    "incerto": false
   },
@@ -2386,7 +2386,7 @@
    "nome": "Ramos G.",
    "squadra": "Milan",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 75,
    "titolare": true,
    "incerto": false
   },
@@ -2602,9 +2602,9 @@
    "nome": "Dele-Bashiru",
    "squadra": "Lazio",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 80,
+   "titolare": true,
+   "incerto": false
   },
   "6631": {
    "id": 6631,
@@ -3603,15 +3603,6 @@
    "ruolo": "D",
    "pct": 40,
    "titolare": false,
-   "incerto": true
-  },
-  "7314": {
-   "id": 7314,
-   "nome": "Taylor K.",
-   "squadra": "Lazio",
-   "ruolo": "C",
-   "pct": 55,
-   "titolare": true,
    "incerto": true
   },
   "7317": {
@@ -4619,12 +4610,12 @@
    {
     "id": 632,
     "nome": "Zaccagni",
-    "pct": 55
+    "pct": 65
    },
    {
     "id": 2038,
     "nome": "Pinamonti",
-    "pct": 45
+    "pct": 35
    }
   ],
   [
@@ -4673,6 +4664,18 @@
     "id": 7071,
     "nome": "Esposito F.P.",
     "pct": 35
+   }
+  ],
+  [
+   {
+    "id": 5750,
+    "nome": "Ostigard",
+    "pct": 60
+   },
+   {
+    "id": 6977,
+    "nome": "Otoa",
+    "pct": 40
    }
   ],
   [
@@ -4953,6 +4956,18 @@
   ],
   [
    {
+    "id": 5526,
+    "nome": "Scalvini",
+    "pct": 65
+   },
+   {
+    "id": 6485,
+    "nome": "Kristensen T.",
+    "pct": 35
+   }
+  ],
+  [
+   {
     "id": 554,
     "nome": "Zappacosta",
     "pct": 60
@@ -4965,14 +4980,26 @@
   ],
   [
    {
+    "id": 5792,
+    "nome": "Ederson D.S.",
+    "pct": 60
+   },
+   {
+    "id": 4364,
+    "nome": "Gaetano",
+    "pct": 40
+   }
+  ],
+  [
+   {
     "id": 5422,
     "nome": "Zalewski",
-    "pct": 60
+    "pct": 55
    },
    {
     "id": 6844,
     "nome": "Rowe",
-    "pct": 40
+    "pct": 45
    }
   ],
   [
@@ -5009,6 +5036,18 @@
     "id": 7374,
     "nome": "Mendy P.",
     "pct": 40
+   }
+  ],
+  [
+   {
+    "id": 5833,
+    "nome": "Gila",
+    "pct": 65
+   },
+   {
+    "id": 4751,
+    "nome": "Tomori",
+    "pct": 35
    }
   ],
   [
@@ -5364,8 +5403,8 @@
   },
   "7314": {
    "id": 7314,
-   "tipo": "dubbio",
-   "nota": "noie muscolari, in dubbio dal 1' contro il Torino"
+   "tipo": "infortunato",
+   "nota": "noie muscolari, da valutare contro il Torino"
   },
   "7351": {
    "id": 7351,
