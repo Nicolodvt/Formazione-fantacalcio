@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-28T00:22:16.574Z",
+ "generato": "2026-11-28T16:00:45.339Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 13,
  "giornateDiscordi": [
@@ -290,15 +290,6 @@
    "squadra": "Genoa",
    "ruolo": "P",
    "pct": 1,
-   "titolare": false,
-   "incerto": true
-  },
-  "252": {
-   "id": 252,
-   "nome": "Biraghi",
-   "squadra": "Torino",
-   "ruolo": "D",
-   "pct": 10,
    "titolare": false,
    "incerto": true
   },
@@ -617,15 +608,6 @@
    "titolare": false,
    "incerto": true
   },
-  "2169": {
-   "id": 2169,
-   "nome": "Rodriguez R.",
-   "squadra": "Torino",
-   "ruolo": "D",
-   "pct": 15,
-   "titolare": false,
-   "incerto": true
-  },
   "2170": {
    "id": 2170,
    "nome": "Milinkovic-Savic V.",
@@ -887,15 +869,6 @@
    "titolare": false,
    "incerto": true
   },
-  "4179": {
-   "id": 4179,
-   "nome": "Gonzalez N.",
-   "squadra": "Juventus",
-   "ruolo": "C",
-   "pct": 15,
-   "titolare": false,
-   "incerto": true
-  },
   "4210": {
    "id": 4210,
    "nome": "Mina",
@@ -964,9 +937,9 @@
    "nome": "Nicolussi Caviglia",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 40,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "4359": {
    "id": 4359,
@@ -1270,9 +1243,9 @@
    "nome": "Monterisi",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 55,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "4957": {
    "id": 4957,
@@ -1360,7 +1333,7 @@
    "nome": "Caqueret",
    "squadra": "Como",
    "ruolo": "C",
-   "pct": 20,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -1733,6 +1706,15 @@
    "titolare": true,
    "incerto": false
   },
+  "5735": {
+   "id": 5735,
+   "nome": "Volpato",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "pct": 35,
+   "titolare": false,
+   "incerto": true
+  },
   "5739": {
    "id": 5739,
    "nome": "De Winter",
@@ -1810,15 +1792,6 @@
    "nome": "Terracciano F.",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 35,
-   "titolare": false,
-   "incerto": true
-  },
-  "5823": {
-   "id": 5823,
-   "nome": "Baldanzi",
-   "squadra": "Genoa",
-   "ruolo": "C",
    "pct": 50,
    "titolare": false,
    "incerto": true
@@ -1909,9 +1882,9 @@
    "nome": "Valeri",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "5872": {
    "id": 5872,
@@ -2152,9 +2125,9 @@
    "nome": "Carboni F.",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6151": {
    "id": 6151,
@@ -2215,7 +2188,7 @@
    "nome": "Kvernadze",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2224,7 +2197,7 @@
    "nome": "Fabbian",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2278,7 +2251,7 @@
    "nome": "Tourè E.",
    "squadra": "Parma",
    "ruolo": "A",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2296,7 +2269,7 @@
    "nome": "Oyono A.",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2413,7 +2386,7 @@
    "nome": "Palmisani",
    "squadra": "Frosinone",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2467,7 +2440,7 @@
    "nome": "Bartesaghi",
    "squadra": "Milan",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 15,
    "titolare": false,
    "incerto": true
   },
@@ -2503,7 +2476,7 @@
    "nome": "Ghedjemis",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2683,7 +2656,7 @@
    "nome": "Delprato",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2693,7 +2666,7 @@
    "squadra": "Parma",
    "ruolo": "C",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "6671": {
@@ -2980,7 +2953,7 @@
    "nome": "Keita M.",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3016,7 +2989,7 @@
    "nome": "Masini",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3052,7 +3025,7 @@
    "nome": "Diao",
    "squadra": "Como",
    "ruolo": "A",
-   "pct": 35,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -3154,6 +3127,15 @@
    "pct": 80,
    "titolare": true,
    "incerto": false
+  },
+  "7036": {
+   "id": 7036,
+   "nome": "Bakola",
+   "squadra": "Sassuolo",
+   "ruolo": "C",
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
   },
   "7048": {
    "id": 7048,
@@ -3385,9 +3367,9 @@
    "nome": "Ndiaye",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "7203": {
    "id": 7203,
@@ -3448,7 +3430,7 @@
    "nome": "Troilo",
    "squadra": "Parma",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3503,7 +3485,7 @@
    "squadra": "Parma",
    "ruolo": "D",
    "pct": 60,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "7260": {
@@ -3538,9 +3520,9 @@
    "nome": "Cremaschi",
    "squadra": "Parma",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7294": {
    "id": 7294,
@@ -3673,7 +3655,7 @@
    "nome": "Elphege",
    "squadra": "Parma",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3731,6 +3713,15 @@
    "titolare": false,
    "incerto": true
   },
+  "7390": {
+   "id": 7390,
+   "nome": "Doucouré M.",
+   "squadra": "Genoa",
+   "ruolo": "D",
+   "pct": 15,
+   "titolare": false,
+   "incerto": true
+  },
   "7408": {
    "id": 7408,
    "nome": "Lisman",
@@ -3754,7 +3745,7 @@
    "nome": "Daffara",
    "squadra": "Parma",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3871,7 +3862,7 @@
    "nome": "Calvani",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3880,7 +3871,7 @@
    "nome": "Bracaglia",
    "squadra": "Frosinone",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3889,7 +3880,7 @@
    "nome": "Calò",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4114,7 +4105,7 @@
    "nome": "Schmid",
    "squadra": "Frosinone",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4276,7 +4267,7 @@
    "nome": "Bobcek",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 65,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4424,15 +4415,6 @@
    "titolare": false,
    "incerto": true
   },
-  "7657": {
-   "id": 7657,
-   "nome": "Pereyra M.",
-   "squadra": "Napoli",
-   "ruolo": "A",
-   "pct": 20,
-   "titolare": false,
-   "incerto": true
-  },
   "7662": {
    "id": 7662,
    "nome": "Grandu",
@@ -4444,66 +4426,6 @@
   }
  },
  "ballottaggi": [
-  [
-   {
-    "id": 4952,
-    "nome": "Monterisi",
-    "pct": 55
-   },
-   {
-    "id": 5757,
-    "nome": "Cittadini",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 7612,
-    "nome": "Bobcek",
-    "pct": 65
-   },
-   {
-    "id": 5436,
-    "nome": "Raimondo",
-    "pct": 35
-   }
-  ],
-  [
-   {
-    "id": 7202,
-    "nome": "Ndiaye",
-    "pct": 60
-   },
-   {
-    "id": 6149,
-    "nome": "Carboni F.",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 7255,
-    "nome": "Britschgi",
-    "pct": 60
-   },
-   {
-    "id": 7276,
-    "nome": "Cremaschi",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 6666,
-    "nome": "Bernabè",
-    "pct": 55
-   },
-   {
-    "id": 7628,
-    "nome": "Sierro",
-    "pct": 45
-   }
-  ],
   [
    {
     "id": 5751,
@@ -5078,8 +5000,8 @@
   },
   "2169": {
    "id": 2169,
-   "tipo": "dubbio",
-   "nota": "lesione tendinea di basso grado ai muscoli flessori della coscia sinistra, da valutare convocazione contro la Lazio"
+   "tipo": "infortunato",
+   "nota": "lesione tendinea di basso grado ai muscoli flessori della coscia sinistra, da valutare convocazione nella 14a giornata"
   },
   "2188": {
    "id": 2188,
@@ -5118,8 +5040,8 @@
   },
   "4179": {
    "id": 4179,
-   "tipo": "dubbio",
-   "nota": "problema muscolare al polpaccio destro, da valutare convocazione a Como"
+   "tipo": "infortunato",
+   "nota": "problema muscolare al polpaccio destro, da valutare convocazione nella 14a giornata"
   },
   "4199": {
    "id": 4199,
@@ -5186,11 +5108,6 @@
    "tipo": "infortunato",
    "nota": "distrazione di basso grado agli adduttori della coscia sinistra, tentativo rientro dalla seconda metà di dicembre"
   },
-  "5036": {
-   "id": 5036,
-   "tipo": "dubbio",
-   "nota": "noie fisiche, in forte dubbio contro la Juventus"
-  },
   "5449": {
    "id": 5449,
    "tipo": "infortunato",
@@ -5226,25 +5143,20 @@
    "tipo": "infortunato",
    "nota": "problema al tendine della coscia destra, ipotesi rientro da fine febbraio"
   },
-  "5735": {
-   "id": 5735,
-   "tipo": "infortunato",
-   "nota": "problema muscolare alla gamba, da valutare contro il Napoli"
-  },
   "5750": {
    "id": 5750,
    "tipo": "infortunato",
    "nota": "sindrome influenzale, out a Milano"
   },
-  "5791": {
-   "id": 5791,
-   "tipo": "dubbio",
-   "nota": "fastidio alla caviglia, in dubbio dal 1' contro l'Inter"
-  },
   "5820": {
    "id": 5820,
    "tipo": "infortunato",
    "nota": "problema muscolare alla coscia destra, out contro Fiorentina"
+  },
+  "5823": {
+   "id": 5823,
+   "tipo": "infortunato",
+   "nota": "noie fisiche, assente contro l'Inter"
   },
   "6046": {
    "id": 6046,
@@ -5331,20 +5243,10 @@
    "tipo": "dubbio",
    "nota": "lieve affaticamento muscolare, in dubbio contro la Fiorentina"
   },
-  "6967": {
-   "id": 6967,
-   "tipo": "dubbio",
-   "nota": "lesione muscolare al flessore della gamba, da valutare convocazione contro la Juventus"
-  },
   "6986": {
    "id": 6986,
    "tipo": "infortunato",
    "nota": "lesione di secondo grado dell'adduttore, rientro dalla seconda metà di dicembre"
-  },
-  "7036": {
-   "id": 7036,
-   "tipo": "infortunato",
-   "nota": "problema fisico, da valutare"
   },
   "7127": {
    "id": 7127,
