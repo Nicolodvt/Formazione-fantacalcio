@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generato": "2026-11-27T16:13:51.531Z",
+ "generato": "2026-11-28T00:22:16.574Z",
  "fonte": "https://www.fantacalcio.it/probabili-formazioni-serie-a",
  "giornata": 13,
  "giornateDiscordi": [
@@ -253,7 +253,7 @@
    "nome": "Skorupski",
    "squadra": "Bologna",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -280,9 +280,9 @@
    "nome": "Bernardeschi",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "219": {
    "id": 219,
@@ -316,7 +316,7 @@
    "nome": "Juan Jesus",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -613,9 +613,9 @@
    "nome": "Orsolini",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 75,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "2169": {
    "id": 2169,
@@ -689,15 +689,6 @@
    "titolare": false,
    "incerto": true
   },
-  "2517": {
-   "id": 2517,
-   "nome": "De Bruyne",
-   "squadra": "Napoli",
-   "ruolo": "C",
-   "pct": 30,
-   "titolare": false,
-   "incerto": true
-  },
   "2521": {
    "id": 2521,
    "nome": "De Gea",
@@ -712,9 +703,9 @@
    "nome": "Darmian",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 55,
+   "titolare": false,
+   "incerto": true
   },
   "2528": {
    "id": 2528,
@@ -775,9 +766,9 @@
    "nome": "Odgaard",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "2766": {
    "id": 2766,
@@ -982,8 +973,8 @@
    "nome": "Piccoli",
    "squadra": "Bologna",
    "ruolo": "A",
-   "pct": 55,
-   "titolare": true,
+   "pct": 60,
+   "titolare": false,
    "incerto": true
   },
   "4360": {
@@ -1063,7 +1054,7 @@
    "nome": "Zortea",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1072,9 +1063,9 @@
    "nome": "Cambiaghi",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 90,
-   "titolare": true,
-   "incerto": false
+   "pct": 60,
+   "titolare": false,
+   "incerto": true
   },
   "4459": {
    "id": 4459,
@@ -1432,7 +1423,7 @@
    "nome": "Pobega",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1450,7 +1441,7 @@
    "nome": "Sohm",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 75,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1499,6 +1490,15 @@
    "titolare": false,
    "incerto": true
   },
+  "5436": {
+   "id": 5436,
+   "nome": "Raimondo",
+   "squadra": "Frosinone",
+   "ruolo": "A",
+   "pct": 50,
+   "titolare": false,
+   "incerto": true
+  },
   "5453": {
    "id": 5453,
    "nome": "Ricci S.",
@@ -1532,7 +1532,7 @@
    "squadra": "Venezia",
    "ruolo": "D",
    "pct": 55,
-   "titolare": true,
+   "titolare": false,
    "incerto": true
   },
   "5498": {
@@ -1540,7 +1540,7 @@
    "nome": "Casale",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1567,9 +1567,9 @@
    "nome": "Busio",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "5514": {
    "id": 5514,
@@ -1666,7 +1666,7 @@
    "nome": "Theate",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -1711,9 +1711,9 @@
    "nome": "Haps",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "5701": {
    "id": 5701,
@@ -1900,7 +1900,7 @@
    "nome": "Ferguson",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2134,7 +2134,7 @@
    "nome": "Moro N.",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 60,
+   "pct": 55,
    "titolare": false,
    "incerto": true
   },
@@ -2314,7 +2314,7 @@
    "nome": "Stankovic F.",
    "squadra": "Venezia",
    "ruolo": "P",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2827,7 +2827,7 @@
    "nome": "Hainaut",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2872,9 +2872,9 @@
    "nome": "Mbangula",
    "squadra": "Bologna",
    "ruolo": "C",
-   "pct": 55,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "6844": {
    "id": 6844,
@@ -2935,7 +2935,7 @@
    "nome": "Moreno M.",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 80,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -2998,9 +2998,9 @@
    "nome": "Yeboah J.",
    "squadra": "Venezia",
    "ruolo": "A",
-   "pct": 60,
+   "pct": 100,
    "titolare": true,
-   "incerto": true
+   "incerto": false
   },
   "6908": {
    "id": 6908,
@@ -3106,7 +3106,7 @@
    "nome": "Perez K.",
    "squadra": "Venezia",
    "ruolo": "C",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -3178,9 +3178,9 @@
    "nome": "Vitik",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 35,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7069": {
    "id": 7069,
@@ -3628,7 +3628,7 @@
    "nome": "Helland",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 50,
+   "pct": 40,
    "titolare": false,
    "incerto": true
   },
@@ -3952,16 +3952,16 @@
    "nome": "Alhassane",
    "squadra": "Bologna",
    "ruolo": "D",
-   "pct": 60,
-   "titolare": false,
-   "incerto": true
+   "pct": 100,
+   "titolare": true,
+   "incerto": false
   },
   "7484": {
    "id": 7484,
    "nome": "Adams A.",
    "squadra": "Venezia",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4069,7 +4069,7 @@
    "nome": "Halhal",
    "squadra": "Venezia",
    "ruolo": "D",
-   "pct": 90,
+   "pct": 100,
    "titolare": true,
    "incerto": false
   },
@@ -4097,6 +4097,15 @@
    "squadra": "Cagliari",
    "ruolo": "A",
    "pct": 55,
+   "titolare": false,
+   "incerto": true
+  },
+  "7550": {
+   "id": 7550,
+   "nome": "Grillitsch",
+   "squadra": "Frosinone",
+   "ruolo": "C",
+   "pct": 30,
    "titolare": false,
    "incerto": true
   },
@@ -4267,7 +4276,7 @@
    "nome": "Bobcek",
    "squadra": "Frosinone",
    "ruolo": "A",
-   "pct": 90,
+   "pct": 65,
    "titolare": true,
    "incerto": false
   },
@@ -4437,66 +4446,6 @@
  "ballottaggi": [
   [
    {
-    "id": 5507,
-    "nome": "Busio",
-    "pct": 60
-   },
-   {
-    "id": 5674,
-    "nome": "Basic",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 5481,
-    "nome": "Mazzocchi",
-    "pct": 55
-   },
-   {
-    "id": 5695,
-    "nome": "Haps",
-    "pct": 45
-   }
-  ],
-  [
-   {
-    "id": 6904,
-    "nome": "Yeboah J.",
-    "pct": 60
-   },
-   {
-    "id": 7482,
-    "nome": "Lauberbach",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 184,
-    "nome": "Bernardeschi",
-    "pct": 60
-   },
-   {
-    "id": 7483,
-    "nome": "Alhassane",
-    "pct": 40
-   }
-  ],
-  [
-   {
-    "id": 4359,
-    "nome": "Piccoli",
-    "pct": 55
-   },
-   {
-    "id": 2765,
-    "nome": "Odgaard",
-    "pct": 45
-   }
-  ],
-  [
-   {
     "id": 4952,
     "nome": "Monterisi",
     "pct": 55
@@ -4505,6 +4454,18 @@
     "id": 5757,
     "nome": "Cittadini",
     "pct": 45
+   }
+  ],
+  [
+   {
+    "id": 7612,
+    "nome": "Bobcek",
+    "pct": 65
+   },
+   {
+    "id": 5436,
+    "nome": "Raimondo",
+    "pct": 35
    }
   ],
   [
@@ -5132,8 +5093,8 @@
   },
   "2517": {
    "id": 2517,
-   "tipo": "dubbio",
-   "nota": "lieve affaticamento muscolare, in dubbio impiego contro il Sassuolo"
+   "tipo": "infortunato",
+   "nota": "lieve affaticamento muscolare, out contro il Sassuolo"
   },
   "2606": {
    "id": 2606,
@@ -5229,11 +5190,6 @@
    "id": 5036,
    "tipo": "dubbio",
    "nota": "noie fisiche, in forte dubbio contro la Juventus"
-  },
-  "5436": {
-   "id": 5436,
-   "tipo": "infortunato",
-   "nota": "lesione multilegamentosa contusivo-distorsiva della caviglia sinistra, tentativo rientro da metà dicembre"
   },
   "5449": {
    "id": 5449,
@@ -5363,7 +5319,7 @@
   "6677": {
    "id": 6677,
    "tipo": "infortunato",
-   "nota": "problema al ginocchio, out contro il Napoli"
+   "nota": "problema al ginocchio, campionato finito"
   },
   "6717": {
    "id": 6717,
@@ -5449,11 +5405,6 @@
    "id": 7533,
    "tipo": "infortunato",
    "nota": "trauma distorsivo del quinto dito della mano sinistra, rientro dalla prima metà di dicembre"
-  },
-  "7550": {
-   "id": 7550,
-   "tipo": "infortunato",
-   "nota": "sindrome retto-adduttoria, rientro dalla fine di novembre"
   },
   "7554": {
    "id": 7554,
